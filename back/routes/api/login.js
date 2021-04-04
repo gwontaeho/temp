@@ -12,12 +12,13 @@ router.post("/", async (req, res, next) => {
     });
     if (findUser.dataValues.password !== req.body.password) {
       // 비밀번호 틀렸을 때
-      return res.status(401).send("");
+      return res.status(401).send("wrong password");
     }
     // 토근발급
     return res.status(200).cookie("token", signToken(findUser)).send("success");
   } catch (error) {
-    return res.status(401).send("");
+    console.log(error);
+    return res.status(401).send("error");
   }
 });
 
