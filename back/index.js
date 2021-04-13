@@ -12,6 +12,7 @@ const app = express();
 app.set("port", process.env.PORT || 3005);
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.static("public"));
 
 app.use("/api", api);
 

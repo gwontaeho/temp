@@ -7,11 +7,11 @@ import { Container, Header, InfoContainer } from "./styles";
 
 const ModifyInfo = loadable(() => import("./modifyinfo"));
 const CheckBooking = loadable(() => import("./checkbooking"));
-const ChangeType = loadable(() => import("./changetype"));
 const ManageBusiness = loadable(() => import("./managebusiness"));
 const ManageClass = loadable(() => import("./manageclass"));
 const ManageBooking = loadable(() => import("./managebooking"));
 const CreateClass = loadable(() => import("./createclass"));
+const ClassInfo = loadable(() => import("./classinfo"));
 
 const Info = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -44,12 +44,9 @@ const Info = () => {
       <InfoContainer>
         <div>
           <Link to="/info/modifyinfo">회원정보수정</Link>
-          <Link to="/info/checkbooking">예약확인</Link>
-          {userType === 1 ? (
-            <Link to="/info/changetype">업체회원 등록하기</Link>
-          ) : null}
+          {userType == 1 ? <Link to="/info/checkbooking">예약확인</Link> : null}
         </div>
-        {userType === 2 ? (
+        {userType == 2 ? (
           <div>
             <Link to="/info/managebusiness">업체관리</Link>
             <Link to="/info/manageclass">클래스관리</Link>
@@ -70,9 +67,6 @@ const Info = () => {
         {window.location.pathname === "/info/checkbooking"
           ? "  예약확인"
           : null}
-        {window.location.pathname === "/info/changetype"
-          ? "   업체회원등록"
-          : null}
         {window.location.pathname === "/info/managebusiness"
           ? "   업체관리"
           : null}
@@ -85,16 +79,19 @@ const Info = () => {
         {window.location.pathname === "/info/createclass"
           ? "   클래스관리   클래스 생성"
           : null}
+        {window.location.pathname === "/info/classinfo"
+          ? "   클래스관리   클래스정보"
+          : null}
       </Header>
       <Switch>
         <Route exact path="/info" component={Index} />
         <Route path="/info/modifyinfo" component={ModifyInfo} />
         <Route path="/info/checkbooking" component={CheckBooking} />
-        <Route path="/info/changetype" component={ChangeType} />
         <Route path="/info/managebusiness" component={ManageBusiness} />
         <Route path="/info/manageclass" component={ManageClass} />
         <Route path="/info/managebooking" component={ManageBooking} />
         <Route path="/info/createclass" component={CreateClass} />
+        <Route path="/info/classinfo/:index" component={ClassInfo} />
       </Switch>
     </Container>
   );

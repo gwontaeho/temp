@@ -1,14 +1,16 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
-import { Container, Logo, Form, LoginBtn, Find, FindLink } from "./styles";
+import { Container, Logo, Section } from "./styles";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
 const Login = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const [type, setType] = useState(1);
 
   const onChangeUser = useCallback((e) => {
     setUser(e.target.value);
@@ -18,6 +20,10 @@ const Login = ({ history }) => {
     setPassword(e.target.value);
   }, []);
 
+  const changeType = useCallback((e) => {
+    setType(e.target.value);
+  }, []);
+
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -25,6 +31,7 @@ const Login = ({ history }) => {
         const response = await axios.post("/api/login", {
           user,
           password,
+          type,
         });
         console.log(response.data);
         return history.push("/");
@@ -33,7 +40,7 @@ const Login = ({ history }) => {
         console.log("abc");
       }
     },
-    [user, password]
+    [user, password, type]
   );
 
   if (cookies.token) {
@@ -44,7 +51,26 @@ const Login = ({ history }) => {
     <Container>
       <Logo>로고</Logo>
       <div>
-        <Form onSubmit={onSubmit}>
+        <Section>
+          <label htmlFor="1">일반</label>
+          <input
+            id="1"
+            value="1"
+            type="radio"
+            name="checkType"
+            defaultChecked
+            onClick={changeType}
+          />
+          <label htmlFor="2">업체</label>
+          <input
+            id="2"
+            value="2"
+            type="radio"
+            name="checkType"
+            onClick={changeType}
+          />
+        </Section>
+        <form onSubmit={onSubmit}>
           <input
             value={user}
             type="text"
@@ -60,13 +86,13 @@ const Login = ({ history }) => {
             maxLength="24"
             onChange={onChangePassword}
           />
-          <LoginBtn type="submit">로그인</LoginBtn>
-        </Form>
-        <Find>
-          <FindLink to="/login">아이디 찾기</FindLink>
-          <FindLink to="/login">비밀번호 찾기</FindLink>
-          <FindLink to="/signup">회원가입</FindLink>
-        </Find>
+          <button type="submit">로그인</button>
+        </form>
+        <Section>
+          <Link to="/login">아이디 찾기</Link>
+          <Link to="/login">비밀번호 찾기</Link>
+          <Link to="/signup">회원가입</Link>
+        </Section>
       </div>
     </Container>
   );

@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("../../models").User;
+const Seller = require("../../models").Seller;
 
-router.post("/", async (req, res, next) => {
+router.post("/user", async (req, res, next) => {
   try {
     await User.create({
       user: req.body.user,
@@ -14,10 +15,28 @@ router.post("/", async (req, res, next) => {
       phone: req.body.phone,
       type: 1,
     });
-    res.status(200).send("abc");
+    res.status(200).send("USER SIGN UP SUCCESS");
   } catch (error) {
     console.log(error);
-    res.status(500).send("nono");
+    res.status(500).send("FAIL");
+  }
+});
+
+router.post("/seller", async (req, res, next) => {
+  try {
+    await Seller.create({
+      seller: req.body.seller,
+      password: req.body.password,
+      name: req.body.name,
+      phone: req.body.phone,
+      address: req.body.address,
+      reg: req.body.reg,
+      type: 2,
+    });
+    res.status(200).send("SELLER SIGN UP SUCCESS");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("FAIL");
   }
 });
 

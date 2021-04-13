@@ -9,7 +9,7 @@ const Main = loadable(() => import("../pages/main"));
 const Info = loadable(() => import("../pages/info"));
 const Category = loadable(() => import("../pages/category"));
 
-const Layout = () => {
+const Layout = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const onClickLogout = useCallback(() => {
@@ -27,8 +27,7 @@ const Layout = () => {
         <Sign>
           {cookies.token ? (
             <>
-              <Link to="/checkbooking">예약확인</Link>
-              <Link to="/info">회원정보</Link>
+              <Link to="/info">내 정보</Link>
               <Link to="/" onClick={onClickLogout}>
                 로그아웃
               </Link>

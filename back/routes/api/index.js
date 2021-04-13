@@ -4,11 +4,13 @@ const router = express();
 const signup = require("./signup");
 const login = require("./login");
 const user = require("./user");
-const changetype = require("./changetype");
+const createclass = require("./createclass");
+const loadclass = require("./loadclass");
 
 router.use("/signup", signup);
 router.use("/login", login);
 router.use("/user", user);
-router.use("/changetype", changetype);
+router.use("/createclass", createclass);
+router.use("/loadclass", loadclass);
 
 module.exports = router;

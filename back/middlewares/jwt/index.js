@@ -1,9 +1,11 @@
 const jwt = require("jsonwebtoken");
 
-exports.signToken = (findUser) => {
+exports.signToken = (user, type) => {
+  console.log(user, type);
   return jwt.sign(
     {
-      user: findUser.dataValues.user,
+      user,
+      type,
     },
     process.env.JWT_SECRET
   );
