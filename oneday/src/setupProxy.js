@@ -9,6 +9,13 @@ module.exports = function (app) {
     })
   );
   app.use(
+    "/img",
+    createProxyMiddleware({
+      target: "http://localhost:3005",
+      changeOrigin: true,
+    })
+  );
+  app.use(
     "/crn",
     createProxyMiddleware({
       target: "https://teht.hometax.go.kr",

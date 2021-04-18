@@ -5,6 +5,7 @@ const morgan = require("morgan");
 
 const { sequelize } = require("./models");
 sequelize.sync();
+// sequelize.sync({ force: true });
 
 const api = require("./routes/api");
 

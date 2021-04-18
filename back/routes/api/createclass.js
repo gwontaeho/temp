@@ -26,7 +26,11 @@ const index = async (req, res, next) => {
     const findIndex = await Class.max("index", {
       where: { sellerSeller: req.decoded.user },
     });
-    req.nextIndex = findIndex + 1;
+    if (findIndex >= 0) {
+      req.nextIndex = findIndex + 1;
+    } else {
+      req.nextIndex = 0;
+    }
     next();
   } catch (error) {
     return res.status(401).send("error");

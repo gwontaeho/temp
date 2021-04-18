@@ -46,11 +46,15 @@ db.Sequelize = Sequelize;
 db.User = require("./user")(sequelize, Sequelize);
 db.Seller = require("./seller")(sequelize, Sequelize);
 db.Class = require("./class")(sequelize, Sequelize);
+db.Schedule = require("./schedule")(sequelize, Sequelize);
 
 // db.User.hasOne(db.Seller, { foreignKey: { allowNull: false, unique: true } });
 // db.Seller.belongsTo(db.User);
 
 db.Seller.hasMany(db.Class, { foreignKey: { allowNull: false } });
 db.Class.belongsTo(db.Seller);
+
+db.Class.hasMany(db.Schedule, { foreignKey: { allowNull: false } });
+db.Schedule.belongsTo(db.Class);
 
 module.exports = db;

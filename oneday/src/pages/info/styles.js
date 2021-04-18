@@ -15,6 +15,10 @@ export const Header = styled.div`
   padding-left: 24px;
 `;
 
+export const Section = styled.div`
+  padding: 24px;
+`;
+
 export const InfoContainer = styled.div`
   width: calc(100% - 24px);
   background-color: lightgreen;

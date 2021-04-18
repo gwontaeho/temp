@@ -30,17 +30,9 @@ const ManageClass = () => {
     }
   }, []);
 
-  const onClickClass = useCallback(() => {
-    console.log("abc");
-  }, []);
-
   const classList = classes.map((v) => {
     return (
-      <div
-        key={v.class + v.id}
-        onClick={onClickClass}
-        style={{ cursor: "pointer", margin: "12px" }}
-      >
+      <div key={v.class + v.id} style={{ cursor: "pointer", margin: "12px" }}>
         <Link to={`/info/classinfo/${v.index}`}>{v.class}</Link>
       </div>
     );

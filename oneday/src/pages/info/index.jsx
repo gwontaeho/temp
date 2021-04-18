@@ -3,7 +3,7 @@ import { Link, Redirect, Route, Switch } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import loadable from "@loadable/component";
 import axios from "axios";
-import { Container, Header, InfoContainer } from "./styles";
+import { Container, Header, Section, InfoContainer } from "./styles";
 
 const ModifyInfo = loadable(() => import("./modifyinfo"));
 const CheckBooking = loadable(() => import("./checkbooking"));
@@ -79,20 +79,22 @@ const Info = () => {
         {window.location.pathname === "/info/createclass"
           ? "   클래스관리   클래스 생성"
           : null}
-        {window.location.pathname === "/info/classinfo"
+        {window.location.pathname.includes("/info/classinfo")
           ? "   클래스관리   클래스정보"
           : null}
       </Header>
-      <Switch>
-        <Route exact path="/info" component={Index} />
-        <Route path="/info/modifyinfo" component={ModifyInfo} />
-        <Route path="/info/checkbooking" component={CheckBooking} />
-        <Route path="/info/managebusiness" component={ManageBusiness} />
-        <Route path="/info/manageclass" component={ManageClass} />
-        <Route path="/info/managebooking" component={ManageBooking} />
-        <Route path="/info/createclass" component={CreateClass} />
-        <Route path="/info/classinfo/:index" component={ClassInfo} />
-      </Switch>
+      <Section>
+        <Switch>
+          <Route exact path="/info" component={Index} />
+          <Route path="/info/modifyinfo" component={ModifyInfo} />
+          <Route path="/info/checkbooking" component={CheckBooking} />
+          <Route path="/info/managebusiness" component={ManageBusiness} />
+          <Route path="/info/manageclass" component={ManageClass} />
+          <Route path="/info/managebooking" component={ManageBooking} />
+          <Route path="/info/createclass" component={CreateClass} />
+          <Route path="/info/classinfo/:index" component={ClassInfo} />
+        </Switch>
+      </Section>
     </Container>
   );
 };

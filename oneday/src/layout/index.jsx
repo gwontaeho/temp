@@ -14,6 +14,7 @@ const Layout = ({ history }) => {
 
   const onClickLogout = useCallback(() => {
     removeCookie("token");
+    window.location.href = "/";
   }, []);
 
   return (
