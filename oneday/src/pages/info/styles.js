@@ -2,35 +2,38 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   width: 100%;
-  height: 600px;
-  background-color: lightgrey;
 `;
 
 export const Header = styled.div`
   width: calc(100% - 24px);
-  height: 60px;
+  height: 72px;
   background-color: white;
   display: flex;
   align-items: center;
   padding-left: 24px;
+  & a {
+    margin-right: 24px;
+  }
 `;
 
 export const Section = styled.div`
-  padding: 24px;
+  padding-left: 24px;
+  display: flex;
+  & .route {
+    padding: 24px;
+    flex: 1;
+  }
 `;
 
 export const InfoContainer = styled.div`
-  width: calc(100% - 24px);
-  background-color: lightgreen;
+  width: 240px;
   display: flex;
   flex-direction: column;
-  padding-left: 24px;
+  border-right: 1px solid lightgray;
+
   & div {
+    height: 72px;
     display: flex;
-    height: 120px;
     align-items: center;
-  }
-  & a {
-    margin-right: 24px;
   }
 `;

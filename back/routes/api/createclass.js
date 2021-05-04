@@ -49,15 +49,15 @@ router.post(
     console.log(req.body.name);
     console.log(req.body.price);
     console.log(req.body.time);
-    // Object.keys(JSON.parse(req.body.schedule)).map((v) => {
-    //   console.log(JSON.parse(req.body.schedule)[v]);
-    // });
+    console.log(req.body.text);
+
     try {
       await Class.create({
         class: req.body.name,
         price: req.body.price,
         time: req.body.time,
         img: req.file ? req.file.path : "",
+        text: req.body.text,
         index: req.nextIndex,
         sellerSeller: req.decoded.user,
       });

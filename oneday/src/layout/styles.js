@@ -1,20 +1,17 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 1200px;
-  height: 1200px;
-  background-color: ivory;
 `;
 
 export const Header = styled.div`
   width: calc(100% - 48px);
-  height: 60px;
-  background-color: lightpink;
+  height: 72px;
   display: flex;
   justify-content: space-between;
   padding-left: 24px;
   padding-right: 24px;
+  border-bottom: 1px solid lightgray;
 `;
 
 export const Logo = styled.div`
@@ -38,49 +35,34 @@ export const Sign = styled.form`
 
 export const Search = styled.div`
   width: 100%;
-  height: 180px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: 72px;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+
+  & div {
+    padding-left: 24px;
+  }
+  & a {
+    margin-right: 24px;
+  }
+
   & form {
+    height: 100%;
+    padding-right: 24px;
     display: flex;
     align-items: center;
-    height: 60px;
   }
   & input {
-    width: 480px;
-    height: 100%;
+    width: 240px;
+    height: 48px;
+    border: 0;
+    border-bottom: 1px solid lightgray;
   }
   & button {
-    width: 78px;
-    height: 100%;
-    border: 0;
+    width: 60px;
+    height: 48px;
   }
-`;
-
-export const Nav = styled.div`
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: lightblue;
-  & a {
-    margin-left: 24px;
-    margin-rifht: 24px;
-  }
-`;
-
-export const Find = styled.div`
-  height: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const FindLink = styled(Link)`
-  color: gray;
-  margin-left: 6px;
-  margin-right: 6px;
 `;

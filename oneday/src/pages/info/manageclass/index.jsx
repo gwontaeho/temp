@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
-import { Container } from "./styles";
 import axios from "axios";
+import { Container, Class } from "./styles";
 
 const ManageClass = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -25,6 +25,7 @@ const ManageClass = () => {
       let newClasses = [...response.data];
       console.log(newClasses);
       setClasses(newClasses);
+      console.log(newClasses);
     } catch (error) {
       console.log(error);
     }
@@ -32,16 +33,19 @@ const ManageClass = () => {
 
   const classList = classes.map((v) => {
     return (
-      <div key={v.class + v.id} style={{ cursor: "pointer", margin: "12px" }}>
-        <Link to={`/info/classinfo/${v.index}`}>{v.class}</Link>
-      </div>
+      <Link to={`/info/classinfo/${v.index}`}>
+        <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
+        {v.class}
+      </Link>
     );
   });
 
   return (
     <Container>
-      {classList}
-      <Link to="/info/createclass">클래스 생성</Link>
+      <div className="btns">
+        <Link to="/info/createclass">클래스 생성</Link>
+      </div>
+      <div className="classes">{classList}</div>
     </Container>
   );
 };

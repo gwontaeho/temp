@@ -1,15 +1,15 @@
-import { Switch, Route, Redirect, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import loadable from "@loadable/component";
 import { useCookies } from "react-cookie";
-import { Container, Header, Logo, Sign, Search, Nav } from "./styles";
-import { IoSearch } from "react-icons/io5";
+import { Container, Header, Logo, Sign, Search } from "./styles";
 import { useCallback } from "react";
+import { IoSearch } from "react-icons/io5";
 
 const Main = loadable(() => import("../pages/main"));
 const Info = loadable(() => import("../pages/info"));
 const Category = loadable(() => import("../pages/category"));
 
-const Layout = ({ history }) => {
+const Layout = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const onClickLogout = useCallback(() => {
@@ -41,29 +41,27 @@ const Layout = ({ history }) => {
           )}
         </Sign>
       </Header>
-      {/* 검색창 */}
       <Search>
-        <Nav>업체 또는 클래스를 검색하세요</Nav>
+        <div>
+          <Link to="/">플라워</Link>
+          <Link to="/">베이킹</Link>
+          <Link to="/">향수</Link>
+          <Link to="/">드로잉</Link>
+          <Link to="/">기타</Link>
+          <Link to="/category/all">전체</Link>
+        </div>
         <form>
           <input type="text" />
           <button>
             <IoSearch />
           </button>
         </form>
-        <Nav>
-          <Link to="/">플라워</Link>
-          <Link to="/">베이킹</Link>
-          <Link to="/">향수</Link>
-          <Link to="/">드로잉</Link>
-          <Link to="/">기타</Link>
-          <Link to="/">전체</Link>
-        </Nav>
       </Search>
-
       {/* 섹션 라우터 */}
       <Switch>
         <Route exact path="/" component={Main} />
         <Route path="/info" component={Info} />
+        <Route path="/category/:category" component={Category} />
       </Switch>
     </Container>
   );

@@ -43,15 +43,24 @@ const Info = () => {
     return (
       <InfoContainer>
         <div>
-          <Link to="/info/modifyinfo">회원정보수정</Link>
-          {userType == 1 ? <Link to="/info/checkbooking">예약확인</Link> : null}
+          <Link to="/info">내 정보</Link>
         </div>
+        <div>
+          <Link to="/info/modifyinfo">회원정보수정</Link>
+        </div>
+        {userType == 1 ? <Link to="/info/checkbooking">예약확인</Link> : null}
         {userType == 2 ? (
-          <div>
-            <Link to="/info/managebusiness">업체관리</Link>
-            <Link to="/info/manageclass">클래스관리</Link>
-            <Link to="/info/managebooking">예약관리</Link>
-          </div>
+          <>
+            <div>
+              <Link to="/info/managebusiness">업체관리</Link>
+            </div>
+            <div>
+              <Link to="/info/manageclass">클래스관리</Link>
+            </div>
+            <div>
+              <Link to="/info/managebooking">예약관리</Link>
+            </div>
+          </>
         ) : null}
       </InfoContainer>
     );
@@ -60,40 +69,42 @@ const Info = () => {
   return (
     <Container>
       <Header>
-        회원정보
-        {window.location.pathname === "/info/modifyinfo"
-          ? "   회원정보수정"
-          : null}
-        {window.location.pathname === "/info/checkbooking"
-          ? "  예약확인"
-          : null}
-        {window.location.pathname === "/info/managebusiness"
-          ? "   업체관리"
-          : null}
-        {window.location.pathname === "/info/manageclass"
-          ? "   클래스관리"
-          : null}
-        {window.location.pathname === "/info/managebooking"
-          ? "   예약관리"
-          : null}
-        {window.location.pathname === "/info/createclass"
-          ? "   클래스관리   클래스 생성"
-          : null}
-        {window.location.pathname.includes("/info/classinfo")
-          ? "   클래스관리   클래스정보"
-          : null}
+        {window.location.pathname === "/info" ? <div>내 정보</div> : null}
+        {window.location.pathname === "/info/modifyinfo" ? (
+          <div>회원정보수정</div>
+        ) : null}
+        {window.location.pathname === "/info/checkbooking" ? (
+          <div>예약확인</div>
+        ) : null}
+        {window.location.pathname === "/info/managebusiness" ? (
+          <div>업체관리</div>
+        ) : null}
+        {window.location.pathname === "/info/manageclass" ? (
+          <div>클래스관리</div>
+        ) : null}
+        {window.location.pathname === "/info/managebooking" ? (
+          <div>예약관리</div>
+        ) : null}
+        {window.location.pathname === "/info/createclass" ? (
+          <div>클래스생성</div>
+        ) : null}
+        {window.location.pathname.includes("/info/classinfo") ? (
+          <div>클래스정보</div>
+        ) : null}
       </Header>
       <Section>
-        <Switch>
-          <Route exact path="/info" component={Index} />
-          <Route path="/info/modifyinfo" component={ModifyInfo} />
-          <Route path="/info/checkbooking" component={CheckBooking} />
-          <Route path="/info/managebusiness" component={ManageBusiness} />
-          <Route path="/info/manageclass" component={ManageClass} />
-          <Route path="/info/managebooking" component={ManageBooking} />
-          <Route path="/info/createclass" component={CreateClass} />
-          <Route path="/info/classinfo/:index" component={ClassInfo} />
-        </Switch>
+        <Index />
+        <div className="route">
+          <Switch>
+            <Route path="/info/modifyinfo" component={ModifyInfo} />
+            <Route path="/info/checkbooking" component={CheckBooking} />
+            <Route path="/info/managebusiness" component={ManageBusiness} />
+            <Route path="/info/manageclass" component={ManageClass} />
+            <Route path="/info/managebooking" component={ManageBooking} />
+            <Route path="/info/createclass" component={CreateClass} />
+            <Route path="/info/classinfo/:index" component={ClassInfo} />
+          </Switch>
+        </div>
       </Section>
     </Container>
   );
