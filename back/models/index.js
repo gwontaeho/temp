@@ -47,6 +47,7 @@ db.User = require("./user")(sequelize, Sequelize);
 db.Seller = require("./seller")(sequelize, Sequelize);
 db.Class = require("./class")(sequelize, Sequelize);
 db.Schedule = require("./schedule")(sequelize, Sequelize);
+db.Reservation = require("./reservation")(sequelize, Sequelize);
 
 // db.User.hasOne(db.Seller, { foreignKey: { allowNull: false, unique: true } });
 // db.Seller.belongsTo(db.User);

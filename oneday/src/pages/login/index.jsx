@@ -8,12 +8,12 @@ import { Link } from "react-router-dom";
 const Login = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
-  const [user, setUser] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [type, setType] = useState(1);
 
-  const onChangeUser = useCallback((e) => {
-    setUser(e.target.value);
+  const onChangeId = useCallback((e) => {
+    setId(e.target.value);
   }, []);
 
   const onChangePassword = useCallback((e) => {
@@ -29,7 +29,7 @@ const Login = ({ history }) => {
       e.preventDefault();
       try {
         const response = await axios.post("/api/login", {
-          user,
+          id,
           password,
           type,
         });
@@ -40,7 +40,7 @@ const Login = ({ history }) => {
         console.log("abc");
       }
     },
-    [user, password, type]
+    [id, password, type]
   );
 
   if (cookies.token) {
@@ -72,12 +72,12 @@ const Login = ({ history }) => {
         </Section>
         <form onSubmit={onSubmit}>
           <input
-            value={user}
+            value={id}
             type="text"
             placeholder="아이디"
             maxLength="12"
             autoFocus
-            onChange={onChangeUser}
+            onChange={onChangeId}
           />
           <input
             value={password}

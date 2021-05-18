@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
+  margin: 60px;
   width: 480px;
 `;
 
@@ -11,11 +12,12 @@ export const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 24px;
 `;
 
 export const TypeContainer = styled.div`
   width: 100%;
-  height: 360px;
+  height: 240px;
   background-color: lightgrey;
   display: flex;
   justify-content: center;

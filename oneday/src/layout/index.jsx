@@ -8,13 +8,13 @@ import { IoSearch } from "react-icons/io5";
 const Main = loadable(() => import("../pages/main"));
 const Info = loadable(() => import("../pages/info"));
 const Category = loadable(() => import("../pages/category"));
+const Product = loadable(() => import("../pages/product"));
 
 const Layout = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const onClickLogout = useCallback(() => {
     removeCookie("token");
-    window.location.href = "/";
   }, []);
 
   return (
@@ -62,6 +62,7 @@ const Layout = () => {
         <Route exact path="/" component={Main} />
         <Route path="/info" component={Info} />
         <Route path="/category/:category" component={Category} />
+        <Route path="/product/:product" component={Product} />
       </Switch>
     </Container>
   );

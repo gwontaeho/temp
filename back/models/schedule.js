@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(4),
       allowNull: false,
     },
-    students: {
+    personnel: {
       type: DataTypes.INTEGER,
     },
-    booked: {
+    reserved: {
       type: DataTypes.INTEGER,
     },
   });

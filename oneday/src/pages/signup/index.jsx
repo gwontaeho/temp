@@ -4,8 +4,8 @@ import { Redirect, Link, Switch, Route } from "react-router-dom";
 
 import { Container, Logo, TypeContainer } from "./styles";
 
-const SignupUser = loadable(() => import("./signupuser"));
-const SignupSeller = loadable(() => import("./signupseller"));
+const User = loadable(() => import("./user"));
+const Seller = loadable(() => import("./seller"));
 
 const Signup = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -28,8 +28,8 @@ const Signup = () => {
       <Logo>로고</Logo>
       <Switch>
         <Route exact path="/signup" component={Index} />
-        <Route path="/signup/user" component={SignupUser} />
-        <Route path="/signup/seller" component={SignupSeller} />
+        <Route path="/signup/user" component={User} />
+        <Route path="/signup/seller" component={Seller} />
       </Switch>
     </Container>
   );

@@ -9,8 +9,8 @@ router.post("/", async (req, res, next) => {
   if (req.body.type == 1) {
     try {
       const findUser = await User.findOne({
-        where: { user: req.body.user },
-        attributes: ["user", "password"],
+        where: { id: req.body.id },
+        attributes: ["id", "password"],
       });
       if (findUser.dataValues.password !== req.body.password) {
         // 비밀번호 틀렸을 때
@@ -19,7 +19,7 @@ router.post("/", async (req, res, next) => {
       // 토근발급
       return res
         .status(200)
-        .cookie("token", signToken(req.body.user, req.body.type))
+        .cookie("token", signToken(req.body.id, req.body.type))
         .send("success");
     } catch (error) {
       return res.status(401).send("error");
@@ -27,8 +27,8 @@ router.post("/", async (req, res, next) => {
   } else if (req.body.type == 2) {
     try {
       const findUser = await Seller.findOne({
-        where: { seller: req.body.user },
-        attributes: ["seller", "password"],
+        where: { id: req.body.id },
+        attributes: ["id", "password"],
       });
       if (findUser.dataValues.password !== req.body.password) {
         // 비밀번호 틀렸을 때
@@ -37,7 +37,7 @@ router.post("/", async (req, res, next) => {
       // 토근발급
       return res
         .status(200)
-        .cookie("token", signToken(req.body.user, req.body.type))
+        .cookie("token", signToken(req.body.id, req.body.type))
         .send("success");
     } catch (error) {
       return res.status(401).send("error");
