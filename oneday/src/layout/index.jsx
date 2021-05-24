@@ -14,7 +14,10 @@ const Layout = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const onClickLogout = useCallback(() => {
-    removeCookie("token");
+    console.log(cookies);
+    if (cookies.token) {
+      removeCookie("token", { path: "/" });
+    }
   }, []);
 
   return (

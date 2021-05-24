@@ -49,13 +49,20 @@ db.Class = require("./class")(sequelize, Sequelize);
 db.Schedule = require("./schedule")(sequelize, Sequelize);
 db.Reservation = require("./reservation")(sequelize, Sequelize);
 
-// db.User.hasOne(db.Seller, { foreignKey: { allowNull: false, unique: true } });
-// db.Seller.belongsTo(db.User);
-
 db.Seller.hasMany(db.Class, { foreignKey: { allowNull: false } });
 db.Class.belongsTo(db.Seller);
+db.Seller.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
+db.Reservation.belongsTo(db.Seller);
+
+db.User.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
+db.Reservation.belongsTo(db.User);
 
 db.Class.hasMany(db.Schedule, { foreignKey: { allowNull: false } });
 db.Schedule.belongsTo(db.Class);
+db.Class.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
+db.Reservation.belongsTo(db.Class);
+
+db.Schedule.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
+db.Reservation.belongsTo(db.Schedule);
 
 module.exports = db;

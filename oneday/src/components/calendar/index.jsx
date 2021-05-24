@@ -28,7 +28,7 @@ const Calendar = (props) => {
   useEffect(() => {
     let newScheduleDateArray = [];
     props.scheduleArray.map((v) => {
-      newScheduleDateArray.push(v.date);
+      newScheduleDateArray.push(v.time.substring(0, 8));
     });
     setScheduleDateArray(newScheduleDateArray);
   }, [props.scheduleArray]);

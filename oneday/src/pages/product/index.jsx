@@ -26,6 +26,8 @@ const Product = ({ match }) => {
   const [classData, setClassData] = useState({});
   const [scheduleArray, setScheduleArray] = useState([]);
   const [content, setContent] = useState("detail");
+  const [selectedSchedule, setSelectedSchedule] = useState(0);
+  const [personnel, setPersonnel] = useState(1);
 
   useEffect(async () => {
     const id = match.params.product;
@@ -46,6 +48,7 @@ const Product = ({ match }) => {
       const response = await axios.post("/api/schedule", {
         classId: v,
       });
+      console.log(response.data);
       setScheduleArray(response.data);
     } catch (error) {
       console.log(error);
@@ -56,16 +59,35 @@ const Product = ({ match }) => {
     setDate(v);
   }, []);
 
-  const onClickNav = useCallback((e) => {
-    const value = e.target.getAttribute("value");
-    setContent(value);
+  const selectSchedule = useCallback((e) => {
+    setSelectedSchedule(e.target.value);
   }, []);
 
+  const onClickNav = useCallback((v) => {
+    setContent(v);
+  }, []);
+
+  const onClickSelectNumberButton = useCallback(
+    (v) => {
+      if (v === "inc") {
+        setPersonnel(personnel + 1);
+      }
+      if (v === "dec" && personnel > 1) {
+        setPersonnel(personnel - 1);
+      }
+    },
+    [personnel]
+  );
+
+  const test = useCallback(() => {
+    console.log(selectedSchedule);
+  }, [selectedSchedule]);
+
   const clickedSchedule = scheduleArray.map((v) => {
-    if (v.date == date) {
+    if (v.time.substring(0, 8) == date) {
       return (
-        <option>
-          {v.start} ~ {v.end} ---
+        <option value={v.id}>
+          {v.time.substring(8, 12)} ~ {v.time.substring(12, 16)} ---
           {v.reserved} / {v.personnel}
         </option>
       );
@@ -93,22 +115,38 @@ const Product = ({ match }) => {
               onChangeDate={onChangeDate}
             />
           </div>
-          <select>
-            <option value="">날짜선택</option>
+          <select onChange={selectSchedule} defaultValue={0}>
+            <option value="0">날짜선택</option>
             {clickedSchedule}
           </select>
+
+          <div className="number">
+            <div className="selectNumber">
+              <div
+                className="selectNumberButton"
+                onClick={() => onClickSelectNumberButton("dec")}
+              >
+                -
+              </div>
+              <div>{personnel}</div>
+              <div
+                className="selectNumberButton"
+                onClick={() => onClickSelectNumberButton("inc")}
+              >
+                +
+              </div>
+            </div>
+            <div onClick={test}>숫자다</div>
+          </div>
+          <div className="submit">
+            <div>버튼</div>
+          </div>
         </div>
       </Info>
       <Nav>
-        <div value="detail" onClick={onClickNav}>
-          상세정보
-        </div>
-        <div value="review" onClick={onClickNav}>
-          리뷰
-        </div>
-        <div value="qna" onClick={onClickNav}>
-          Q&A
-        </div>
+        <div onClick={() => onClickNav("detail")}>상세정보</div>
+        <div onClick={() => onClickNav("review")}>리뷰</div>
+        <div onClick={() => onClickNav("qna")}>Q&A</div>
       </Nav>
       {classData.id ? (
         <div className="routes">

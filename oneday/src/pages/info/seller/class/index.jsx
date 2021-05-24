@@ -231,34 +231,33 @@ const Class = ({ match }) => {
     setPersonnel(e.target.value);
   }, []);
 
-  // 클릭된 스케줄
-  // const clickedSchedule = scheduleArray.map((v) => {
-  //   if (scheduleArray === undefined || scheduleArray.length == 0) {
-  //     return;
-  //   } else {
-  //     if (v.date.substring(0, 8) == date) {
-  //       return (
-  //         <div className="schedule">
-  //           <div style={{ display: "flex" }}>
-  //             <div>
-  //               {v.date.substring(8, 12)} ~ {v.date.substring(12, 16)} ---
-  //             </div>
-  //             <div>
-  //               {v.reserved} / {v.personnel}
-  //             </div>
-  //           </div>
-  //           <div
-  //             onClick={() => {
-  //               onClickDelete(v);
-  //             }}
-  //           >
-  //             삭제
-  //           </div>
-  //         </div>
-  //       );
-  //     }
-  //   }
-  // });
+  const clickedSchedule = scheduleArray.map((v) => {
+    if (scheduleArray === undefined || scheduleArray.length == 0) {
+      return;
+    } else {
+      if (v.time.substring(0, 8) == date) {
+        return (
+          <div className="schedule">
+            <div style={{ display: "flex" }}>
+              <div>
+                {v.time.substring(8, 12)} ~ {v.time.substring(12, 16)} ---
+              </div>
+              <div>
+                {v.reserved} / {v.personnel}
+              </div>
+            </div>
+            <div
+              onClick={() => {
+                onClickDelete(v);
+              }}
+            >
+              삭제
+            </div>
+          </div>
+        );
+      }
+    }
+  });
 
   const details = detail.map((v) => {
     return (
@@ -341,7 +340,7 @@ const Class = ({ match }) => {
           </div>
           <div className="scheduleList">
             <div className="clickedDate">{date} 일정목록</div>
-            <div></div>
+            <div>{clickedSchedule}</div>
           </div>
         </div>
         <AddSchedule>

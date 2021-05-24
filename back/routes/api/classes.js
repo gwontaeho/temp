@@ -7,20 +7,6 @@ const { verifyToken } = require("../../middlewares/jwt");
 
 const Class = require("../../models").Class;
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, "public/img/class/");
-    },
-    filename(req, file, done) {
-      done(
-        null,
-        req.decoded.id + "_" + req.nextIndex + path.extname(file.originalname)
-      );
-    },
-  }),
-});
-
 const index = async (req, res, next) => {
   console.log(req.decoded.id);
   try {
@@ -37,6 +23,25 @@ const index = async (req, res, next) => {
     return res.status(401).send("error");
   }
 };
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, "public/img/class/");
+    },
+    filename(req, file, done) {
+      done(
+        null,
+        req.decoded.id +
+          "_" +
+          req.nextIndex +
+          "_" +
+          String(new Date().getTime()) +
+          path.extname(file.originalname)
+      );
+    },
+  }),
+});
 
 router.post("/", verifyToken, async (req, res, next) => {
   console.log(req.decoded);

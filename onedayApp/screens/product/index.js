@@ -9,11 +9,13 @@ import {
   FlatList,
 } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import styles from './styles';
 
-const Product = ({route}) => {
+const Product = ({route, navigation}) => {
   const {id} = route.params;
+  const [user, setUser] = useState({});
   const [data, setData] = useState({});
   const [isModalVisible, setModalVisible] = useState(false);
   const [schedules, setSchedules] = useState([]);
@@ -24,7 +26,21 @@ const Product = ({route}) => {
   const [ym, setYm] = useState('');
   const [ymd, setYmd] = useState('');
   const [schedule, setSchedule] = useState({});
-  const [applicant, setApplicant] = useState(1);
+  const [personnel, setPersonnel] = useState(1);
+
+  /* 예약시 전송할 데이터 */
+  /* seller id, user id, schedule id, class id, personnel */
+
+  useEffect(async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      if (jsonValue != null) {
+        setUser(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      // error reading value
+    }
+  }, []);
 
   useEffect(async () => {
     try {
@@ -87,9 +103,13 @@ const Product = ({route}) => {
     }
   }, [data]);
 
-  const toggleModal = useCallback(() => {
-    setModalVisible(!isModalVisible);
-  }, [isModalVisible]);
+  const openModal = useCallback(() => {
+    setModalVisible(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setModalVisible(false);
+  }, []);
 
   const onPressYm = useCallback(
     item => {
@@ -128,14 +148,24 @@ const Product = ({route}) => {
   }, []);
 
   const onPressDecrease = useCallback(() => {
-    if (applicant > 1) {
-      setApplicant(applicant - 1);
+    if (personnel > 1) {
+      setPersonnel(personnel - 1);
     }
-  }, [applicant]);
+  }, [personnel]);
 
   const onPressIncrease = useCallback(() => {
-    setApplicant(applicant + 1);
-  }, [applicant]);
+    setPersonnel(personnel + 1);
+  }, [personnel]);
+
+  const onPressApply = useCallback(() => {
+    closeModal();
+    navigation.navigate('Payment', {
+      userId: user.id,
+      data: data,
+      schedule,
+      personnel,
+    });
+  }, [user, data, schedule, personnel]);
 
   const renderYm = ({item}) => {
     return (
@@ -233,23 +263,29 @@ const Product = ({route}) => {
           </View>
         </ScrollView>
       )}
-      <TouchableOpacity style={styles.button} onPress={toggleModal}>
-        <Text>신청하기</Text>
-      </TouchableOpacity>
+      {Object.keys(user).length === 0 ? (
+        <TouchableOpacity style={styles.button}>
+          <Text>로그인을 해주세요</Text>
+        </TouchableOpacity>
+      ) : user.type == 1 ? (
+        <TouchableOpacity style={styles.button} onPress={openModal}>
+          <Text>신청하기</Text>
+        </TouchableOpacity>
+      ) : null}
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={isModalVisible}
         onShow={getSchedules}
         onRequestClose={() => {
-          console.log('abc');
           setModalVisible(!isModalVisible);
         }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalTitle}>
               <Text>날짜 선택</Text>
-              <TouchableOpacity onPress={toggleModal}>
+              <TouchableOpacity onPress={closeModal}>
                 <Text>닫기</Text>
               </TouchableOpacity>
             </View>
@@ -290,7 +326,7 @@ const Product = ({route}) => {
                     <Text>-</Text>
                   </TouchableOpacity>
                   <View style={styles.howManyPeopleItem}>
-                    <Text>{applicant}</Text>
+                    <Text>{personnel}</Text>
                   </View>
                   <TouchableOpacity
                     style={styles.howManyPeopleItem}
@@ -300,7 +336,7 @@ const Product = ({route}) => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={styles.button} onPress={toggleModal}>
+            <TouchableOpacity style={styles.button} onPress={onPressApply}>
               <Text>신청하기</Text>
             </TouchableOpacity>
           </View>

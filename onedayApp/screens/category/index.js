@@ -32,6 +32,7 @@ const Category = ({route, navigation}) => {
   }, []);
 
   const renderItem = ({item}) => {
+    console.log(item);
     const uri =
       'http://172.30.1.27:3005' +
       item.img.replace(/\\/gi, '/').replace(/public/gi, '');

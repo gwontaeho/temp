@@ -45,6 +45,32 @@ export const Info = styled.div`
       text-align-last: center;
       outline: none;
     }
+
+    .number {
+      width: calc(100% - 48px);
+      height: 72px;
+      border: 1px solid gray;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px 0 24px;
+    }
+    .selectNumber {
+      display: flex;
+      border: 1px solid black;
+      justify-content: center;
+      & > div {
+        padding: 12px;
+      }
+      .selectNumberButton {
+        cursor: pointer;
+      }
+    }
+    .submit {
+      width: 100%;
+      height: 72px;
+      border: 1px solid gray;
+    }
   }
 `;
 
