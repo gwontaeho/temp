@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(24),
       allowNull: false,
     },
+    company: {
+      type: DataTypes.STRING(24),
+      allowNull: false,
+    },
     name: {
       type: DataTypes.STRING(24),
       allowNull: false,
@@ -34,10 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    class_cnt: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
     },
   });
 };

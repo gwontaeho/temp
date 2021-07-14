@@ -2,12 +2,13 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   width: 360px;
+  margin: 24px;
 `;
 
 export const Head = styled.div`
   display: flex;
   width: 100%;
-  height: 36px;
+  height: 60px;
   & div {
     flex: 1;
     display: flex;
@@ -26,7 +27,7 @@ export const Body = styled.div`
     grid-template-columns: repeat(7, 1fr);
     grid-gap: 6px;
     width: 100%;
-    height: 36px;
+    height: 48px;
     & > div {
       display: flex;
       justify-content: center;
@@ -45,17 +46,23 @@ export const Body = styled.div`
       justify-content: center;
       align-items: center;
       border-radius: 12px;
+      color: lightgray;
     }
     .includes {
-      background-color: lightgray;
+      color: black;
+    }
+    .date {
+      cursor: pointer;
     }
     .today {
       border: 1px solid lightgray;
     }
-
-    .date:hover {
-      cursor: pointer;
+    .includes:hover {
       color: gray;
+    }
+    .selected {
+      background-color: lightgray;
+      color: white;
     }
   }
 `;

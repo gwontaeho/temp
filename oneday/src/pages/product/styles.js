@@ -26,50 +26,89 @@ export const Info = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   .reserve {
-    .title {
-      justify-content: center;
-    }
+    padding: 24px;
     .calendar {
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      width: 100%;
-      border: 1px solid red;
+      align-items: center;
+      width: calc(100% - 2px);
+      border: 1px solid lightgray;
+      margin-bottom: 24px;
     }
-    select {
+    .scheduleContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .title_schedule {
       width: 100%;
       height: 72px;
-      border: 1px solid blue;
-      text-align-last: center;
-      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid lightgray;
+      margin-bottom: 24px;
+    }
+    .title_schedule:hover:not(:last-child) {
+      cursor: pointer;
+    }
+    .schedules {
+      width: 100%;
+      position: absolute;
+      background-color: white;
+      border: 1px solid lightgray;
+      top: 73px;
+    }
+    .schedule {
+      width: 100%;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .schedule:hover {
+      background-color: lightgray;
     }
 
     .number {
-      width: calc(100% - 48px);
+      width: 100%;
       height: 72px;
-      border: 1px solid gray;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 24px 0 24px;
+      margin-bottom: 24px;
     }
     .selectNumber {
       display: flex;
-      border: 1px solid black;
       justify-content: center;
+      height: 36px;
       & > div {
         padding: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .selectNumberButton {
         cursor: pointer;
+        border: 1px solid lightgray;
       }
     }
-    .submit {
-      width: 100%;
+    .applyButton {
+      width: calc(100% - 2px);
+      cursor: pointer;
       height: 72px;
-      border: 1px solid gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid lightgray;
     }
   }
 `;

@@ -28,22 +28,26 @@ const Create = ({ history }) => {
   const [detailedAddress, setDetailedAddress] = useState("");
   const [isOpend, setIsOpend] = useState(false);
 
-  useEffect(async () => {
-    try {
-      const response = await axios.post(
-        "/api/auth/seller",
-        {},
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
-      setSeller(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "/api/auth/seller",
+          {},
+          {
+            headers: {
+              token: cookies.token,
+            },
+          }
+        );
+        setSeller(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const onChangeImg = useCallback((e) => {

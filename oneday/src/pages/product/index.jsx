@@ -7,7 +7,7 @@ import Detail from "./detail";
 import Review from "./review";
 import Qna from "./qna";
 
-const Product = ({ match }) => {
+const Product = ({ match, history }) => {
   const today = new Date();
   const todayYmd =
     String(today.getFullYear()) +
@@ -26,8 +26,9 @@ const Product = ({ match }) => {
   const [classData, setClassData] = useState({});
   const [scheduleArray, setScheduleArray] = useState([]);
   const [content, setContent] = useState("detail");
-  const [selectedSchedule, setSelectedSchedule] = useState(0);
   const [personnel, setPersonnel] = useState(1);
+  const [schedulesDisplay, setSchedulesDisplay] = useState("none");
+  const [selectedSchedule, setSelectedSchedule] = useState({});
 
   useEffect(async () => {
     const id = match.params.product;
@@ -42,6 +43,10 @@ const Product = ({ match }) => {
       console.log(error);
     }
   }, []);
+
+  useEffect(() => {
+    if (schedulesDisplay != "none") setSchedulesDisplay("none");
+  }, [date]);
 
   const getSchedule = useCallback(async (v) => {
     try {
@@ -59,9 +64,18 @@ const Product = ({ match }) => {
     setDate(v);
   }, []);
 
-  const selectSchedule = useCallback((e) => {
-    setSelectedSchedule(e.target.value);
-  }, []);
+  const toggleSchedules = useCallback(() => {
+    if (schedulesDisplay == "none") {
+      let ary = [];
+      scheduleArray.forEach((v) => {
+        if (v.time.substring(0, 8) == date) ary.push(v);
+      });
+      if (ary.length == 0) return;
+      setSchedulesDisplay("block");
+    } else {
+      setSchedulesDisplay("none");
+    }
+  }, [date, schedulesDisplay]);
 
   const onClickNav = useCallback((v) => {
     setContent(v);
@@ -79,17 +93,38 @@ const Product = ({ match }) => {
     [personnel]
   );
 
-  const test = useCallback(() => {
+  const onClickSchedule = useCallback((v) => {
+    setSelectedSchedule(v);
+    setSchedulesDisplay("none");
+  }, []);
+
+  const onClickApply = useCallback(() => {
+    history.push({
+      pathname: "/reservation",
+      state: { classData, schedule: selectedSchedule, personnel },
+    });
     console.log(selectedSchedule);
-  }, [selectedSchedule]);
+    console.log(personnel);
+    console.log(classData);
+  }, [classData, selectedSchedule, personnel]);
 
   const clickedSchedule = scheduleArray.map((v) => {
     if (v.time.substring(0, 8) == date) {
       return (
-        <option value={v.id}>
-          {v.time.substring(8, 12)} ~ {v.time.substring(12, 16)} ---
-          {v.reserved} / {v.personnel}
-        </option>
+        <div className="schedule" onClick={() => onClickSchedule(v)}>
+          {v.time.substring(8, 10) +
+            ":" +
+            v.time.substring(10, 12) +
+            " ~ " +
+            v.time.substring(12, 14) +
+            ":" +
+            v.time.substring(14, 16) +
+            " [" +
+            v.reserved +
+            " / " +
+            v.personnel +
+            "]"}
+        </div>
       );
     }
   });
@@ -107,18 +142,47 @@ const Product = ({ match }) => {
           />
           <div className="title">{classData.name}</div>
         </div>
+
         <div className="reserve">
           <div className="title">클래스일정</div>
+
           <div className="calendar">
             <Calendar
               scheduleArray={scheduleArray}
               onChangeDate={onChangeDate}
             />
           </div>
-          <select onChange={selectSchedule} defaultValue={0}>
-            <option value="0">날짜선택</option>
-            {clickedSchedule}
-          </select>
+
+          <div className="scheduleContainer">
+            <div className="title_schedule" onClick={toggleSchedules}>
+              {schedulesDisplay == "none" ? "일정 선택" : "닫기"}
+            </div>
+            <div className="schedules" style={{ display: schedulesDisplay }}>
+              {clickedSchedule}
+            </div>
+            <div className="title_schedule">
+              {Object.keys(selectedSchedule).length != 0
+                ? selectedSchedule.time.substring(0, 4) +
+                  ". " +
+                  selectedSchedule.time.substring(4, 6) +
+                  ". " +
+                  selectedSchedule.time.substring(6, 8) +
+                  " " +
+                  selectedSchedule.time.substring(8, 10) +
+                  ":" +
+                  selectedSchedule.time.substring(10, 12) +
+                  " ~ " +
+                  selectedSchedule.time.substring(12, 14) +
+                  ":" +
+                  selectedSchedule.time.substring(14, 16) +
+                  " (" +
+                  selectedSchedule.reserved +
+                  " / " +
+                  selectedSchedule.personnel +
+                  ") 명"
+                : "일정을 선택해주세요"}
+            </div>
+          </div>
 
           <div className="number">
             <div className="selectNumber">
@@ -136,10 +200,11 @@ const Product = ({ match }) => {
                 +
               </div>
             </div>
-            <div onClick={test}>숫자다</div>
+            <div>{Number(classData.price) * personnel}원</div>
           </div>
-          <div className="submit">
-            <div>버튼</div>
+
+          <div className="applyButton" onClick={onClickApply}>
+            신청하기
           </div>
         </div>
       </Info>

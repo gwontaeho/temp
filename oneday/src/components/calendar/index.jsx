@@ -11,7 +11,7 @@ const Calendar = (props) => {
         : String(today.getMonth() + 1)
     ) +
     String(
-      today.getDate() + 1 < 10
+      today.getDate() < 10
         ? "0" + String(today.getDate())
         : String(today.getDate())
     );
@@ -20,6 +20,7 @@ const Calendar = (props) => {
   const [empty, setEmpty] = useState([]);
   const [body, setBody] = useState([]);
   const [scheduleDateArray, setScheduleDateArray] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     createBody();
@@ -68,6 +69,7 @@ const Calendar = (props) => {
   const onClickDate = useCallback((e) => {
     const thisDate = e.target.getAttribute("value");
     props.onChangeDate(thisDate);
+    setSelectedDate(thisDate);
     console.log(thisDate);
   }, []);
 
@@ -82,7 +84,8 @@ const Calendar = (props) => {
           className={
             "date" +
             (scheduleDateArray.includes(v) ? " includes" : "") +
-            (v === todayYmd ? " today" : "")
+            (v === todayYmd ? " today" : "") +
+            (selectedDate == v ? " selected" : "")
           }
           value={v}
           onClick={onClickDate}

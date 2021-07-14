@@ -27,6 +27,7 @@ router.post("/seller", async (req, res, next) => {
     await Seller.create({
       id: req.body.id,
       password: req.body.password,
+      company: req.body.company,
       name: req.body.name,
       phone: req.body.phone,
       address: req.body.address,

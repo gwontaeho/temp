@@ -14,9 +14,7 @@ export const Container = styled.div`
     height: 100%;
     text-align: center;
     line-height: 48px;
-    background-color: lightblue;
-    border-radius: 6px;
-    color: white;
+    border: 1px solid black;
   }
 
   .classes {

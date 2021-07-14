@@ -9,6 +9,7 @@ const Main = loadable(() => import("../pages/main"));
 const Info = loadable(() => import("../pages/info"));
 const Category = loadable(() => import("../pages/category"));
 const Product = loadable(() => import("../pages/product"));
+const Reservation = loadable(() => import("../pages/reservation"));
 
 const Layout = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -66,6 +67,7 @@ const Layout = () => {
         <Route path="/info" component={Info} />
         <Route path="/category/:category" component={Category} />
         <Route path="/product/:product" component={Product} />
+        <Route path="/reservation" component={Reservation} />
       </Switch>
     </Container>
   );

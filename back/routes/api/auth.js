@@ -13,8 +13,7 @@ router.post("/user", verifyToken, async (req, res, next) => {
     const findUser = await User.findOne({
       where: { id: req.decoded.id },
     });
-    console.log(findUser);
-    return res.status(200).send("success");
+    return res.status(200).send(findUser.dataValues);
   } catch (error) {
     return res.status(401).send("error");
   }

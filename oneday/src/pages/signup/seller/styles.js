@@ -11,9 +11,10 @@ export const Container = styled.div`
     flex-direction: column;
     margin-bottom: 24px;
     div {
-      height: 32px;
+      height: 48px;
       display: flex;
       align-items: center;
+      padding-left: 12px;
     }
   }
   & input {
@@ -25,7 +26,7 @@ export const Container = styled.div`
   & select {
     height: 62px;
     padding-left: 6px;
-    border: 1px solid black;
+    border: 1px solid gray;
     outline: none;
   }
 `;
@@ -43,6 +44,6 @@ export const Buttons = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid gray;
   }
 `;

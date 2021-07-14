@@ -11,38 +11,19 @@ Modal.setAppElement("#root");
 const Seller = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
+  const regId = /^[A-Za-z]{1}[A-Za-z0-9]{8,12}$/;
+
   const [isOpend, setIsOpend] = useState(false);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [company, setCompany] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [extraAd, setExtraAd] = useState("");
-  const [reg, setReg] = useState("");
   const [category, setCategory] = useState("etc");
-
-  const onClickSignUp = useCallback(
-    async (e) => {
-      e.preventDefault();
-      try {
-        const response = await axios.post("/api/signup/seller", {
-          id,
-          password,
-          name,
-          phone,
-          address: address + " " + extraAd,
-          category,
-          reg,
-        });
-        console.log(response.data);
-        return history.push("/");
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [id, password, passwordCheck, name, phone, address, extraAd, category, reg]
-  );
+  const [reg, setReg] = useState("");
 
   const onChangeId = useCallback((e) => {
     setId(e.target.value);
@@ -54,6 +35,10 @@ const Seller = ({ history }) => {
 
   const onChangePasswordCheck = useCallback((e) => {
     setPasswordCheck(e.target.value);
+  }, []);
+
+  const onChangeCompany = useCallback((e) => {
+    setCompany(e.target.value);
   }, []);
 
   const onChangeName = useCallback((e) => {
@@ -103,6 +88,29 @@ const Seller = ({ history }) => {
     closeModal();
   }, []);
 
+  const onClickSignUp = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post("/api/signup/seller", {
+          id,
+          password,
+          company,
+          name,
+          phone,
+          address: address + " " + extraAd,
+          category,
+          reg,
+        });
+        console.log(response.data);
+        return history.push("/");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [id, password, company, name, phone, address, extraAd, category, reg]
+  );
+
   const onClickCancel = useCallback(() => {
     return history.push("/");
   }, []);
@@ -121,6 +129,8 @@ const Seller = ({ history }) => {
           maxLength="12"
           autoFocus
           onChange={onChangeId}
+          placeholder="영문과 숫자를 포함한 8~12자리"
+          style={{ borderColor: regId.test(id) ? "green" : "lightgray" }}
         />
       </label>
       <label>
@@ -130,6 +140,7 @@ const Seller = ({ history }) => {
           type="password"
           maxLength="24"
           onChange={onChangePassword}
+          placeholder="24자 이내"
         />
       </label>
       <label>
@@ -139,6 +150,15 @@ const Seller = ({ history }) => {
           type="password"
           maxLength="24"
           onChange={onChangePasswordCheck}
+        />
+      </label>
+      <label>
+        <div>업체명</div>
+        <input
+          value={company}
+          type="text"
+          maxLength="12"
+          onChange={onChangeCompany}
         />
       </label>
       <label>
