@@ -2,10 +2,12 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const router = express.Router();
+const fs = require("fs");
 
 const { verifyToken } = require("../../middlewares/jwt");
 
 const Class = require("../../models").Class;
+const Reservation = require("../../models").Reservation;
 
 const index = async (req, res, next) => {
   console.log(req.decoded.id);
@@ -22,6 +24,12 @@ const index = async (req, res, next) => {
   } catch (error) {
     return res.status(401).send("error");
   }
+};
+
+const modifyIndex = (req, res, next) => {
+  console.log(req.headers.nextindex);
+  req.nextIndex = req.headers.nextindex;
+  next();
 };
 
 const upload = multer({
@@ -98,18 +106,61 @@ router.post(
   }
 );
 
-router.post("/modify", verifyToken, async (req, res, next) => {
-  console.log(req.body);
+router.post(
+  "/modify",
+  verifyToken,
+  modifyIndex,
+  upload.single("img"),
+  async (req, res, next) => {
+    console.log(req.body);
+    if (req.body.imgCheck === "0") {
+      try {
+        await Class.update(
+          {
+            name: req.body.name,
+            price: req.body.price,
+            time: req.body.time,
+            address: req.body.address,
+            detail: req.body.detail,
+          },
+          { where: { id: req.body.classId } }
+        );
+        return res.status(200).send("success");
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (req.body.imgCheck === "1") {
+      fs.unlink(req.body.orgImg, (error) => {
+        if (error) console.log(error);
+        else console.log("deleted");
+      });
+
+      try {
+        await Class.update(
+          {
+            img: req.file ? req.file.path : "",
+            name: req.body.name,
+            price: req.body.price,
+            time: req.body.time,
+            address: req.body.address,
+            detail: req.body.detail,
+          },
+          { where: { id: req.body.classId } }
+        );
+        return res.status(200).send("success");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+);
+
+router.post("/popular", async (req, res, next) => {
   try {
-    await Class.update(
-      {
-        class: req.body.newName,
-        price: req.body.newPrice,
-        time: req.body.newTime,
-      },
-      { where: { id: req.body.classId } }
-    );
-    return res.status(200).send("CLASS INFO MODIFY SUCCESS");
+    const findClass = await Class.findAndCountAll({
+      include: [{ model: Reservation, required: true }],
+    });
+    return res.status(200).json(findClass);
   } catch (error) {
     return res.status(401).send("error");
   }

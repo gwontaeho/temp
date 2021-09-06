@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
@@ -6,6 +6,7 @@ import Modal from "react-modal";
 
 import {
   Container,
+  Header,
   Buttons,
   Infos,
   Img,
@@ -72,7 +73,7 @@ const Create = ({ history }) => {
 
   const onClickAdd = useCallback(() => {
     const detail = document.getElementsByClassName("detail");
-    if (detail.length == 5) return;
+    if (detail.length === 5) return;
     const details = document.getElementsByClassName("details")[0];
     const newDiv = document.createElement("div");
     const header = document.createElement("div");
@@ -170,7 +171,7 @@ const Create = ({ history }) => {
     addressButton1.classList.remove("selected");
     addressButton2.classList.remove("selected");
     e.target.classList.add("selected");
-    if (value == 1) {
+    if (value === "1") {
       inputs.classList.add("open");
       setUseRegisteredAddress(false);
     } else {
@@ -181,6 +182,7 @@ const Create = ({ history }) => {
 
   return (
     <Container>
+      <Header>클래스 생성</Header>
       <Buttons>
         <a onClick={onSubmit}>등록</a>
         <Link to="/info/classes">취소</Link>

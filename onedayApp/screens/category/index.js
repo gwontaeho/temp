@@ -11,17 +11,20 @@ const Category = ({route, navigation}) => {
 
   const [products, setProducts] = useState([]);
 
-  useEffect(async () => {
-    try {
-      const response = await axios.post(
-        'http://172.30.1.27:3005/api/category',
-        {},
-      );
-      console.log(response.data);
-      setProducts(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          'http://172.30.1.27:3005/api/category',
+          {},
+        );
+        console.log(response.data);
+        setProducts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
     console.log(categoryName);
   }, []);
 

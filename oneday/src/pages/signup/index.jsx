@@ -1,3 +1,4 @@
+import React from "react";
 import { useCookies } from "react-cookie";
 import loadable from "@loadable/component";
 import { Redirect, Link, Switch, Route } from "react-router-dom";

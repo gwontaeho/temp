@@ -14,7 +14,6 @@ export const Container = styled.div`
     height: 100%;
     text-align: center;
     line-height: 48px;
-    border: 1px solid black;
   }
 
   .classes {
@@ -33,4 +32,14 @@ export const Container = styled.div`
       object-fit: cover;
     }
   }
+`;
+
+export const Header = styled.div`
+  width: calc(100% - 24px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 24px;
 `;

@@ -15,11 +15,11 @@ export const Header = styled.div`
 `;
 
 export const Nav = styled.div`
-  width: calc(100% -24px);
+  width: 100%;
   height: 72px;
   display: flex;
   align-items: center;
-  padding-left: 24px;
+  justify-content: flex-end;
 
   div {
     margin-right: 24px;

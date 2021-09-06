@@ -1,50 +1,60 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 
-import { Container, Header, List, Item } from "./styles";
+import { Container, Header, Nav, List, Item } from "./styles";
 
 const Reservation = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [ing, setIng] = useState([]);
   const [past, setPast] = useState([]);
+  const [request, setRequest] = useState([]);
   const [canceled, setCanceled] = useState([]);
   const [selected, setSelected] = useState([]);
 
-  useEffect(async () => {
-    try {
-      const response = await axios.post(
-        "/api/reservation/history/seller",
-        {},
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
-      let newIng = [];
-      let newPast = [];
-      let newCancled = [];
-      response.data.map((v) => {
-        if (v.state === 0) {
-          newIng.push(v);
-        } else if (v.state === 1) {
-          newPast.push(v);
-        } else if (v.state === 2) {
-          newCancled.push(v);
-        }
-      });
-      setIng(newIng);
-      setPast(newPast);
-      setCanceled(newCancled);
-      setSelected(newIng);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "/api/reservation/history/seller",
+          {},
+          {
+            headers: {
+              token: cookies.token,
+            },
+          }
+        );
+        let newIng = [];
+        let newPast = [];
+        let newRequest = [];
+        let newCancled = [];
+        response.data.map((v) => {
+          if (v.state === 0) {
+            newIng.push(v);
+          } else if (v.state === 1) {
+            newPast.push(v);
+          } else if (v.state === 2) {
+            newRequest.push(v);
+          } else if (v.state === 3) {
+            newCancled.push(v);
+          }
+        });
+        setIng(newIng);
+        setPast(newPast);
+        setRequest(newRequest);
+        setCanceled(newCancled);
+        setSelected(newIng);
 
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const onClickState = useCallback(
@@ -54,10 +64,12 @@ const Reservation = () => {
       } else if (v === 1) {
         setSelected(past);
       } else if (v === 2) {
+        setSelected(request);
+      } else if (v === 3) {
         setSelected(canceled);
       }
     },
-    [ing, past, canceled]
+    [ing, past, request, canceled]
   );
 
   const onClickItem = useCallback((v) => {
@@ -72,23 +84,25 @@ const Reservation = () => {
       ". " +
       new Date(v.createdAt).getDate();
     return (
-      <Item onClick={() => onClickItem(v)}>
-        <div>
-          <img src={v.class.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
-        </div>
+      <Link to={`/info/reservations/${v.id}`}>
+        <Item onClick={() => onClickItem(v)}>
+          <div>
+            <img
+              src={v.class.img.replace(/\\/gi, "/").replace(/public/gi, "")}
+            />
+          </div>
 
-        <div>{v.class.name}</div>
-        <div>{ymd}</div>
-        <div>
-          {v.state === 0 ? "예약 중" : v.state === 1 ? "수강 완료" : "취소"}
-        </div>
-      </Item>
+          <div>{v.class.name}</div>
+          <div>{ymd}</div>
+        </Item>
+      </Link>
     );
   });
 
   return (
     <Container>
-      <Header>
+      <Header>예약 관리</Header>
+      <Nav>
         <div onClick={() => onClickState(0)}>
           <div>예약 중</div>
           <div>{ing.length}</div>
@@ -98,10 +112,14 @@ const Reservation = () => {
           <div>{past.length}</div>
         </div>
         <div onClick={() => onClickState(2)}>
+          <div>취소 요청</div>
+          <div>{request.length}</div>
+        </div>
+        <div onClick={() => onClickState(3)}>
           <div>취소</div>
           <div>{canceled.length}</div>
         </div>
-      </Header>
+      </Nav>
       <List>{selectedList}</List>
     </Container>
   );

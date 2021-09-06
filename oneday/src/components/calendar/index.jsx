@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Container, Head, Body } from "./styles";
 
 const Calendar = (props) => {
@@ -79,20 +79,20 @@ const Calendar = (props) => {
 
   const bodyList = body.map((v) => {
     return (
-      <>
+      <React.Fragment>
         <div
           className={
             "date" +
             (scheduleDateArray.includes(v) ? " includes" : "") +
             (v === todayYmd ? " today" : "") +
-            (selectedDate == v ? " selected" : "")
+            (selectedDate === v ? " selected" : "")
           }
           value={v}
-          onClick={onClickDate}
+          onClick={v < todayYmd && props.type === 0 ? null : onClickDate}
         >
           {v.substring(6, 8)}
         </div>
-      </>
+      </React.Fragment>
     );
   });
 
@@ -100,7 +100,8 @@ const Calendar = (props) => {
     <Container>
       <Head>
         {String(ym.getFullYear()) + String(ym.getMonth()) <=
-        String(today.getFullYear()) + String(today.getMonth()) ? (
+          String(today.getFullYear()) + String(today.getMonth()) &&
+        props.type === 0 ? (
           <div></div>
         ) : (
           <div onClick={onClickPrev}>이전</div>

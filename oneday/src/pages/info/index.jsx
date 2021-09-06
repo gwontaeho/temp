@@ -1,26 +1,28 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import loadable from "@loadable/component";
 import axios from "axios";
+import loadable from "@loadable/component";
 import { Container, Nav } from "./styles";
 
-const Modify = loadable(() => import("./common/modify"));
+const MyInfo = loadable(() => import("./common/my_info"));
+const ModifyInfo = loadable(() => import("./common/modify_info"));
 const History = loadable(() => import("./user/history"));
 const HistoryDetail = loadable(() => import("./user/history_detail"));
-const Business = loadable(() => import("./seller/business"));
 const Classes = loadable(() => import("./seller/classes"));
-const Reservations = loadable(() => import("./seller/reservations"));
-const Create = loadable(() => import("./seller/create"));
 const Class = loadable(() => import("./seller/class"));
+const ModifyClass = loadable(() => import("./seller/modify_class"));
+const Create = loadable(() => import("./seller/create"));
+const Reservations = loadable(() => import("./seller/reservations"));
+const ReservationDetail = loadable(() => import("./seller/reservation_detail"));
+const Schedules = loadable(() => import("./seller/schedules"));
+const ScheduleDetail = loadable(() => import("./seller/schedule_detail"));
 
 const Info = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [type, setType] = useState(0);
 
   useEffect(() => {
-    console.log(cookies);
-
     const fetchData = async () => {
       try {
         const response = await axios.post(
@@ -49,30 +51,41 @@ const Info = () => {
     <Container>
       <Nav>
         <Link to="/info">내 정보</Link>
-        <Link to="/info/modify">회원정보수정</Link>
         {type === 1 ? (
-          <>
+          <React.Fragment>
             <Link to="/info/history">예약 내역</Link>
-          </>
+          </React.Fragment>
         ) : null}
         {type === 2 ? (
-          <>
-            <Link to="/info/business">업체관리</Link>
-            <Link to="/info/classes">클래스관리</Link>
-            <Link to="/info/reservations">예약관리</Link>
-          </>
+          <React.Fragment>
+            <Link to="/info/classes">클래스 관리</Link>
+            <Link to="/info/schedules">일정 관리</Link>
+            <Link to="/info/reservations">예약 관리</Link>
+          </React.Fragment>
         ) : null}
       </Nav>
       <div className="routes">
         <Switch>
-          <Route path="/info/modify" component={Modify} />
+          <Route exact path="/info" render={() => <MyInfo type={type} />} />
+          <Route exact path="/info/modify" component={ModifyInfo} />
           <Route exact path="/info/history" component={History} />
-          <Route path="/info/history/:id" component={HistoryDetail} />
-          <Route path="/info/business" component={Business} />
-          <Route path="/info/classes" component={Classes} />
-          <Route path="/info/reservations" component={Reservations} />
-          <Route path="/info/create" component={Create} />
-          <Route path="/info/class/:index" component={Class} />
+          <Route exact path="/info/history/:id" component={HistoryDetail} />
+          <Route exact path="/info/classes" component={Classes} />
+          <Route exact path="/info/class/:index" component={Class} />
+          <Route
+            exact
+            path="/info/class/modify/:index"
+            component={ModifyClass}
+          />
+          <Route exact path="/info/create" component={Create} />
+          <Route exact path="/info/schedules" component={Schedules} />
+          <Route exact path="/info/schedules/:id" component={ScheduleDetail} />
+          <Route exact path="/info/reservations" component={Reservations} />
+          <Route
+            exact
+            path="/info/reservations/:id"
+            component={ReservationDetail}
+          />
         </Switch>
       </div>
     </Container>

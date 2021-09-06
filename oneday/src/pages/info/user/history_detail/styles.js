@@ -5,28 +5,68 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-  width: calc(100% - 24px);
+  width: calc(100% - 48px);
   height: 72px;
   display: flex;
   align-items: center;
   padding-left: 24px;
+  padding-right: 24px;
   border-bottom: 1px solid lightgray;
   margin-bottom: 24px;
+  justify-content: space-between;
+
+  .header-btns {
+    display: flex;
+    > div {
+      margin-left: 24px;
+      cursor: pointer;
+    }
+  }
 `;
 
-export const ClassInfo = styled.div`
+export const Review = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  textarea {
+    width: 80%;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    resize: none;
+    border: 1px solid lightgray;
+    padding: 12px;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
+`;
+
+export const Detail = styled.div`
   display: flex;
 
-  img {
-    width: 240px;
-    height: 240px;
-    object-fit: cover;
+  .title {
+    width: 120px;
+  }
+
+  .btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 120px;
+
+    > div {
+      cursor: pointer;
+    }
   }
 
   > div {
-    border: 1px solid black;
-    flex: 1;
     display: flex;
-    align-items: center;
-  }
+    flex-direction: column;
+    > div {
+      height: 36px;
+      display: flex;
+      align-items: center;
+    }
 `;

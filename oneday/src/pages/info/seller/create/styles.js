@@ -4,6 +4,16 @@ export const Container = styled.div`
   width: 100%;
 `;
 
+export const Header = styled.div`
+  width: calc(100% - 24px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 24px;
+`;
+
 export const Buttons = styled.div`
   height: 72px;
   width: calc(100% - 24px);
@@ -106,15 +116,15 @@ export const Address = styled.div`
     display: none;
     flex-direction: column;
   }
+  .open {
+    display: flex;
+  }
   input {
     width: 360px;
     height: 48px;
     border: 0;
     border-bottom: 1px solid gray;
     margin-bottom: 24px;
-  }
-  .open {
-    display: flex;
   }
 `;
 

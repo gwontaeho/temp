@@ -2,12 +2,16 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   width: 100%;
+`;
 
-  .title {
-    line-height: 72px;
-    height: 72px;
-    border-bottom: 1px solid lightgray;
-  }
+export const Header = styled.div`
+  width: calc(100% - 24px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 24px;
 `;
 
 export const Info = styled.div`
@@ -16,55 +20,50 @@ export const Info = styled.div`
 
   img {
     width: 360px;
-    height: 240px;
+    height: 360px;
     object-fit: cover;
-    border-radius: 12px;
+    margin-right: 24px;
   }
 
-  & > div {
-    padding-left: 24px;
-    flex: 1;
+  > div {
     display: flex;
     flex-direction: column;
+    justify-content: center;
   }
 
-  .title {
-    margin-bottom: 24px;
-  }
-
-  .text {
-    display: flex;
-    align-items: center;
-    height: 36px;
-
-    & div {
-      width: 72px;
+  .info {
+    > div {
+      display: flex;
+      > div {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .title {
+      height: 60px;
+      width: 120px;
+    }
+    .address {
+      flex: 1;
     }
   }
 
   .btn {
     display: flex;
     align-items: center;
-    height: 36px;
+    height: 60px;
     div {
       cursor: pointer;
       color: gray;
-      margin-right: 12px;
     }
   }
 `;
 
 export const Schedule = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100%;
+  height: 360px;
   margin-bottom: 24px;
-
-  .scheduleContainer {
-    display: flex;
-    height: 360px;
-    margin-bottom: 24px;
-  }
 
   .calendar {
     display: flex;
@@ -86,21 +85,32 @@ export const Schedule = styled.div`
 
   .clickedDate {
     width: 100%;
-    height: 36px;
+    height: 60px;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    > div:not(:last-child) {
+      padding-right: 36px;
+    }
   }
 
   .schedule {
     width: 100%;
     display: flex;
-    height: 36px;
+    height: 60px;
     align-items: center;
     justify-content: center;
     background-color: lightgray;
     margin-bottom: 2px;
+
+    .item {
+      display: flex;
+      > div {
+        padding-right: 36px;
+      }
+    }
   }
 `;
 
@@ -108,18 +118,21 @@ export const AddSchedule = styled.div`
   display: flex;
   align-items: center;
   height: 72px;
-  border: 1px solid black;
-  width: 100%;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  width: calc(100% - 24px);
+  padding-left: 24px;
+  margin-bottom: 24px;
+
+  > div {
+    padding-right: 24px;
+  }
 
   input,
   select {
     width: 72px;
     height: 36px;
-  }
-
-  button {
-    height: 36px;
-    border: 0;
+    border: 1px solid lightgray;
   }
 `;
 

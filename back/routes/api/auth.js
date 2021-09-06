@@ -19,6 +19,35 @@ router.post("/user", verifyToken, async (req, res, next) => {
   }
 });
 
+router.post("/user/modify", verifyToken, async (req, res, next) => {
+  try {
+    await User.update(
+      { phone: req.body.phone },
+      { where: { id: req.decoded.id } }
+    );
+    return res.status(200).send("success");
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
+router.post("/seller/modify", verifyToken, async (req, res, next) => {
+  try {
+    await Seller.update(
+      {
+        phone: req.body.phone,
+        company: req.body.company,
+        address: req.body.address,
+        category: req.body.category,
+      },
+      { where: { id: req.decoded.id } }
+    );
+    return res.status(200).send("success");
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
 router.post("/seller", verifyToken, async (req, res, next) => {
   try {
     const findSeller = await Seller.findOne({

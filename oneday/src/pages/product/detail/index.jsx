@@ -1,6 +1,5 @@
+import React, { useCallback, useEffect, useState } from "react";
 import { Container } from "./styles";
-import { useCallback, useEffect, useState } from "react";
-import { Link, Redirect, Route, Switch } from "react-router-dom";
 
 import axios from "axios";
 

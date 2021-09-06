@@ -1,32 +1,36 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 import axios from "axios";
-import { Container, Class } from "./styles";
+import { Container, Header } from "./styles";
 
 const Classes = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [classes, setClasses] = useState([]);
 
-  useEffect(async () => {
-    try {
-      const response = await axios.post(
-        "/api/classes",
-        {},
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "/api/classes",
+          {},
+          {
+            headers: {
+              token: cookies.token,
+            },
+          }
+        );
 
-      let newClasses = [...response.data];
-      setClasses(newClasses);
-    } catch (error) {
-      console.log(error);
-    }
+        let newClasses = [...response.data];
+        setClasses(newClasses);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const classList = classes.map((v) => {
@@ -40,6 +44,7 @@ const Classes = () => {
 
   return (
     <Container>
+      <Header>클래스 관리</Header>
       <div className="btns">
         <Link to="/info/create">클래스 생성</Link>
       </div>

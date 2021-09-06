@@ -1,7 +1,7 @@
-import { Container, Header, Info, UserInfo, Apply } from "./styles";
-import { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import React, { useCallback, useEffect, useState } from "react";
 import { Redirect } from "react-router";
+import { Container, Header, Info, UserInfo, Apply } from "./styles";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 const Reservation = ({ location, history }) => {
@@ -14,24 +14,28 @@ const Reservation = ({ location, history }) => {
   const [reservationName, setReservationName] = useState("");
   const [reservationPhone, setReservationPhone] = useState("");
 
-  useEffect(async () => {
-    try {
-      const response = await axios.post(
-        "/api/auth/user",
-        {},
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
-      console.log(response.data);
-      setUser(response.data);
-      setReservationName(response.data.name);
-      setReservationPhone(response.data.phone);
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "/api/auth/user",
+          {},
+          {
+            headers: {
+              token: cookies.token,
+            },
+          }
+        );
+        console.log(response.data);
+        setUser(response.data);
+        setReservationName(response.data.name);
+        setReservationPhone(response.data.phone);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -49,17 +53,11 @@ const Reservation = ({ location, history }) => {
   }, []);
 
   const onClickApply = useCallback(async () => {
-    console.log(classData);
     try {
       const response = await axios.post(
-        "/api/reservation",
+        "/api/schedule/detail",
         {
-          classId: classData.id,
           scheduleId: schedule.id,
-          sellerId: classData.sellerId,
-          personnel,
-          name: reservationName,
-          phone: reservationPhone,
         },
         {
           headers: {
@@ -67,8 +65,36 @@ const Reservation = ({ location, history }) => {
           },
         }
       );
-      if (response.status === 200) {
-        window.alert("예약 되었습니다.");
+      if (
+        response.data.personnel - response.data.reserved - personnel >= 0 &&
+        response.data.state === 0
+      ) {
+        try {
+          const response2 = await axios.post(
+            "/api/reservation/add",
+            {
+              classId: classData.id,
+              scheduleId: schedule.id,
+              sellerId: classData.sellerId,
+              personnel,
+              name: reservationName,
+              phone: reservationPhone,
+            },
+            {
+              headers: {
+                token: cookies.token,
+              },
+            }
+          );
+          if (response2.status === 200) {
+            window.alert("예약 되었습니다.");
+            history.replace("/");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        window.alert("예약에 실패하였습니다.");
         history.replace("/");
       }
     } catch (error) {

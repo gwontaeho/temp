@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -11,6 +11,7 @@ const History = () => {
 
   const [ing, setIng] = useState([]);
   const [past, setPast] = useState([]);
+  const [request, setRequest] = useState([]);
   const [canceled, setCanceled] = useState([]);
   const [selected, setSelected] = useState([]);
 
@@ -28,6 +29,7 @@ const History = () => {
         );
         let newIng = [];
         let newPast = [];
+        let newRequest = [];
         let newCancled = [];
         response.data.map((v) => {
           if (v.state === 0) {
@@ -35,11 +37,14 @@ const History = () => {
           } else if (v.state === 1) {
             newPast.push(v);
           } else if (v.state === 2) {
+            newRequest.push(v);
+          } else if (v.state === 3) {
             newCancled.push(v);
           }
         });
         setIng(newIng);
         setPast(newPast);
+        setRequest(newRequest);
         setCanceled(newCancled);
         setSelected(newIng);
 
@@ -58,10 +63,12 @@ const History = () => {
       } else if (v === 1) {
         setSelected(past);
       } else if (v === 2) {
+        setSelected(request);
+      } else if (v === 3) {
         setSelected(canceled);
       }
     },
-    [ing, past, canceled]
+    [ing, past, request, canceled]
   );
 
   const onClickItem = useCallback((v) => {
@@ -106,6 +113,10 @@ const History = () => {
           <div>{past.length}</div>
         </div>
         <div onClick={() => onClickState(2)}>
+          <div>취소 요청</div>
+          <div>{request.length}</div>
+        </div>
+        <div onClick={() => onClickState(3)}>
           <div>취소</div>
           <div>{canceled.length}</div>
         </div>
