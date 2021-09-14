@@ -256,7 +256,11 @@ const Product = ({ match, history }) => {
 
       <div className="routes">
         {content === "detail" ? (
-          <Detail detailArray={classData.detail} />
+          <Detail
+            className={classData.name}
+            detailArray={classData.detail}
+            address={classData.address}
+          />
         ) : content === "review" ? (
           <Review classId={classData.id} />
         ) : (

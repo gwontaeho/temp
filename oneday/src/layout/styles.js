@@ -41,10 +41,13 @@ export const Nav = styled.div`
   align-items: center;
   border-bottom: 1px solid lightgray;
 
-  & div {
+  div {
     padding-left: 24px;
   }
-  & a {
+  a {
     margin-right: 24px;
+  }
+  a:hover {
+    color: gray;
   }
 `;

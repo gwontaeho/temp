@@ -1,7 +1,17 @@
 import styled from "@emotion/styled";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export const Container = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .progress {
+    margin-top: 120px;
+  }
 `;
 
 export const Header = styled.div`
@@ -17,8 +27,8 @@ export const Header = styled.div`
 export const Ad = styled.div`
   position: relative;
   top: 0;
-  left: calc((100vw - 1200px) / -2);
-  width: 100vw;
+
+  width: 100%;
   height: 240px;
   border: 1px solid black;
 `;
@@ -29,38 +39,43 @@ export const Contents = styled.div`
   flex-direction: column;
 `;
 
-export const ContentsBox = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 24px;
-  padding-bottom: 24px;
+export const StyledSlider = styled(Slider)`
+  .slick-list {
+    width: 100%;
+  }
 
   .class {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: calc(100% -24px);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    transition: 0.2s;
-    border-radius: 12px;
+    position: relative;
+
+    .address {
+      position: absolute;
+      bottom: 72px;
+      color: white;
+    }
 
     div {
-      width: calc(100% - 48px);
-      height: 60px;
-      line-height: 60px;
-      padding-left: 48px;
+      width: 100%;
+      padding-left: 12px;
+      height: 36px;
+      display: flex;
+      align-items: center;
     }
 
     img {
       width: 100%;
-      height: 180px;
+      height: 240px;
       object-fit: cover;
+      border-radius: 12px;
+      transition: 0.2s;
     }
-  }
-
-  .class:hover {
-    opacity: 0.8;
-    transition: 0.2s;
+    img:hover {
+      opacity: 0.8;
+      transition: 0.2s;
+    }
   }
 `;

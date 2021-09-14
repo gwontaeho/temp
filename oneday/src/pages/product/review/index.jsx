@@ -35,6 +35,7 @@ const Review = (props) => {
             " / " +
             new Date(v.createdAt).getDate()}
         </div>
+        <div>{v.userId}</div>
       </Item>
     );
   });

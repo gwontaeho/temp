@@ -229,7 +229,13 @@ const Class = ({ match }) => {
                 </div>
                 <div>
                   <div className="title">주소</div>
-                  <div className="address">{data.address}</div>
+                  <div className="address">
+                    {data.address === "&"
+                      ? null
+                      : data.address.split("&")[1] +
+                        " " +
+                        data.address.split("&")[2]}
+                  </div>
                 </div>
               </div>
               <div className="btn">

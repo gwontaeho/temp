@@ -16,6 +16,7 @@ export const Info = styled.div`
 
   .info {
     display: flex;
+    padding: 24px;
     flex-direction: column;
     justify-content: center;
 
@@ -122,7 +123,7 @@ export const Nav = styled.div`
   display: flex;
   justify-content: center;
   height: 72px;
-  border: 1px solid black;
+  border: 1px solid lightgray;
 
   div {
     display: flex;

@@ -17,4 +17,9 @@ export const Container = styled.div`
     border: 1px solid gray;
     font-size: 2rem;
   }
+
+  #map {
+    width: 50%;
+    height: 480px;
+  }
 `;

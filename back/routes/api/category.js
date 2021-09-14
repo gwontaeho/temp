@@ -1,35 +1,45 @@
 const express = require("express");
 const router = express.Router();
-const { sequelize } = require("../../models");
+const { sequelize, Seller } = require("../../models");
+const { Op } = require("sequelize");
 
 const Class = require("../../models").Class;
-const Reservation = require("../../models").Reservation;
 const Review = require("../../models").Review;
 
-router.post("/all", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
+  console.log(req.body);
   try {
     const findClass = await Class.findAll({
       include: [
         {
           model: Review,
+          attributes: [
+            "classId",
+            [
+              sequelize.fn(
+                "round",
+                sequelize.fn("avg", sequelize.col("rating")),
+                1
+              ),
+              "rating",
+            ],
+          ],
         },
       ],
-      // attributes: {
-      //   include: [
-      //     [
-      //       sequelize.fn(
-      //         "round",
-      //         sequelize.fn("avg", sequelize.col("reviews.rating")),
-      //         1
-      //       ),
-      //       "rating",
-      //     ],
-
-      //   ],
-      // },
-      // group: "id",
+      where: {
+        category:
+          req.body.category === "all" ? { [Op.ne]: null } : req.body.category,
+      },
+      group: ["id"],
+      order:
+        req.body.sort === "rating"
+          ? [["reviews", "rating", "DESC"]]
+          : req.body.sort === "sale"
+          ? [["sold", "DESC"]]
+          : req.body.sort === "lowPrice"
+          ? [["price", "ASC"]]
+          : [["price", "DESC"]],
     });
-    console.log(findClass);
     return res.status(200).json(findClass);
   } catch (error) {
     return res.status(401).send("error");

@@ -94,7 +94,18 @@ const History = () => {
           <div>{v.class.name}</div>
           <div>{ymd}</div>
           <div>
-            {v.state === 0 ? "예약 중" : v.state === 1 ? "수강 완료" : "취소"}
+            {v.state === 0 ? (
+              "예약 중"
+            ) : v.state === 1 && v.review === null ? (
+              <>
+                <div>수강 완료</div>
+                <div>리뷰를 작성해 주세요</div>
+              </>
+            ) : v.state === 1 && v.review !== null ? (
+              "수강 완료"
+            ) : (
+              "취소"
+            )}
           </div>
         </Item>
       </Link>

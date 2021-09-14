@@ -19,8 +19,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         afterUpdate: async (schedule, options) => {
-          console.log("아아아");
-          console.log(options);
           try {
             const updateReservation = await sequelize.models.reservation.update(
               {
@@ -32,20 +30,16 @@ module.exports = (sequelize, DataTypes) => {
                 },
               }
             );
-            console.log("-;;;;;;;;;;;;;;;");
             try {
-              const updateClass = await sequelize.models.class.update(
+              await sequelize.models.class.update(
                 {
                   sold: sequelize.literal(`sold + ${updateReservation[0]}`),
                 },
                 { where: { id: schedule.dataValues.classId } }
               );
-              console.log("업데이트클래스");
-              console.log(updateClass);
             } catch (error) {
               console.log(error);
             }
-            console.log(updateReservation[0]);
           } catch (error) {
             console.log(error);
           }

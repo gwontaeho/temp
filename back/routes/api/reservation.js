@@ -42,6 +42,9 @@ router.post("/history", verifyToken, async (req, res, next) => {
           model: Class,
           attributes: ["name", "img"],
         },
+        {
+          model: Review,
+        },
       ],
       where: { userId: req.decoded.id },
       order: [["createdAt", "DESC"]],

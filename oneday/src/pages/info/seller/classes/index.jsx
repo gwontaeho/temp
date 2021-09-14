@@ -37,7 +37,7 @@ const Classes = () => {
     return (
       <Link to={`/info/class/${v.index}`}>
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
-        {v.name}
+        <div>{v.name}</div>
       </Link>
     );
   });

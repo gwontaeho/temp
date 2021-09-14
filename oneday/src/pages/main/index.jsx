@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { IoLocationOutline } from "react-icons/io5";
 
 import axios from "axios";
 
-import { Container, Header, Ad, Contents, ContentsBox } from "./styles";
+import { Container, Header, Ad, Contents, StyledSlider } from "./styles";
 
 const Main = () => {
-  const [popular, setPopular] = useState([]);
-  const [newly, setNewly] = useState([]);
+  const [popClass, setPopClass] = useState([]);
+  const [newClass, setNewClass] = useState([]);
+
+  let settings = {
+    infinite: true,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post("/api/classes/popular", {});
-
-        let popular0 = [...response.data.rows];
-        popular0.sort((a, b) => {
-          return b.reservations.length - a.reservations.length;
-        });
-        popular0 = popular0.slice(0, 5);
-        console.log(popular0);
-        let newly0 = [...response.data.rows];
-        newly0.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        newly0 = newly0.slice(0, 5);
-        console.log(newly0);
-
-        setPopular(popular0);
-        setNewly(newly0);
+        const response = await axios.post("/api/classes/main", {});
+        console.log(response.data);
+        setPopClass(response.data.popClass);
+        setNewClass(response.data.newClass);
       } catch (error) {
         console.log(error);
       }
@@ -36,23 +33,35 @@ const Main = () => {
     fetchData();
   }, []);
 
-  const popluarList = popular.map((v) => {
+  const popClassList = popClass.map((v) => {
     return (
-      <Link to={`/product/${v.id}`} key={v.id} className="class">
-        <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
-        <div>{v.name}</div>
-        <div>{v.price}</div>
-      </Link>
+      <div>
+        <Link to={`/product/${v.id}`} key={v.id} className="class">
+          <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
+          <div className="address">
+            <IoLocationOutline />
+            {v.address.split("&")[0]}
+          </div>
+          <div>{"[" + v.seller.category + "] " + v.name}</div>
+          <div>{v.price}원</div>
+        </Link>
+      </div>
     );
   });
 
-  const newlyList = newly.map((v) => {
+  const newClassList = newClass.map((v) => {
     return (
-      <Link to={`/product/${v.id}`} key={v.id} className="class">
-        <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
-        <div>{v.name}</div>
-        <div>{v.price}</div>
-      </Link>
+      <div>
+        <Link to={`/product/${v.id}`} key={v.id} className="class">
+          <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
+          <div className="address">
+            <IoLocationOutline />
+            {v.address.split("&")[0]}
+          </div>
+          <div>{"[" + v.seller.category + "] " + v.name}</div>
+          <div>{v.price}</div>
+        </Link>
+      </div>
     );
   });
 
@@ -60,14 +69,12 @@ const Main = () => {
     <Container>
       <Contents>
         <Header>인기 클래스</Header>
-        <ContentsBox>{popluarList}</ContentsBox>
+        <StyledSlider {...settings}>{popClassList}</StyledSlider>
       </Contents>
-
       <Contents>
         <Header>신규 클래스</Header>
-        <ContentsBox>{newlyList}</ContentsBox>
+        <StyledSlider {...settings}>{newClassList}</StyledSlider>
       </Contents>
-
       <Ad>123</Ad>
     </Container>
   );

@@ -37,15 +37,46 @@ export const Classes = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 24px;
 
-  img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-  }
-
-  div {
-    height: 32px;
+  .class {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    .address {
+      position: absolute;
+      color: white;
+      bottom: 72px;
+      width: calc(100% - 12px);
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 0 0 12px 12px;
+    }
+
+    .rating {
+      position: absolute;
+      bottom: 108px;
+      width: calc(100% - 12px);
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 12px 12px 0 0;
+    }
+
+    img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    img:hover {
+      opacity: 0.8;
+      transition: 0.2s;
+    }
+
+    div {
+      padding-left: 12px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+    }
   }
 `;

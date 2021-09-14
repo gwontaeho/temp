@@ -7,7 +7,7 @@ const fs = require("fs");
 const { verifyToken } = require("../../middlewares/jwt");
 
 const Class = require("../../models").Class;
-const Reservation = require("../../models").Reservation;
+const Seller = require("../../models").Seller;
 
 const index = async (req, res, next) => {
   console.log(req.decoded.id);
@@ -155,12 +155,27 @@ router.post(
   }
 );
 
-router.post("/popular", async (req, res, next) => {
+router.post("/main", async (req, res, next) => {
   try {
-    const findClass = await Class.findAndCountAll({
-      include: [{ model: Reservation, required: true }],
+    const popClass = await Class.findAll({
+      include: [
+        {
+          model: Seller,
+        },
+      ],
+      order: [["sold", "DESC"]],
+      limit: 10,
     });
-    return res.status(200).json(findClass);
+    const newClass = await Class.findAll({
+      include: [
+        {
+          model: Seller,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 10,
+    });
+    return res.status(200).json({ popClass, newClass });
   } catch (error) {
     return res.status(401).send("error");
   }

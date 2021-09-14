@@ -43,6 +43,12 @@ const Layout = () => {
       <Nav>
         <div>
           <Link to="/category/all">전체</Link>
+          <Link to="/category/flower">플라워</Link>
+          <Link to="/category/art">미술</Link>
+          <Link to="/category/cooking">요리</Link>
+          <Link to="/category/handmade">수공예</Link>
+          <Link to="/category/activity">액티비티</Link>
+          <Link to="/category/etc">기타</Link>
         </div>
       </Nav>
       <Switch>

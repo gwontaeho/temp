@@ -2,72 +2,46 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Container, Header, Nav, Classes } from "./styles";
+import { IoLocationOutline } from "react-icons/io5";
+import Rating from "@material-ui/lab/Rating";
 
 const Category = (props) => {
   const [classArray, setClassArray] = useState([]);
 
   useEffect(() => {
-    console.log(props.match.params);
-
+    console.log(props.match.params.category);
     const fetchData = async () => {
       try {
-        const response = await axios.post("/api/category/all", {});
+        const response = await axios.post(`/api/category`, {
+          category: props.match.params.category,
+          sort: "rating",
+        });
+        setClassArray(response.data);
         console.log(response.data);
-        // response.data.rows.forEach((v) => {
-        //   let rating = 0;
-        //   if (v.reviews.length !== 0) {
-        //     v.reviews.forEach((vv) => {
-        //       rating += vv.rating;
-        //     });
-        //     rating = Math.round((rating / v.reviews.length) * 10) / 10;
-        //   }
-        //   v.rating = rating;
-        // });
-        // console.log(response.data.rows);
-        // setClassArray(response.data.rows);
       } catch (error) {
         console.log(error);
       }
     };
-
     fetchData();
-  }, []);
+  }, [props]);
 
   // 정렬
   const onClickNav = useCallback(
-    (e) => {
+    async (e) => {
       const sort = e.target.getAttribute("value");
-      let ary = [...classArray];
-      switch (sort) {
-        case "sale":
-          ary.sort((a, b) => {
-            return b.reservations.length - a.reservations.length;
-          });
-          setClassArray(ary);
-          break;
-        case "rating":
-          ary.sort((a, b) => {
-            return b.rating - a.rating;
-          });
-          setClassArray(ary);
-          break;
-        case "lowPrice":
-          ary.sort((a, b) => {
-            return a.price - b.price;
-          });
-          setClassArray(ary);
-          break;
-        case "highPrice":
-          ary.sort((a, b) => {
-            return b.price - a.price;
-          });
-          setClassArray(ary);
-          break;
-        default:
-          break;
+      console.log(sort);
+      try {
+        const response = await axios.post(`/api/category`, {
+          category: props.match.params.category,
+          sort,
+        });
+        setClassArray(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
       }
     },
-    [classArray]
+    [props]
   );
 
   // 클래스
@@ -75,6 +49,20 @@ const Category = (props) => {
     return (
       <Link to={`/product/${v.id}`} key={v.id} className="class">
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
+        <div className="address">
+          <IoLocationOutline />
+          {v.address.split("&")[0]}
+        </div>
+        <div className="rating">
+          {Array.isArray(v.reviews) && v.reviews.length !== 0 ? (
+            <Rating
+              name="half-rating-read"
+              defaultValue={v.reviews[0].rating}
+              precision={0.1}
+              readOnly
+            />
+          ) : null}
+        </div>
         <div>{v.name}</div>
         <div>{v.price}원</div>
       </Link>
@@ -83,13 +71,27 @@ const Category = (props) => {
 
   return (
     <Container>
-      <Header>전체</Header>
+      <Header>
+        {props.match.params.category === "all"
+          ? "전체"
+          : props.match.params.category === "flower"
+          ? "플라워"
+          : props.match.params.category === "art"
+          ? "미술"
+          : props.match.params.category === "cooking"
+          ? "요리"
+          : props.match.params.category === "handmade"
+          ? "수공예"
+          : props.match.params.category === "activity"
+          ? "액티비티"
+          : "기타"}
+      </Header>
       <Nav>
-        <div value="sale" onClick={onClickNav}>
-          판매순
-        </div>
         <div value="rating" onClick={onClickNav}>
           평점순
+        </div>
+        <div value="sale" onClick={onClickNav}>
+          판매순
         </div>
         <div value="lowPrice" onClick={onClickNav}>
           낮은 가격순

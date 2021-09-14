@@ -7,10 +7,10 @@ export const Container = styled.div`
   .btns {
     height: 48px;
     margin-bottom: 24px;
+    padding-left: 24px;
     display: flex;
   }
   .btns a {
-    width: 120px;
     height: 100%;
     text-align: center;
     line-height: 48px;
@@ -28,8 +28,14 @@ export const Container = styled.div`
     align-items: center;
     img {
       width: 100%;
-      height: 160px;
+      height: 180px;
       object-fit: cover;
+      border-radius: 12px;
+    }
+    div {
+      display: flex;
+      height: 36px;
+      align-items: center;
     }
   }
 `;

@@ -71,6 +71,7 @@ const Seller = ({ history }) => {
   }, []);
 
   const handleComplete = useCallback((data) => {
+    let shortAddress = data.sigungu + " " + data.bname + "&";
     let fullAddress = data.address;
     let extraAddress = "";
 
@@ -85,7 +86,7 @@ const Seller = ({ history }) => {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    setAddress(fullAddress);
+    setAddress(shortAddress + fullAddress);
     closeModal();
   }, []);
 
@@ -99,7 +100,7 @@ const Seller = ({ history }) => {
           company,
           name,
           phone,
-          address: address + " " + extraAd,
+          address: address + "&" + extraAd,
           category,
           reg,
         });
