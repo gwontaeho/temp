@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+
   header: {
     width: '100%',
     height: 60,
@@ -12,18 +13,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  innerContainer: {
-    width: '100%',
-    height: '100%',
-  },
+
   banner: {
     width: '100%',
     height: 180,
     backgroundColor: 'ivory',
   },
+
   categories: {
     width: '100%',
-    height: 120,
+    display: 'flex',
+    borderWidth: 1,
+  },
+  row: {
+    width: '100%',
     display: 'flex',
     flexDirection: 'row',
   },
@@ -32,10 +35,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 60,
   },
+
   classList: {
     width: '100%',
-    height: 240,
     backgroundColor: 'lightgray',
     borderWidth: 1,
   },
@@ -44,20 +48,31 @@ const styles = StyleSheet.create({
     height: 60,
     display: 'flex',
     justifyContent: 'center',
-    paddingLeft: 12,
+    paddingLeft: 24,
   },
   list: {
     width: '100%',
     paddingLeft: 12,
   },
   content: {
-    width: 150,
-    height: 240,
+    width: 156,
     paddingRight: 12,
   },
-  image: {
+  content_image: {
     width: '100%',
     height: 120,
+    borderRadius: 12,
+  },
+  content_address: {
+    position: 'absolute',
+    bottom: 48,
+    color: 'white',
+  },
+  content_text: {
+    height: 24,
+    lineHeight: 24,
+    fontSize: 10,
+    paddingLeft: 12,
   },
 });
 

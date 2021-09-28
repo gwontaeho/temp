@@ -7,43 +7,30 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import axios from 'axios';
+import axios from '../../../axios';
 
 import styles from './styles';
 
-const Main = ({navigation}) => {
-  const [popular, setPopular] = useState([]);
-  const [newly, setNewly] = useState([]);
+const Main = props => {
+  const [popClass, setPopClass] = useState([]);
+  const [newClass, setNewClass] = useState([]);
 
-  const onPressCategory = useCallback(v => {
-    navigation.navigate('Category', {
-      categoryName: v,
-    });
-  }, []);
+  const onPressCategory = useCallback(
+    v => {
+      props.navigation.navigate('Category', {
+        categoryName: v,
+      });
+    },
+    [props],
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(
-          'http://172.30.1.27:3005/api/classes/popular',
-          {},
-        );
-
-        let popular0 = [...response.data.rows];
-        popular0.sort((a, b) => {
-          return b.reservations.length - a.reservations.length;
-        });
-        popular0 = popular0.slice(0, 5);
-        console.log(popular0);
-        let newly0 = [...response.data.rows];
-        newly0.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        newly0 = newly0.slice(0, 5);
-        console.log(newly0);
-
-        setPopular(popular0);
-        setNewly(newly0);
+        const response = await axios.post('/api/classes/main', {});
+        console.log(response.data);
+        setPopClass(response.data.popClass);
+        setNewClass(response.data.newClass);
       } catch (error) {
         console.log(error);
       }
@@ -64,9 +51,13 @@ const Main = ({navigation}) => {
           source={{
             uri,
           }}
-          style={styles.image}
+          style={styles.content_image}
         />
-        <Text>{item.name}</Text>
+        <Text style={[styles.content_text, styles.content_address]}>
+          {item.address.split('&')[0]}
+        </Text>
+        <Text style={styles.content_text}>{item.name}</Text>
+        <Text style={styles.content_text}>{item.price}원</Text>
       </TouchableOpacity>
     );
   };
@@ -76,57 +67,75 @@ const Main = ({navigation}) => {
       <View style={styles.header}>
         <Text>로고</Text>
       </View>
-      <ScrollView style={styles.innerContainer}>
+
+      <ScrollView>
         <View style={styles.banner}>
           <Text>광고창</Text>
         </View>
+
         <View style={styles.categories}>
-          <View style={styles.category}>
-            <TouchableOpacity onPress={() => onPressCategory('flower')}>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('all')}>
+              <Text>전체</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('flower')}>
               <Text>플라워</Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.category}>
-            <TouchableOpacity onPress={() => onPressCategory('cooking')}>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('art')}>
+              <Text>미술</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('cooking')}>
               <Text>요리</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.category}>
-            <TouchableOpacity onPress={() => onPressCategory('art')}>
-              <Text>미술</Text>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('handmade')}>
+              <Text>수공예</Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.category}>
-            <TouchableOpacity onPress={() => onPressCategory('etc')}>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('activity')}>
+              <Text>액티비티</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.category}
+              onPress={() => onPressCategory('etc')}>
               <Text>기타</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.category}>
-            <TouchableOpacity onPress={() => onPressCategory('all')}>
-              <Text>전체</Text>
-            </TouchableOpacity>
-          </View>
         </View>
+
         <View style={styles.classList}>
           <View style={styles.title}>
             <Text>인기 클래스</Text>
           </View>
           <View style={styles.list}>
             <FlatList
-              data={popular}
+              data={popClass}
               renderItem={renderItem}
               horizontal={true}
               keyExtractor={item => item.id}
             />
           </View>
         </View>
+
         <View style={styles.classList}>
           <View style={styles.title}>
             <Text>신규 클래스</Text>
           </View>
           <View style={styles.list}>
             <FlatList
-              data={newly}
+              data={newClass}
               renderItem={renderItem}
               horizontal={true}
               keyExtractor={item => item.id}

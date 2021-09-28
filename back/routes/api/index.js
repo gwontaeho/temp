@@ -10,6 +10,7 @@ const category = require("./category");
 const product = require("./product");
 const reservation = require("./reservation");
 const review = require("./review");
+const qna = require("./qna");
 
 router.use("/signup", signup);
 router.use("/login", login);
@@ -20,5 +21,6 @@ router.use("/category", category);
 router.use("/product", product);
 router.use("/reservation", reservation);
 router.use("/review", review);
+router.use("/qna", qna);
 
 module.exports = router;

@@ -6,6 +6,7 @@ import Home from './screens/home';
 import Category from './screens/category';
 import Product from './screens/product';
 import Payment from './screens/payment';
+import Login from './screens/login';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const App = () => {
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="Payment" component={Payment} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );

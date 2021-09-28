@@ -123,7 +123,7 @@ export const Nav = styled.div`
   display: flex;
   justify-content: center;
   height: 72px;
-  border: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
 
   div {
     display: flex;

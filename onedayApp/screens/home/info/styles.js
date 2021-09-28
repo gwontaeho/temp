@@ -5,14 +5,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+
   header: {
     width: '100%',
     height: 60,
-    backgroundColor: 'lightgreen',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   line: {
     width: '100%',
     height: 60,

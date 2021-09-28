@@ -34,7 +34,7 @@ router.post("/", async (req, res, next) => {
       order:
         req.body.sort === "rating"
           ? [["reviews", "rating", "DESC"]]
-          : req.body.sort === "sale"
+          : req.body.sort === "sold"
           ? [["sold", "DESC"]]
           : req.body.sort === "lowPrice"
           ? [["price", "ASC"]]

@@ -90,7 +90,7 @@ const Category = (props) => {
         <div value="rating" onClick={onClickNav}>
           평점순
         </div>
-        <div value="sale" onClick={onClickNav}>
+        <div value="sold" onClick={onClickNav}>
           판매순
         </div>
         <div value="lowPrice" onClick={onClickNav}>

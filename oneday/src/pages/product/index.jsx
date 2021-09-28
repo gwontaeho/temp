@@ -264,7 +264,11 @@ const Product = ({ match, history }) => {
         ) : content === "review" ? (
           <Review classId={classData.id} />
         ) : (
-          <Qna />
+          <Qna
+            classId={classData.id}
+            sellerId={classData.sellerId}
+            type={type}
+          />
         )}
       </div>
     </Container>
