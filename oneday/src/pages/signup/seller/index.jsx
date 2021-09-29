@@ -21,6 +21,7 @@ const Seller = ({ history }) => {
   const [company, setCompany] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [shortAddress, setShortAddress] = useState("");
   const [address, setAddress] = useState("");
   const [extraAd, setExtraAd] = useState("");
   const [category, setCategory] = useState("etc");
@@ -71,7 +72,7 @@ const Seller = ({ history }) => {
   }, []);
 
   const handleComplete = useCallback((data) => {
-    let shortAddress = data.sigungu + " " + data.bname + "&";
+    let short = data.sigungu + " " + data.bname;
     let fullAddress = data.address;
     let extraAddress = "";
 
@@ -85,8 +86,8 @@ const Seller = ({ history }) => {
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-
-    setAddress(shortAddress + fullAddress);
+    setShortAddress(short);
+    setAddress(fullAddress);
     closeModal();
   }, []);
 
@@ -100,7 +101,7 @@ const Seller = ({ history }) => {
           company,
           name,
           phone,
-          address: address + "&" + extraAd,
+          address: shortAddress + "&" + address + "&" + extraAd,
           category,
           reg,
         });

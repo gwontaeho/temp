@@ -42,6 +42,31 @@ const HistoryDetail = ({ match }) => {
     console.log(match.params.id);
   }, []);
 
+  const onClickWaitingCancel = useCallback(async () => {
+    const result = window.confirm("예약을 취소하시겠습니까?");
+
+    if (result) {
+      try {
+        const response = await axios.post(
+          "/api/reservation/waitingcancel",
+          {
+            reservationId: data.id,
+          },
+          {
+            headers: {
+              token: cookies.token,
+            },
+          }
+        );
+        window.alert("예약이 취소 되었습니다.");
+        window.location.reload();
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [data]);
+
   const onClickCancel = useCallback(async () => {
     const result = window.confirm("예약을 취소하시겠습니까?");
 
@@ -233,7 +258,9 @@ const HistoryDetail = ({ match }) => {
                 ? "수강 완료"
                 : data.state === 2
                 ? "취소 요청"
-                : "취소"}
+                : data.state === 3
+                ? "취소"
+                : "예약 대기"}
             </div>
           </div>
         </div>
@@ -246,6 +273,8 @@ const HistoryDetail = ({ match }) => {
             <div onClick={openModal}>리뷰 수정</div>
           ) : data.state === 2 ? (
             <div onClick={onClickWithdraw}>취소 철회</div>
+          ) : data.state === 4 ? (
+            <div onClick={onClickWaitingCancel}>예약 취소</div>
           ) : null}
         </div>
       </Detail>

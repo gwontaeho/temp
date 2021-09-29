@@ -86,6 +86,8 @@ const Class = ({ match }) => {
             },
           }
         );
+        console.log("----------");
+        console.log(response.data);
         setData(response.data);
         setDetail(JSON.parse(response.data.detail));
         loadSchedule(response.data.id);
@@ -230,7 +232,7 @@ const Class = ({ match }) => {
                 <div>
                   <div className="title">주소</div>
                   <div className="address">
-                    {data.address === "&"
+                    {data.address === "&&"
                       ? null
                       : data.address.split("&")[1] +
                         " " +

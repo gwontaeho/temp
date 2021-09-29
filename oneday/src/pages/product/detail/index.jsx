@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Container } from "./styles";
+import { Container, DetailInfo, Map } from "./styles";
 
 import axios from "axios";
 
@@ -48,9 +48,11 @@ const Detail = (props) => {
 
   return (
     <Container>
-      <div id="map"></div>
-      <div>sad</div>
-      {detailList}
+      <DetailInfo>{detailList}</DetailInfo>
+      <Map>
+        <div id="map"></div>
+        <div>asdasd</div>
+      </Map>
     </Container>
   );
 };

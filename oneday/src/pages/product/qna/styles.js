@@ -9,7 +9,9 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-  width: 720px;
+  width: calc(720px - 48px);
+  padding-left: 24px;
+  padding-right: 24px;
   height: 72px;
   display: flex;
   justify-content: space-between;
@@ -23,6 +25,7 @@ export const QnaList = styled.div`
 export const QnaItem = styled.div`
   width: 100%;
   margin-bottom: 24px;
+
   .id {
     height: 48px;
     display: flex;

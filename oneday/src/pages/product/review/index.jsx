@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Rating from "@material-ui/lab/Rating";
 
-import { Container, Item } from "./styles";
+import { Container, Header, ReviewItem, ReviewList } from "./styles";
 
 import axios from "axios";
 
@@ -25,22 +25,31 @@ const Review = (props) => {
 
   const reviewList = data.map((v) => {
     return (
-      <Item>
+      <ReviewItem>
         <Rating name="read-only" value={v.rating} readOnly />
-        <div>{v.text}</div>
-        <div>
-          {new Date(v.createdAt).getFullYear() +
-            " / " +
-            (new Date(v.createdAt).getMonth() + 1) +
-            " / " +
-            new Date(v.createdAt).getDate()}
+        <div className="id">
+          <div>{v.userId}</div>
+          <div>
+            {new Date(v.createdAt).getFullYear() +
+              " / " +
+              (new Date(v.createdAt).getMonth() + 1) +
+              " / " +
+              new Date(v.createdAt).getDate()}
+          </div>
         </div>
-        <div>{v.userId}</div>
-      </Item>
+        <div>{v.text}</div>
+      </ReviewItem>
     );
   });
 
-  return <Container>{reviewList}</Container>;
+  return (
+    <Container>
+      <Header>
+        <div>클래스 리뷰 (총 {data.length}건)</div>
+      </Header>
+      <ReviewList>{reviewList}</ReviewList>
+    </Container>
+  );
 };
 
 export default Review;

@@ -9,6 +9,7 @@ import { Container, Header, List, Item } from "./styles";
 const History = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
+  const [waiting, setWaiting] = useState([]);
   const [ing, setIng] = useState([]);
   const [past, setPast] = useState([]);
   const [request, setRequest] = useState([]);
@@ -27,6 +28,7 @@ const History = () => {
             },
           }
         );
+        let newWaiting = [];
         let newIng = [];
         let newPast = [];
         let newRequest = [];
@@ -40,6 +42,8 @@ const History = () => {
             newRequest.push(v);
           } else if (v.state === 3) {
             newCancled.push(v);
+          } else if (v.state === 4) {
+            newWaiting.push(v);
           }
         });
         setIng(newIng);
@@ -47,6 +51,7 @@ const History = () => {
         setRequest(newRequest);
         setCanceled(newCancled);
         setSelected(newIng);
+        setWaiting(newWaiting);
 
         console.log(response.data);
       } catch (error) {
@@ -66,9 +71,11 @@ const History = () => {
         setSelected(request);
       } else if (v === 3) {
         setSelected(canceled);
+      } else if (v === 4) {
+        setSelected(waiting);
       }
     },
-    [ing, past, request, canceled]
+    [ing, past, request, canceled, waiting]
   );
 
   const onClickItem = useCallback((v) => {
@@ -103,8 +110,12 @@ const History = () => {
               </>
             ) : v.state === 1 && v.review !== null ? (
               "수강 완료"
-            ) : (
+            ) : v.state === 2 ? (
+              "취소 요청"
+            ) : v.state === 3 ? (
               "취소"
+            ) : (
+              "예약 대기"
             )}
           </div>
         </Item>
@@ -115,6 +126,10 @@ const History = () => {
   return (
     <Container>
       <Header>
+        <div onClick={() => onClickState(4)}>
+          <div>예약 대기</div>
+          <div>{waiting.length}</div>
+        </div>
         <div onClick={() => onClickState(0)}>
           <div>예약 중</div>
           <div>{ing.length}</div>

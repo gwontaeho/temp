@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       state: {
         type: DataTypes.INTEGER,
-        defaultValue: 0,
+        defaultValue: 4,
       },
     },
     {
@@ -31,6 +31,23 @@ module.exports = (sequelize, DataTypes) => {
             },
             { where: { id: reservation.dataValues.scheduleId } }
           );
+        },
+
+        afterUpdate: (reservation, options) => {
+          console.log("---------------------------------------------");
+
+          console.log("updateddd");
+
+          if (reservation.dataValues.state === 3) {
+            sequelize.models.schedule.update(
+              {
+                reserved: sequelize.literal(
+                  `reserved - ${reservation.dataValues.personnel}`
+                ),
+              },
+              { where: { id: reservation.dataValues.scheduleId } }
+            );
+          }
         },
       },
     }

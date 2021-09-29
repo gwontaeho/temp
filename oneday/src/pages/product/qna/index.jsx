@@ -79,7 +79,13 @@ const Qna = (props) => {
         <div className="question">
           <div className="id">
             <div>{v.userId}</div>
-            <div>{v.createdAt}</div>
+            <div>
+              {new Date(v.createdAt).getFullYear() +
+                " / " +
+                (new Date(v.createdAt).getMonth() + 1) +
+                " / " +
+                new Date(v.createdAt).getDate()}
+            </div>
           </div>
           <div>{v.question}</div>
         </div>
@@ -88,7 +94,13 @@ const Qna = (props) => {
           <div className="answer">
             <div className="id">
               <div>{v.sellerId}</div>
-              <div>{v.updatedAt}</div>
+              <div>
+                {new Date(v.updatedAt).getFullYear() +
+                  " / " +
+                  (new Date(v.updatedAt).getMonth() + 1) +
+                  " / " +
+                  new Date(v.updatedAt).getDate()}
+              </div>
             </div>
             <div>test</div>
           </div>

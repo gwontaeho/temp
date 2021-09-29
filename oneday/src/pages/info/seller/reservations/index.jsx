@@ -14,6 +14,7 @@ const Reservation = () => {
   const [request, setRequest] = useState([]);
   const [canceled, setCanceled] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [waiting, setWaiting] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +32,7 @@ const Reservation = () => {
         let newPast = [];
         let newRequest = [];
         let newCancled = [];
+        let newWaiting = [];
         response.data.map((v) => {
           if (v.state === 0) {
             newIng.push(v);
@@ -40,6 +42,8 @@ const Reservation = () => {
             newRequest.push(v);
           } else if (v.state === 3) {
             newCancled.push(v);
+          } else if (v.state === 4) {
+            newWaiting.push(v);
           }
         });
         setIng(newIng);
@@ -47,6 +51,7 @@ const Reservation = () => {
         setRequest(newRequest);
         setCanceled(newCancled);
         setSelected(newIng);
+        setWaiting(newWaiting);
 
         console.log(response.data);
       } catch (error) {
@@ -67,9 +72,11 @@ const Reservation = () => {
         setSelected(request);
       } else if (v === 3) {
         setSelected(canceled);
+      } else if (v === 4) {
+        setSelected(waiting);
       }
     },
-    [ing, past, request, canceled]
+    [ing, past, request, canceled, waiting]
   );
 
   const onClickItem = useCallback((v) => {
@@ -103,6 +110,10 @@ const Reservation = () => {
     <Container>
       <Header>예약 관리</Header>
       <Nav>
+        <div onClick={() => onClickState(4)}>
+          <div>예약 대기</div>
+          <div>{waiting.length}</div>
+        </div>
         <div onClick={() => onClickState(0)}>
           <div>예약 중</div>
           <div>{ing.length}</div>

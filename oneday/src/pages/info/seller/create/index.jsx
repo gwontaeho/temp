@@ -25,8 +25,9 @@ const Create = ({ history }) => {
   const [time, setTime] = useState("");
   const [useRegisteredAddress, setUseRegisteredAddress] = useState(true);
   const [seller, setSeller] = useState({});
+  const [shortAddress, setShortAddress] = useState("");
   const [address, setAddress] = useState("");
-  const [detailedAddress, setDetailedAddress] = useState("");
+  const [extraAd, setExtraAd] = useState("");
   const [isOpend, setIsOpend] = useState(false);
 
   useEffect(() => {
@@ -63,8 +64,8 @@ const Create = ({ history }) => {
   const onChangeTime = useCallback((e) => {
     setTime(e.target.value);
   }, []);
-  const onChangeDetailedAddress = useCallback((e) => {
-    setDetailedAddress(e.target.value);
+  const onChangeExtraAd = useCallback((e) => {
+    setExtraAd(e.target.value);
   }, []);
 
   const onclickRemove = useCallback((e) => {
@@ -111,7 +112,8 @@ const Create = ({ history }) => {
     formData.append("time", time);
     formData.append("category", seller.category);
     if (useRegisteredAddress) formData.append("address", seller.address);
-    else formData.append("address", address + " " + detailedAddress);
+    else
+      formData.append("address", shortAddress + "&" + address + "&" + extraAd);
     formData.append("detail", JSON.stringify(stringary));
 
     try {
@@ -131,8 +133,9 @@ const Create = ({ history }) => {
     price,
     time,
     useRegisteredAddress,
+    shortAddress,
     address,
-    detailedAddress,
+    extraAd,
     seller,
   ]);
 
@@ -145,6 +148,7 @@ const Create = ({ history }) => {
   }, []);
 
   const handleComplete = useCallback((data) => {
+    let short = data.sigungu + " " + data.bname;
     let fullAddress = data.address;
     let extraAddress = "";
 
@@ -159,6 +163,7 @@ const Create = ({ history }) => {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
+    setShortAddress(short);
     setAddress(fullAddress);
     closeModal();
   }, []);
@@ -234,8 +239,8 @@ const Create = ({ history }) => {
               <input type="text" value={address} readOnly onClick={openModal} />
               <input
                 type="text"
-                value={detailedAddress}
-                onChange={onChangeDetailedAddress}
+                value={extraAd}
+                onChange={onChangeExtraAd}
                 placeholder="상세 주소를 입력하세요."
               />
             </div>

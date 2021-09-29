@@ -130,16 +130,53 @@ router.post("/reservations", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/cancel", verifyToken, async (req, res, next) => {
+router.post("/confirm", verifyToken, async (req, res, next) => {
   console.log(req.body);
   try {
     await Reservation.update(
-      { state: 3 },
+      { state: 0 },
       { where: { id: req.body.reservationId } }
     );
     return res.status(200).send("success");
   } catch (error) {
     return res.status(401).send("error");
+  }
+});
+
+router.post("/cancel", verifyToken, async (req, res, next) => {
+  console.log(req.body);
+  try {
+    await Reservation.update(
+      { state: 3 },
+      { where: { id: req.body.reservationId }, individualHooks: true }
+    );
+    return res.status(200).send("success");
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
+router.post("/waitingcancel", verifyToken, async (req, res, next) => {
+  console.log(req.body);
+  try {
+    const findReservation = await Reservation.findOne({
+      where: { id: req.body.reservationId },
+    });
+    if (findReservation.dataValues.state === 4) {
+      try {
+        await Reservation.update(
+          { state: 3 },
+          { where: { id: req.body.reservationId }, individualHooks: true }
+        );
+        return res.status(200).send("success");
+      } catch (error) {
+        return res.status(401).send("error");
+      }
+    } else {
+      return res.status(200).send("failure");
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
