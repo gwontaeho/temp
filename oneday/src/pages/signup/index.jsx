@@ -26,7 +26,9 @@ const Signup = () => {
 
   return (
     <Container>
-      <Logo>로고</Logo>
+      <Logo>
+        <Link to="/">로고</Link>
+      </Logo>
       <Switch>
         <Route exact path="/signup" component={Index} />
         <Route path="/signup/user" component={User} />

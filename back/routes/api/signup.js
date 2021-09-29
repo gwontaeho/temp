@@ -42,4 +42,32 @@ router.post("/seller", async (req, res, next) => {
   }
 });
 
+router.post("/check", async (req, res, next) => {
+  let findUser;
+  let findSeller;
+
+  try {
+    findUser = await User.findOne({
+      where: { id: req.body.id },
+    });
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+
+  try {
+    findSeller = await Seller.findOne({
+      where: { id: req.body.id },
+    });
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+
+  console.log(findUser);
+  console.log(findSeller);
+
+  if (findUser === null && findSeller === null)
+    return res.status(200).send("ok");
+  else return res.status(200).send("no");
+});
+
 module.exports = router;

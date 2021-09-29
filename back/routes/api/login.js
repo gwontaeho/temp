@@ -6,6 +6,7 @@ const User = require("../../models").User;
 const Seller = require("../../models").Seller;
 
 router.post("/", async (req, res, next) => {
+  console.log(req.body);
   if (req.body.type == 1) {
     try {
       const findUser = await User.findOne({

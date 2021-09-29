@@ -5,7 +5,7 @@ import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
-const Login = ({ history }) => {
+const Login = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [id, setId] = useState("");
@@ -28,16 +28,14 @@ const Login = ({ history }) => {
     async (e) => {
       e.preventDefault();
       try {
-        const response = await axios.post("/api/login", {
+        await axios.post("/api/login", {
           id,
           password,
           type,
         });
-        console.log(response.data);
-        return history.push("/");
+        return props.history.push("/");
       } catch (error) {
         console.log(error);
-        console.log("abc");
       }
     },
     [id, password, type]

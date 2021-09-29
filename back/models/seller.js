@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("seller", {
     id: {
-      type: DataTypes.STRING(24),
+      type: DataTypes.STRING(12),
       allowNull: false,
       unique: true,
       primaryKey: true,
@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     company: {
-      type: DataTypes.STRING(24),
+      type: DataTypes.STRING(12),
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING(24),
+      type: DataTypes.STRING(12),
       allowNull: false,
     },
     phone: {
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     category: {
-      type: DataTypes.STRING(24),
+      type: DataTypes.STRING(12),
       allowNull: false,
     },
     type: {
