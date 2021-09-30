@@ -17,10 +17,12 @@ const Reservations = loadable(() => import("./seller/reservations"));
 const ReservationDetail = loadable(() => import("./seller/reservation_detail"));
 const Schedules = loadable(() => import("./seller/schedules"));
 const ScheduleDetail = loadable(() => import("./seller/schedule_detail"));
+const Qna = loadable(() => import("./seller/qna"));
+const QnaDetail = loadable(() => import("./seller/qna_detail"));
 
 const Info = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const [type, setType] = useState(0);
+  const [type, setType] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,16 +54,17 @@ const Info = () => {
       <Nav>
         <Link to="/info">내 정보</Link>
         {type === 1 ? (
-          <React.Fragment>
+          <>
             <Link to="/info/history">예약 내역</Link>
-          </React.Fragment>
+          </>
         ) : null}
         {type === 2 ? (
-          <React.Fragment>
+          <>
             <Link to="/info/classes">클래스 관리</Link>
             <Link to="/info/schedules">일정 관리</Link>
             <Link to="/info/reservations">예약 관리</Link>
-          </React.Fragment>
+            <Link to="/info/qna">문의 관리</Link>
+          </>
         ) : null}
       </Nav>
       <div className="routes">
@@ -86,6 +89,8 @@ const Info = () => {
             path="/info/reservations/:id"
             component={ReservationDetail}
           />
+          <Route exact path="/info/qna" component={Qna} />
+          <Route exact path="/info/qna/:id" component={QnaDetail} />
         </Switch>
       </div>
     </Container>

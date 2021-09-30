@@ -57,7 +57,7 @@ const Qna = (props) => {
   const onClickSave = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/qna/add",
+        "/api/qna/question",
         {
           question: questionText,
           classId: props.classId,

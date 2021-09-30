@@ -62,9 +62,6 @@ router.post("/check", async (req, res, next) => {
     return res.status(401).send("error");
   }
 
-  console.log(findUser);
-  console.log(findSeller);
-
   if (findUser === null && findSeller === null)
     return res.status(200).send("ok");
   else return res.status(200).send("no");
