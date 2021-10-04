@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   header_space: {
     flex: 1,
     padding: 12,
+    borderWidth: 1,
   },
 
   sort: {

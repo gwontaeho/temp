@@ -7,7 +7,26 @@ const Class = require("../../models").Class;
 const Review = require("../../models").Review;
 
 router.post("/", async (req, res, next) => {
-  console.log(req.body);
+  let order = [[]];
+  console.log(req.body.sort);
+  switch (req.body.sort) {
+    case "rating":
+      order = [["reviews", "rating", "DESC"]];
+      break;
+    case "sold":
+      order = [["sold", "DESC"]];
+      break;
+    case "lowPrice":
+      order = [["price", "ASC"]];
+      break;
+    case "highPrice":
+      order = [["price", "DESC"]];
+      break;
+    default:
+      break;
+  }
+  console.log(order);
+
   try {
     const findClass = await Class.findAll({
       include: [
@@ -31,14 +50,7 @@ router.post("/", async (req, res, next) => {
           req.body.category === "all" ? { [Op.ne]: null } : req.body.category,
       },
       group: ["id"],
-      order:
-        req.body.sort === "rating"
-          ? [["reviews", "rating", "DESC"]]
-          : req.body.sort === "sold"
-          ? [["sold", "DESC"]]
-          : req.body.sort === "lowPrice"
-          ? [["price", "ASC"]]
-          : [["price", "DESC"]],
+      order: order,
     });
     return res.status(200).json(findClass);
   } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
 import axios from "axios";
-import { Container, Logo, Section } from "./styles";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import { Container, Logo, Inputs, Section } from "./styles";
 
 const Login = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -21,25 +21,21 @@ const Login = (props) => {
   }, []);
 
   const changeType = useCallback((e) => {
-    setType(e.target.value);
+    setType(Number(e.target.value));
   }, []);
 
-  const onSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      try {
-        await axios.post("/api/login", {
-          id,
-          password,
-          type,
-        });
-        return props.history.push("/");
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [id, password, type]
-  );
+  const onClickLogin = useCallback(async () => {
+    try {
+      await axios.post("/api/auth/login", {
+        id,
+        password,
+        type,
+      });
+      return props.history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }, [id, password, type]);
 
   if (cookies.token) {
     return <Redirect to="/" />;
@@ -53,7 +49,7 @@ const Login = (props) => {
           <label htmlFor="1">일반</label>
           <input
             id="1"
-            value="1"
+            value={1}
             type="radio"
             name="checkType"
             defaultChecked
@@ -62,13 +58,13 @@ const Login = (props) => {
           <label htmlFor="2">업체</label>
           <input
             id="2"
-            value="2"
+            value={2}
             type="radio"
             name="checkType"
             onClick={changeType}
           />
         </Section>
-        <form onSubmit={onSubmit}>
+        <Inputs>
           <input
             value={id}
             type="text"
@@ -84,11 +80,11 @@ const Login = (props) => {
             maxLength="24"
             onChange={onChangePassword}
           />
-          <button type="submit">로그인</button>
-        </form>
+          <div className="button" onClick={onClickLogin}>
+            로그인
+          </div>
+        </Inputs>
         <Section>
-          <Link to="/login">아이디 찾기</Link>
-          <Link to="/login">비밀번호 찾기</Link>
           <Link to="/signup">회원가입</Link>
         </Section>
       </div>

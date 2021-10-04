@@ -57,7 +57,7 @@ const Seller = (props) => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
 
     try {
-      const response = await axios.post("/api/signup/check", {
+      const response = await axios.post("/api/auth/signup/check", {
         id,
       });
       console.log(response.data === "ok");
@@ -179,7 +179,7 @@ const Seller = (props) => {
       return window.alert("사업자등록번호를 정확히 입력해주세요");
 
     try {
-      await axios.post("/api/signup/seller", {
+      await axios.post("/api/auth/signup/seller", {
         id,
         password,
         company,

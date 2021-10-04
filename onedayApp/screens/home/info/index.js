@@ -15,33 +15,39 @@ const Main = props => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    console.log(user);
-    const check = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('jsonValue');
-        if (jsonValue !== null) {
-          setUser(jsonValue);
-        }
-        console.log('--------------------------------------------');
-        console.log(jsonValue);
-      } catch (error) {
-        console.log(error);
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      console.log('abc');
+      check();
+    });
+
+    return unsubscribe;
+  }, [props.navigation]);
+
+  const check = useCallback(async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('jsonValue');
+      if (jsonValue !== null) {
+        setUser(jsonValue);
       }
-    };
-    check();
+      console.log('--------------------------------------------');
+      console.log(jsonValue);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const logInOut = useCallback(async () => {
     if (Object.keys(user).length === 0) {
       props.navigation.navigate('Login', {});
     } else {
-      console.log('로그아웃');
       try {
         await AsyncStorage.removeItem('jsonValue');
         setUser({});
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, [props, user]);
+  }, [props.navigation, user]);
 
   return (
     <View style={styles.container}>

@@ -15,28 +15,29 @@ const Main = props => {
   const [popClass, setPopClass] = useState([]);
   const [newClass, setNewClass] = useState([]);
 
+  useEffect(() => {
+    requestMainData();
+  }, []);
+
+  const requestMainData = useCallback(async () => {
+    try {
+      const response = await axios.post('/api/classes/main', {});
+      console.log(response.data);
+      setPopClass(response.data.popClass);
+      setNewClass(response.data.newClass);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const onPressCategory = useCallback(
     v => {
       props.navigation.navigate('Category', {
         categoryName: v,
       });
     },
-    [props],
+    [props.navigation],
   );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post('/api/classes/main', {});
-        console.log(response.data);
-        setPopClass(response.data.popClass);
-        setNewClass(response.data.newClass);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const renderItem = ({item}) => {
     console.log(item);
@@ -70,7 +71,7 @@ const Main = props => {
 
       <ScrollView>
         <View style={styles.banner}>
-          <Text>광고창</Text>
+          <Text>광고ㅇ창</Text>
         </View>
 
         <View style={styles.categories}>

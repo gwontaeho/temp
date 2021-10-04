@@ -1,56 +1,49 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {Text, View, FlatList, Image, TouchableOpacity} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import axios from '../../axios';
 
 import styles from './styles';
 
 const Category = props => {
-  const {categoryName} = props.route.params;
-  const {navigation} = props;
-
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post('/api/category', {
-          sort: 'rating',
-          category: categoryName,
-        });
-        console.log(response.data);
-        setProducts(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [categoryName]);
+    requestCategoryData();
+  }, []);
 
-  const onPressSort = useCallback(
-    async v => {
-      console.log(v);
-      try {
-        const response = await axios.post('/api/category', {
-          category: categoryName,
-          sort: v,
-        });
-        setProducts(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [categoryName],
-  );
-
-  const onPressContent = useCallback(
-    v => {
-      navigation.navigate('Product', {
-        id: v.id,
+  const requestCategoryData = useCallback(async () => {
+    try {
+      const response = await axios.post('/api/category', {
+        sort: 'rating',
+        category: props.route.params.categoryName,
       });
-    },
-    [navigation],
-  );
+      console.log(response.data);
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const onPressSort = useCallback(async v => {
+    console.log(v);
+    try {
+      const response = await axios.post('/api/category', {
+        category: props.route.params.categoryName.categoryName,
+        sort: v,
+      });
+      setProducts(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const onPressContent = useCallback(v => {
+    props.navigation.navigate('Product', {
+      id: v.id,
+    });
+  }, []);
 
   const renderItem = ({item}) => {
     const uri =
@@ -79,25 +72,27 @@ const Category = props => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.header_space}>
-          <TouchableOpacity onPress={() => navigation.pop()}>
+          <TouchableOpacity onPress={() => props.navigation.pop()}>
             <Text>뒤로</Text>
           </TouchableOpacity>
         </View>
-        <Text>
-          {categoryName === 'all'
-            ? '전체'
-            : categoryName === 'flower'
-            ? '플라워'
-            : categoryName === 'art'
-            ? '미술'
-            : categoryName === 'cooking'
-            ? '요리'
-            : categoryName === 'handmade'
-            ? '수공예'
-            : categoryName === 'activity'
-            ? '액티비티'
-            : '기타'}
-        </Text>
+        <TouchableOpacity>
+          <Text>
+            {props.route.params.categoryName === 'all'
+              ? '전체'
+              : props.route.params.categoryName === 'flower'
+              ? '플라워'
+              : props.route.params.categoryName === 'art'
+              ? '미술'
+              : props.route.params.categoryName === 'cooking'
+              ? '요리'
+              : props.route.params.categoryName === 'handmade'
+              ? '수공예'
+              : props.route.params.categoryName === 'activity'
+              ? '액티비티'
+              : '기타'}
+          </Text>
+        </TouchableOpacity>
         <View style={styles.header_space} />
       </View>
 

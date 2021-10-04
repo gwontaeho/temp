@@ -2,30 +2,6 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   width: 360px;
-
-  & form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  & form input {
-    border: 1px black solid;
-    padding-left: 6px;
-    margin-top: 6px;
-    margin-bottom: 18px;
-    height: 48px;
-    cursor: pointer;
-  }
-
-  & form button {
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-top: 6px;
-  }
 `;
 
 export const Logo = styled.div`
@@ -35,6 +11,29 @@ export const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const Inputs = styled.div`
+  display: flex;
+  flex-direction: column;
+  input {
+    border: 1px black solid;
+    padding-left: 6px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+    height: 48px;
+    cursor: pointer;
+  }
+
+  .button {
+    border: 1px solid black;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 6px;
+  }
 `;
 
 export const Section = styled.div`

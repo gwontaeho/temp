@@ -181,4 +181,16 @@ router.post("/main", async (req, res, next) => {
   }
 });
 
+router.post("/product", async (req, res, next) => {
+  try {
+    const result = await Class.findOne({
+      where: { id: req.body.id },
+    });
+    console.log(result.dataValues);
+    return res.status(200).json(result.dataValues);
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
 module.exports = router;

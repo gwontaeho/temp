@@ -47,7 +47,7 @@ const User = (props) => {
       return window.alert("휴대전화를 정확히 입력해주세요");
 
     try {
-      await axios.post("/api/signup/user", {
+      await axios.post("/api/auth/signup/user", {
         id,
         password,
         name,
@@ -69,7 +69,7 @@ const User = (props) => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
 
     try {
-      const response = await axios.post("/api/signup/check", {
+      const response = await axios.post("/api/auth/signup/check", {
         id,
       });
       console.log(response.data === "ok");

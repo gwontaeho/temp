@@ -29,7 +29,9 @@ router.post("/add", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/history", verifyToken, async (req, res, next) => {
+// 구매자 : 예약내역
+
+router.post("/user/get", verifyToken, async (req, res, next) => {
   console.log(req.body);
   console.log(req.decoded.id);
 
