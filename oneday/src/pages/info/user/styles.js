@@ -1,17 +1,16 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  width: calc(100% - 24px);
-  padding-left: 24px;
+  width: 100%;
   display: flex;
   .routes {
-    padding: 24px;
     flex: 1;
   }
 `;
 
 export const Nav = styled.div`
-  width: 240px;
+  width: calc(240px - 24px);
+  padding-left: 24px;
   display: flex;
   flex-direction: column;
   border-right: 1px solid lightgray;

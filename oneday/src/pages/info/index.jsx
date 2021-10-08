@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, Redirect, Route, Switch } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import loadable from "@loadable/component";
+
 import { Container } from "./styles";
 
 const User = loadable(() => import("./user"));

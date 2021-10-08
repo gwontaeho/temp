@@ -2,6 +2,7 @@ import React from "react";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import loadable from "@loadable/component";
+
 import { Container, Nav } from "./styles";
 
 const UserInfo = loadable(() => import("./user_info"));

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../../middlewares/jwt");
+const { Op } = require("sequelize");
 
 const Schedule = require("../../models").Schedule;
 const Class = require("../../models").Class;
@@ -10,6 +11,32 @@ router.post("/", async (req, res, next) => {
   try {
     const findAllSchedule = await Schedule.findAll({
       where: { classId: req.body.classId },
+    });
+    findAllSchedule.forEach((v) => {
+      result.push(v.dataValues);
+    });
+    console.log(result);
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
+// 상품 > 일정목록
+router.post("/product", async (req, res, next) => {
+  let result = [];
+  try {
+    const findAllSchedule = await Schedule.findAll({
+      where: {
+        classId: req.body.classId,
+        ymd: {
+          [Op.gt]: req.body.ymd,
+        },
+      },
+      order: [
+        ["ymd", "ASC"],
+        ["time", "DESC"],
+      ],
     });
     findAllSchedule.forEach((v) => {
       result.push(v.dataValues);
@@ -77,6 +104,7 @@ router.post("/finish", verifyToken, async (req, res, next) => {
 router.post("/add", verifyToken, async (req, res, next) => {
   try {
     await Schedule.create({
+      ymd: req.body.ymd,
       time: req.body.time,
       personnel: req.body.personnel,
       reserved: 0,

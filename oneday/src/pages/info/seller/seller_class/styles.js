@@ -5,20 +5,19 @@ export const Container = styled.div`
   background-color: white;
 
   .btns {
-    height: 48px;
-    margin-bottom: 24px;
-    padding-left: 24px;
+    height: 72px;
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .btns a {
-    height: 100%;
-    text-align: center;
-    line-height: 48px;
+    padding: 12px;
   }
 
   .classes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    padding: 24px;
     gap: 24px;
   }
 
@@ -47,5 +46,4 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
 `;

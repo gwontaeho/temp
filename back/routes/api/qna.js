@@ -5,6 +5,49 @@ const { verifyToken } = require("../../middlewares/jwt");
 const Qna = require("../../models").Qna;
 const Class = require("../../models").Class;
 
+// 구매자, 판매자 : 상품상세 > 문의
+router.post("/get", async (req, res, next) => {
+  let result = [];
+  try {
+    const findAllQna = await Qna.findAll({
+      where: { classId: req.body.classId },
+      order: [["createdAt", "Desc"]],
+    });
+    findAllQna.forEach((v) => {
+      result.push(v.dataValues);
+    });
+    console.log(result);
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
+router.post("/gett", async (req, res, next) => {
+  let jsonResult = {};
+  let result = [];
+  let page = req.body.page;
+  let offset = 0;
+  if (page > 1) offset = 5 * (page - 1);
+  try {
+    const findAndCountAllQna = await Qna.findAndCountAll({
+      where: { classId: req.body.classId },
+      order: [["createdAt", "Desc"]],
+      offset,
+      limit: 5,
+    });
+    findAndCountAllQna.rows.forEach((v) => {
+      result.push(v.dataValues);
+    });
+    jsonResult.count = findAndCountAllQna.count;
+    jsonResult.result = result;
+
+    return res.status(200).json(jsonResult);
+  } catch (error) {
+    return res.status(401).send("error");
+  }
+});
+
 // 판매자 : 내정보 > 문의관리
 router.post("/page/seller", verifyToken, async (req, res, next) => {
   let jsonResult = {};
@@ -95,24 +138,6 @@ router.post("/detail", async (req, res, next) => {
     });
     console.log(findOneQna.dataValues);
     return res.status(200).json(findOneQna.dataValues);
-  } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-// 구매자, 판매자 : 상품상세 > 문의
-router.post("/get", async (req, res, next) => {
-  let result = [];
-  try {
-    const findAllQna = await Qna.findAll({
-      where: { classId: req.body.classId },
-      order: [["createdAt", "Desc"]],
-    });
-    findAllQna.forEach((v) => {
-      result.push(v.dataValues);
-    });
-    console.log(result);
-    return res.status(200).send(result);
   } catch (error) {
     return res.status(401).send("error");
   }

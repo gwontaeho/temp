@@ -31,25 +31,24 @@ const SellerClassCreate = ({ history }) => {
   const [isOpend, setIsOpend] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/auth/seller",
-          {},
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        setSeller(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    requestData();
+  }, []);
 
-    fetchData();
+  const requestData = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/auth/seller",
+        {},
+        {
+          headers: {
+            token: cookies.token,
+          },
+        }
+      );
+      setSeller(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const onChangeImg = useCallback((e) => {
@@ -117,13 +116,12 @@ const SellerClassCreate = ({ history }) => {
     formData.append("detail", JSON.stringify(stringary));
 
     try {
-      const response = await axios.post("/api/classes/create", formData, {
+      await axios.post("/api/classes/create", formData, {
         headers: {
           token: cookies.token,
         },
       });
       history.replace("/info/class");
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -187,10 +185,27 @@ const SellerClassCreate = ({ history }) => {
 
   return (
     <Container>
+      <Modal
+        isOpen={isOpend}
+        onRequestClose={closeModal}
+        style={{
+          content: {
+            width: "600px",
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <DaumPostcode onComplete={handleComplete} />
+      </Modal>
       <Header>클래스 생성</Header>
       <Buttons>
         <a onClick={onSubmit}>등록</a>
-        <Link to="/info/classes">취소</Link>
+        <Link to="/info/class">취소</Link>
       </Buttons>
       <Infos>
         <Img>
@@ -245,23 +260,6 @@ const SellerClassCreate = ({ history }) => {
               />
             </div>
           </div>
-          <Modal
-            isOpen={isOpend}
-            onRequestClose={closeModal}
-            style={{
-              content: {
-                width: "600px",
-                top: "50%",
-                left: "50%",
-                right: "auto",
-                bottom: "auto",
-                marginRight: "-50%",
-                transform: "translate(-50%, -50%)",
-              },
-            }}
-          >
-            <DaumPostcode onComplete={handleComplete} />
-          </Modal>
         </Address>
 
         <Details>

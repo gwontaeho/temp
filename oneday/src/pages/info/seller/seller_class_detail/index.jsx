@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-import "react-datepicker/dist/react-datepicker.css";
-import Calendar from "../../../../components/calendar";
+import Calendar from "./calendar/index";
 
 import {
   Container,
@@ -13,7 +13,6 @@ import {
   Schedule,
   Detail,
 } from "./styles";
-import axios from "axios";
 
 const ClassDetail = ({ match }) => {
   const hours = [
@@ -64,8 +63,8 @@ const ClassDetail = ({ match }) => {
   const [detail, setDetail] = useState([]);
   const [date, setDate] = useState(todayYmd); // 클릭된 날짜 (기본값 오늘)
   const [hour, setHour] = useState("00"); // 스케줄 시작 시각
-  const [endHour, setEndHour] = useState("00"); // 스케줄 종료 시각
   const [minute, setMinute] = useState("00"); // 스케줄 시작 분
+  const [endHour, setEndHour] = useState("00"); // 스케줄 종료 시각
   const [endMinute, setEndMinute] = useState("00"); // 스케줄 종료 분
   const [personnel, setPersonnel] = useState(1); // 스케줄 인원
   const [scheduleArray, setScheduleArray] = useState([]); // 스케줄 데이터
@@ -73,35 +72,35 @@ const ClassDetail = ({ match }) => {
 
   //클래스 데이터 요청
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/classes/class",
-          {
-            index: match.params.index,
+    requestData();
+  }, []);
+
+  const requestData = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/classes/class",
+        {
+          index: match.params.index,
+        },
+        {
+          headers: {
+            token: cookies.token,
           },
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        console.log("----------");
-        console.log(response.data);
-        setData(response.data);
-        setDetail(JSON.parse(response.data.detail));
-        loadSchedule(response.data.id);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+        }
+      );
+      console.log(response.data);
+      setData(response.data);
+      setDetail(JSON.parse(response.data.detail));
+      loadSchedule(response.data.id);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
     let ary = [];
     scheduleArray.forEach((v) => {
-      if (v.time.substring(0, 8) === date) ary.push(v);
+      if (String(v.ymd) === date) ary.push(v);
     });
     ary.sort((a, b) => a.time - b.time);
     setSelectedScheduleArray(ary);
@@ -134,10 +133,11 @@ const ClassDetail = ({ match }) => {
     }
 
     try {
-      const response = await axios.post(
+      await axios.post(
         "/api/schedule/add",
         {
-          time: date + start + end,
+          ymd: Number(date),
+          time: start + end,
           personnel,
           classId: data.id,
         },
@@ -177,20 +177,20 @@ const ClassDetail = ({ match }) => {
       <div className="schedule">
         <div className="item">
           <div>
-            {v.time.substring(8, 10) +
+            {v.time.substring(0, 2) +
               " : " +
-              v.time.substring(10, 12) +
+              v.time.substring(2, 4) +
               " ~ " +
-              v.time.substring(12, 14) +
+              v.time.substring(4, 6) +
               " : " +
-              v.time.substring(14, 16)}
+              v.time.substring(6, 8)}
           </div>
           <div>
             {v.reserved} / {v.personnel}
           </div>
           <div>{v.state === 0 ? "진행 중" : "종료"}</div>
         </div>
-        <Link to={`/info/schedules/${v.id}`}>상세</Link>
+        <Link to={`/info/schedule/${v.id}`}>상세</Link>
       </div>
     );
   });
@@ -210,7 +210,7 @@ const ClassDetail = ({ match }) => {
     <Container>
       <Header>클래스 상세</Header>
       {Object.keys(data).length === 0 ? null : (
-        <React.Fragment>
+        <>
           <Info>
             <img src={data.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
             <div>
@@ -245,7 +245,7 @@ const ClassDetail = ({ match }) => {
               </div>
             </div>
           </Info>
-        </React.Fragment>
+        </>
       )}
       <Header>클래스 일정</Header>
       <Schedule>

@@ -25,9 +25,7 @@ const SellerClass = () => {
           },
         }
       );
-
-      let newClasses = [...response.data];
-      setClasses(newClasses);
+      setClasses(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -35,7 +33,7 @@ const SellerClass = () => {
 
   const classList = classes.map((v) => {
     return (
-      <Link to={`/info/class/${v.index}`}>
+      <Link to={`/info/class/${v.index}`} key={v.index}>
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
         <div>{v.name}</div>
       </Link>

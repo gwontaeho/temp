@@ -1,6 +1,15 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+  containerStyle: {
+    backgroundColor: 'white',
+    height: '50%',
+    width: '90%',
+  },
+  modal: {
+    alignItems: 'center',
+  },
+
   container: {
     flex: 1,
     borderWidth: 3,
@@ -27,6 +36,12 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
 
+  btn: {
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   nav: {
     flexDirection: 'row',
   },
@@ -35,6 +50,15 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  fab: {
+    position: 'absolute',
+    margin: 12,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+    backgroundColor: 'lightgray',
   },
 });
 

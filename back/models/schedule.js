@@ -2,8 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     "schedule",
     {
+      ymd: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       time: {
-        type: DataTypes.STRING(16),
+        type: DataTypes.STRING(8),
         allowNull: false,
       },
       personnel: {
