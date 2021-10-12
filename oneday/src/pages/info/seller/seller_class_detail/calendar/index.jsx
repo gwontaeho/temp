@@ -27,12 +27,12 @@ const Calendar = (props) => {
   }, [ym]);
 
   useEffect(() => {
-    let newScheduleDateArray = [];
-    props.scheduleArray.map((v) => {
-      newScheduleDateArray.push(v.time.substring(0, 8));
+    const ary = props.scheduleData.map((v) => {
+      return v.ymd;
     });
-    setScheduleDateArray(newScheduleDateArray);
-  }, [props.scheduleArray]);
+    setScheduleDateArray(ary);
+    console.log(ary);
+  }, []);
 
   const createBody = useCallback(() => {
     const firstDay = new Date(ym.setDate(1)).getDay();
@@ -79,7 +79,7 @@ const Calendar = (props) => {
 
   const bodyList = body.map((v) => {
     return (
-      <React.Fragment>
+      <>
         <div
           className={
             "date" +
@@ -92,7 +92,7 @@ const Calendar = (props) => {
         >
           {v.substring(6, 8)}
         </div>
-      </React.Fragment>
+      </>
     );
   });
 

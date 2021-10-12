@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     state: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+      allowNull: false,
     },
   });
 };

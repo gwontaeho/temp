@@ -21,7 +21,7 @@ export const Nav = styled.div`
   align-items: center;
   justify-content: flex-end;
 
-  div {
+  a {
     margin-right: 24px;
     cursor: pointer;
     :hover {

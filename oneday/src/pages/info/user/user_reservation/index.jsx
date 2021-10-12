@@ -49,12 +49,12 @@ const UserReservation = () => {
           newWaiting.push(v);
         }
       });
+      setWaiting(newWaiting);
       setIng(newIng);
       setPast(newPast);
       setRequest(newRequest);
       setCanceled(newCancled);
       setSelected(newIng);
-      setWaiting(newWaiting);
 
       console.log(response.data);
     } catch (error) {
@@ -91,7 +91,7 @@ const UserReservation = () => {
       ". " +
       new Date(v.createdAt).getDate();
     return (
-      <Link to={`/info/history/${v.id}`}>
+      <Link to={`/info/reservation/${v.id}`}>
         <Item onClick={() => onClickItem(v)}>
           <div>
             <img

@@ -1,13 +1,9 @@
 import React, { useState, useCallback } from "react";
-import { useCookies } from "react-cookie";
-import { Redirect } from "react-router";
 import axios from "axios";
 
 import { Container, Buttons } from "./styles";
 
 const User = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-
   const idRegExp = /^[a-zA-Z0-9]{4,12}$/;
   const passwordRegExp = /^[a-zA-z0-9]{8,24}$/;
   const nameRegExp = /^[가-힣]{2,8}$/;
@@ -47,7 +43,7 @@ const User = (props) => {
       return window.alert("휴대전화를 정확히 입력해주세요");
 
     try {
-      await axios.post("/api/auth/signup/user", {
+      await axios.post("/api/auth/user/create", {
         id,
         password,
         name,
@@ -55,7 +51,7 @@ const User = (props) => {
         gender,
         phone,
       });
-      return props.history.push("/");
+      return props.history.replace("/");
     } catch (error) {
       console.log(error);
     }
@@ -69,11 +65,11 @@ const User = (props) => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
 
     try {
-      const response = await axios.post("/api/auth/signup/check", {
+      const response = await axios.post("/api/auth/overlap", {
         id,
       });
-      console.log(response.data === "ok");
-      if (response.data === "ok") setIdCheck(true);
+      console.log(response);
+      if (response.status === 200) setIdCheck(true);
     } catch (error) {
       console.log(error);
     }
@@ -135,10 +131,6 @@ const User = (props) => {
   const onClickCancel = useCallback(() => {
     return props.history.push("/");
   }, []);
-
-  if (cookies.token) {
-    return <Redirect to="/" />;
-  }
 
   return (
     <Container>

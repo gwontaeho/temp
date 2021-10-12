@@ -6,7 +6,7 @@ import loadable from "@loadable/component";
 import { Container, Nav } from "./styles";
 
 const UserInfo = loadable(() => import("./user_info"));
-const UserInfoModify = loadable(() => import("./user_info_modify"));
+const UserInfoUpdate = loadable(() => import("./user_info_update"));
 const UserReservation = loadable(() => import("./user_reservation"));
 const UserReservationDetail = loadable(() =>
   import("./user_reservation_detail")
@@ -31,7 +31,7 @@ const User = () => {
       <div className="routes">
         <Switch>
           <Route exact path="/info" component={UserInfo} />
-          <Route exact path="/info/modify" component={UserInfoModify} />
+          <Route exact path="/info/modify" component={UserInfoUpdate} />
           <Route exact path="/info/reservation" component={UserReservation} />
           <Route
             exact

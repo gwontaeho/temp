@@ -3,11 +3,32 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   containerStyle: {
     backgroundColor: 'white',
-    height: '50%',
     width: '90%',
   },
+
   modal: {
     alignItems: 'center',
+  },
+  month_item: {
+    height: 60,
+    width: 60,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reservation_button: {
+    borderWidth: 1,
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  personnel: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  personnel_item: {
+    padding: 12,
   },
 
   container: {

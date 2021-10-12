@@ -42,20 +42,20 @@ const Layout = () => {
       </Sign>
       <Nav>
         <div>
-          <Link to="/category/all">전체</Link>
-          <Link to="/category/flower">플라워</Link>
-          <Link to="/category/art">미술</Link>
-          <Link to="/category/cooking">요리</Link>
-          <Link to="/category/handmade">수공예</Link>
-          <Link to="/category/activity">액티비티</Link>
-          <Link to="/category/etc">기타</Link>
+          <Link to="/category?name=all&sort=rating">전체</Link>
+          <Link to="/category?name=flower&sort=rating">플라워</Link>
+          <Link to="/category?name=art&sort=rating">미술</Link>
+          <Link to="/category?name=cooking&sort=rating">요리</Link>
+          <Link to="/category?name=handmade&sort=rating">수공예</Link>
+          <Link to="/category?name=activity&sort=rating">액티비티</Link>
+          <Link to="/category?name=etc&sort=rating">기타</Link>
         </div>
       </Nav>
       <Switch>
         <Route exact path="/" component={Main} />
         <Route path="/info" component={Info} />
-        <Route path="/category/:category" component={Category} />
-        <Route path="/product/:product" component={Product} />
+        <Route path="/category" component={Category} />
+        <Route path="/product" component={Product} />
         <Route path="/reservation" component={Reservation} />
       </Switch>
     </Container>

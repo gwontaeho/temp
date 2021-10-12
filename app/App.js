@@ -7,7 +7,11 @@ import Login from './screen/login';
 import Category from './screen/category';
 import Product from './screen/product';
 import Reservation from './screen/reservation';
+import ReservationOk from './screen/reservation_ok';
+import History from './screen/history';
+import HistoryDetail from './screen/history_detail';
 import Qna from './screen/qna';
+import QnaDetail from './screen/qna_detail';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +24,11 @@ const App = () => {
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="Reservation" component={Reservation} />
+        <Stack.Screen name="ReservationOk" component={ReservationOk} />
+        <Stack.Screen name="History" component={History} />
+        <Stack.Screen name="HistoryDetail" component={HistoryDetail} />
         <Stack.Screen name="Qna" component={Qna} />
+        <Stack.Screen name="QnaDetail" component={QnaDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import {Divider, FAB, Modal, Portal, Provider} from 'react-native-paper';
+import {Divider, FAB, Modal, Portal} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../axios';
 
 import styles from './styles';
@@ -31,35 +32,56 @@ const Product = props => {
         : String(today.getDate()),
     );
 
-  const [classData, setClassData] = useState({});
+  const [user, setUser] = useState({});
+  const [productData, setProductData] = useState({});
+  const [scheduleData, setScheduleData] = useState([]);
+  const [scheduleMonth, setScheduleMonth] = useState([]);
+  const [scheduleYmd, setScheduleYmd] = useState([]);
+  const [selectedYmd, setSelectedYmd] = useState([]);
+  const [selectedSchedule, setSelectedSchedule] = useState([]);
+  const [schedule, setSchedule] = useState({});
+  const [personnel, setPersonnel] = useState(1);
   const [selected, setSelected] = useState(0);
   const [visible, setVisible] = useState(false);
 
   let scrollViewRef = useRef();
 
   useEffect(() => {
-    requestClassData();
-    requestSchedule();
+    check();
+    requestProductData();
   }, []);
 
-  const requestClassData = useCallback(async () => {
+  const check = useCallback(async () => {
     try {
-      const response = await axios.post('/api/classes/product', {
-        id: props.route.params.id,
-      });
-      setClassData(response.data);
+      const jsonValue = await AsyncStorage.getItem('jsonValue');
+      if (jsonValue !== null) {
+        setUser(JSON.parse(jsonValue));
+      }
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  const requestSchedule = useCallback(async () => {
+  const requestProductData = useCallback(async () => {
     try {
-      const response = await axios.post('/api/schedule/product', {
-        classId: props.route.params.id,
-        ymd: Number(todayYmd),
-      });
+      const response = await axios.get(
+        `/api/product?id=${props.route.params.id}`,
+      );
       console.log(response.data);
+      let newScheduleMonth = [];
+      let newScheduleYmd = [];
+      response.data.schedules.forEach(v => {
+        newScheduleMonth.push(String(v.ymd).substring(4, 6));
+        newScheduleYmd.push(v.ymd);
+      });
+      const set = new Set(newScheduleYmd);
+      const set2 = new Set(newScheduleMonth);
+      newScheduleYmd = [...set];
+      newScheduleMonth = [...set2];
+      setScheduleData(response.data.schedules);
+      setScheduleMonth(newScheduleMonth);
+      setScheduleYmd(newScheduleYmd);
+      setProductData(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -84,10 +106,107 @@ const Product = props => {
     }
   }, []);
 
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const showModal = useCallback(() => setVisible(true), []);
+  const hideModal = useCallback(() => setVisible(false), []);
 
-  return Object.keys(classData).length === 0 ? null : (
+  const onPressMonth = useCallback(
+    v => {
+      console.log(v);
+      let newSelectedYmd = [];
+      scheduleYmd.forEach(ymd => {
+        if (v === String(ymd).substring(4, 6)) newSelectedYmd.push(ymd);
+      });
+      setSelectedYmd(newSelectedYmd);
+      setSelectedSchedule([]);
+      setSchedule({});
+      setPersonnel(1);
+    },
+    [scheduleYmd],
+  );
+
+  const onPressYmd = useCallback(
+    v => {
+      let newSelectedSchedule = [];
+      scheduleData.forEach(schedule => {
+        if (schedule.ymd === v) newSelectedSchedule.push(schedule);
+      });
+      setSelectedSchedule(newSelectedSchedule);
+      setSchedule({});
+      setPersonnel(1);
+    },
+    [scheduleData],
+  );
+
+  const onPressSchedule = useCallback(v => {
+    console.log(v);
+    setPersonnel(1);
+    setSchedule(v);
+  }, []);
+
+  const onPressDec = useCallback(() => {
+    if (personnel > 1) setPersonnel(personnel - 1);
+  }, [personnel]);
+
+  const onPressInc = useCallback(() => {
+    if (schedule.reserved + personnel < schedule.personnel)
+      setPersonnel(personnel + 1);
+  }, [personnel, schedule]);
+
+  const onPressReservation = useCallback(() => {
+    hideModal();
+    props.navigation.navigate('Reservation', {
+      productData,
+      schedule,
+      user,
+      personnel,
+    });
+  }, [productData, schedule, user, personnel]);
+
+  const renderMonth = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.month_item}
+        onPress={() => onPressMonth(item)}>
+        <Text>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderYmd = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.month_item}
+        onPress={() => onPressYmd(item)}>
+        <Text>{String(item).substring(6, 8)}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderSchedule = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.month_item}
+        onPress={() => {
+          if (item.reserved !== item.personnel) onPressSchedule(item);
+        }}>
+        <Text>
+          {item.start.substr(0, 2) +
+            ' : ' +
+            item.start.substr(2, 4) +
+            ' ~ ' +
+            item.end.substr(0, 2) +
+            ' : ' +
+            item.end.substr(2, 4) +
+            '   ' +
+            item.reserved +
+            ' / ' +
+            item.personnel}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  return Object.keys(productData).length === 0 ? null : (
     <View style={styles.container}>
       <Portal>
         <Modal
@@ -95,7 +214,59 @@ const Product = props => {
           onDismiss={hideModal}
           style={styles.modal}
           contentContainerStyle={styles.containerStyle}>
-          <FlatList />
+          <View>
+            <View>
+              <Text>월 선택</Text>
+            </View>
+            <FlatList
+              data={scheduleMonth}
+              renderItem={renderMonth}
+              keyExtractor={item => item}
+              horizontal={true}
+            />
+          </View>
+          {Object.keys(selectedYmd).length === 0 ? null : (
+            <View>
+              <Text>날짜 선택</Text>
+              <FlatList
+                data={selectedYmd}
+                renderItem={renderYmd}
+                keyExtractor={item => item}
+                horizontal={true}
+              />
+            </View>
+          )}
+          {Object.keys(selectedSchedule).length === 0 ? null : (
+            <View>
+              <Text>일정 선택</Text>
+              <FlatList
+                data={selectedSchedule}
+                renderItem={renderSchedule}
+                keyExtractor={item => item.id}
+                horizontal={true}
+              />
+            </View>
+          )}
+          {Object.keys(schedule).length === 0 ? null : (
+            <View style={styles.reservation_button}>
+              <View style={styles.personnel}>
+                <TouchableOpacity
+                  style={styles.personnel_item}
+                  onPress={onPressDec}>
+                  <Text>-</Text>
+                </TouchableOpacity>
+                <Text>{personnel}</Text>
+                <TouchableOpacity
+                  style={styles.personnel_item}
+                  onPress={onPressInc}>
+                  <Text>+</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={onPressReservation}>
+                <Text>신청하기</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </Modal>
       </Portal>
       <View style={styles.header}>
@@ -111,18 +282,27 @@ const Product = props => {
           </TouchableOpacity>
         </View>
       </View>
-      <FAB style={styles.fab} small label="신청하기" onPress={showModal} />
+      {Object.keys(user).length === 0 ? (
+        <FAB
+          style={styles.fab}
+          small
+          label="로그인"
+          onPress={() => props.navigation.navigate('Login')}
+        />
+      ) : (
+        <FAB style={styles.fab} small label="신청하기" onPress={showModal} />
+      )}
       <ScrollView ref={scrollViewRef}>
         <Image
           source={{
             uri:
               'http://172.30.1.27:3005' +
-              classData.img.replace(/\\/gi, '/').replace(/public/gi, ''),
+              productData.img.replace(/\\/gi, '/').replace(/public/gi, ''),
           }}
           style={styles.image}
         />
         <View style={styles.title}>
-          <Text>{category(classData.category) + classData.name}</Text>
+          <Text>{category(productData.category) + productData.name}</Text>
         </View>
         <Divider />
         <View style={styles.nav}>
@@ -144,11 +324,15 @@ const Product = props => {
         </View>
         <Divider />
         {selected === 0 ? (
-          <Detail details={classData.detail} />
+          <Detail details={productData.detail} />
         ) : selected === 1 ? (
-          <Review />
+          <Review productId={productData.id} />
         ) : (
-          <Qna classId={classData.id} />
+          <Qna
+            productId={productData.id}
+            user={user}
+            sellerId={productData.sellerId}
+          />
         )}
       </ScrollView>
     </View>

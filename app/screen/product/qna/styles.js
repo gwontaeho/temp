@@ -4,9 +4,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  title: {
+  header: {
     height: 60,
+    flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  write: {
+    padding: 12,
   },
 
   nav: {
@@ -18,6 +23,23 @@ const styles = StyleSheet.create({
   nav_item: {
     padding: 6,
     marginHorizontal: 12,
+  },
+
+  input: {
+    borderWidth: 1,
+    marginHorizontal: 12,
+    borderRadius: 12,
+  },
+  buttons: {
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingRight: 12,
+  },
+  button: {
+    marginLeft: 12,
+    padding: 12,
   },
 
   data: {

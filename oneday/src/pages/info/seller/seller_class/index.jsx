@@ -17,7 +17,7 @@ const SellerClass = () => {
   const requestClass = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/classes",
+        "/api/product/seller/all",
         {},
         {
           headers: {
@@ -33,7 +33,7 @@ const SellerClass = () => {
 
   const classList = classes.map((v) => {
     return (
-      <Link to={`/info/class/${v.index}`} key={v.index}>
+      <Link to={`/info/class/${v.id}`} key={v.id}>
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
         <div>{v.name}</div>
       </Link>

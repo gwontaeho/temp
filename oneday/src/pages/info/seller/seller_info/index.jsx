@@ -25,6 +25,7 @@ const SellerInfo = (props) => {
           },
         }
       );
+      console.log(response.data);
       setData(response.data);
     } catch (error) {
       console.log(error);
@@ -71,7 +72,7 @@ const SellerInfo = (props) => {
       <Button>
         <Link
           to={{
-            pathname: "/info/modify",
+            pathname: "/info/update",
             state: { data },
           }}
         >

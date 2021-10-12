@@ -24,10 +24,10 @@ const Main = () => {
 
   const requestData = useCallback(async () => {
     try {
-      const response = await axios.post("/api/classes/main", {});
+      const response = await axios.get("/api/product/main");
       console.log(response.data);
-      setPopClass(response.data.popClass);
-      setNewClass(response.data.newClass);
+      setPopClass(response.data.popProduct);
+      setNewClass(response.data.newProduct);
     } catch (error) {
       console.log(error);
     }
@@ -35,14 +35,14 @@ const Main = () => {
 
   const popClassList = popClass.map((v) => {
     return (
-      <div>
-        <Link to={`/product/${v.id}`} key={v.id} className="class">
+      <div key={v.id}>
+        <Link to={`/product?id=${v.id}`} className="class">
           <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
           <div className="address">
             <IoLocationOutline />
             {v.address.split("&")[0]}
           </div>
-          <div>{"[" + v.seller.category + "] " + v.name}</div>
+          <div>{"[" + v.category + "] " + v.name}</div>
           <div>{v.price}원</div>
         </Link>
       </div>
@@ -51,14 +51,14 @@ const Main = () => {
 
   const newClassList = newClass.map((v) => {
     return (
-      <div>
-        <Link to={`/product/${v.id}`} key={v.id} className="class">
+      <div key={v.id}>
+        <Link to={`/product?id=${v.id}`} className="class">
           <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
           <div className="address">
             <IoLocationOutline />
             {v.address.split("&")[0]}
           </div>
-          <div>{"[" + v.seller.category + "] " + v.name}</div>
+          <div>{"[" + v.category + "] " + v.name}</div>
           <div>{v.price}원</div>
         </Link>
       </div>

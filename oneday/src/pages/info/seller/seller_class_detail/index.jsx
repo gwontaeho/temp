@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import constants from "./constants";
 
 import Calendar from "./calendar/index";
 
@@ -15,34 +16,6 @@ import {
 } from "./styles";
 
 const ClassDetail = ({ match }) => {
-  const hours = [
-    "00",
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-  ];
-  const minutes = ["00", "10", "20", "30", "40", "50"];
   const today = new Date();
   const todayYmd =
     String(today.getFullYear()) +
@@ -61,26 +34,26 @@ const ClassDetail = ({ match }) => {
 
   const [data, setData] = useState({});
   const [detail, setDetail] = useState([]);
+  const [scheduleData, setScheduleData] = useState([]); // 스케줄 데이터
+  const [selectedScheduleArray, setSelectedScheduleArray] = useState([]);
   const [date, setDate] = useState(todayYmd); // 클릭된 날짜 (기본값 오늘)
   const [hour, setHour] = useState("00"); // 스케줄 시작 시각
   const [minute, setMinute] = useState("00"); // 스케줄 시작 분
   const [endHour, setEndHour] = useState("00"); // 스케줄 종료 시각
   const [endMinute, setEndMinute] = useState("00"); // 스케줄 종료 분
   const [personnel, setPersonnel] = useState(1); // 스케줄 인원
-  const [scheduleArray, setScheduleArray] = useState([]); // 스케줄 데이터
-  const [selectedScheduleArray, setSelectedScheduleArray] = useState([]);
 
   //클래스 데이터 요청
   useEffect(() => {
-    requestData();
+    requestProductData();
   }, []);
 
-  const requestData = useCallback(async () => {
+  const requestProductData = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/classes/class",
+        "/api/product/seller/detail",
         {
-          index: match.params.index,
+          id: match.params.id,
         },
         {
           headers: {
@@ -91,7 +64,20 @@ const ClassDetail = ({ match }) => {
       console.log(response.data);
       setData(response.data);
       setDetail(JSON.parse(response.data.detail));
-      loadSchedule(response.data.id);
+      requestScheduleData(response.data.id);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  // 스케줄 데이터 요청
+  const requestScheduleData = useCallback(async (v) => {
+    try {
+      const response = await axios.post("/api/schedule/seller/product", {
+        productId: v,
+      });
+      console.log(response.data);
+      setScheduleData(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -99,25 +85,12 @@ const ClassDetail = ({ match }) => {
 
   useEffect(() => {
     let ary = [];
-    scheduleArray.forEach((v) => {
+    scheduleData.forEach((v) => {
       if (String(v.ymd) === date) ary.push(v);
     });
-    ary.sort((a, b) => a.time - b.time);
+    ary.sort((a, b) => a.start + a.end - (b.start + b.end));
     setSelectedScheduleArray(ary);
-  }, [date, scheduleArray]);
-
-  // 스케줄 데이터 요청
-  const loadSchedule = useCallback(async (v) => {
-    try {
-      const response = await axios.post("/api/schedule", {
-        classId: v,
-      });
-      console.log(response.data);
-      setScheduleArray(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  }, [date, scheduleData]);
 
   // 스케줄 추가
   const onClickAdd = useCallback(async () => {
@@ -133,13 +106,14 @@ const ClassDetail = ({ match }) => {
     }
 
     try {
-      await axios.post(
-        "/api/schedule/add",
+      const response = await axios.post(
+        "/api/schedule/create",
         {
           ymd: Number(date),
-          time: start + end,
+          start,
+          end,
           personnel,
-          classId: data.id,
+          productId: data.id,
         },
         {
           headers: {
@@ -147,11 +121,21 @@ const ClassDetail = ({ match }) => {
           },
         }
       );
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
-    loadSchedule(data.id);
-  }, [data, date, hour, minute, endHour, endMinute, personnel, loadSchedule]);
+    requestScheduleData(data.id);
+  }, [
+    data,
+    date,
+    hour,
+    minute,
+    endHour,
+    endMinute,
+    personnel,
+    requestScheduleData,
+  ]);
 
   const onChangeDate = useCallback((v) => {
     setDate(v);
@@ -177,13 +161,13 @@ const ClassDetail = ({ match }) => {
       <div className="schedule">
         <div className="item">
           <div>
-            {v.time.substring(0, 2) +
+            {v.start.substr(0, 2) +
               " : " +
-              v.time.substring(2, 4) +
+              v.start.substr(2, 2) +
               " ~ " +
-              v.time.substring(4, 6) +
+              v.end.substr(0, 2) +
               " : " +
-              v.time.substring(6, 8)}
+              v.end.substr(2, 2)}
           </div>
           <div>
             {v.reserved} / {v.personnel}
@@ -241,7 +225,7 @@ const ClassDetail = ({ match }) => {
                 </div>
               </div>
               <div className="btn">
-                <Link to={`/info/class/modify/${data.index}`}>수정하기</Link>
+                <Link to={`/info/class/modify/${data.id}`}>수정하기</Link>
               </div>
             </div>
           </Info>
@@ -250,7 +234,7 @@ const ClassDetail = ({ match }) => {
       <Header>클래스 일정</Header>
       <Schedule>
         <div className="calendar">
-          <Calendar scheduleArray={scheduleArray} onChangeDate={onChangeDate} />
+          <Calendar scheduleData={scheduleData} onChangeDate={onChangeDate} />
         </div>
         <div className="scheduleList">
           <div className="clickedDate">
@@ -269,7 +253,7 @@ const ClassDetail = ({ match }) => {
       <AddSchedule>
         <div>수강시간 :</div>
         <select onChange={onChangeHour}>
-          {hours.map((v) => {
+          {constants.hours.map((v) => {
             return (
               <option key={v} value={v}>
                 {v}
@@ -278,7 +262,7 @@ const ClassDetail = ({ match }) => {
           })}
         </select>
         <select onChange={onChangeMinute}>
-          {minutes.map((v) => {
+          {constants.minutes.map((v) => {
             return (
               <option key={v} value={v}>
                 {v}
@@ -288,7 +272,7 @@ const ClassDetail = ({ match }) => {
         </select>
         <div>부터</div>
         <select onChange={onChangeEndHour}>
-          {hours.map((v) => {
+          {constants.hours.map((v) => {
             return (
               <option key={v} value={v}>
                 {v}
@@ -297,7 +281,7 @@ const ClassDetail = ({ match }) => {
           })}
         </select>
         <select onChange={onChangeEndMinute}>
-          {minutes.map((v) => {
+          {constants.minutes.map((v) => {
             return (
               <option key={v} value={v}>
                 {v}

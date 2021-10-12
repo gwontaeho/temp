@@ -22,10 +22,10 @@ const SellerQnaDetail = (props) => {
   const [answerText, setAnswerText] = useState("");
 
   useEffect(() => {
-    getQnaDetail();
+    requestQnaData();
   }, []);
 
-  const getQnaDetail = useCallback(async () => {
+  const requestQnaData = useCallback(async () => {
     try {
       const response = await axios.post(
         "/api/qna/detail",
@@ -69,7 +69,7 @@ const SellerQnaDetail = (props) => {
         { headers: { token: cookies.token } }
       );
       closeModal();
-      getQnaDetail();
+      requestQnaData();
     } catch (error) {
       console.log(error);
     }
@@ -120,7 +120,7 @@ const SellerQnaDetail = (props) => {
         </QnaItem>
         <QnaItem>
           <div className="name">{qnaData.userId}</div>
-          <div className="class">{qnaData.class.name}</div>
+          <div className="class">{qnaData.product.name}</div>
           <div className="date">{qnaData.createdAt.substr(0, 10)}</div>
           {qnaData.state === 0 ? (
             <div className="date"></div>

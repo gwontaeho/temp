@@ -18,28 +18,47 @@ const Qna = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [isOpend, setIsOpend] = useState(false);
-  const [questionText, setQuestionText] = useState("");
+  const [question, setQuestion] = useState("");
   const [qnaData, setQnaData] = useState([]);
 
   useEffect(() => {
-    console.log("-------------");
-    console.log(props);
+    console.log(props.type);
+    requestQnaData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post("/api/qna/get", {
-          classId: props.classId,
-        });
-        console.log(response.data);
-        setQnaData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const requestQnaData = useCallback(async () => {
+    console.log("abc");
+    try {
+      const response = await axios.get(`/api/qna?productId=${props.productId}`);
+      console.log(response.data);
+      setQnaData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [props]);
+
+  const requsetCreateQuestion = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/qna/question",
+        {
+          question,
+          productId: props.productId,
+          sellerId: props.sellerId,
+        },
+        { headers: { token: cookies.token } }
+      );
+      requestQnaData();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [question]);
+
+  const onClickSave = useCallback(() => {
+    requsetCreateQuestion();
+    closeModal();
+  }, [question]);
 
   const openModal = useCallback(() => {
     setIsOpend(true);
@@ -49,29 +68,9 @@ const Qna = (props) => {
     setIsOpend(false);
   }, []);
 
-  const onChangeQuestionText = useCallback((e) => {
-    setQuestionText(e.target.value);
-    console.log(e.target.value);
+  const onChangeQuestion = useCallback((e) => {
+    setQuestion(e.target.value);
   }, []);
-
-  const onClickSave = useCallback(async () => {
-    try {
-      const response = await axios.post(
-        "/api/qna/question",
-        {
-          question: questionText,
-          classId: props.classId,
-          sellerId: props.sellerId,
-        },
-        { headers: { token: cookies.token } }
-      );
-      console.log(response.data);
-      closeModal();
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [props, questionText]);
 
   const qnaDataList = qnaData.map((v) => {
     return (
@@ -138,8 +137,8 @@ const Qna = (props) => {
           <textarea
             maxLength="200"
             rows="5"
-            value={questionText}
-            onChange={onChangeQuestionText}
+            value={question}
+            onChange={onChangeQuestion}
           />
         </QnaTextarea>
       </Modal>

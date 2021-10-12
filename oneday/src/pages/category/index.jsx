@@ -1,53 +1,36 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import qs from "qs";
 import { Container, Header, Nav, Classes } from "./styles";
 import { IoLocationOutline } from "react-icons/io5";
 import Rating from "@material-ui/lab/Rating";
 
 const Category = (props) => {
+  const query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
   const [classArray, setClassArray] = useState([]);
 
   useEffect(() => {
-    console.log(props.match.params.category);
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(`/api/category`, {
-          category: props.match.params.category,
-          sort: "rating",
-        });
-        setClassArray(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    console.log(query);
+    requestProductData();
   }, [props]);
 
-  // 정렬
-  const onClickNav = useCallback(
-    async (e) => {
-      const sort = e.target.getAttribute("value");
-      console.log(sort);
-      try {
-        const response = await axios.post(`/api/category`, {
-          category: props.match.params.category,
-          sort,
-        });
-        setClassArray(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [props]
-  );
+  const requestProductData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `/api/product/category?name=${query.name}&sort=${query.sort}`
+      );
+      setClassArray(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [props]);
 
   // 클래스
   const classList = classArray.map((v) => {
     return (
-      <Link to={`/product/${v.id}`} key={v.id} className="class">
+      <Link to={`/product?id=${v.id}`} key={v.id} className="class">
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
         <div className="address">
           <IoLocationOutline />
@@ -87,18 +70,10 @@ const Category = (props) => {
           : "기타"}
       </Header>
       <Nav>
-        <div value="rating" onClick={onClickNav}>
-          평점순
-        </div>
-        <div value="sold" onClick={onClickNav}>
-          판매순
-        </div>
-        <div value="lowPrice" onClick={onClickNav}>
-          낮은 가격순
-        </div>
-        <div value="highPrice" onClick={onClickNav}>
-          높은 가격순
-        </div>
+        <Link to={`/category?name=${query.name}&sort=rating`}>평점순</Link>
+        <Link to={`/category?name=${query.name}&sort=sold`}>판매순</Link>
+        <Link to={`/category?name=${query.name}&sort=low`}>낮은 가격순</Link>
+        <Link to={`/category?name=${query.name}&sort=high`}>높은 가격순</Link>
       </Nav>
       <Classes>{classList}</Classes>
     </Container>

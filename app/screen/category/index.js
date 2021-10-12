@@ -6,37 +6,22 @@ import styles from './styles';
 
 const Category = props => {
   const [products, setProducts] = useState([]);
+  const [sort, setSort] = useState('rating');
 
   useEffect(() => {
     requestCategoryData();
-  }, []);
+  }, [sort]);
 
   const requestCategoryData = useCallback(async () => {
     try {
-      const response = await axios.post('/api/category', {
-        category: props.route.params.categoryName,
-        sort: 'rating',
-      });
-      console.log(response.data);
+      const response = await axios.get(
+        `/api/product/category?name=${props.route.params.categoryName}&sort=${sort}`,
+      );
       setProducts(response.data);
     } catch (error) {
       console.log(error);
     }
-  }, []);
-
-  const onPressSort = useCallback(async v => {
-    console.log(v);
-    try {
-      const response = await axios.post('/api/category', {
-        category: props.route.params.categoryName,
-        sort: v,
-      });
-      setProducts(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  }, [sort]);
 
   const onPressContent = useCallback(v => {
     props.navigation.navigate('Product', {
@@ -84,16 +69,16 @@ const Category = props => {
       </View>
 
       <View style={styles.sort}>
-        <TouchableOpacity onPress={() => onPressSort('rating')}>
+        <TouchableOpacity onPress={() => setSort('rating')}>
           <Text style={styles.sort_text}>평점순</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressSort('sold')}>
+        <TouchableOpacity onPress={() => setSort('sold')}>
           <Text style={styles.sort_text}>판매순</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressSort('lowPrice')}>
+        <TouchableOpacity onPress={() => setSort('low')}>
           <Text style={styles.sort_text}>낮은 가격순</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressSort('highPrice')}>
+        <TouchableOpacity onPress={() => setSort('high')}>
           <Text style={styles.sort_text}>높은 가격순</Text>
         </TouchableOpacity>
       </View>

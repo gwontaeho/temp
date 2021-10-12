@@ -6,18 +6,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      time: {
-        type: DataTypes.STRING(8),
+      start: {
+        type: DataTypes.STRING(4),
+        allowNull: false,
+      },
+      end: {
+        type: DataTypes.STRING(4),
         allowNull: false,
       },
       personnel: {
         type: DataTypes.INTEGER,
+        allowNull: false,
       },
       reserved: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       state: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
     },
     {

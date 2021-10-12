@@ -1,7 +1,5 @@
 import React from "react";
 import { useState, useCallback } from "react";
-import { useCookies } from "react-cookie";
-import { Redirect } from "react-router";
 import Modal from "react-modal";
 import axios from "axios";
 import DaumPostcode from "react-daum-postcode";
@@ -10,8 +8,6 @@ import { Container, Buttons } from "./styles";
 Modal.setAppElement("#root");
 
 const Seller = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-
   const idRegExp = /^[a-zA-Z0-9]{4,12}$/;
   const passwordRegExp = /^[a-zA-z0-9]{8,24}$/;
   const nameRegExp = /^[가-힣]{2,8}$/;
@@ -57,11 +53,11 @@ const Seller = (props) => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
 
     try {
-      const response = await axios.post("/api/auth/signup/check", {
+      const response = await axios.post("/api/auth/overlap", {
         id,
       });
-      console.log(response.data === "ok");
-      if (response.data === "ok") setIdCheck(true);
+      console.log(response);
+      if (response.status === 200) setIdCheck(true);
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +75,6 @@ const Seller = (props) => {
   const onChangePassword = useCallback(
     (e) => {
       validation(passwordRef);
-
       setPassword(e.target.value);
     },
     [passwordRef]
@@ -179,7 +174,7 @@ const Seller = (props) => {
       return window.alert("사업자등록번호를 정확히 입력해주세요");
 
     try {
-      await axios.post("/api/auth/signup/seller", {
+      await axios.post("/api/auth/seller/create", {
         id,
         password,
         company,
@@ -189,7 +184,7 @@ const Seller = (props) => {
         category,
         reg,
       });
-      return props.history.push("/");
+      return props.history.replace("/");
     } catch (error) {
       console.log(error);
     }
@@ -211,10 +206,6 @@ const Seller = (props) => {
   const onClickCancel = useCallback(() => {
     return props.history.push("/");
   }, []);
-
-  if (cookies.token) {
-    return <Redirect to="/" />;
-  }
 
   return (
     <Container>

@@ -43,20 +43,15 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 db.User = require("./user")(sequelize, Sequelize);
 db.Seller = require("./seller")(sequelize, Sequelize);
-db.Class = require("./class")(sequelize, Sequelize);
+db.Product = require("./product")(sequelize, Sequelize);
 db.Schedule = require("./schedule")(sequelize, Sequelize);
 db.Reservation = require("./reservation")(sequelize, Sequelize);
 db.Review = require("./review")(sequelize, Sequelize);
 db.Qna = require("./qna")(sequelize, Sequelize);
-
-db.Seller.hasMany(db.Class, { foreignKey: { allowNull: false } });
-db.Class.belongsTo(db.Seller);
-db.Seller.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
-db.Reservation.belongsTo(db.Seller);
-db.Seller.hasMany(db.Qna, { foreignKey: { allowNull: false } });
-db.Qna.belongsTo(db.Seller);
 
 db.User.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
 db.Reservation.belongsTo(db.User);
@@ -65,19 +60,28 @@ db.Review.belongsTo(db.User);
 db.User.hasMany(db.Qna, { foreignKey: { allowNull: false } });
 db.Qna.belongsTo(db.User);
 
-db.Class.hasMany(db.Schedule, { foreignKey: { allowNull: false } });
-db.Schedule.belongsTo(db.Class);
-db.Class.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
-db.Reservation.belongsTo(db.Class);
-db.Class.hasMany(db.Review, { foreignKey: { allowNull: false } });
-db.Review.belongsTo(db.Class);
-db.Class.hasMany(db.Qna, { foreignKey: { allowNull: false } });
-db.Qna.belongsTo(db.Class);
+db.Seller.hasMany(db.Product, { foreignKey: { allowNull: false } });
+db.Product.belongsTo(db.Seller);
+db.Seller.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
+db.Reservation.belongsTo(db.Seller);
+db.Seller.hasMany(db.Qna, { foreignKey: { allowNull: false } });
+db.Qna.belongsTo(db.Seller);
 
-db.Reservation.hasOne(db.Review, { foreignKey: { allowNull: false } });
-db.Review.belongsTo(db.Reservation);
+db.Product.hasMany(db.Schedule, { foreignKey: { allowNull: false } });
+db.Schedule.belongsTo(db.Product);
+db.Product.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
+db.Reservation.belongsTo(db.Product);
+db.Product.hasMany(db.Review, { foreignKey: { allowNull: false } });
+db.Review.belongsTo(db.Product);
+db.Product.hasMany(db.Qna, { foreignKey: { allowNull: false } });
+db.Qna.belongsTo(db.Product);
 
 db.Schedule.hasMany(db.Reservation, { foreignKey: { allowNull: false } });
 db.Reservation.belongsTo(db.Schedule);
+
+db.Reservation.hasOne(db.Review, { foreignKey: { allowNull: false } });
+db.Review.belongsTo(db.Reservation);
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 module.exports = db;

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Container, Info, Nav } from "./styles";
 import { useCookies } from "react-cookie";
+import qs from "qs";
 
 import axios from "axios";
 import Calendar from "../../components/calendar";
@@ -8,8 +9,9 @@ import Detail from "./detail";
 import Review from "./review";
 import Qna from "./qna";
 
-const Product = ({ match, history }) => {
+const Product = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
 
   const today = new Date();
   const todayYmd =
@@ -25,9 +27,9 @@ const Product = ({ match, history }) => {
         : String(today.getDate())
     );
 
-  const [type, setType] = useState();
+  const [type, setType] = useState(0);
   const [date, setDate] = useState(todayYmd);
-  const [classData, setClassData] = useState({});
+  const [productData, setProductData] = useState({});
   const [scheduleArray, setScheduleArray] = useState([]);
   const [content, setContent] = useState("detail");
   const [personnel, setPersonnel] = useState(1);
@@ -35,57 +37,38 @@ const Product = ({ match, history }) => {
   const [selectedSchedule, setSelectedSchedule] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/auth/type",
-          {},
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        console.log(response.data);
-        setType(response.data.type);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    requestProductData();
+    requestType();
+  }, []);
 
-    const fetchData2 = async () => {
-      const id = match.params.product;
-      try {
-        const response = await axios.post("/api/product", {
-          id,
-        });
-        console.log(response.data);
-        setClassData(response.data);
-        getSchedule(response.data.id);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData2();
+  const requestProductData = useCallback(async () => {
+    try {
+      const response = await axios.get(`/api/product?id=${query.id}`);
+      setProductData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const requestType = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/auth/type",
+        {},
+        { headers: { token: cookies.token } }
+      );
+      setType(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
     if (schedulesDisplay !== "none") setSchedulesDisplay("none");
     setPersonnel(1);
   }, [date]);
-
-  const getSchedule = useCallback(async (v) => {
-    try {
-      const response = await axios.post("/api/schedule", {
-        classId: v,
-      });
-      response.data.sort((a, b) => a.time - b.time);
-      setScheduleArray(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   const onChangeDate = useCallback((v) => {
     setDate(v);
@@ -132,14 +115,14 @@ const Product = ({ match, history }) => {
 
   const onClickApply = useCallback(() => {
     if (Object.keys(selectedSchedule).length !== 0) {
-      history.push({
+      props.history.push({
         pathname: "/reservation",
-        state: { classData, schedule: selectedSchedule, personnel },
+        state: { productData, schedule: selectedSchedule, personnel },
       });
     } else {
       window.alert("일정을 선택해주세요.");
     }
-  }, [classData, selectedSchedule, personnel]);
+  }, [productData, selectedSchedule, personnel]);
 
   const clickedSchedule = scheduleArray.map((v) => {
     if (v.time.substring(0, 8) === date) {
@@ -171,14 +154,14 @@ const Product = ({ match, history }) => {
     }
   });
 
-  return Object.keys(classData).length === 0 ? null : (
+  return Object.keys(productData).length === 0 ? null : (
     <Container>
       <Info>
         <div className="info">
           <img
-            src={classData.img.replace(/\\/gi, "/").replace(/public/gi, "")}
+            src={productData.img.replace(/\\/gi, "/").replace(/public/gi, "")}
           />
-          <div className="title">{classData.name}</div>
+          <div className="title">{productData.name}</div>
         </div>
 
         <div className="reserve">
@@ -237,7 +220,7 @@ const Product = ({ match, history }) => {
                 +
               </div>
             </div>
-            <div>{Number(classData.price) * personnel}원</div>
+            <div>{Number(productData.price) * personnel}원</div>
           </div>
 
           {type === 1 ? (
@@ -257,16 +240,16 @@ const Product = ({ match, history }) => {
       <div className="routes">
         {content === "detail" ? (
           <Detail
-            className={classData.name}
-            detailArray={classData.detail}
-            address={classData.address}
+            productId={productData.name}
+            detailArray={productData.detail}
+            address={productData.address}
           />
         ) : content === "review" ? (
-          <Review classId={classData.id} />
+          <Review productId={productData.id} />
         ) : (
           <Qna
-            classId={classData.id}
-            sellerId={classData.sellerId}
+            productId={productData.id}
+            sellerId={productData.sellerId}
             type={type}
           />
         )}

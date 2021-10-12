@@ -19,10 +19,10 @@ import axios from "axios";
 const SellerClassCreate = ({ history }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
-  const [img, setImg] = useState("");
+  const [img, setImg] = useState();
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [time, setTime] = useState("");
+  const [price, setPrice] = useState();
+  const [time, setTime] = useState();
   const [useRegisteredAddress, setUseRegisteredAddress] = useState(true);
   const [seller, setSeller] = useState({});
   const [shortAddress, setShortAddress] = useState("");
@@ -95,6 +95,15 @@ const SellerClassCreate = ({ history }) => {
   }, []);
 
   const onSubmit = useCallback(async () => {
+    console.log(price);
+    if (img === undefined)
+      return window.alert("클래스 대표사진을 등록해주세요");
+    if (name.length === 0) return window.alert("클래스 이름을 입력해주세요");
+    if (price === "" || price === undefined)
+      return window.alert("수강료를 입력해주세요");
+    if (time === "" || time === undefined)
+      return window.alert("수강시간을 입력해주세요");
+
     let stringary = [];
     const details = document.getElementsByClassName("detail");
     [...details].forEach((v) => {
@@ -116,7 +125,7 @@ const SellerClassCreate = ({ history }) => {
     formData.append("detail", JSON.stringify(stringary));
 
     try {
-      await axios.post("/api/classes/create", formData, {
+      await axios.post("/api/product/create", formData, {
         headers: {
           token: cookies.token,
         },
@@ -213,7 +222,12 @@ const SellerClassCreate = ({ history }) => {
           <label htmlFor="input-file">
             <img src={img ? URL.createObjectURL(img) : null} />
           </label>
-          <input id="input-file" type="file" onChange={onChangeImg} />
+          <input
+            id="input-file"
+            type="file"
+            accept="image/gif,image/jpeg,image/png"
+            onChange={onChangeImg}
+          />
         </Img>
 
         <Info>
@@ -223,12 +237,12 @@ const SellerClassCreate = ({ history }) => {
 
         <Info>
           <div className="title">수강료 (원)</div>
-          <input type="text" value={price} onChange={onChangePrice} />
+          <input type="number" value={price} onChange={onChangePrice} />
         </Info>
 
         <Info>
           <div className="title">수강시간 (분)</div>
-          <input type="text" value={time} onChange={onChangeTime} />
+          <input type="number" value={time} onChange={onChangeTime} />
         </Info>
 
         <Address>

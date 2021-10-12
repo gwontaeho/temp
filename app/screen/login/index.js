@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../axios';
@@ -23,14 +23,13 @@ const Login = props => {
         if (v.split('=')[0] === 'token') {
           jsonValue.token = v.split('=')[1];
           jsonValue.id = id;
-          jsonValue.type = 1;
         }
       });
 
       if (response.status === 200) {
         try {
           await AsyncStorage.setItem('jsonValue', JSON.stringify(jsonValue));
-          props.navigation.navigate('main');
+          props.navigation.navigate('Main');
           console.log(props);
         } catch (error) {
           console.log(error);

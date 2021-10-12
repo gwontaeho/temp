@@ -6,7 +6,7 @@ import loadable from "@loadable/component";
 import { Container, Nav, Routes } from "./styles";
 
 const SellerInfo = loadable(() => import("./seller_info"));
-const SellerInfoModify = loadable(() => import("./seller_info_modify"));
+const SellerInfoUpdate = loadable(() => import("./seller_info_update"));
 const SellerClass = loadable(() => import("./seller_class"));
 const SellerClassCreate = loadable(() => import("./seller_class_create"));
 const SellerClassDetail = loadable(() => import("./seller_class_detail"));
@@ -39,17 +39,13 @@ const Seller = () => {
       <Routes>
         <Switch>
           <Route exact path="/info" component={SellerInfo} />
-          <Route exact path="/info/modify" component={SellerInfoModify} />
+          <Route exact path="/info/update" component={SellerInfoUpdate} />
           <Route exact path="/info/class" component={SellerClass} />
           <Route exact path="/info/create" component={SellerClassCreate} />
+          <Route exact path="/info/class/:id" component={SellerClassDetail} />
           <Route
             exact
-            path="/info/class/:index"
-            component={SellerClassDetail}
-          />
-          <Route
-            exact
-            path="/info/class/modify/:index"
+            path="/info/class/modify/:id"
             component={SellerClassModify}
           />
           <Route exact path="/info/reservation" component={SellerReservation} />

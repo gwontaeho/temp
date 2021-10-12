@@ -28,7 +28,7 @@ const Info = () => {
           },
         }
       );
-      setType(parseInt(response.data.type));
+      setType(response.data);
     } catch (error) {
       console.log(error);
     }

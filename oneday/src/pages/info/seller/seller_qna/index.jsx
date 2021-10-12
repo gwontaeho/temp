@@ -11,7 +11,7 @@ const SellerQna = () => {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState([]);
   const [answerState, setAnswerState] = useState(2);
-  const [qnaData, setQnaData] = useState({ count: 0, result: [] });
+  const [qnaData, setQnaData] = useState({ count: 0, data: [] });
 
   const pageSelectRef = React.createRef();
 
@@ -22,7 +22,7 @@ const SellerQna = () => {
   const requestQna = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/qna/page/seller",
+        "/api/qna/seller",
         {
           answerState,
           page,
@@ -39,6 +39,7 @@ const SellerQna = () => {
         newPages.push(i);
       }
       setPages(newPages);
+
       setQnaData(response.data);
 
       console.log(response.data);
@@ -68,11 +69,11 @@ const SellerQna = () => {
     );
   });
 
-  const qnaList = qnaData.result.map((v) => {
+  const qnaList = qnaData.data.map((v) => {
     return (
       <QnaItem>
         <div className="name">{v.userId}</div>
-        <div className="class">{v.class.name}</div>
+        <div className="class">{v.product.name}</div>
         <div className="date">{v.createdAt.substr(0, 10)}</div>
         {v.state === 0 ? (
           <div className="date"></div>

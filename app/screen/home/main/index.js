@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import axios from '../../../axios';
+import SplashScreen from 'react-native-splash-screen';
 
 import styles from './styles';
 
@@ -16,18 +17,19 @@ const Main = props => {
   const [newClass, setNewClass] = useState([]);
 
   useEffect(() => {
-    requestMainData();
+    requestProductData();
   }, []);
 
-  const requestMainData = useCallback(async () => {
+  const requestProductData = useCallback(async () => {
     try {
-      const response = await axios.post('/api/classes/main', {});
+      const response = await axios.get('/api/product/main');
       console.log(response.data);
-      setPopClass(response.data.popClass);
-      setNewClass(response.data.newClass);
+      setPopClass(response.data.popProduct);
+      setNewClass(response.data.newProduct);
     } catch (error) {
       console.log(error);
     }
+    SplashScreen.hide();
   }, []);
 
   const onPressCategory = useCallback(
@@ -39,6 +41,12 @@ const Main = props => {
     [props.navigation],
   );
 
+  const onPressProduct = useCallback(v => {
+    props.navigation.navigate('Product', {
+      id: v.id,
+    });
+  }, []);
+
   const renderItem = ({item}) => {
     console.log(item);
     const uri =
@@ -47,7 +55,7 @@ const Main = props => {
     return (
       <TouchableOpacity
         style={styles.content}
-        onPress={() => console.log(item)}>
+        onPress={() => onPressProduct(item)}>
         <Image
           source={{
             uri,

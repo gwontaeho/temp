@@ -21,7 +21,7 @@ Modal.setAppElement("#root");
 const SellerClassModify = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
-  const [data, setData] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [img, setImg] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -31,7 +31,7 @@ const SellerClassModify = (props) => {
   const [extraAd, setExtraAd] = useState("");
   const [detail, setDetail] = useState([]);
 
-  const [imgCheck, setImgCheck] = useState("0");
+  const [imgCheck, setImgCheck] = useState(0);
   const [addressType, setAddressType] = useState("0");
   const [seller, setSeller] = useState({});
   const [newShortAddress, setNewShortAddress] = useState("");
@@ -39,63 +39,61 @@ const SellerClassModify = (props) => {
   const [newExtraAd, setNewExtraAd] = useState("");
   const [isOpend, setIsOpend] = useState(false);
 
-  //클래스 데이터 요청
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/classes/class",
-          {
-            index: props.match.params.index,
+    requestSellerData();
+    requestProductData();
+  }, []);
+
+  const requestSellerData = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/auth/seller",
+        {},
+        {
+          headers: {
+            token: cookies.token,
           },
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        console.log(response.data);
-        setData(response.data);
-        setImg(response.data.img.replace(/\\/gi, "/").replace(/public/gi, ""));
-        setName(response.data.name);
-        setPrice(response.data.price);
-        setTime(response.data.time);
-        setDetail(JSON.parse(response.data.detail));
-
-        if (response.data.address !== "&&") {
-          setShortAddress(response.data.address.split("&")[0]);
-          setAddress(response.data.address.split("&")[1]);
-          setExtraAd(response.data.address.split("&")[2]);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+      );
+      setSeller(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
-    const fetchData2 = async () => {
-      try {
-        const response = await axios.post(
-          "/api/auth/seller",
-          {},
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        setSeller(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const requestProductData = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/product/seller/detail",
+        {
+          id: props.match.params.id,
+        },
+        {
+          headers: {
+            token: cookies.token,
+          },
+        }
+      );
+      console.log(response.data);
+      setProductData(response.data);
+      setImg(response.data.img.replace(/\\/gi, "/").replace(/public/gi, ""));
+      setName(response.data.name);
+      setPrice(response.data.price);
+      setTime(response.data.time);
+      setDetail(JSON.parse(response.data.detail));
 
-    fetchData2();
+      if (response.data.address !== "&&") {
+        setShortAddress(response.data.address.split("&")[0]);
+        setAddress(response.data.address.split("&")[1]);
+        setExtraAd(response.data.address.split("&")[2]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const onChangeImg = useCallback((e) => {
-    setImgCheck("1");
+    setImgCheck(1);
     setImg(e.target.files[0]);
   }, []);
   const onChangeName = useCallback((e) => {
@@ -149,20 +147,18 @@ const SellerClassModify = (props) => {
     });
 
     const formData = new FormData();
-    formData.append("classId", data.id);
+    formData.append("productId", productData.id);
     formData.append("imgCheck", imgCheck);
-    if (imgCheck === "1") {
-      formData.append("img", img);
-      formData.append("orgImg", data.img);
-    }
+    formData.append("img", img);
+    formData.append("oldImg", productData.img);
     formData.append("name", name);
     formData.append("price", price);
     formData.append("time", time);
-    if (addressType === "0") {
+    if (addressType === 0) {
       formData.append("address", shortAddress + "&" + address + "&" + extraAd);
-    } else if (addressType === "1") {
+    } else if (addressType === 1) {
       formData.append("address", seller.address);
-    } else if (addressType === "2") {
+    } else if (addressType === 2) {
       formData.append(
         "address",
         newShortAddress + "&" + newAddress + "&" + newExtraAd
@@ -171,18 +167,18 @@ const SellerClassModify = (props) => {
     formData.append("detail", JSON.stringify(stringary));
 
     try {
-      const response = await axios.post("/api/classes/modify", formData, {
+      const response = await axios.post("/api/product/update", formData, {
         headers: {
           token: cookies.token,
-          nextindex: data.index,
         },
       });
-      props.history.replace(`/info/class/${data.index}`);
+      console.log(response);
+      props.history.replace(`/info/class/${productData.id}`);
     } catch (error) {
       console.log(error);
     }
   }, [
-    data,
+    productData,
     img,
     name,
     price,
@@ -227,8 +223,7 @@ const SellerClassModify = (props) => {
     closeModal();
   }, []);
 
-  const onClickAddressButton = useCallback((e) => {
-    const value = e.target.getAttribute("value");
+  const onClickAddressButton = useCallback((e, v) => {
     const inputs = document.getElementsByClassName("inputs")[0];
     const addressButton1 = document.getElementsByClassName("addressButton")[0];
     const addressButton2 = document.getElementsByClassName("addressButton")[1];
@@ -237,15 +232,15 @@ const SellerClassModify = (props) => {
     addressButton2.classList.remove("selected");
     addressButton3.classList.remove("selected");
     e.target.classList.add("selected");
-    if (value === "0") {
+    if (v === 0) {
       inputs.classList.remove("open");
-      setAddressType("0");
-    } else if (value === "1") {
+      setAddressType(0);
+    } else if (v === 1) {
       inputs.classList.remove("open");
-      setAddressType("1");
-    } else if (value === "2") {
+      setAddressType(1);
+    } else if (v === 2) {
       inputs.classList.add("open");
-      setAddressType("2");
+      setAddressType(2);
     }
   }, []);
 
@@ -265,24 +260,33 @@ const SellerClassModify = (props) => {
 
   return (
     <Container>
+      <Modal
+        isOpen={isOpend}
+        onRequestClose={closeModal}
+        style={{
+          content: {
+            width: "600px",
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <DaumPostcode onComplete={handleComplete} />
+      </Modal>
       <Header>클래스 수정</Header>
       <Buttons>
         <a onClick={onSubmit}>수정</a>
-        <Link to={`/info/class/${data.index}`}>취소</Link>
+        <Link to={`/info/class/${productData.index}`}>취소</Link>
       </Buttons>
       <Infos>
         <Img>
           <div className="title">클래스 대표사진</div>
           <label htmlFor="input-file">
-            <img
-              src={
-                imgCheck === "0"
-                  ? img
-                  : imgCheck === "1"
-                  ? URL.createObjectURL(img)
-                  : null
-              }
-            />
+            <img src={imgCheck === 0 ? img : URL.createObjectURL(img)} />
           </label>
           <input id="input-file" type="file" onChange={onChangeImg} />
         </Img>
@@ -294,12 +298,12 @@ const SellerClassModify = (props) => {
 
         <Info>
           <div className="title">수강료 (원)</div>
-          <input type="text" value={price} onChange={onChangePrice} />
+          <input type="number" value={price} onChange={onChangePrice} />
         </Info>
 
         <Info>
           <div className="title">수강시간 (분)</div>
-          <input type="text" value={time} onChange={onChangeTime} />
+          <input type="number" value={time} onChange={onChangeTime} />
         </Info>
 
         <Address>
@@ -308,22 +312,19 @@ const SellerClassModify = (props) => {
             <div className="oldAddress">{address + " " + extraAd}</div>
             <div className="addressButtons">
               <div
-                value="0"
-                onClick={onClickAddressButton}
+                onClick={(e) => onClickAddressButton(e, 0)}
                 className="addressButton selected"
               >
                 변경 안함
               </div>
               <div
-                value="1"
-                onClick={onClickAddressButton}
+                onClick={(e) => onClickAddressButton(e, 1)}
                 className="addressButton"
               >
                 계정에 등록된 주소 사용
               </div>
               <div
-                value="2"
-                onClick={onClickAddressButton}
+                onClick={(e) => onClickAddressButton(e, 2)}
                 className="addressButton"
               >
                 직접 입력
@@ -344,23 +345,6 @@ const SellerClassModify = (props) => {
               />
             </div>
           </div>
-          <Modal
-            isOpen={isOpend}
-            onRequestClose={closeModal}
-            style={{
-              content: {
-                width: "600px",
-                top: "50%",
-                left: "50%",
-                right: "auto",
-                bottom: "auto",
-                marginRight: "-50%",
-                transform: "translate(-50%, -50%)",
-              },
-            }}
-          >
-            <DaumPostcode onComplete={handleComplete} />
-          </Modal>
         </Address>
 
         <Details>

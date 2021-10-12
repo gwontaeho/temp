@@ -1,42 +1,55 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {Divider} from 'react-native-paper';
+
 import axios from '../../../axios';
 
 import styles from './styles';
 
 const Qna = props => {
-  const [page, setPage] = useState(1);
-  const [endPage, setEndPage] = useState(1);
-  const [data, setData] = useState([]);
+  const [qnaData, setQnaData] = useState([]);
+  const [question, setQuestion] = useState('');
+  const [display, setDisplay] = useState('none');
 
   useEffect(() => {
-    requestData();
-  }, [page]);
+    requestQnaData();
+    console.log(props.user.token);
+  }, []);
 
-  const requestData = useCallback(async () => {
+  const requestQnaData = useCallback(async () => {
     try {
-      const response = await axios.post('/api/qna/gett', {
-        classId: props.classId,
-        page,
-      });
+      const response = await axios.get(`/api/qna?productId=${props.productId}`);
 
-      console.log(response.data.result);
-      setData(response.data.result);
-      setEndPage(Math.ceil(response.data.count / 5));
+      setQnaData(response.data);
     } catch (error) {
       console.log(error);
     }
-  }, [page]);
+  }, []);
 
-  const onPressPrev = useCallback(() => {
-    if (page > 1) setPage(page - 1);
-  }, [page]);
+  const requestCreateQna = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        '/api/qna/question',
+        {
+          question,
+          sellerId: props.sellerId,
+          productId: props.productId,
+        },
+        {headers: {token: props.user.token}},
+      );
+      setDisplay('none');
+      setQuestion('');
+      requestQnaData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [question]);
 
-  const onPressNext = useCallback(() => {
-    if (endPage > page) setPage(page + 1);
-  }, [endPage, page]);
+  const onPressCreate = useCallback(() => {
+    console.log(question);
+  }, [question]);
 
-  const dataList = data.map(v => {
+  const dataList = qnaData.map(v => {
     return (
       <View key={v.id} style={styles.data}>
         <View style={styles.question}>
@@ -57,15 +70,34 @@ const Qna = props => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.datas}>{dataList}</View>
-      <View style={styles.nav}>
-        <TouchableOpacity onPress={onPressPrev} style={styles.nav_item}>
-          <Text>이전</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onPressNext} style={styles.nav_item}>
-          <Text>다음</Text>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.write}
+          onPress={() => setDisplay('flex')}>
+          <Text>문의 작성하기</Text>
         </TouchableOpacity>
       </View>
+      <View style={{display: display}}>
+        <TextInput
+          style={styles.input}
+          multiline={true}
+          numberOfLines={4}
+          value={question}
+          onChangeText={setQuestion}
+        />
+        <View style={styles.buttons}>
+          <TouchableOpacity style={styles.button} onPress={requestCreateQna}>
+            <Text>확인</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setDisplay('none')}>
+            <Text>취소</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Divider />
+      <View style={styles.datas}>{dataList}</View>
     </View>
   );
 };

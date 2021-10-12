@@ -26,12 +26,12 @@ const Login = (props) => {
 
   const onClickLogin = useCallback(async () => {
     try {
-      await axios.post("/api/auth/login", {
+      const response = await axios.post("/api/auth/login", {
         id,
         password,
         type,
       });
-      return props.history.push("/");
+      if (response.status === 200) return props.history.replace("/");
     } catch (error) {
       console.log(error);
     }
