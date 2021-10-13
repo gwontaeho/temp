@@ -4,59 +4,66 @@ import { Container, Header, Info, UserInfo, Apply } from "./styles";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
-const Reservation = ({ location, history }) => {
+const Reservation = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [user, setUser] = useState({});
-  const [classData, setClassData] = useState(location.state.classData);
-  const [schedule, setSchedule] = useState(location.state.schedule);
-  const [personnel, setPersonnel] = useState(location.state.personnel);
-  const [reservationName, setReservationName] = useState("");
-  const [reservationPhone, setReservationPhone] = useState("");
+  const [productData, setProductData] = useState(
+    props.location.state.productData
+  );
+  const [schedule, setSchedule] = useState(props.location.state.schedule);
+  const [personnel, setPersonnel] = useState(props.location.state.personnel);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/auth/user",
-          {},
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        console.log(response.data);
-        setUser(response.data);
-        setReservationName(response.data.name);
-        setReservationPhone(response.data.phone);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    requestUserData();
+  }, []);
 
-    fetchData();
+  const requestUserData = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "/api/auth/user",
+        {},
+        {
+          headers: {
+            token: cookies.token,
+          },
+        }
+      );
+      console.log(response.data);
+      setUser(response.data);
+      setName(response.data.name);
+      setPhone(response.data.phone);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
-    console.log(classData);
+    console.log(productData);
     console.log(schedule);
     console.log(personnel);
   }, []);
 
-  const onChangeReservationName = useCallback((e) => {
-    setReservationName(e.target.value);
+  const onChangeName = useCallback((e) => {
+    setName(e.target.value);
   }, []);
 
-  const onChangeReservationPhone = useCallback((e) => {
-    setReservationPhone(e.target.value);
+  const onChangePhone = useCallback((e) => {
+    setPhone(e.target.value);
   }, []);
 
   const onClickApply = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/schedule/detail",
+        "/api/reservation/create",
         {
+          name,
+          phone,
+          personnel,
+          productId: productData.id,
+          sellerId: productData.sellerId,
           scheduleId: schedule.id,
         },
         {
@@ -65,79 +72,39 @@ const Reservation = ({ location, history }) => {
           },
         }
       );
-      if (
-        response.data.personnel - response.data.reserved - personnel >= 0 &&
-        response.data.state === 0
-      ) {
-        try {
-          const response2 = await axios.post(
-            "/api/reservation/add",
-            {
-              classId: classData.id,
-              scheduleId: schedule.id,
-              sellerId: classData.sellerId,
-              personnel,
-              name: reservationName,
-              phone: reservationPhone,
-            },
-            {
-              headers: {
-                token: cookies.token,
-              },
-            }
-          );
-          if (response2.status === 200) {
-            window.alert("예약 되었습니다.");
-            history.replace("/");
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        window.alert("예약에 실패하였습니다.");
-        history.replace("/");
-      }
+      if (response.status === 200) props.history.replace("/");
     } catch (error) {
       console.log(error);
     }
-  }, [classData, schedule, personnel, reservationName, reservationPhone]);
+  }, [productData, schedule, personnel, name, phone]);
 
-  if (location.state == undefined) return <Redirect to="/" />;
-  return (
+  return Object.keys(productData).length === 0 ? null : (
     <Container>
       <Header>예약 / 결제</Header>
       <Info>
         <img
-          src={
-            classData.img
-              ? classData.img.replace(/\\/gi, "/").replace(/public/gi, "")
-              : null
-          }
+          src={productData.img.replace(/\\/gi, "/").replace(/public/gi, "")}
         />
         <div>
-          <div>{classData.name}</div>
-          <div>{classData.sellerId}</div>
+          <div>{productData.name}</div>
+          <div>{productData.sellerId}</div>
           <div>{personnel}</div>
-          <div>{classData.price * personnel}</div>
+          <div>{productData.price * personnel}</div>
         </div>
       </Info>
       <Header>예약자 정보</Header>
       <UserInfo>
         <label className="name">
           <div>이름</div>
-          <input
-            type="text"
-            value={reservationName}
-            onChange={onChangeReservationName}
-          />
+          <input type="text" value={name} onChange={onChangeName} />
         </label>
         <label className="phone">
           <div>연락처</div>
           <input
             type="text"
             maxLength={11}
-            value={reservationPhone}
-            onChange={onChangeReservationPhone}
+            value={phone}
+            onChange={onChangePhone}
           />
         </label>
       </UserInfo>

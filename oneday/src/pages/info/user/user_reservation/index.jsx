@@ -17,13 +17,13 @@ const UserReservation = () => {
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    requestReservation();
+    requestReservationData();
   }, []);
 
-  const requestReservation = useCallback(async () => {
+  const requestReservationData = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/reservation/user/get",
+        "/api/reservation/user",
         {},
         {
           headers: {
@@ -36,7 +36,7 @@ const UserReservation = () => {
       let newPast = [];
       let newRequest = [];
       let newCancled = [];
-      response.data.map((v) => {
+      response.data.forEach((v) => {
         if (v.state === 0) {
           newIng.push(v);
         } else if (v.state === 1) {
@@ -62,27 +62,6 @@ const UserReservation = () => {
     }
   }, []);
 
-  const onClickState = useCallback(
-    (v) => {
-      if (v === 0) {
-        setSelected(ing);
-      } else if (v === 1) {
-        setSelected(past);
-      } else if (v === 2) {
-        setSelected(request);
-      } else if (v === 3) {
-        setSelected(canceled);
-      } else if (v === 4) {
-        setSelected(waiting);
-      }
-    },
-    [ing, past, request, canceled, waiting]
-  );
-
-  const onClickItem = useCallback((v) => {
-    console.log(v);
-  }, []);
-
   const selectedList = selected.map((v) => {
     const ymd =
       new Date(v.createdAt).getFullYear() +
@@ -92,14 +71,14 @@ const UserReservation = () => {
       new Date(v.createdAt).getDate();
     return (
       <Link to={`/info/reservation/${v.id}`}>
-        <Item onClick={() => onClickItem(v)}>
+        <Item>
           <div>
             <img
-              src={v.class.img.replace(/\\/gi, "/").replace(/public/gi, "")}
+              src={v.product.img.replace(/\\/gi, "/").replace(/public/gi, "")}
             />
           </div>
 
-          <div>{v.class.name}</div>
+          <div>{v.product.name}</div>
           <div>{ymd}</div>
           <div>
             {v.state === 0 ? (
@@ -127,23 +106,23 @@ const UserReservation = () => {
   return (
     <Container>
       <Header>
-        <div onClick={() => onClickState(4)}>
+        <div onClick={() => setSelected(waiting)}>
           <div>예약 대기</div>
           <div>{waiting.length}</div>
         </div>
-        <div onClick={() => onClickState(0)}>
+        <div onClick={() => setSelected(ing)}>
           <div>예약 중</div>
           <div>{ing.length}</div>
         </div>
-        <div onClick={() => onClickState(1)}>
+        <div onClick={() => setSelected(past)}>
           <div>수강 완료</div>
           <div>{past.length}</div>
         </div>
-        <div onClick={() => onClickState(2)}>
+        <div onClick={() => setSelected(request)}>
           <div>취소 요청</div>
           <div>{request.length}</div>
         </div>
-        <div onClick={() => onClickState(3)}>
+        <div onClick={() => setSelected(canceled)}>
           <div>취소</div>
           <div>{canceled.length}</div>
         </div>

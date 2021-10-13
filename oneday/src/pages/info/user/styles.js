@@ -3,20 +3,21 @@ import styled from "@emotion/styled";
 export const Container = styled.div`
   width: 100%;
   display: flex;
-  .routes {
-    flex: 1;
-  }
 `;
 
 export const Nav = styled.div`
-  width: calc(240px - 24px);
-  padding-left: 24px;
+  width: 240px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   border-right: 1px solid lightgray;
 
   & a {
-    height: 72px;
-    line-height: 72px;
+    height: 120px;
+    line-height: 120px;
   }
+`;
+
+export const RouteContainer = styled.div`
+  flex: 1;
 `;

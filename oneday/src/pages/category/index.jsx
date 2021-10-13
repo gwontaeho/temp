@@ -2,16 +2,15 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import qs from "qs";
-import { Container, Header, Nav, Classes } from "./styles";
+import { Container, Header, Nav, Products } from "./styles";
 import { IoLocationOutline } from "react-icons/io5";
 import Rating from "@material-ui/lab/Rating";
 
 const Category = (props) => {
   const query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
-  const [classArray, setClassArray] = useState([]);
+  const [productData, setProductData] = useState([]);
 
   useEffect(() => {
-    console.log(query);
     requestProductData();
   }, [props]);
 
@@ -20,17 +19,16 @@ const Category = (props) => {
       const response = await axios.get(
         `/api/product/category?name=${query.name}&sort=${query.sort}`
       );
-      setClassArray(response.data);
-      console.log(response.data);
+      setProductData(response.data);
     } catch (error) {
       console.log(error);
     }
   }, [props]);
 
   // 클래스
-  const classList = classArray.map((v) => {
+  const productList = productData.map((v) => {
     return (
-      <Link to={`/product?id=${v.id}`} key={v.id} className="class">
+      <Link to={`/product?id=${v.id}`} key={v.id}>
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
         <div className="address">
           <IoLocationOutline />
@@ -55,17 +53,17 @@ const Category = (props) => {
   return (
     <Container>
       <Header>
-        {props.match.params.category === "all"
+        {query.name === "all"
           ? "전체"
-          : props.match.params.category === "flower"
+          : query.name === "flower"
           ? "플라워"
-          : props.match.params.category === "art"
+          : query.name === "art"
           ? "미술"
-          : props.match.params.category === "cooking"
+          : query.name === "cooking"
           ? "요리"
-          : props.match.params.category === "handmade"
+          : query.name === "handmade"
           ? "수공예"
-          : props.match.params.category === "activity"
+          : query.name === "activity"
           ? "액티비티"
           : "기타"}
       </Header>
@@ -75,7 +73,7 @@ const Category = (props) => {
         <Link to={`/category?name=${query.name}&sort=low`}>낮은 가격순</Link>
         <Link to={`/category?name=${query.name}&sort=high`}>높은 가격순</Link>
       </Nav>
-      <Classes>{classList}</Classes>
+      <Products>{productList}</Products>
     </Container>
   );
 };

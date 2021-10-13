@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  width: calc(100% - 48px);
-  padding: 24px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,7 +11,7 @@ export const Header = styled.div`
   width: calc(720px - 48px);
   padding-left: 24px;
   padding-right: 24px;
-  height: 72px;
+  height: 120px;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -4,27 +4,9 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Header = styled.div`
-  width: calc(100% - 24px);
-  height: 72px;
-  display: flex;
-  align-items: center;
-  padding-left: 24px;
-  border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
-`;
-
 export const Info = styled.div`
-  padding-left: 24px;
-  div {
-    display: flex;
-    align-items: center;
-  }
-  .title {
-    height: 60px;
-    width: 192px;
-  }
-  margin-bottom: 24px;
+  width: 100%;
+  height: 240px;
 `;
 
 export const Button = styled.div`

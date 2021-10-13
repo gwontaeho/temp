@@ -30,7 +30,6 @@ const Qna = (props) => {
     console.log("abc");
     try {
       const response = await axios.get(`/api/qna?productId=${props.productId}`);
-      console.log(response.data);
       setQnaData(response.data);
     } catch (error) {
       console.log(error);
@@ -74,7 +73,7 @@ const Qna = (props) => {
 
   const qnaDataList = qnaData.map((v) => {
     return (
-      <QnaItem>
+      <QnaItem key={v.id}>
         <div className="question">
           <div className="id">
             <div>{v.userId}</div>
@@ -89,7 +88,7 @@ const Qna = (props) => {
           <div>{v.question}</div>
         </div>
 
-        {v.answer === null ? (
+        {v.answer === null ? null : (
           <div className="answer">
             <div className="id">
               <div>{v.sellerId}</div>
@@ -101,9 +100,9 @@ const Qna = (props) => {
                   new Date(v.updatedAt).getDate()}
               </div>
             </div>
-            <div>test</div>
+            <div>{v.answer}</div>
           </div>
-        ) : null}
+        )}
       </QnaItem>
     );
   });

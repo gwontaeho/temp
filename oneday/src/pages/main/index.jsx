@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { IoLocationOutline } from "react-icons/io5";
 import axios from "axios";
 
-import { Container, Header, Ad, Contents, StyledSlider } from "./styles";
+import { Container, Header, Ad, Product, StyledSlider, Footer } from "./styles";
 
 const Main = () => {
-  const [popClass, setPopClass] = useState([]);
-  const [newClass, setNewClass] = useState([]);
+  const [popProduct, setPopProduct] = useState([]);
+  const [newProduct, setNewProduct] = useState([]);
 
   let settings = {
     infinite: true,
@@ -25,57 +25,77 @@ const Main = () => {
   const requestData = useCallback(async () => {
     try {
       const response = await axios.get("/api/product/main");
-      console.log(response.data);
-      setPopClass(response.data.popProduct);
-      setNewClass(response.data.newProduct);
+      setPopProduct(response.data.popProduct);
+      setNewProduct(response.data.newProduct);
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  const popClassList = popClass.map((v) => {
+  const popProductList = popProduct.map((v) => {
+    const category =
+      v.category === "flower"
+        ? "플라워"
+        : v.category === "art"
+        ? "미술"
+        : v.category === "cooking"
+        ? "요리"
+        : v.category === "handmade"
+        ? "수공예"
+        : v.category === "activity"
+        ? "액티비티"
+        : "기타";
     return (
-      <div key={v.id}>
-        <Link to={`/product?id=${v.id}`} className="class">
+      <Product key={v.id}>
+        <Link to={`/product?id=${v.id}`}>
           <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
           <div className="address">
             <IoLocationOutline />
             {v.address.split("&")[0]}
           </div>
-          <div>{"[" + v.category + "] " + v.name}</div>
+          <div>{"[" + category + "] " + v.name}</div>
           <div>{v.price}원</div>
         </Link>
-      </div>
+      </Product>
     );
   });
 
-  const newClassList = newClass.map((v) => {
+  const newProductList = newProduct.map((v) => {
+    const category =
+      v.category === "flower"
+        ? "플라워"
+        : v.category === "art"
+        ? "미술"
+        : v.category === "cooking"
+        ? "요리"
+        : v.category === "handmade"
+        ? "수공예"
+        : v.category === "activity"
+        ? "액티비티"
+        : "기타";
     return (
-      <div key={v.id}>
-        <Link to={`/product?id=${v.id}`} className="class">
+      <Product key={v.id}>
+        <Link to={`/product?id=${v.id}`}>
           <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
           <div className="address">
             <IoLocationOutline />
             {v.address.split("&")[0]}
           </div>
-          <div>{"[" + v.category + "] " + v.name}</div>
+          <div>{"[" + category + "] " + v.name}</div>
           <div>{v.price}원</div>
         </Link>
-      </div>
+      </Product>
     );
   });
 
   return (
     <Container>
-      <Contents>
-        <Header>인기 클래스</Header>
-        <StyledSlider {...settings}>{popClassList}</StyledSlider>
-      </Contents>
-      <Contents>
-        <Header>신규 클래스</Header>
-        <StyledSlider {...settings}>{newClassList}</StyledSlider>
-      </Contents>
-      <Ad>123</Ad>
+      <Ad>광고</Ad>
+      <Header>인기 클래스</Header>
+      <StyledSlider {...settings}>{popProductList}</StyledSlider>
+      <Header>신규 클래스</Header>
+      <StyledSlider {...settings}>{newProductList}</StyledSlider>
+      <Footer />
     </Container>
   );
 };

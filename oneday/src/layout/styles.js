@@ -1,51 +1,46 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  width: 1280px;
+  width: 1440px;
   font-size: 1.3rem;
 `;
 
-export const Logo = styled.div`
+export const Header = styled.div`
   width: 100%;
-  height: 144px;
+  height: 120px;
   display: flex;
-  justify-content: center;
-  font-size: 2rem;
-  a {
-    width: 360px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  border-bottom: 1px solid lightgray;
 `;
 
-export const Sign = styled.form`
-  width: 100%;
-  height: 72px;
+export const Logo = styled.div`
+  flex: 1;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  & a {
-    color: black;
-    margin-left: 12px;
-  }
 `;
 
 export const Nav = styled.div`
-  width: 100%;
-  height: 72px;
+  flex: 1;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  border-bottom: 1px solid lightgray;
 
-  div {
-    padding-left: 24px;
-  }
   a {
-    margin-right: 24px;
+    padding: 12px;
+  }
+  a:hover {
+    color: gray;
+  }
+`;
+
+export const Sign = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    padding: 12px;
   }
   a:hover {
     color: gray;

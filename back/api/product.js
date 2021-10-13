@@ -155,11 +155,23 @@ router.get("/", async (req, res, next) => {
       include: [
         {
           model: Schedule,
+          where: {
+            ymd: {
+              [Op.gt]: req.query.today,
+            },
+          },
+          required: false,
         },
       ],
+      order: [
+        [Schedule, "ymd", "DESC"],
+        [Schedule, "start", "ASC"],
+      ],
     });
+    console.log(findProduct);
     return res.status(200).send(findProduct.dataValues);
   } catch (error) {
+    console.log(error);
     return res.status(500).send();
   }
 });

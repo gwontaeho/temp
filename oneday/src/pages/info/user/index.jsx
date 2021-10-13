@@ -3,7 +3,7 @@ import { Link, Redirect, Route, Switch } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import loadable from "@loadable/component";
 
-import { Container, Nav } from "./styles";
+import { Container, Nav, RouteContainer } from "./styles";
 
 const UserInfo = loadable(() => import("./user_info"));
 const UserInfoUpdate = loadable(() => import("./user_info_update"));
@@ -28,9 +28,9 @@ const User = () => {
         <Link to="/info/reservation">예약 내역</Link>
         <Link to="/info/qna">문의 내역</Link>
       </Nav>
-      <div className="routes">
+      <RouteContainer>
+        <UserInfo />
         <Switch>
-          <Route exact path="/info" component={UserInfo} />
           <Route exact path="/info/modify" component={UserInfoUpdate} />
           <Route exact path="/info/reservation" component={UserReservation} />
           <Route
@@ -41,7 +41,7 @@ const User = () => {
           <Route exact path="/info/qna" component={UserQna} />
           <Route exact path="/info/qna/:id" component={UserQnaDetail} />
         </Switch>
-      </div>
+      </RouteContainer>
     </Container>
   );
 };
