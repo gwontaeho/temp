@@ -14,7 +14,7 @@ import {
   Nav,
   RouteContainer,
 } from "./styles";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 import qs from "qs";
 
 import axios from "axios";
@@ -24,6 +24,7 @@ import Review from "./review";
 import Qna from "./qna";
 
 const Product = (props) => {
+  const auth = useSelector((state) => state.auth);
   const query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
   const today = new Date();
   const todayYmd =
@@ -39,9 +40,6 @@ const Product = (props) => {
         : String(today.getDate())
     );
 
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-
-  const [type, setType] = useState(0);
   const [productData, setProductData] = useState({});
   const [scheduleData, setScheduleData] = useState([]);
   const [schedules, setSchedules] = useState([]);
@@ -55,20 +53,6 @@ const Product = (props) => {
 
   useEffect(() => {
     requestProductData();
-    requestType();
-  }, []);
-
-  const requestType = useCallback(async () => {
-    try {
-      const response = await axios.post(
-        "/api/auth/type",
-        {},
-        { headers: { token: cookies.token } }
-      );
-      setType(response.data);
-    } catch (error) {
-      console.log(error);
-    }
   }, []);
 
   const requestProductData = useCallback(async () => {
@@ -222,7 +206,7 @@ const Product = (props) => {
           <Qna
             productId={productData.id}
             sellerId={productData.sellerId}
-            type={type}
+            type={auth.type}
           />
         )}
       </RouteContainer>

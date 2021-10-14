@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
+import profile from "../../../images/profile.png";
 
-import { Container, Buttons } from "./styles";
+import { Container, Img, Buttons } from "./styles";
 
 const User = (props) => {
   const idRegExp = /^[a-zA-Z0-9]{4,12}$/;
@@ -17,6 +18,7 @@ const User = (props) => {
   const birthRef = React.createRef();
   const phoneRef = React.createRef();
 
+  const [img, setImg] = useState();
   const [id, setId] = useState("");
   const [idCheck, setIdCheck] = useState(false);
   const [password, setPassword] = useState("");
@@ -42,20 +44,25 @@ const User = (props) => {
     if (!phoneRegExp.test(phone))
       return window.alert("휴대전화를 정확히 입력해주세요");
 
+    const formData = new FormData();
+    formData.append("img", img);
+    formData.append("id", id);
+    formData.append("name", name);
+    formData.append("password", password);
+    formData.append("birth", birth);
+    formData.append("gender", gender);
+    formData.append("phone", phone);
+
     try {
-      await axios.post("/api/auth/user/create", {
-        id,
-        password,
-        name,
-        birth,
-        gender,
-        phone,
+      const response = await axios.post("/api/auth/user/create", formData, {
+        headers: { signuptype: 1, signupid: id },
       });
-      return props.history.replace("/");
+      if (response.status === 200) return props.history.replace("/");
     } catch (error) {
       console.log(error);
+      return props.history.replace("/");
     }
-  }, [id, idCheck, password, passwordCheck, name, birth, gender, phone]);
+  }, [img, id, idCheck, password, passwordCheck, name, birth, gender, phone]);
 
   const validation = useCallback((v) => {
     v.current.style.display = "block";
@@ -128,12 +135,28 @@ const User = (props) => {
     [phoneRef]
   );
 
+  const onChangeImg = useCallback((e) => {
+    setImg(e.target.files[0]);
+  }, []);
+
   const onClickCancel = useCallback(() => {
-    return props.history.push("/");
+    return props.history.replace("/");
   }, []);
 
   return (
     <Container>
+      <Img>
+        <label htmlFor="input-file">
+          <img src={img ? URL.createObjectURL(img) : profile} />
+          <input
+            id="input-file"
+            type="file"
+            accept="image/gif,image/jpeg,image/png"
+            onChange={onChangeImg}
+          />
+        </label>
+      </Img>
+
       <label>
         <div className="title">
           <div>아이디</div>

@@ -1,31 +1,34 @@
 import React from "react";
-import { useCookies } from "react-cookie";
 import loadable from "@loadable/component";
 import { Redirect, Link, Switch, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { Container, Logo, TypeContainer } from "./styles";
+import { Container, IndexContainer, Title, TypeContainer } from "./styles";
 
 const User = loadable(() => import("./user"));
 const Seller = loadable(() => import("./seller"));
 
 const Signup = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
-  if (cookies.token) {
+  if (auth.type !== 0) {
     return <Redirect to="/" />;
   }
 
   const Index = () => {
     return (
-      <TypeContainer>
-        <Link to="/signup/user">일반 회원가입</Link>
-        <Link to="/signup/seller">판매자 회원가입</Link>
-      </TypeContainer>
+      <IndexContainer>
+        <TypeContainer>
+          <Link to="/signup/user">일반 회원가입</Link>
+          <Link to="/signup/seller">판매자 회원가입</Link>
+        </TypeContainer>
+      </IndexContainer>
     );
   };
 
   return (
     <Container>
+      <Title>회원가입</Title>
       <Switch>
         <Route exact path="/signup" component={Index} />
         <Route path="/signup/user" component={User} />

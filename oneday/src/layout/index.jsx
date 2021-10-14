@@ -1,9 +1,11 @@
 import React, { useCallback } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router";
-
 import loadable from "@loadable/component";
-import { useCookies } from "react-cookie";
+
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../features/auth";
+
 import { Container, Header, Logo, Nav, Sign } from "./styles";
 
 const Login = loadable(() => import("../pages/login"));
@@ -15,13 +17,11 @@ const Product = loadable(() => import("../pages/product"));
 const Reservation = loadable(() => import("../pages/reservation"));
 
 const Layout = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const onClickLogout = useCallback(() => {
-    console.log(cookies);
-    if (cookies.token) {
-      removeCookie("token", { path: "/" });
-    }
+    dispatch(logOut());
   }, []);
 
   return (
@@ -39,17 +39,17 @@ const Layout = () => {
           <Link to="/category?name=activity&sort=rating">액티비티</Link>
           <Link to="/category?name=etc&sort=rating">기타</Link>
         </Nav>
-        {cookies.token ? (
+        {auth.type === 0 ? (
+          <Sign>
+            <Link to="/signup">회원가입</Link>
+            <Link to="/login">로그인</Link>
+          </Sign>
+        ) : (
           <Sign>
             <Link to="/info">내 정보</Link>
             <Link to="/" onClick={onClickLogout}>
               로그아웃
             </Link>
-          </Sign>
-        ) : (
-          <Sign>
-            <Link to="/signup">회원가입</Link>
-            <Link to="/login">로그인</Link>
           </Sign>
         )}
       </Header>

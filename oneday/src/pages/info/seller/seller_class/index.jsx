@@ -2,11 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import { Container, Header } from "./styles";
 
 const SellerClass = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
   const [classes, setClasses] = useState([]);
 
@@ -21,7 +22,7 @@ const SellerClass = () => {
         {},
         {
           headers: {
-            token: cookies.token,
+            token: auth.token,
           },
         }
       );

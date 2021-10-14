@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
-import Calendar from "../../../../components/calendar";
+// import Calendar from "../../../../components/calendar";
 
 import axios from "axios";
 
@@ -94,7 +94,7 @@ const SellerSchedule = () => {
       {Object.keys(data).length === 0 ? null : (
         <>
           <div className="calendar">
-            <Calendar scheduleArray={data} onChangeDate={onChangeDate} />
+            {/* <Calendar scheduleArray={data} onChangeDate={onChangeDate} /> */}
           </div>
           <Header>
             {date.substring(4, 6) + "월 " + date.substring(6, 8) + "일"} 수업 총{" "}

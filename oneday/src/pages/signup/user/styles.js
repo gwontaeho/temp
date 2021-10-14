@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  width: 100%;
+  width: 480px;
   display: flex;
   flex-direction: column;
 
@@ -50,6 +50,27 @@ export const Container = styled.div`
     padding-left: 6px;
     border: 1px solid black;
     outline: none;
+  }
+`;
+
+export const Img = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border: 1px solid black;
+  label {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  input {
+    display: none;
   }
 `;
 

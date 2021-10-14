@@ -1,10 +1,35 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
+const path = require("path");
+const fs = require("fs");
+
 const { verifyToken, signToken } = require("../jwt");
 const User = require("../models").User;
 const Seller = require("../models").Seller;
 
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(
+        null,
+        `public/img/${req.headers.signuptype === "1" ? "user" : "seller"}/`
+      );
+    },
+    filename(req, file, done) {
+      done(
+        null,
+        req.headers.signupid +
+          "_" +
+          String(new Date().getTime()) +
+          path.extname(file.originalname)
+      );
+    },
+  }),
+});
+
 router.post("/type", verifyToken, (req, res, next) => {
+  /////////////////////////////////////////////////////
   const response = req.decoded.type;
   return res.status(200).json(response);
 });
@@ -79,10 +104,7 @@ router.post("/login", async (req, res, next) => {
       if (findUser.dataValues.password !== req.body.password) {
         return res.status(400).send();
       }
-      return res
-        .status(200)
-        .cookie("token", signToken(req.body.id, req.body.type))
-        .send();
+      return res.status(200).send(signToken(req.body.id, req.body.type));
     } catch (error) {
       return res.status(500).send();
     }
@@ -96,18 +118,15 @@ router.post("/login", async (req, res, next) => {
       if (findSeller.dataValues.password !== req.body.password) {
         return res.status(400).send();
       }
-      return res
-        .status(200)
-        .cookie("token", signToken(req.body.id, req.body.type))
-        .send();
+      return res.status(200).send(signToken(req.body.id, req.body.type));
     } catch (error) {
       return res.status(500).send();
     }
   }
 });
 
-router.post("/user/create", async (req, res, next) => {
-  ////////////////////////////////////////////////////////////////////
+router.post("/user/create", upload.single("img"), async (req, res, next) => {
+  //////////////////////////////////////////////////////////////////
   try {
     await User.create({
       id: req.body.id,
@@ -116,14 +135,18 @@ router.post("/user/create", async (req, res, next) => {
       birth: req.body.birth,
       gender: req.body.gender,
       phone: req.body.phone,
+      img: req.file === undefined ? null : req.file.path,
     });
     return res.status(200).send();
   } catch (error) {
+    fs.unlink(req.file.path, (error) => {
+      if (error) console.log(error);
+    });
     return res.status(500).send();
   }
 });
 
-router.post("/seller/create", async (req, res, next) => {
+router.post("/seller/create", upload.single("img"), async (req, res, next) => {
   ////////////////////////////////////////////////////////////////////
   try {
     await Seller.create({
@@ -135,9 +158,13 @@ router.post("/seller/create", async (req, res, next) => {
       address: req.body.address,
       category: req.body.category,
       reg: req.body.reg,
+      img: req.file === undefined ? null : req.file.path,
     });
     return res.status(200).send();
   } catch (error) {
+    fs.unlink(req.file.path, (error) => {
+      if (error) console.log(error);
+    });
     return res.status(500).send();
   }
 });

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
+import { useSelector } from "react-redux";
 
 import {
   Container,
@@ -17,7 +17,7 @@ import {
 import axios from "axios";
 
 const SellerClassCreate = ({ history }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
   const [img, setImg] = useState();
   const [name, setName] = useState("");
@@ -41,7 +41,7 @@ const SellerClassCreate = ({ history }) => {
         {},
         {
           headers: {
-            token: cookies.token,
+            token: auth.token,
           },
         }
       );
@@ -127,7 +127,7 @@ const SellerClassCreate = ({ history }) => {
     try {
       await axios.post("/api/product/create", formData, {
         headers: {
-          token: cookies.token,
+          token: auth.token,
         },
       });
       history.replace("/info/class");

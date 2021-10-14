@@ -3,7 +3,8 @@ import { useState, useCallback } from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import DaumPostcode from "react-daum-postcode";
-import { Container, Buttons } from "./styles";
+import { Container, Img, Buttons } from "./styles";
+import profile from "../../../images/profile.png";
 
 Modal.setAppElement("#root");
 
@@ -24,6 +25,7 @@ const Seller = (props) => {
   const regRef = React.createRef();
 
   const [isOpend, setIsOpend] = useState(false);
+  const [img, setImg] = useState();
   const [id, setId] = useState("");
   const [idCheck, setIdCheck] = useState(false);
   const [password, setPassword] = useState("");
@@ -124,6 +126,10 @@ const Seller = (props) => {
     setCategory(e.target.value);
   }, []);
 
+  const onChangeImg = useCallback((e) => {
+    setImg(e.target.files[0]);
+  }, []);
+
   const onChangeReg = useCallback(
     (e) => {
       validation(regRef);
@@ -173,22 +179,28 @@ const Seller = (props) => {
     if (!regRegExp.test(reg))
       return window.alert("사업자등록번호를 정확히 입력해주세요");
 
+    const formData = new FormData();
+    formData.append("img", img);
+    formData.append("id", id);
+    formData.append("password", password);
+    formData.append("company", company);
+    formData.append("name", name);
+    formData.append("phone", phone);
+    formData.append("address", shortAddress + "&" + address + "&" + extraAd);
+    formData.append("category", category);
+    formData.append("reg", reg);
+
     try {
-      await axios.post("/api/auth/seller/create", {
-        id,
-        password,
-        company,
-        name,
-        phone,
-        address: shortAddress + "&" + address + "&" + extraAd,
-        category,
-        reg,
+      const response = await axios.post("/api/auth/seller/create", formData, {
+        headers: { signuptype: 2, signupid: id },
       });
-      return props.history.replace("/");
+      if (response.status === 200) return props.history.replace("/");
     } catch (error) {
       console.log(error);
+      return props.history.replace("/");
     }
   }, [
+    img,
     id,
     idCheck,
     password,
@@ -204,7 +216,7 @@ const Seller = (props) => {
   ]);
 
   const onClickCancel = useCallback(() => {
-    return props.history.push("/");
+    return props.history.replace("/");
   }, []);
 
   return (
@@ -226,7 +238,17 @@ const Seller = (props) => {
       >
         <DaumPostcode onComplete={handleComplete} />
       </Modal>
-
+      <Img>
+        <label htmlFor="input-file">
+          <img src={img ? URL.createObjectURL(img) : profile} />
+          <input
+            id="input-file"
+            type="file"
+            accept="image/gif,image/jpeg,image/png"
+            onChange={onChangeImg}
+          />
+        </label>
+      </Img>
       <label>
         <div className="title">
           <div>아이디</div>

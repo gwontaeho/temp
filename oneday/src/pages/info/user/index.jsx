@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, Redirect, Route, Switch } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { Link, Route, Switch } from "react-router-dom";
 import loadable from "@loadable/component";
 
 import { Container, Nav, RouteContainer } from "./styles";
@@ -15,12 +14,6 @@ const UserQna = loadable(() => import("./user_qna"));
 const UserQnaDetail = loadable(() => import("./user_qna_detail"));
 
 const User = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-
-  if (!cookies.token) {
-    return <Redirect to="/" />;
-  }
-
   return (
     <Container>
       <Nav>

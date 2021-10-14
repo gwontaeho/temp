@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Redirect } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 import loadable from "@loadable/component";
+import { useSelector } from "react-redux";
 
 import { Container } from "./styles";
 
@@ -10,37 +10,15 @@ const User = loadable(() => import("./user"));
 const Seller = loadable(() => import("./seller"));
 
 const Info = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const [type, setType] = useState(0);
+  const auth = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    requestType();
-  }, []);
-
-  const requestType = useCallback(async () => {
-    try {
-      const response = await axios.post(
-        "/api/auth/type",
-        {},
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
-      setType(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  if (!cookies.token) {
+  if (auth.type === 0) {
     return <Redirect to="/" />;
   }
 
   return (
     <Container>
-      {type === 1 ? <User /> : type === 2 ? <Seller /> : null}
+      {auth.type === 1 ? <User /> : auth.type === 2 ? <Seller /> : null}
     </Container>
   );
 };

@@ -1,12 +1,16 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+
+import { useSelector, useDispatch } from "react-redux";
+import { logIn } from "../../features/auth";
+
 import { Container, Logo, Inputs, Section } from "./styles";
 
 const Login = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -31,13 +35,15 @@ const Login = (props) => {
         password,
         type,
       });
+      console.log(response.data);
+      dispatch(logIn({ token: response.data, type }));
       if (response.status === 200) return props.history.replace("/");
     } catch (error) {
       console.log(error);
     }
   }, [id, password, type]);
 
-  if (cookies.token) {
+  if (auth.type !== 0) {
     return <Redirect to="/" />;
   }
 
