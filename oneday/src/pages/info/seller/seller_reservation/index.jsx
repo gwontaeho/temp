@@ -1,89 +1,33 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import axios from "axios";
 
-import { Container, Header, Nav, List, Item } from "./styles";
+import { Container, Nav, List, Item } from "./styles";
 
-const SellerReservation = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+const SellerReservation = (props) => {
+  const auth = useSelector((state) => state.auth);
 
-  const [ing, setIng] = useState([]);
-  const [past, setPast] = useState([]);
-  const [request, setRequest] = useState([]);
-  const [canceled, setCanceled] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const [waiting, setWaiting] = useState([]);
+  const [reservationData, setReservationData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/reservation/history/seller",
-          {},
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        let newIng = [];
-        let newPast = [];
-        let newRequest = [];
-        let newCancled = [];
-        let newWaiting = [];
-        response.data.map((v) => {
-          if (v.state === 0) {
-            newIng.push(v);
-          } else if (v.state === 1) {
-            newPast.push(v);
-          } else if (v.state === 2) {
-            newRequest.push(v);
-          } else if (v.state === 3) {
-            newCancled.push(v);
-          } else if (v.state === 4) {
-            newWaiting.push(v);
-          }
-        });
-        setIng(newIng);
-        setPast(newPast);
-        setRequest(newRequest);
-        setCanceled(newCancled);
-        setSelected(newIng);
-        setWaiting(newWaiting);
-
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+  const requestReservationData = useCallback(async (state) => {
+    try {
+      const response = await axios.get(`/api/reservation?state=${state}`, {
+        headers: { token: auth.token },
+      });
+      console.log(response.data);
+      setReservationData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
-
-  const onClickState = useCallback(
-    (v) => {
-      if (v === 0) {
-        setSelected(ing);
-      } else if (v === 1) {
-        setSelected(past);
-      } else if (v === 2) {
-        setSelected(request);
-      } else if (v === 3) {
-        setSelected(canceled);
-      } else if (v === 4) {
-        setSelected(waiting);
-      }
-    },
-    [ing, past, request, canceled, waiting]
-  );
 
   const onClickItem = useCallback((v) => {
     console.log(v);
   }, []);
 
-  const selectedList = selected.map((v) => {
+  const reservationList = reservationData.map((v) => {
     const ymd =
       new Date(v.createdAt).getFullYear() +
       ". " +
@@ -95,11 +39,11 @@ const SellerReservation = () => {
         <Item onClick={() => onClickItem(v)}>
           <div>
             <img
-              src={v.class.img.replace(/\\/gi, "/").replace(/public/gi, "")}
+              src={v.product.img.replace(/\\/gi, "/").replace(/public/gi, "")}
             />
           </div>
 
-          <div>{v.class.name}</div>
+          <div>{v.product.name}</div>
           <div>{ymd}</div>
         </Item>
       </Link>
@@ -108,30 +52,31 @@ const SellerReservation = () => {
 
   return (
     <Container>
-      <Header>예약 관리</Header>
       <Nav>
-        <div onClick={() => onClickState(4)}>
+        <div onClick={() => requestReservationData(4)}>
           <div>예약 대기</div>
-          <div>{waiting.length}</div>
+          <div>{props.reservationCountData.e}</div>
         </div>
-        <div onClick={() => onClickState(0)}>
+        <div onClick={() => requestReservationData(0)}>
           <div>예약 중</div>
-          <div>{ing.length}</div>
+          <div>{props.reservationCountData.a}</div>
         </div>
-        <div onClick={() => onClickState(1)}>
+        <div onClick={() => requestReservationData(1)}>
           <div>수강 완료</div>
-          <div>{past.length}</div>
+          <div>
+            {props.reservationCountData.b + props.reservationCountData.f}
+          </div>
         </div>
-        <div onClick={() => onClickState(2)}>
+        <div onClick={() => requestReservationData(2)}>
           <div>취소 요청</div>
-          <div>{request.length}</div>
+          <div>{props.reservationCountData.c}</div>
         </div>
-        <div onClick={() => onClickState(3)}>
+        <div onClick={() => requestReservationData(3)}>
           <div>취소</div>
-          <div>{canceled.length}</div>
+          <div>{props.reservationCountData.d}</div>
         </div>
       </Nav>
-      <List>{selectedList}</List>
+      <List>{reservationList}</List>
     </Container>
   );
 };

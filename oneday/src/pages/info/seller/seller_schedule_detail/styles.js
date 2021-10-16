@@ -15,40 +15,104 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
 `;
 
-export const Detail = styled.div`
+export const Nav = styled.div`
+  width: calc(100% - 24px);
+  padding-right: 24px;
+  height: 72px;
   display: flex;
-
-  border-top: 1px solid lightgray;
+  justify-content: flex-end;
+  align-items: center;
   border-bottom: 1px solid lightgray;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  margin-bottom: 24px;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    > div {
-      height: 36px;
-      display: flex;
-      align-items: center;
+  div {
+    margin-left: 24px;
+    cursor: pointer;
+    :hover {
+      color: lightgray;
     }
   }
+`;
 
-  .title {
-    width: 120px;
-  }
-
-  .btns {
+export const InfoHeader = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  div {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: 120px;
+  }
+`;
 
-    & > div {
-      cursor: pointer;
+export const Info = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  height: 120px;
+  border-bottom: 1px solid lightgray;
+
+  .info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 24px;
+  }
+
+  img {
+    width: 120px;
+    height: 96px;
+    object-fit: cover;
+    padding-right: 24px;
+  }
+
+  .classDate {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    a {
+      :hover {
+        color: lightgray;
+      }
     }
+  }
+`;
+
+export const List = styled.div`
+  width: 100%;
+`;
+
+export const ListHeader = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+export const Item = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  a:hover {
+    color: lightgray;
   }
 `;

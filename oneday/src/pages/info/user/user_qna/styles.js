@@ -11,42 +11,47 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
 
   select {
     margin-left: 24px;
   }
 `;
 
-export const Qnas = styled.div`
+export const QnaHeader = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+export const List = styled.div`
   width: 100%;
 `;
 
-export const QnaItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+export const Item = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   height: 72px;
-  border: 1px solid black;
-
-  div {
-    text-align: center;
-  }
-
-  a {
-    color: gray;
-  }
+  border-bottom: 1px solid lightgray;
 
   .name {
-    width: 120px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
   }
-  .class {
-    width: 240px;
+
+  .text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  .state {
-    width: 120px;
-  }
-  .date {
-    width: 120px;
+
+  a:hover {
+    color: lightgray;
   }
 `;

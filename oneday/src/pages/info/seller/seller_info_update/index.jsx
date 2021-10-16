@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useCookies } from "react-cookie";
 import Modal from "react-modal";
 import DaumPostcode from "react-daum-postcode";
+import { useSelector } from "react-redux";
 
 import axios from "axios";
 
@@ -10,10 +10,10 @@ import { Container, Header, Info, Button } from "./styles";
 Modal.setAppElement("#root");
 
 const SellerInfoUpdate = (props) => {
+  const auth = useSelector((state) => state.auth);
+
   const companyRegExp = /^[a-zA-z0-9가-힣]{1,12}$/;
   const phoneRegExp = /^[0-9]{1,11}$/;
-
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const [isOpend, setIsOpend] = useState(false);
 
@@ -26,14 +26,14 @@ const SellerInfoUpdate = (props) => {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    setData(props.location.state.data);
-    setPhone(props.location.state.data.phone);
-    setCompany(props.location.state.data.company);
-    setCategory(props.location.state.data.category);
-    if (props.location.state.data.address !== "&&") {
-      setShortAddress(props.location.state.data.address.split("&")[0]);
-      setAddress(props.location.state.data.address.split("&")[1]);
-      setExtraAd(props.location.state.data.address.split("&")[2]);
+    setData(props.location.state.sellerData);
+    setPhone(props.location.state.sellerData.phone);
+    setCompany(props.location.state.sellerData.company);
+    setCategory(props.location.state.sellerData.category);
+    if (props.location.state.sellerData.address !== "&&") {
+      setShortAddress(props.location.state.sellerData.address.split("&")[0]);
+      setAddress(props.location.state.sellerData.address.split("&")[1]);
+      setExtraAd(props.location.state.sellerData.address.split("&")[2]);
     }
   }, []);
 
@@ -94,8 +94,8 @@ const SellerInfoUpdate = (props) => {
 
     if (result) {
       try {
-        await axios.post(
-          "/api/auth/seller/update",
+        await axios.put(
+          "/api/auth/seller",
           {
             phone,
             company,
@@ -104,7 +104,7 @@ const SellerInfoUpdate = (props) => {
           },
           {
             headers: {
-              token: cookies.token,
+              token: auth.token,
             },
           }
         );
@@ -199,7 +199,7 @@ const SellerInfoUpdate = (props) => {
           <div>
             <select
               onChange={onChangeCategory}
-              defaultValue={props.location.state.data.category}
+              defaultValue={props.location.state.sellerData.category}
             >
               <option value="flower">플라워</option>
               <option value="cooking">요리</option>

@@ -1,163 +1,164 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import axios from "axios";
 
-import { Container, Header, Detail } from "./styles";
+import {
+  Container,
+  Header,
+  Nav,
+  InfoHeader,
+  Info,
+  List,
+  ListHeader,
+  Item,
+} from "./styles";
 
-const SellerScheduleDetail = ({ match }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+const SellerScheduleDetail = (props) => {
+  const auth = useSelector((state) => state.auth);
 
-  const [schedule, setSchedule] = useState({});
-  const [reservations, setReservations] = useState([]);
+  const [scheduleData, setScheduleData] = useState({});
+  const [reservationData, setReservationData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/schedule/detail",
-          {
-            scheduleId: match.params.id,
-          },
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        setSchedule(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchData2 = async () => {
-      try {
-        const response = await axios.post(
-          "/api/reservation/reservations",
-          {
-            scheduleId: match.params.id,
-          },
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        setReservations(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-    fetchData2();
+    requestScheduleData();
   }, []);
 
-  const onClickFinish = useCallback(async () => {
+  const requestScheduleData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `/api/schedule/${props.match.params.id}`,
+        { headers: { token: auth.token } }
+      );
+      console.log(response.data);
+      setScheduleData(response.data);
+      setReservationData(response.data.reservations);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const onClickEnd = useCallback(async () => {
     const result = window.confirm("일정을 종료하시겠습니까?");
 
     if (result) {
       try {
-        const response = await axios.post(
-          "/api/schedule/finish",
+        const response = await axios.put(
+          "/api/schedule",
           {
-            scheduleId: schedule.id,
+            id: scheduleData.id,
           },
           {
             headers: {
-              token: cookies.token,
+              token: auth.token,
             },
           }
         );
+        console.log(response);
+        requestScheduleData();
         window.alert("일정이 종료되었습니다.");
-        window.location.reload();
       } catch (error) {
         console.log(error);
       }
     }
-  }, [schedule]);
+  }, [scheduleData]);
 
-  const reservationsList = reservations.map((v) => {
+  const reservationsList = reservationData.map((v) => {
     return (
-      <Detail>
-        <div className="title">
-          <div>아이디</div>
-          <div>이름</div>
-          <div>연락처</div>
-          <div>예약 인원</div>
-          <div>예약 일자</div>
-          <div>예약 상태</div>
+      <Item key={v.id}>
+        <div>{v.userId}</div>
+        <div>{v.name}</div>
+        <div>{v.phone}</div>
+        <div>
+          {v.createdAt.substr(0, 4) +
+            ". " +
+            v.createdAt.substr(5, 2) +
+            ". " +
+            v.createdAt.substr(8, 2)}
+        </div>
+        <div>{v.personnel}</div>
+        <div>
+          {v.state === 0
+            ? "예약 중"
+            : v.state === 1
+            ? "수강 완료"
+            : v.state === 2
+            ? "취소 요청"
+            : v.state === 3
+            ? "취소"
+            : "예약 대기"}
         </div>
         <div>
-          <div>{v.userId}</div>
-          <div>{v.name}</div>
-          <div>{v.phone}</div>
-          <div>{v.personnel}</div>
-          <div>{v.createdAt}</div>
-          <div>
-            {v.state === 0
-              ? "예약 중"
-              : v.state === 1
-              ? "수강 완료"
-              : v.state === 2
-              ? "취소 요청"
-              : v.state === 3
-              ? "취소"
-              : "예약 대기"}
-          </div>
+          <Link to={`/info/reservation/${v.id}`}>자세히</Link>
         </div>
-        <div className="btns">
-          <Link to={`/info/reservations/${v.id}`}>상세 정보</Link>
-        </div>
-      </Detail>
+      </Item>
     );
   });
 
-  return Object.keys(schedule).length === 0 ? null : (
+  return Object.keys(scheduleData).length === 0 ? null : (
     <Container>
-      <Header>일정 상세</Header>
-      <Detail>
-        <div className="title">
-          <div>클래스 명</div>
-          <div>수강료</div>
-          <div>수업 일자</div>
-          <div>수강 인원</div>
-          <div>예약 인원</div>
-          <div>일정 상태</div>
-        </div>
-        <div>
-          <div>{schedule.class.name}</div>
-          <div>{schedule.class.price}</div>
+      <Header>일정 상세 내역</Header>
+      <Nav>
+        {scheduleData.state === 0 ? (
+          <div onClick={onClickEnd}>일정 종료</div>
+        ) : null}
+      </Nav>
+      <InfoHeader>
+        <div>클래스 정보</div>
+        <div>수강 일자</div>
+        <div>수강 인원</div>
+        <div>상태</div>
+      </InfoHeader>
+      <Info>
+        <div className="info">
+          <img
+            src={scheduleData.product.img
+              .replace(/\\/gi, "/")
+              .replace(/public/gi, "")}
+          />
           <div>
-            {schedule.time.substring(0, 4) +
-              "-" +
-              schedule.time.substring(4, 6) +
-              "-" +
-              schedule.time.substring(6, 8) +
-              " / " +
-              schedule.time.substring(8, 10) +
-              ":" +
-              schedule.time.substring(10, 12) +
-              " ~ " +
-              schedule.time.substring(12, 14) +
-              ":" +
-              schedule.time.substring(14, 16)}
+            <div>{scheduleData.product.category}</div>
+            <div>{scheduleData.product.name}</div>
           </div>
-          <div>{schedule.personnel}</div>
-          <div>{schedule.reserved}</div>
-          <div>{schedule.state === 0 ? "진행 중" : "종료"}</div>
         </div>
-        <div className="btns">
-          {schedule.state === 0 ? (
-            <div onClick={onClickFinish}>일정 종료</div>
-          ) : null}
+        <div className="classDate">
+          <div>
+            {String(scheduleData.ymd).substr(0, 4) +
+              ". " +
+              String(scheduleData.ymd).substr(4, 2) +
+              ". " +
+              String(scheduleData.ymd).substr(6, 2)}
+          </div>
+          <div>
+            {scheduleData.start.substr(0, 2) +
+              ":" +
+              scheduleData.start.substr(2, 2) +
+              " ~ " +
+              scheduleData.end.substr(0, 2) +
+              ":" +
+              scheduleData.end.substr(2, 2)}
+          </div>
         </div>
-      </Detail>
+        <div className="text">
+          {scheduleData.reserved + " / " + scheduleData.personnel}
+        </div>
+        <div className="text">
+          {scheduleData.state === 0 ? "진행 중" : "종료"}
+        </div>
+      </Info>
       <Header>예약자 정보</Header>
-      <div>{reservationsList}</div>
+      <List>
+        <ListHeader>
+          <div>아이디</div>
+          <div>이름</div>
+          <div>연락처</div>
+          <div>예약 일자</div>
+          <div>예약 인원</div>
+          <div>예약 상태</div>
+        </ListHeader>
+        {reservationsList}
+      </List>
     </Container>
   );
 };

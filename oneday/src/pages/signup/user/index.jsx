@@ -72,9 +72,7 @@ const User = (props) => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
 
     try {
-      const response = await axios.post("/api/auth/overlap", {
-        id,
-      });
+      const response = await axios.get(`/api/auth/overlap?id=${id}`);
       console.log(response);
       if (response.status === 200) setIdCheck(true);
     } catch (error) {

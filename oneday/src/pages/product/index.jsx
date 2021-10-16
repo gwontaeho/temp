@@ -58,7 +58,7 @@ const Product = (props) => {
   const requestProductData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `/api/product?id=${query.id}&today=${todayYmd}`
+        `/api/product/${query.id}?&today=${todayYmd}`
       );
       setProductData(response.data);
       setScheduleData(response.data.schedules);

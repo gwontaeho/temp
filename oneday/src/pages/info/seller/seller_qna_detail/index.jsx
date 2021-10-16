@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
 import axios from "axios";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 
 import {
   Container,
   Header,
   Qnas,
   QnaItem,
+  Text,
   ModalHeader,
   QnaTextarea,
 } from "./styles";
@@ -15,7 +16,7 @@ import {
 Modal.setAppElement("#root");
 
 const SellerQnaDetail = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
   const [isOpend, setIsOpend] = useState(false);
   const [qnaData, setQnaData] = useState({});
@@ -27,17 +28,9 @@ const SellerQnaDetail = (props) => {
 
   const requestQnaData = useCallback(async () => {
     try {
-      const response = await axios.post(
-        "/api/qna/detail",
-        {
-          id: props.match.params.id,
-        },
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
+      const response = await axios.get(`/api/qna/${props.match.params.id}`, {
+        headers: { token: auth.token },
+      });
       setQnaData(response.data);
       console.log(response.data);
     } catch (error) {
@@ -60,13 +53,13 @@ const SellerQnaDetail = (props) => {
 
   const onClickSave = useCallback(async () => {
     try {
-      await axios.post(
+      await axios.put(
         "/api/qna/answer",
         {
           answer: answerText,
           id: qnaData.id,
         },
-        { headers: { token: cookies.token } }
+        { headers: { token: auth.token } }
       );
       closeModal();
       requestQnaData();
@@ -112,35 +105,33 @@ const SellerQnaDetail = (props) => {
       <Header>문의 상세</Header>
       <Qnas>
         <QnaItem>
-          <div className="name">작성자</div>
-          <div className="class">클래스 명</div>
-          <div className="date">문의일자</div>
-          <div className="date">답변일자</div>
-          <div className="state">상태</div>
+          <div>작성자</div>
+          <div>클래스 명</div>
+          <div>문의일자</div>
+          <div>답변일자</div>
+          <div>상태</div>
         </QnaItem>
         <QnaItem>
-          <div className="name">{qnaData.userId}</div>
-          <div className="class">{qnaData.product.name}</div>
-          <div className="date">{qnaData.createdAt.substr(0, 10)}</div>
+          <div>{qnaData.userId}</div>
+          <div>{qnaData.product.name}</div>
+          <div>{qnaData.createdAt.substr(0, 10)}</div>
           {qnaData.state === 0 ? (
-            <div className="date"></div>
+            <div></div>
           ) : (
-            <div className="date">{qnaData.updatedAt.substr(0, 10)}</div>
+            <div>{qnaData.updatedAt.substr(0, 10)}</div>
           )}
-          <div className="state">
-            {qnaData.state === 0 ? "미답변" : "답변완료"}
-          </div>
-          <div className="answer" onClick={openModal}>
+          <div>{qnaData.state === 0 ? "미답변" : "답변완료"}</div>
+          <div onClick={openModal}>
             {qnaData.state === 0 ? "답변하기" : null}
           </div>
         </QnaItem>
       </Qnas>
       <Header>문의 내용</Header>
-      <div>{qnaData.question}</div>
+      <Text>{qnaData.question}</Text>
       {qnaData.answer === null ? null : (
         <>
           <Header>문의 답변</Header>
-          <div>{qnaData.answer}</div>
+          <Text>{qnaData.answer}</Text>
         </>
       )}
     </Container>

@@ -5,14 +5,32 @@ const { Op } = require("sequelize");
 
 const Schedule = require("../models").Schedule;
 const Product = require("../models").Product;
+const { Reservation } = require("../models");
 
-router.post("/seller/product", async (req, res, next) => {
-  ////////////////////////////////////////////////////////////////////
-  //  판매자 클래스 스케줄
-  ////////////////////////////////////////////////////////////////////
+router.get("/", verifyToken, async (req, res, next) => {
+  //////////////////////////////////////////////////////////////////////
+  //  판매자 스케줄 / 월별
+  //////////////////////////////////////////////////////////////////////
+  const productId =
+    req.query.productId === "0" ? { [Op.ne]: null } : req.query.productId;
   try {
     const findAllSchedule = await Schedule.findAll({
-      where: { productId: req.body.productId },
+      include: [
+        {
+          model: Product,
+          attributes: ["name"],
+        },
+      ],
+      where: {
+        ymd: {
+          [Op.startsWith]: req.query.ym,
+        },
+        productId: productId,
+      },
+      order: [
+        ["start", "asc"],
+        ["end", "asc"],
+      ],
     });
     const response = findAllSchedule.map((v) => {
       return v.dataValues;
@@ -23,86 +41,29 @@ router.post("/seller/product", async (req, res, next) => {
   }
 });
 
-// 상품 > 일정목록
-router.post("/product", async (req, res, next) => {
-  let result = [];
-  try {
-    const findAllSchedule = await Schedule.findAll({
-      where: {
-        classId: req.body.classId,
-        ymd: {
-          [Op.gt]: req.body.ymd,
-        },
-      },
-      order: [
-        ["ymd", "ASC"],
-        ["time", "ASC"],
-      ],
-    });
-    findAllSchedule.forEach((v) => {
-      result.push(v.dataValues);
-    });
-    console.log(result);
-    return res.status(200).send(result);
-  } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-router.post("/seller", verifyToken, async (req, res, next) => {
-  console.log(req.decoded);
-  let result = [];
-  try {
-    const findAllSchedule = await Schedule.findAll({
-      include: [
-        {
-          model: Product,
-          attributes: ["name", "sellerId"],
-          where: { sellerId: req.decoded.id },
-        },
-      ],
-      order: [["time", "ASC"]],
-    });
-    findAllSchedule.forEach((v) => {
-      result.push(v.dataValues);
-    });
-    console.log(result);
-    return res.status(200).send(result);
-  } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-router.post("/detail", verifyToken, async (req, res, next) => {
+router.get("/:id", verifyToken, async (req, res, next) => {
+  //////////////////////////////////////////////////////////////////////
+  //  판매자 일정 상세
+  //////////////////////////////////////////////////////////////////////
   try {
     const findSchedule = await Schedule.findOne({
       include: [
         {
           model: Product,
-          attributes: ["name", "price", "time"],
+        },
+        {
+          model: Reservation,
         },
       ],
-      where: { id: req.body.scheduleId },
+      where: { id: req.params.id },
     });
-    return res.status(200).json(findSchedule.dataValues);
+    return res.status(200).send(findSchedule.dataValues);
   } catch (error) {
-    return res.status(401).send("error");
+    return res.status(500).send();
   }
 });
 
-router.post("/finish", verifyToken, async (req, res, next) => {
-  try {
-    await Schedule.update(
-      { state: 1 },
-      { where: { id: req.body.scheduleId }, individualHooks: true }
-    );
-    return res.status(200).send("success");
-  } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-router.post("/create", verifyToken, async (req, res, next) => {
+router.post("/", verifyToken, async (req, res, next) => {
   //////////////////////////////////////////////////////////////////
   // 판매자 스케줄 생성
   //////////////////////////////////////////////////////////////////
@@ -118,6 +79,32 @@ router.post("/create", verifyToken, async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).send();
+  }
+});
+
+router.put("/", verifyToken, async (req, res, next) => {
+  ///////////////////////////////////////////////////////////////
+  //  일정 종료
+  ///////////////////////////////////////////////////////////////
+  let count;
+  try {
+    count = await Reservation.count({
+      where: { state: [2, 4], scheduleId: req.body.id },
+    });
+  } catch (error) {
+    return res.status(500).send();
+  }
+  if (count > 0) return res.status(400).send();
+  else {
+    try {
+      await Schedule.update(
+        { state: 1 },
+        { where: { id: req.body.id }, individualHooks: true }
+      );
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(500).send();
+    }
   }
 });
 

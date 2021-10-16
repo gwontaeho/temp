@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
-// import Calendar from "../../../../components/calendar";
+import { useSelector } from "react-redux";
+import Calendar from "./calendar";
 
 import axios from "axios";
 
-import { Container, Header, Item } from "./styles";
+import { Container, Header, State, CalendarNList, List, Item } from "./styles";
 
 const SellerSchedule = () => {
+  const auth = useSelector((state) => state.auth);
+
   const today = new Date();
   const todayYmd =
     String(today.getFullYear()) +
@@ -22,87 +24,91 @@ const SellerSchedule = () => {
         : String(today.getDate())
     );
 
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-
-  const [data, setData] = useState([]);
+  const [scheduleData, setScheduleData] = useState([]);
+  const [ym, setYm] = useState(todayYmd.substr(0, 6));
   const [date, setDate] = useState(todayYmd); // 클릭된 날짜 (기본값 오늘)
-  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "/api/schedule/seller",
-          {},
-          {
-            headers: {
-              token: cookies.token,
-            },
-          }
-        );
-        setData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    requestScheduleData();
+  }, [ym]);
+
+  const requestScheduleData = useCallback(async () => {
+    try {
+      const response = await axios.get(`/api/schedule?productId=0&ym=${ym}`, {
+        headers: { token: auth.token },
+      });
+      setScheduleData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [ym]);
+
+  const onChangeYm = useCallback((v) => {
+    setYm(v);
   }, []);
 
-  useEffect(() => {
-    let rAry = [];
-
-    data.forEach((v) => {
-      if (v.time.substring(0, 8) === date) {
-        rAry.push(v);
-      }
-    });
-
-    setSelected(rAry);
-  }, [data, date]);
-
   const onChangeDate = useCallback((v) => {
+    console.log(v);
     setDate(v);
   }, []);
 
-  const seletedList = selected.map((v) => {
-    return (
-      <Link to={`/info/schedule/${v.id}`}>
-        <Item>
-          <div>{selected.indexOf(v) + 1}</div>
-          <div className="name">{v.class.name}</div>
+  const scheduleList = scheduleData.map((v) => {
+    if (String(v.ymd) === date)
+      return (
+        <Item key={v.id}>
+          <div>{v.product.name}</div>
+          <div>{`${v.start.substr(0, 2)} : ${v.start.substr(
+            2,
+            2
+          )} ~ ${v.end.substr(0, 2)} : ${v.end.substr(2, 2)}`}</div>
+          <div>{v.reserved + "/" + v.personnel}</div>
+          <div>{v.state === 0 ? "진행 중" : "종료"}</div>
           <div>
-            {v.time.substring(8, 10) +
-              " : " +
-              v.time.substring(10, 12) +
-              " ~ " +
-              v.time.substring(12, 14) +
-              " : " +
-              v.time.substring(14, 16)}
-          </div>
-          <div>
-            예약 : {v.reserved} / {v.personnel}
+            <Link to={`/info/schedule/${v.id}`}>자세히</Link>
           </div>
         </Item>
-      </Link>
-    );
+      );
   });
 
   return (
     <Container>
       <Header>일정 관리</Header>
-      {Object.keys(data).length === 0 ? null : (
-        <>
-          <div className="calendar">
-            {/* <Calendar scheduleArray={data} onChangeDate={onChangeDate} /> */}
-          </div>
-          <Header>
-            {date.substring(4, 6) + "월 " + date.substring(6, 8) + "일"} 수업 총{" "}
-            {selected.length}건
-          </Header>
-          <div>{seletedList}</div>
-        </>
-      )}
+      <State>
+        <div>
+          {"진행중인 일정 : " +
+            scheduleData.reduce(
+              (cnt, element) => cnt + (element.state === 0),
+              0
+            )}
+        </div>
+        <div>
+          {"종료된 일정 : " +
+            scheduleData.reduce(
+              (cnt, element) => cnt + (element.state === 1),
+              0
+            )}
+        </div>
+        <div>아직 종료되지 않은 일정이 있습니다</div>
+      </State>
+      <CalendarNList>
+        <div className="calendar">
+          <Calendar
+            scheduleData={scheduleData}
+            onChangeDate={onChangeDate}
+            onChangeYm={onChangeYm}
+          />
+        </div>
+        <List>
+          <Item>
+            <div>클래스 명</div>
+            <div>시간</div>
+            <div>인원</div>
+            <div>상태</div>
+          </Item>
+          {scheduleList}
+        </List>
+      </CalendarNList>
     </Container>
   );
 };

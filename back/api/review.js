@@ -3,53 +3,60 @@ const router = express.Router();
 const { verifyToken } = require("../jwt");
 
 const Review = require("../models").Review;
+const Product = require("../models").Product;
 
-router.post("/add", verifyToken, async (req, res, next) => {
+router.get("/", verifyToken, async (req, res, next) => {
+  try {
+    const findAllReview = await Review.findAll({
+      include: [
+        {
+          model: Product,
+          attributes: ["name", "img"],
+        },
+      ],
+      where: { userId: req.decoded.id },
+      order: [["createdAt", "Desc"]],
+    });
+
+    const response = findAllReview.map((v) => {
+      return v.dataValues;
+    });
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
+router.get("/:productId", async (req, res, next) => {
+  try {
+    const findAllReview = await Review.findAll({
+      where: { productId: req.params.productId },
+      order: [["createdAt", "Desc"]],
+    });
+
+    const response = findAllReview.map((v) => {
+      return v.dataValues;
+    });
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
+router.post("/", verifyToken, async (req, res, next) => {
+  console.log(req.body);
   try {
     await Review.create({
       text: req.body.text,
       rating: req.body.rating,
       userId: req.decoded.id,
-      classId: req.body.classId,
+      productId: req.body.productId,
       reservationId: req.body.reservationId,
     });
-    res.status(200).send("SUCCESS");
+    res.status(200).send();
   } catch (error) {
     console.log(error);
-    res.status(500).send("FAIL");
-  }
-});
-
-router.post("/modify", verifyToken, async (req, res, next) => {
-  try {
-    await Review.update(
-      {
-        text: req.body.text,
-        rating: req.body.rating,
-      },
-      { where: { id: req.body.reviewId } }
-    );
-    res.status(200).send("SUCCESS");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("FAIL");
-  }
-});
-
-router.post("/get", async (req, res, next) => {
-  let result = [];
-  try {
-    const findAllReview = await Review.findAll({
-      where: { classId: req.body.classId },
-      order: [["createdAt", "Desc"]],
-    });
-    findAllReview.forEach((v) => {
-      result.push(v.dataValues);
-    });
-    console.log(result);
-    return res.status(200).send(result);
-  } catch (error) {
-    return res.status(401).send("error");
+    res.status(500).send();
   }
 });
 

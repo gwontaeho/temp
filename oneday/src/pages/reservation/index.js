@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Redirect } from "react-router";
 import { Container, Header, Info, UserInfo, Apply } from "./styles";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 const Reservation = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
   const [user, setUser] = useState({});
   const [productData, setProductData] = useState(
@@ -27,7 +27,7 @@ const Reservation = (props) => {
         {},
         {
           headers: {
-            token: cookies.token,
+            token: auth.token,
           },
         }
       );
@@ -57,7 +57,7 @@ const Reservation = (props) => {
   const onClickApply = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/reservation/create",
+        "/api/reservation",
         {
           name,
           phone,
@@ -68,7 +68,7 @@ const Reservation = (props) => {
         },
         {
           headers: {
-            token: cookies.token,
+            token: auth.token,
           },
         }
       );

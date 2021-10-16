@@ -11,7 +11,6 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
 
   select {
     margin-left: 24px;
@@ -23,30 +22,18 @@ export const Qnas = styled.div`
 `;
 
 export const QnaItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
   height: 72px;
-  border: 1px solid black;
+  border-bottom: 1px solid lightgray;
 
   div {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  a {
-    color: gray;
-  }
-
-  .name {
-    width: 120px;
-  }
-  .class {
-    width: 240px;
-  }
-  .state {
-    width: 120px;
-  }
-  .date {
-    width: 120px;
+  a:hover {
+    color: lightgray;
   }
 `;

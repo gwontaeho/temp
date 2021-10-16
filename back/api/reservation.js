@@ -3,12 +3,13 @@ const router = express.Router();
 
 const { verifyToken } = require("../jwt");
 
+const { Op } = require("sequelize");
 const Reservation = require("../models").Reservation;
 const Product = require("../models").Product;
 const Schedule = require("../models").Schedule;
 const Review = require("../models").Review;
 
-router.post("/create", verifyToken, async (req, res, next) => {
+router.post("/", verifyToken, async (req, res, next) => {
   /////////////////////////////////////////////////////////////
   // 예약생성
   /////////////////////////////////////////////////////////////
@@ -43,7 +44,10 @@ router.post("/create", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/user", verifyToken, async (req, res, next) => {
+router.get("/", verifyToken, async (req, res, next) => {
+  const userId = req.decoded.type === "1" ? req.decoded.id : { [Op.ne]: null };
+  const sellerId =
+    req.decoded.type === "2" ? req.decoded.id : { [Op.ne]: null };
   ///////////////////////////////////////////////////////////////
   //  예약 내역
   ///////////////////////////////////////////////////////////////
@@ -52,13 +56,18 @@ router.post("/user", verifyToken, async (req, res, next) => {
       include: [
         {
           model: Product,
-          attributes: ["name", "img"],
+          attributes: ["name", "img", "category"],
         },
         {
-          model: Review,
+          model: Schedule,
+          attributes: ["ymd", "start", "end"],
         },
       ],
-      where: { userId: req.decoded.id },
+      where: {
+        userId,
+        sellerId,
+        state: req.query.state === "1" ? [1, 5] : req.query.state,
+      },
       order: [["createdAt", "DESC"]],
     });
     const response = findAllReservation.map((v) => {
@@ -70,7 +79,93 @@ router.post("/user", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/user/detail", verifyToken, async (req, res, next) => {
+router.get("/count", verifyToken, async (req, res, next) => {
+  const userId = req.decoded.type === "1" ? req.decoded.id : { [Op.ne]: null };
+  const sellerId =
+    req.decoded.type === "2" ? req.decoded.id : { [Op.ne]: null };
+  ///////////////////////////////////////////////////////////////
+  //  예약 내역 카운트
+  ///////////////////////////////////////////////////////////////
+  try {
+    const a = await Reservation.count({
+      where: {
+        userId,
+        sellerId,
+        state: 0,
+      },
+    });
+    const b = await Reservation.count({
+      where: {
+        userId,
+        sellerId,
+        state: 1,
+      },
+    });
+    const c = await Reservation.count({
+      where: {
+        userId,
+        sellerId,
+        state: 2,
+      },
+    });
+    const d = await Reservation.count({
+      where: {
+        userId,
+        sellerId,
+        state: 3,
+      },
+    });
+    const e = await Reservation.count({
+      where: {
+        userId,
+        sellerId,
+        state: 4,
+      },
+    });
+    const f = await Reservation.count({
+      where: {
+        userId,
+        sellerId,
+        state: 5,
+      },
+    });
+    const response = { a, b, c, d, e, f };
+    console.log(response);
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
+router.get("/unwritten", verifyToken, async (req, res, next) => {
+  ///////////////////////////////////////////////////////////////
+  //  후기 미 작성 예약 내역
+  ///////////////////////////////////////////////////////////////
+  try {
+    const findAllReservation = await Reservation.findAll({
+      include: [
+        {
+          model: Product,
+          attributes: ["id", "name", "img", "category"],
+        },
+        {
+          model: Schedule,
+          attributes: ["ymd", "start", "end"],
+        },
+      ],
+      where: { userId: req.decoded.id, state: 1 },
+    });
+    const response = findAllReservation.map((v) => {
+      return v.dataValues;
+    });
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
+router.get("/:id", verifyToken, async (req, res, next) => {
+  console.log(req.params.id);
   ///////////////////////////////////////////////////////////////
   //  예약 상세
   ///////////////////////////////////////////////////////////////
@@ -79,7 +174,7 @@ router.post("/user/detail", verifyToken, async (req, res, next) => {
       include: [
         {
           model: Product,
-          attributes: ["name", "img", "price"],
+          attributes: ["id", "name", "img", "price", "address", "category"],
         },
         {
           model: Schedule,
@@ -89,7 +184,7 @@ router.post("/user/detail", verifyToken, async (req, res, next) => {
           model: Review,
         },
       ],
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     });
     return res.status(200).send(findReservation);
   } catch (error) {
@@ -97,69 +192,26 @@ router.post("/user/detail", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/history/seller", verifyToken, async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.decoded.id);
-
-  console.log(req.decoded);
-  let result = [];
+router.put("/", verifyToken, async (req, res, next) => {
+  ////////////////////////////////////////////////////////
+  //  예약 확정
+  ////////////////////////////////////////////////////////
   try {
-    const findAllReservation = await Reservation.findAll({
-      include: [
-        {
-          model: Class,
-          attributes: ["name", "img", "price"],
-        },
-      ],
-      where: { sellerId: req.decoded.id },
-      order: [["createdAt", "DESC"]],
-    });
-    findAllReservation.forEach((v) => {
-      result.push(v.dataValues);
-    });
-    console.log(result);
-    return res.status(200).send(result);
+    await Reservation.update({ state: 0 }, { where: { id: req.body.id } });
+    return res.status(200).send();
   } catch (error) {
-    return res.status(401).send("error");
+    return res.status(500).send();
   }
 });
 
-router.post("/reservations", verifyToken, async (req, res, next) => {
-  let result = [];
-  try {
-    const findAllReservation = await Reservation.findAll({
-      where: { scheduleId: req.body.scheduleId },
-      order: [["createdAt", "DESC"]],
-    });
-    findAllReservation.forEach((v) => {
-      result.push(v.dataValues);
-    });
-    console.log(result);
-    return res.status(200).send(result);
-  } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-router.post("/confirm", verifyToken, async (req, res, next) => {
-  console.log(req.body);
-  try {
-    await Reservation.update(
-      { state: 0 },
-      { where: { id: req.body.reservationId } }
-    );
-    return res.status(200).send("success");
-  } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-router.post("/cancel", verifyToken, async (req, res, next) => {
-  console.log(req.body);
+router.put("/cancel", verifyToken, async (req, res, next) => {
+  ////////////////////////////////////////////////////////
+  // 예약 취소
+  ////////////////////////////////////////////////////////
   try {
     await Reservation.update(
       { state: 3 },
-      { where: { id: req.body.reservationId }, individualHooks: true }
+      { where: { id: req.body.id }, individualHooks: true }
     );
     return res.status(200).send("success");
   } catch (error) {
@@ -167,53 +219,41 @@ router.post("/cancel", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/waitingcancel", verifyToken, async (req, res, next) => {
-  console.log(req.body);
+router.put("/cancel/waiting", verifyToken, async (req, res, next) => {
+  ////////////////////////////////////////////////////////
+  // 대기중 예약 취소
+  ////////////////////////////////////////////////////////
   try {
     const findReservation = await Reservation.findOne({
-      where: { id: req.body.reservationId },
+      where: { id: req.body.id },
     });
     if (findReservation.dataValues.state === 4) {
       try {
         await Reservation.update(
           { state: 3 },
-          { where: { id: req.body.reservationId }, individualHooks: true }
+          { where: { id: req.body.id }, individualHooks: true }
         );
-        return res.status(200).send("success");
+        return res.status(200).send();
       } catch (error) {
-        return res.status(401).send("error");
+        return res.status(500).send();
       }
     } else {
-      return res.status(200).send("failure");
+      return res.status(400).send();
     }
   } catch (error) {
-    console.log(error);
+    return res.status(500).send();
   }
 });
 
-router.post("/request", verifyToken, async (req, res, next) => {
-  console.log(req.body);
+router.put("/cancel/request", verifyToken, async (req, res, next) => {
+  ////////////////////////////////////////////////////////
+  //  예약중 취소 요청
+  ////////////////////////////////////////////////////////
   try {
-    await Reservation.update(
-      { state: 2 },
-      { where: { id: req.body.reservationId } }
-    );
-    return res.status(200).send("success");
+    await Reservation.update({ state: 2 }, { where: { id: req.body.id } });
+    return res.status(200).send();
   } catch (error) {
-    return res.status(401).send("error");
-  }
-});
-
-router.post("/withdraw", verifyToken, async (req, res, next) => {
-  console.log(req.body);
-  try {
-    await Reservation.update(
-      { state: 0 },
-      { where: { id: req.body.reservationId } }
-    );
-    return res.status(200).send("success");
-  } catch (error) {
-    return res.status(401).send("error");
+    return res.status(500).send();
   }
 });
 

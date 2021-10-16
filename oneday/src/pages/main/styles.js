@@ -62,10 +62,3 @@ export const Product = styled.div`
 `;
 
 export const StyledSlider = styled(Slider)``;
-
-export const Footer = styled.div`
-  width: 100%;
-  height: 240px;
-  margin-top: 60px;
-  background-color: lightgray;
-`;

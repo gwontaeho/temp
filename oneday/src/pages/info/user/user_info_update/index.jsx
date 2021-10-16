@@ -1,17 +1,17 @@
 import React, { useState, useCallback } from "react";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 
 import axios from "axios";
 
 import { Container, Header, Info, Button } from "./styles";
 
 const UserInfoUpdate = (props) => {
+  const auth = useSelector((state) => state.auth);
+
   const phoneRegExp = /^[0-9]{1,11}$/;
 
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-
-  const [data, setData] = useState(props.location.state.data);
-  const [phone, setPhone] = useState(props.location.state.data.phone);
+  const [data, setData] = useState(props.location.state.userData);
+  const [phone, setPhone] = useState(props.location.state.userData.phone);
 
   const onChangePhone = useCallback((e) => {
     setPhone(e.target.value);
@@ -24,12 +24,12 @@ const UserInfoUpdate = (props) => {
     const result = window.confirm("정보를 수정하시겠습니까?");
     if (result) {
       try {
-        await axios.post(
-          "/api/auth/user/update",
+        await axios.put(
+          "/api/auth/user",
           { phone },
           {
             headers: {
-              token: cookies.token,
+              token: auth.token,
             },
           }
         );

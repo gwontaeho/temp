@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
-import { Container, Header, Qnas, QnaItem } from "./styles";
+import { Container, Header, List, Item, QnaHeader } from "./styles";
 
 const UserQna = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState([]);
@@ -16,22 +16,14 @@ const UserQna = () => {
   const pageSelectRef = React.createRef();
 
   useEffect(() => {
-    requestQna();
+    requestQnaData();
   }, [answerState, page]);
 
-  const requestQna = useCallback(async () => {
+  const requestQnaData = useCallback(async () => {
     try {
-      const response = await axios.post(
-        "/api/qna/user",
-        {
-          answerState,
-          page,
-        },
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
+      const response = await axios.get(
+        `/api/qna/page?state=${answerState}&page=${page}`,
+        { headers: { token: auth.token } }
       );
 
       let newPages = [];
@@ -62,32 +54,45 @@ const UserQna = () => {
 
   const pageList = pages.map((v) => {
     return (
-      <option value={v}>
+      <option key={v} value={v}>
         {v} / {pages.length}
       </option>
     );
   });
 
   const qnaList = qnaData.data.map((v) => {
+    const category =
+      v.product.category === "flower"
+        ? "플라워"
+        : v.product.category === "art"
+        ? "미술"
+        : v.product.category === "cooking"
+        ? "요리"
+        : v.product.category === "handmade"
+        ? "수공예"
+        : v.product.category === "activity"
+        ? "액티비티"
+        : "기타";
     return (
-      <QnaItem>
-        <div className="name">{v.userId}</div>
-        <div className="class">{v.product.name}</div>
-        <div className="date">{v.createdAt.substr(0, 10)}</div>
+      <Item key={v.id}>
+        <div className="name">{`[${category}] ${v.product.name}`}</div>
+        <div className="text">{v.createdAt.substr(0, 10)}</div>
         {v.state === 0 ? (
-          <div className="date"></div>
+          <div></div>
         ) : (
-          <div className="date">{v.updatedAt.substr(0, 10)}</div>
+          <div className="text">{v.updatedAt.substr(0, 10)}</div>
         )}
-        <div className="state">{v.state === 0 ? "미답변" : "답변완료"}</div>
-        <Link to={`/info/qna/${v.id}`}>상세</Link>
-      </QnaItem>
+        <div className="text">{v.state === 0 ? "미 답변" : "답변 완료"}</div>
+        <div className="text">
+          <Link to={`/info/qna/${v.id}`}>자세히</Link>
+        </div>
+      </Item>
     );
   });
 
   return (
     <Container>
-      <Header>문의 관리</Header>
+      <Header>문의 내역</Header>
       <Header>
         <div>{qnaData.count}건</div>
         <select onChange={onChangeAnswerState} defaultValue={2}>
@@ -99,16 +104,13 @@ const UserQna = () => {
           {pageList}
         </select>
       </Header>
-      <Qnas>
-        <QnaItem>
-          <div className="name">작성자</div>
-          <div className="class">클래스 명</div>
-          <div className="date">문의일자</div>
-          <div className="date">답변일자</div>
-          <div className="state">상태</div>
-        </QnaItem>
-        {qnaList}
-      </Qnas>
+      <QnaHeader>
+        <div>클래스 명</div>
+        <div>문의 일자</div>
+        <div>답변 일자</div>
+        <div>상태</div>
+      </QnaHeader>
+      <List>{qnaList}</List>
     </Container>
   );
 };

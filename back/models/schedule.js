@@ -40,15 +40,16 @@ module.exports = (sequelize, DataTypes) => {
               {
                 where: {
                   scheduleId: schedule.dataValues.id,
+                  state: 0,
                 },
               }
             );
             try {
-              await sequelize.models.class.update(
+              await sequelize.models.product.update(
                 {
                   sold: sequelize.literal(`sold + ${updateReservation[0]}`),
                 },
-                { where: { id: schedule.dataValues.classId } }
+                { where: { id: schedule.dataValues.productId } }
               );
             } catch (error) {
               console.log(error);

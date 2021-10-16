@@ -22,9 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        afterCreate: (reservation, options) => {
-          console.log("abcbcbcddddddcreate");
-          sequelize.models.schedule.update(
+        afterCreate: async (reservation, options) => {
+          await sequelize.models.schedule.update(
             {
               reserved: sequelize.literal(
                 `reserved + ${reservation.dataValues.personnel}`
@@ -33,14 +32,9 @@ module.exports = (sequelize, DataTypes) => {
             { where: { id: reservation.dataValues.scheduleId } }
           );
         },
-
-        afterUpdate: (reservation, options) => {
-          console.log("---------------------------------------------");
-
-          console.log("updateddd");
-
+        afterUpdate: async (reservation, options) => {
           if (reservation.dataValues.state === 3) {
-            sequelize.models.schedule.update(
+            await sequelize.models.schedule.update(
               {
                 reserved: sequelize.literal(
                   `reserved - ${reservation.dataValues.personnel}`

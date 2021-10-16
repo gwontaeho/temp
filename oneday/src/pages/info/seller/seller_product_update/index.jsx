@@ -16,42 +16,59 @@ import {
 } from "./styles";
 import axios from "axios";
 
-const SellerClassCreate = ({ history }) => {
+Modal.setAppElement("#root");
+
+const SellerClassModify = (props) => {
   const auth = useSelector((state) => state.auth);
 
-  const [img, setImg] = useState();
+  const [productData, setProductData] = useState([]);
+  const [img, setImg] = useState("");
   const [name, setName] = useState("");
-  const [price, setPrice] = useState();
-  const [time, setTime] = useState();
-  const [useRegisteredAddress, setUseRegisteredAddress] = useState(true);
-  const [seller, setSeller] = useState({});
+  const [price, setPrice] = useState("");
+  const [time, setTime] = useState("");
   const [shortAddress, setShortAddress] = useState("");
   const [address, setAddress] = useState("");
   const [extraAd, setExtraAd] = useState("");
+  const [detail, setDetail] = useState([]);
+
+  const [imgCheck, setImgCheck] = useState(0);
+  const [addressType, setAddressType] = useState("0");
+  const [newShortAddress, setNewShortAddress] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [newExtraAd, setNewExtraAd] = useState("");
   const [isOpend, setIsOpend] = useState(false);
 
   useEffect(() => {
-    requestData();
+    console.log(props);
+    requestProductData();
   }, []);
 
-  const requestData = useCallback(async () => {
+  const requestProductData = useCallback(async () => {
     try {
-      const response = await axios.post(
-        "/api/auth/seller",
-        {},
-        {
-          headers: {
-            token: auth.token,
-          },
-        }
+      const response = await axios.get(
+        `/api/product/seller/${props.match.params.id}`,
+        { headers: { token: auth.token } }
       );
-      setSeller(response.data);
+      console.log(response.data);
+      setProductData(response.data);
+      setImg(response.data.img.replace(/\\/gi, "/").replace(/public/gi, ""));
+      setName(response.data.name);
+      setPrice(response.data.price);
+      setTime(response.data.time);
+      setDetail(JSON.parse(response.data.detail));
+
+      if (response.data.address !== "&&") {
+        setShortAddress(response.data.address.split("&")[0]);
+        setAddress(response.data.address.split("&")[1]);
+        setExtraAd(response.data.address.split("&")[2]);
+      }
     } catch (error) {
       console.log(error);
     }
   }, []);
 
   const onChangeImg = useCallback((e) => {
+    setImgCheck(1);
     setImg(e.target.files[0]);
   }, []);
   const onChangeName = useCallback((e) => {
@@ -63,8 +80,8 @@ const SellerClassCreate = ({ history }) => {
   const onChangeTime = useCallback((e) => {
     setTime(e.target.value);
   }, []);
-  const onChangeExtraAd = useCallback((e) => {
-    setExtraAd(e.target.value);
+  const onChangeNewExtraAd = useCallback((e) => {
+    setNewExtraAd(e.target.value);
   }, []);
 
   const onclickRemove = useCallback((e) => {
@@ -95,15 +112,6 @@ const SellerClassCreate = ({ history }) => {
   }, []);
 
   const onSubmit = useCallback(async () => {
-    console.log(price);
-    if (img === undefined)
-      return window.alert("클래스 대표사진을 등록해주세요");
-    if (name.length === 0) return window.alert("클래스 이름을 입력해주세요");
-    if (price === "" || price === undefined)
-      return window.alert("수강료를 입력해주세요");
-    if (time === "" || time === undefined)
-      return window.alert("수강시간을 입력해주세요");
-
     let stringary = [];
     const details = document.getElementsByClassName("detail");
     [...details].forEach((v) => {
@@ -114,36 +122,50 @@ const SellerClassCreate = ({ history }) => {
     });
 
     const formData = new FormData();
+    formData.append("productId", productData.id);
+    formData.append("imgCheck", imgCheck);
     formData.append("img", img);
+    formData.append("oldImg", productData.img);
     formData.append("name", name);
     formData.append("price", price);
     formData.append("time", time);
-    formData.append("category", seller.category);
-    if (useRegisteredAddress) formData.append("address", seller.address);
-    else
+    if (addressType === 0) {
       formData.append("address", shortAddress + "&" + address + "&" + extraAd);
+    } else if (addressType === 1) {
+      formData.append("address", props.sellerData.address);
+    } else if (addressType === 2) {
+      formData.append(
+        "address",
+        newShortAddress + "&" + newAddress + "&" + newExtraAd
+      );
+    }
     formData.append("detail", JSON.stringify(stringary));
 
     try {
-      await axios.post("/api/product/create", formData, {
+      const response = await axios.post("/api/product/update", formData, {
         headers: {
           token: auth.token,
         },
       });
-      history.replace("/info/class");
+      console.log(response);
+      props.history.replace(`/info/class/${productData.id}`);
     } catch (error) {
       console.log(error);
     }
   }, [
+    productData,
     img,
     name,
     price,
     time,
-    useRegisteredAddress,
     shortAddress,
     address,
     extraAd,
-    seller,
+    newShortAddress,
+    newAddress,
+    newExtraAd,
+    addressType,
+    imgCheck,
   ]);
 
   const openModal = useCallback(() => {
@@ -170,27 +192,45 @@ const SellerClassCreate = ({ history }) => {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    setShortAddress(short);
-    setAddress(fullAddress);
+    setNewShortAddress(short);
+    setNewAddress(fullAddress);
     closeModal();
   }, []);
 
-  const onClickAddressButton = useCallback((e) => {
-    const value = e.target.getAttribute("value");
+  const onClickAddressButton = useCallback((e, v) => {
     const inputs = document.getElementsByClassName("inputs")[0];
     const addressButton1 = document.getElementsByClassName("addressButton")[0];
     const addressButton2 = document.getElementsByClassName("addressButton")[1];
+    const addressButton3 = document.getElementsByClassName("addressButton")[2];
     addressButton1.classList.remove("selected");
     addressButton2.classList.remove("selected");
+    addressButton3.classList.remove("selected");
     e.target.classList.add("selected");
-    if (value === "1") {
-      inputs.classList.add("open");
-      setUseRegisteredAddress(false);
-    } else {
+    if (v === 0) {
       inputs.classList.remove("open");
-      setUseRegisteredAddress(true);
+      setAddressType(0);
+    } else if (v === 1) {
+      inputs.classList.remove("open");
+      setAddressType(1);
+    } else if (v === 2) {
+      inputs.classList.add("open");
+      setAddressType(2);
     }
   }, []);
+
+  const detailList = detail.map((v) => {
+    return (
+      <div className="detail">
+        <div className="header">
+          <input className="detailTitle" defaultValue={v.title} />
+          <div className="removeButton" onClick={onclickRemove}>
+            삭제
+          </div>
+        </div>
+        <textarea className="detailText" defaultValue={v.text} />
+      </div>
+    );
+  });
 
   return (
     <Container>
@@ -211,23 +251,18 @@ const SellerClassCreate = ({ history }) => {
       >
         <DaumPostcode onComplete={handleComplete} />
       </Modal>
-      <Header>클래스 생성</Header>
+      <Header>클래스 수정</Header>
       <Buttons>
-        <a onClick={onSubmit}>등록</a>
-        <Link to="/info/class">취소</Link>
+        <a onClick={onSubmit}>수정</a>
+        <Link to={`/info/class/${productData.index}`}>취소</Link>
       </Buttons>
       <Infos>
         <Img>
           <div className="title">클래스 대표사진</div>
           <label htmlFor="input-file">
-            <img src={img ? URL.createObjectURL(img) : null} />
+            <img src={imgCheck === 0 ? img : URL.createObjectURL(img)} />
           </label>
-          <input
-            id="input-file"
-            type="file"
-            accept="image/gif,image/jpeg,image/png"
-            onChange={onChangeImg}
-          />
+          <input id="input-file" type="file" onChange={onChangeImg} />
         </Img>
 
         <Info>
@@ -248,28 +283,38 @@ const SellerClassCreate = ({ history }) => {
         <Address>
           <div className="title">주소</div>
           <div className="box">
+            <div className="oldAddress">{address + " " + extraAd}</div>
             <div className="addressButtons">
               <div
-                value="0"
-                onClick={onClickAddressButton}
+                onClick={(e) => onClickAddressButton(e, 0)}
                 className="addressButton selected"
               >
-                등록된 주소 사용
+                변경 안함
               </div>
               <div
-                value="1"
-                onClick={onClickAddressButton}
+                onClick={(e) => onClickAddressButton(e, 1)}
+                className="addressButton"
+              >
+                계정에 등록된 주소 사용
+              </div>
+              <div
+                onClick={(e) => onClickAddressButton(e, 2)}
                 className="addressButton"
               >
                 직접 입력
               </div>
             </div>
             <div className="inputs">
-              <input type="text" value={address} readOnly onClick={openModal} />
               <input
                 type="text"
-                value={extraAd}
-                onChange={onChangeExtraAd}
+                value={newAddress}
+                readOnly
+                onClick={openModal}
+              />
+              <input
+                type="text"
+                value={newExtraAd}
+                onChange={onChangeNewExtraAd}
                 placeholder="상세 주소를 입력하세요."
               />
             </div>
@@ -283,11 +328,11 @@ const SellerClassCreate = ({ history }) => {
               영역 추가
             </div>
           </div>
-          <div className="details"></div>
+          <div className="details">{detailList}</div>
         </Details>
       </Infos>
     </Container>
   );
 };
 
-export default SellerClassCreate;
+export default SellerClassModify;

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { IoLocationOutline } from "react-icons/io5";
 import axios from "axios";
 
-import { Container, Header, Ad, Product, StyledSlider, Footer } from "./styles";
+import { Container, Header, Ad, Product, StyledSlider } from "./styles";
 
 const Main = () => {
   const [popProduct, setPopProduct] = useState([]);
@@ -24,7 +24,7 @@ const Main = () => {
 
   const requestData = useCallback(async () => {
     try {
-      const response = await axios.get("/api/product/main");
+      const response = await axios.get(`/api/product/main`);
       setPopProduct(response.data.popProduct);
       setNewProduct(response.data.newProduct);
     } catch (error) {
@@ -95,7 +95,6 @@ const Main = () => {
       <StyledSlider {...settings}>{popProductList}</StyledSlider>
       <Header>신규 클래스</Header>
       <StyledSlider {...settings}>{newProductList}</StyledSlider>
-      <Footer />
     </Container>
   );
 };

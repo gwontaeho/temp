@@ -4,27 +4,140 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Header = styled.div`
-  width: calc(100% - 48px);
+export const Nav = styled.div`
+  width: calc(100% - 24px);
+  padding-right: 24px;
   height: 72px;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  padding-left: 24px;
-  padding-right: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
-  justify-content: space-between;
-
-  .header-btns {
-    display: flex;
-    > div {
-      margin-left: 24px;
-      cursor: pointer;
+  div {
+    margin-left: 24px;
+    cursor: pointer;
+    :hover {
+      color: lightgray;
     }
   }
 `;
 
-export const Review = styled.div`
+export const Header = styled.div`
+  width: calc(100% - 24px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  border-bottom: 1px solid lightgray;
+`;
+
+export const InfoHeader = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+export const Info = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  height: 120px;
+  border-bottom: 1px solid lightgray;
+
+  .info {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+  }
+
+  img {
+    width: 120px;
+    height: 96px;
+    object-fit: cover;
+    margin-right: 24px;
+    border-radius: 12px;
+  }
+
+  .classDate {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    a {
+      :hover {
+        color: lightgray;
+      }
+    }
+  }
+`;
+
+export const UserNLocation = styled.div`
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid lightgray;
+`;
+
+export const User = styled.div`
+  flex: 2;
+  border-right: 1px solid lightgray;
+  > div {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+  }
+
+  .title {
+    width: 120px;
+  }
+`;
+
+export const Location = styled.div`
+  flex: 3;
+  .address {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+  }
+`;
+
+export const Map = styled.div`
+  width: calc(100%-48px);
+  padding: 24px;
+
+  #map {
+    width: 100%;
+    height: 360px;
+    border-radius: 24px;
+    z-index: 0;
+  }
+`;
+
+export const ModalHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  > div {
+    display: flex;
+    div {
+      margin-left: 24px;
+    }
+  }
+`;
+
+export const ModalText = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,7 +148,7 @@ export const Review = styled.div`
     margin-bottom: 24px;
     resize: none;
     border: 1px solid lightgray;
-    padding: 12px;
+    padding: 24px;
   }
 
   textarea:focus {
@@ -43,30 +156,13 @@ export const Review = styled.div`
   }
 `;
 
-export const Detail = styled.div`
+export const Review = styled.div`
+  width: calc(100% - 48px);
   display: flex;
-
-  .title {
-    width: 120px;
+  padding: 24px;
+  border-bottom: 1px solid lightgray;
+  flex-direction: column;
+  div:not(:last-child) {
+    margin-bottom: 12px;
   }
-
-  .btns {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 120px;
-
-    > div {
-      cursor: pointer;
-    }
-  }
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    > div {
-      height: 36px;
-      display: flex;
-      align-items: center;
-    }
 `;

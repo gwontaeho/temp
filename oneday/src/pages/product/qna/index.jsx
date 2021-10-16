@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 import Modal from "react-modal";
 import axios from "axios";
 
@@ -15,14 +15,14 @@ import {
 Modal.setAppElement("#root");
 
 const Qna = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const auth = useSelector((state) => state.auth);
 
   const [isOpend, setIsOpend] = useState(false);
   const [question, setQuestion] = useState("");
   const [qnaData, setQnaData] = useState([]);
 
   useEffect(() => {
-    console.log(props.type);
+    console.log(props);
     requestQnaData();
   }, []);
 
@@ -39,13 +39,13 @@ const Qna = (props) => {
   const requsetCreateQuestion = useCallback(async () => {
     try {
       const response = await axios.post(
-        "/api/qna/question",
+        "/api/qna",
         {
           question,
           productId: props.productId,
           sellerId: props.sellerId,
         },
-        { headers: { token: cookies.token } }
+        { headers: { token: auth.token } }
       );
       requestQnaData();
       console.log(response);

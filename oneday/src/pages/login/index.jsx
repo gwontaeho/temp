@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
@@ -27,14 +27,11 @@ const Login = (props) => {
   const changeType = useCallback((e) => {
     setType(Number(e.target.value));
   }, []);
-
   const onClickLogin = useCallback(async () => {
     try {
-      const response = await axios.post("/api/auth/login", {
-        id,
-        password,
-        type,
-      });
+      const response = await axios.get(
+        `/api/auth?id=${id}&password=${password}&type=${type}`
+      );
       console.log(response.data);
       dispatch(logIn({ token: response.data, type }));
       if (response.status === 200) return props.history.replace("/");

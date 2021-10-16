@@ -11,26 +11,19 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
 `;
 
-export const Info = styled.div`
-  padding-left: 24px;
-  div {
-    display: flex;
-    align-items: center;
-  }
-  .title {
-    height: 60px;
-    width: 192px;
-  }
-  margin-bottom: 24px;
-`;
-
-export const Button = styled.div`
-  border-top: 1px solid lightgray;
-  padding-left: 24px;
+export const Nav = styled.div`
+  width: calc(100% - 24px);
+  height: 72px;
   display: flex;
   align-items: center;
-  height: 72px;
+  padding-left: 24px;
+  border-bottom: 1px solid lightgray;
+  a {
+    margin-right: 24px;
+    :hover {
+      color: lightgray;
+    }
+  }
 `;

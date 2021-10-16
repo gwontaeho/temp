@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
 import loadable from "@loadable/component";
 import { useSelector } from "react-redux";
 

@@ -1,133 +1,137 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
 
 import axios from "axios";
 
-import { Container, Header, List, Item } from "./styles";
+import { Container, Nav, Header, List, Item } from "./styles";
 
-const UserReservation = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+const UserReservation = (props) => {
+  const auth = useSelector((state) => state.auth);
 
-  const [waiting, setWaiting] = useState([]);
-  const [ing, setIng] = useState([]);
-  const [past, setPast] = useState([]);
-  const [request, setRequest] = useState([]);
-  const [canceled, setCanceled] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [reservationData, setReservationData] = useState([]);
+  const [state, setState] = useState(0);
 
   useEffect(() => {
     requestReservationData();
-  }, []);
+  }, [state]);
 
   const requestReservationData = useCallback(async () => {
     try {
-      const response = await axios.post(
-        "/api/reservation/user",
-        {},
-        {
-          headers: {
-            token: cookies.token,
-          },
-        }
-      );
-      let newWaiting = [];
-      let newIng = [];
-      let newPast = [];
-      let newRequest = [];
-      let newCancled = [];
-      response.data.forEach((v) => {
-        if (v.state === 0) {
-          newIng.push(v);
-        } else if (v.state === 1) {
-          newPast.push(v);
-        } else if (v.state === 2) {
-          newRequest.push(v);
-        } else if (v.state === 3) {
-          newCancled.push(v);
-        } else if (v.state === 4) {
-          newWaiting.push(v);
-        }
+      const response = await axios.get(`/api/reservation?state=${state}`, {
+        headers: { token: auth.token },
       });
-      setWaiting(newWaiting);
-      setIng(newIng);
-      setPast(newPast);
-      setRequest(newRequest);
-      setCanceled(newCancled);
-      setSelected(newIng);
-
-      console.log(response.data);
+      setReservationData(response.data);
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [state]);
 
-  const selectedList = selected.map((v) => {
-    const ymd =
-      new Date(v.createdAt).getFullYear() +
+  const reservationList = reservationData.map((v) => {
+    const scheduleYmd =
+      String(v.schedule.ymd).substr(0, 4) +
       ". " +
-      (new Date(v.createdAt).getMonth() + 1) +
+      String(v.schedule.ymd).substr(4, 2) +
       ". " +
-      new Date(v.createdAt).getDate();
+      String(v.schedule.ymd).substr(6, 2);
+    const scheduleTime =
+      v.schedule.start.substr(0, 2) +
+      ":" +
+      v.schedule.start.substr(2, 2) +
+      " ~ " +
+      v.schedule.end.substr(0, 2) +
+      ":" +
+      v.schedule.end.substr(2, 2);
+    const reservationYmd =
+      v.createdAt.substr(0, 4) +
+      ". " +
+      v.createdAt.substr(5, 2) +
+      ". " +
+      v.createdAt.substr(8, 2);
     return (
-      <Link to={`/info/reservation/${v.id}`}>
-        <Item>
+      <Item key={v.id}>
+        <div className="info">
+          <img
+            src={v.product.img.replace(/\\/gi, "/").replace(/public/gi, "")}
+          />
           <div>
-            <img
-              src={v.product.img.replace(/\\/gi, "/").replace(/public/gi, "")}
-            />
+            <div>
+              [
+              {v.product.category === "flower"
+                ? "플라워"
+                : v.product.category === "art"
+                ? "미술"
+                : v.product.category === "cooking"
+                ? "요리"
+                : v.product.category === "handmade"
+                ? "수공예"
+                : v.product.category === "activity"
+                ? "액티비티"
+                : "기타"}
+              ]
+            </div>
+            <div>{v.product.name}</div>
           </div>
-
-          <div>{v.product.name}</div>
-          <div>{ymd}</div>
+        </div>
+        <div className="text">
+          <div>{scheduleYmd}</div>
+          <div>{scheduleTime}</div>
+        </div>
+        <div className="text">{reservationYmd}</div>
+        <div className="text">
           <div>
-            {v.state === 0 ? (
-              "예약 중"
-            ) : v.state === 1 && v.review === null ? (
-              <>
-                <div>수강 완료</div>
-                <div>리뷰를 작성해 주세요</div>
-              </>
-            ) : v.state === 1 && v.review !== null ? (
-              "수강 완료"
-            ) : v.state === 2 ? (
-              "취소 요청"
-            ) : v.state === 3 ? (
-              "취소"
-            ) : (
-              "예약 대기"
-            )}
+            {v.state === 0
+              ? "예약 중"
+              : v.state === 1 || v.state === 5
+              ? "수강 완료"
+              : v.state === 2
+              ? "취소 요청"
+              : v.state === 3
+              ? "취소"
+              : "예약 대기"}
           </div>
-        </Item>
-      </Link>
+        </div>
+        <div className="text">
+          <Link to={`/info/reservation/${v.id}`}>자세히</Link>
+          <div>{v.state === 1 ? "후기를 작성해주세요" : null}</div>
+        </div>
+      </Item>
     );
   });
 
   return (
     <Container>
-      <Header>
-        <div onClick={() => setSelected(waiting)}>
+      <Nav>
+        <div onClick={() => setState(4)}>
           <div>예약 대기</div>
-          <div>{waiting.length}</div>
+          <div>{props.reservationCountData.e}</div>
         </div>
-        <div onClick={() => setSelected(ing)}>
+        <div onClick={() => setState(0)}>
           <div>예약 중</div>
-          <div>{ing.length}</div>
+          <div>{props.reservationCountData.a}</div>
         </div>
-        <div onClick={() => setSelected(past)}>
+        <div onClick={() => setState(1)}>
           <div>수강 완료</div>
-          <div>{past.length}</div>
+          <div>
+            {props.reservationCountData.b + props.reservationCountData.f}
+          </div>
         </div>
-        <div onClick={() => setSelected(request)}>
+        <div onClick={() => setState(2)}>
           <div>취소 요청</div>
-          <div>{request.length}</div>
+          <div>{props.reservationCountData.c}</div>
         </div>
-        <div onClick={() => setSelected(canceled)}>
+        <div onClick={() => setState(3)}>
           <div>취소</div>
-          <div>{canceled.length}</div>
+          <div>{props.reservationCountData.d}</div>
         </div>
+      </Nav>
+      <Header>
+        <div>클래스 정보</div>
+        <div>수강 일자</div>
+        <div>예약 일자</div>
+        <div>예약 상태</div>
       </Header>
-      <List>{selectedList}</List>
+      <List>{reservationList}</List>
     </Container>
   );
 };

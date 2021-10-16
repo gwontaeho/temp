@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import loadable from "@loadable/component";
@@ -6,7 +6,7 @@ import loadable from "@loadable/component";
 import { useSelector, useDispatch } from "react-redux";
 import { logOut } from "../features/auth";
 
-import { Container, Header, Logo, Nav, Sign } from "./styles";
+import { Container, Header, Logo, Nav, Sign, Footer } from "./styles";
 
 const Login = loadable(() => import("../pages/login"));
 const Signup = loadable(() => import("../pages/signup"));
@@ -19,6 +19,10 @@ const Reservation = loadable(() => import("../pages/reservation"));
 const Layout = () => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(auth);
+  }, []);
 
   const onClickLogout = useCallback(() => {
     dispatch(logOut());
@@ -71,6 +75,7 @@ const Layout = () => {
           }
         />
       </Switch>
+      <Footer />
     </Container>
   );
 };
