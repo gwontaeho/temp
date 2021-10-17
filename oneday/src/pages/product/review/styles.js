@@ -1,43 +1,45 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  width: calc(100% - 48px);
-  padding: 24px;
-
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
 export const Header = styled.div`
-  width: calc(720px - 48px);
-  padding-left: 24px;
-  padding-right: 24px;
+  width: calc(100% - 24px);
   height: 72px;
   display: flex;
+  padding-left: 24px;
   justify-content: flex-start;
   align-items: center;
 `;
 
-export const ReviewList = styled.div`
-  width: 720px;
+export const List = styled.div`
+  width: calc(100% - 48px);
+  padding: 0 24px 0 24px;
 `;
 
-export const ReviewItem = styled.div`
+export const Item = styled.div`
   width: calc(100% - 48px);
   padding: 24px;
   margin-bottom: 24px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   border: 1px solid lightgray;
   border-radius: 12px;
+  height: 60px;
 
-  .id {
-    width: 100%;
+  img {
+    width: 48px;
     height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    border-radius: 50%;
+    margin-right: 24px;
+    object-fit: cover;
+  }
+
+  .text {
+    flex: 1;
+    margin-left: 24px;
   }
 `;

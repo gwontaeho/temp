@@ -9,8 +9,10 @@ import {
   User,
   Location,
   Map,
+  Review,
 } from "./styles";
 import { useSelector } from "react-redux";
+import Rating from "@material-ui/lab/Rating";
 
 import axios from "axios";
 
@@ -169,7 +171,7 @@ const SellerReservationDetail = (props) => {
         <div className="text">
           {reservationData.state === 0
             ? "예약 중"
-            : reservationData.state === 1
+            : reservationData.state === 1 || reservationData.state === 5
             ? "수강 완료"
             : reservationData.state === 2
             ? "취소 요청"
@@ -202,6 +204,21 @@ const SellerReservationDetail = (props) => {
           </div>
         </Location>
       </UserNLocation>
+      {reservationData.review === null ? null : (
+        <>
+          <Header>후기</Header>
+          <Review>
+            <div>
+              <Rating
+                name="read-only"
+                value={reservationData.review.rating}
+                readOnly
+              />
+            </div>
+            <div>{reservationData.review.text}</div>
+          </Review>
+        </>
+      )}
     </Container>
   );
 };

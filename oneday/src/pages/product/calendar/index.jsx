@@ -35,7 +35,6 @@ const Calendar = (props) => {
     const set = new Set(newScheduleDate);
     newScheduleDate = [...set];
     setScheduleDate(newScheduleDate);
-    console.log(newScheduleDate);
   }, []);
 
   const createBody = useCallback(() => {

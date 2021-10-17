@@ -1,31 +1,50 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  width: calc(100% - 48px);
-  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
-export const DetailInfo = styled.div`
+export const List = styled.div`
+  flex: 1;
   display: flex;
-  width: 100%;
-  border: 1px solid black;
-
+  width: 720px;
   flex-direction: column;
-  margin-bottom: 24px;
+`;
 
-  .title {
+export const Item = styled.div`
+  div {
     height: 72px;
-    line-height: 72px;
-    border: 1px solid gray;
     font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  pre {
+    padding: 24px;
+    font-size: 1.3rem;
   }
 `;
 
 export const Map = styled.div`
   display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 24px 0 24px;
 
   #map {
-    width: 50%;
-    height: 360px;
+    width: 100%;
+    border-radius: 24px;
+    height: 480px;
+  }
+
+  .header {
+    height: 72px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    border-: 1px solid lightgray;
   }
 `;

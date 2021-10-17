@@ -142,13 +142,13 @@ const SellerClassModify = (props) => {
     formData.append("detail", JSON.stringify(stringary));
 
     try {
-      const response = await axios.post("/api/product/update", formData, {
+      const response = await axios.put("/api/product/update", formData, {
         headers: {
           token: auth.token,
         },
       });
       console.log(response);
-      props.history.replace(`/info/class/${productData.id}`);
+      props.history.replace(`/info/product/${productData.id}`);
     } catch (error) {
       console.log(error);
     }

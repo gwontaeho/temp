@@ -41,6 +41,40 @@ router.get("/", verifyToken, async (req, res, next) => {
   }
 });
 
+router.get("/unfinished", verifyToken, async (req, res, next) => {
+  //////////////////////////////////////////////////////////////////////
+  //  종료되지않은 판매자 스케줄
+  //  오늘 ymd 이하의 스케줄
+  //////////////////////////////////////////////////////////////////////
+  try {
+    const findAllSchedule = await Schedule.findAll({
+      include: [
+        {
+          model: Product,
+          attributes: ["name"],
+        },
+      ],
+      where: {
+        ymd: {
+          [Op.lt]: req.query.ymd,
+        },
+        state: 0,
+      },
+      order: [
+        ["ymd", "desc"],
+        ["start", "asc"],
+        ["end", "asc"],
+      ],
+    });
+    const response = findAllSchedule.map((v) => {
+      return v.dataValues;
+    });
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
 router.get("/:id", verifyToken, async (req, res, next) => {
   //////////////////////////////////////////////////////////////////////
   //  판매자 일정 상세
@@ -83,6 +117,7 @@ router.post("/", verifyToken, async (req, res, next) => {
 });
 
 router.put("/", verifyToken, async (req, res, next) => {
+  console.log(req.body);
   ///////////////////////////////////////////////////////////////
   //  일정 종료
   ///////////////////////////////////////////////////////////////

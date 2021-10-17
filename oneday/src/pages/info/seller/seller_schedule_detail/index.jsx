@@ -56,6 +56,7 @@ const SellerScheduleDetail = (props) => {
           }
         );
         console.log(response);
+        props.requestUnfinishedScheduleData(auth);
         requestScheduleData();
         window.alert("일정이 종료되었습니다.");
       } catch (error) {
@@ -81,7 +82,7 @@ const SellerScheduleDetail = (props) => {
         <div>
           {v.state === 0
             ? "예약 중"
-            : v.state === 1
+            : v.state === 1 || v.state === 5
             ? "수강 완료"
             : v.state === 2
             ? "취소 요청"

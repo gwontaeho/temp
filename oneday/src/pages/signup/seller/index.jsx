@@ -83,7 +83,6 @@ const Seller = (props) => {
   const onChangePasswordCheck = useCallback(
     (e) => {
       validation(passwordCheckRef);
-
       setPasswordCheck(e.target.value);
     },
     [passwordCheckRef]
@@ -92,7 +91,6 @@ const Seller = (props) => {
   const onChangeCompany = useCallback(
     (e) => {
       validation(companyRef);
-
       setCompany(e.target.value);
     },
     [companyRef]
@@ -101,7 +99,6 @@ const Seller = (props) => {
   const onChangeName = useCallback(
     (e) => {
       validation(nameRef);
-
       setName(e.target.value);
     },
     [nameRef]
@@ -110,7 +107,6 @@ const Seller = (props) => {
   const onChangePhone = useCallback(
     (e) => {
       validation(phoneRef);
-
       setPhone(e.target.value);
     },
     [phoneRef]
@@ -131,7 +127,6 @@ const Seller = (props) => {
   const onChangeReg = useCallback(
     (e) => {
       validation(regRef);
-
       setReg(e.target.value);
     },
     [regRef]
@@ -350,13 +345,13 @@ const Seller = (props) => {
 
       <label>
         <div className="title">카테고리</div>
-        <select onChange={onChangeCategory} defaultValue="etc">
-          <option value="flower">플라워</option>
-          <option value="cooking">요리</option>
-          <option value="art">미술</option>
-          <option value="handmade">수공예</option>
-          <option value="activity">액티비티</option>
-          <option value="etc">기타</option>
+        <select onChange={onChangeCategory} defaultValue="기타">
+          <option value="플라워">플라워</option>
+          <option value="요리">요리</option>
+          <option value="미술">미술</option>
+          <option value="수공예">수공예</option>
+          <option value="액티비티">액티비티</option>
+          <option value="기타">기타</option>
         </select>
       </label>
 

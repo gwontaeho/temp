@@ -12,8 +12,11 @@ import {
   Personnel,
   ApplyButton,
   Nav,
-  RouteContainer,
+  Box,
+  Routes,
 } from "./styles";
+import Rating from "@material-ui/lab/Rating";
+
 import { useSelector } from "react-redux";
 import qs from "qs";
 
@@ -46,13 +49,15 @@ const Product = (props) => {
   const [personnel, setPersonnel] = useState(1);
   const [isOpend, setIsOpend] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState({});
+  const [rating, setRating] = useState(0);
 
-  const [content, setContent] = useState("detail");
+  const [content, setContent] = useState(0);
 
   const selectRef = React.createRef();
 
   useEffect(() => {
     requestProductData();
+    requestRating();
   }, []);
 
   const requestProductData = useCallback(async () => {
@@ -60,9 +65,18 @@ const Product = (props) => {
       const response = await axios.get(
         `/api/product/${query.id}?&today=${todayYmd}`
       );
+      console.log(response.data);
       setProductData(response.data);
       setScheduleData(response.data.schedules);
-      console.log(response.data.schedules);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const requestRating = useCallback(async () => {
+    try {
+      const response = await axios.get(`/api/review/rating/${query.id}`);
+      setRating(Number(response.data.rating));
     } catch (error) {
       console.log(error);
     }
@@ -110,6 +124,9 @@ const Product = (props) => {
   }, [isOpend, selectRef, schedules]);
 
   const onClickApply = useCallback(() => {
+    if (auth.type === 0)
+      return window.alert("회원가입 후 신청하실 수 있습니다");
+    if (auth.type === 2) return window.alert("판매자는 신청할 수 없습니다");
     if (Object.keys(selectedSchedule).length !== 0) {
       props.history.push({
         pathname: "/reservation",
@@ -154,7 +171,26 @@ const Product = (props) => {
           <img
             src={productData.img.replace(/\\/gi, "/").replace(/public/gi, "")}
           />
-          <div className="title">{productData.name}</div>
+          <div className="title">
+            <div className="rating">
+              <Rating name="read-only" value={rating} readOnly size="large" />
+            </div>
+            <div className="name">
+              [
+              {productData.category === "flower"
+                ? "플라워"
+                : productData.category === "art"
+                ? "미술"
+                : productData.category === "cooking"
+                ? "요리"
+                : productData.category === "hadmade"
+                ? "수공예"
+                : productData.category === "activity"
+                ? "액티비티"
+                : "기타"}
+              ] {productData.name}
+            </div>
+          </div>
         </Image>
         <Schedule>
           <Calendar
@@ -187,29 +223,28 @@ const Product = (props) => {
         </Schedule>
       </Info>
 
-      <Nav>
-        <div onClick={() => setContent("detail")}>상세정보</div>
-        <div onClick={() => setContent("review")}>리뷰</div>
-        <div onClick={() => setContent("qna")}>Q&A</div>
-      </Nav>
-
-      <RouteContainer>
-        {content === "detail" ? (
-          <Detail
-            productId={productData.name}
-            detailArray={productData.detail}
-            address={productData.address}
-          />
-        ) : content === "review" ? (
-          <Review productId={productData.id} />
-        ) : (
-          <Qna
-            productId={productData.id}
-            sellerId={productData.sellerId}
-            type={auth.type}
-          />
-        )}
-      </RouteContainer>
+      <Box>
+        <Detail
+          productName={productData.name}
+          detailArray={productData.detail}
+          address={productData.address}
+        />
+        <Routes>
+          <Nav>
+            <div onClick={() => setContent(0)}>리뷰</div>
+            <div onClick={() => setContent(1)}>Q&A</div>
+          </Nav>
+          {content === 0 ? (
+            <Review productId={productData.id} />
+          ) : (
+            <Qna
+              productId={productData.id}
+              company={productData.seller.company}
+              type={auth.type}
+            />
+          )}
+        </Routes>
+      </Box>
     </Container>
   );
 };

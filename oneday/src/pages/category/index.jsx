@@ -27,6 +27,10 @@ const Category = (props) => {
 
   // 클래스
   const productList = productData.map((v) => {
+    const defaultValue =
+      Array.isArray(v.reviews) && v.reviews.length !== 0
+        ? v.reviews[0].rating
+        : "0";
     return (
       <Link to={`/product?id=${v.id}`} key={v.id}>
         <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
@@ -38,7 +42,7 @@ const Category = (props) => {
           {Array.isArray(v.reviews) && v.reviews.length !== 0 ? (
             <Rating
               name="half-rating-read"
-              defaultValue={v.reviews[0].rating}
+              defaultValue={Number(defaultValue)}
               precision={0.1}
               readOnly
             />

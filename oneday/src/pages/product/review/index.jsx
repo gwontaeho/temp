@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Rating from "@material-ui/lab/Rating";
+import Profile from "../../../images/profile.png";
 
-import { Container, Header, ReviewItem, ReviewList } from "./styles";
+import { Container, Header, List, Item } from "./styles";
 
 import axios from "axios";
 
@@ -15,7 +16,6 @@ const Review = (props) => {
   const requestReviewData = useCallback(async () => {
     try {
       const response = await axios.get(`/api/review/${props.productId}`);
-      console.log(response.data);
       setReviewData(response.data);
     } catch (error) {
       console.log(error);
@@ -24,9 +24,16 @@ const Review = (props) => {
 
   const reviewList = reviewData.map((v) => {
     return (
-      <ReviewItem>
-        <Rating name="read-only" value={v.rating} readOnly />
-        <div className="id">
+      <Item key={v.id}>
+        <img
+          src={
+            v.user.img === null
+              ? Profile
+              : v.user.img.replace(/\\/gi, "/").replace(/public/gi, "")
+          }
+        />
+        <div>
+          <Rating name="read-only" value={v.rating} readOnly />
           <div>{v.userId}</div>
           <div>
             {new Date(v.createdAt).getFullYear() +
@@ -36,8 +43,8 @@ const Review = (props) => {
               new Date(v.createdAt).getDate()}
           </div>
         </div>
-        <div>{v.text}</div>
-      </ReviewItem>
+        <div className="text">{v.text}</div>
+      </Item>
     );
   });
 
@@ -46,7 +53,7 @@ const Review = (props) => {
       <Header>
         <div>클래스 리뷰 (총 {reviewData.length}건)</div>
       </Header>
-      <ReviewList>{reviewList}</ReviewList>
+      <List>{reviewList}</List>
     </Container>
   );
 };

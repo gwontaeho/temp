@@ -20,6 +20,7 @@ const SellerQna = () => {
   }, [answerState, page]);
 
   const requestQnaData = useCallback(async () => {
+    console.log("abc");
     try {
       const response = await axios.get(
         `/api/qna/page?state=${answerState}&page=${page}`,

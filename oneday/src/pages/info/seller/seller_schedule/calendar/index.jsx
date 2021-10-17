@@ -28,7 +28,6 @@ const Calendar = (props) => {
   }, [date]);
 
   useEffect(() => {
-    console.log("abcbc");
     let newScheduleDate = [];
     props.scheduleData.forEach((v) => {
       if (v.state === 0 && v.reserved < v.personnel)
@@ -37,7 +36,6 @@ const Calendar = (props) => {
     const set = new Set(newScheduleDate);
     newScheduleDate = [...set];
     setScheduleDate(newScheduleDate);
-    console.log(newScheduleDate);
   }, [props.scheduleData]);
 
   const createBody = useCallback(() => {

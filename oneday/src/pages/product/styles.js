@@ -7,11 +7,13 @@ export const Container = styled.div`
 export const Info = styled.div`
   width: 100%;
   display: flex;
+  border-bottom: 1px solid lightgray;
 `;
 
 export const Image = styled.div`
   flex: 1.5;
   display: flex;
+  padding: 24px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -20,13 +22,26 @@ export const Image = styled.div`
     width: 100%;
     height: 600px;
     object-fit: cover;
+    border-radius: 48px;
+    margin-bottom: 24px;
   }
+
   .title {
-    height: 72px;
-    width: 100%;
+    width: calc(100% - 48px);
+    padding-left: 24px;
+    padding-right: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rating {
+    height: 36px;
     display: flex;
     align-items: center;
-    justify-content: center;
+  }
+
+  .name {
+    font-size: 2rem;
   }
 `;
 
@@ -115,8 +130,7 @@ export const Nav = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  height: 120px;
-  border-top: 1px solid lightgray;
+  height: 72px;
   border-bottom: 1px solid lightgray;
 
   div {
@@ -128,6 +142,14 @@ export const Nav = styled.div`
   }
 `;
 
-export const RouteContainer = styled.div`
+export const Box = styled.div`
   width: 100%;
+  display: flex;
+`;
+
+export const Routes = styled.div`
+  flex: 1;
+  border: 1px solid lightgray;
+  border-radius: 24px;
+  margin-top: 24px;
 `;

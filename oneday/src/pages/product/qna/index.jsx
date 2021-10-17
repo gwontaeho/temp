@@ -2,15 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Modal from "react-modal";
 import axios from "axios";
+import Profile from "../../../images/profile.png";
 
-import {
-  Container,
-  Header,
-  QnaList,
-  QnaItem,
-  QnaTextarea,
-  ModalHeader,
-} from "./styles";
+import { Container, Header, List, Item, ModalHeader } from "./styles";
 
 Modal.setAppElement("#root");
 
@@ -22,12 +16,10 @@ const Qna = (props) => {
   const [qnaData, setQnaData] = useState([]);
 
   useEffect(() => {
-    console.log(props);
     requestQnaData();
   }, []);
 
   const requestQnaData = useCallback(async () => {
-    console.log("abc");
     try {
       const response = await axios.get(`/api/qna?productId=${props.productId}`);
       setQnaData(response.data);
@@ -73,9 +65,16 @@ const Qna = (props) => {
 
   const qnaDataList = qnaData.map((v) => {
     return (
-      <QnaItem key={v.id}>
+      <Item key={v.id}>
         <div className="question">
-          <div className="id">
+          <img
+            src={
+              v.user.img === null
+                ? Profile
+                : v.user.img.replace(/\\/gi, "/").replace(/public/gi, "")
+            }
+          />
+          <div>
             <div>{v.userId}</div>
             <div>
               {new Date(v.createdAt).getFullYear() +
@@ -85,25 +84,32 @@ const Qna = (props) => {
                 new Date(v.createdAt).getDate()}
             </div>
           </div>
-          <div>{v.question}</div>
+          <div className="text">{v.question}</div>
         </div>
 
         {v.answer === null ? null : (
           <div className="answer">
-            <div className="id">
-              <div>{v.sellerId}</div>
+            <img
+              src={
+                v.user.img === null
+                  ? Profile
+                  : v.user.img.replace(/\\/gi, "/").replace(/public/gi, "")
+              }
+            />
+            <div>
+              <div>{v.userId}</div>
               <div>
-                {new Date(v.updatedAt).getFullYear() +
+                {new Date(v.createdAt).getFullYear() +
                   " / " +
-                  (new Date(v.updatedAt).getMonth() + 1) +
+                  (new Date(v.createdAt).getMonth() + 1) +
                   " / " +
-                  new Date(v.updatedAt).getDate()}
+                  new Date(v.createdAt).getDate()}
               </div>
             </div>
-            <div>{v.answer}</div>
+            <div className="text">{v.question}</div>
           </div>
         )}
-      </QnaItem>
+      </Item>
     );
   });
 
@@ -132,14 +138,14 @@ const Qna = (props) => {
             <div onClick={closeModal}>닫기</div>
           </div>
         </ModalHeader>
-        <QnaTextarea>
+        <Item>
           <textarea
             maxLength="200"
             rows="5"
             value={question}
             onChange={onChangeQuestion}
           />
-        </QnaTextarea>
+        </Item>
       </Modal>
       <Header>
         <div>클래스 문의 (총 {qnaData.length}건)</div>
@@ -149,7 +155,7 @@ const Qna = (props) => {
           <div></div>
         )}
       </Header>
-      <QnaList>{qnaDataList}</QnaList>
+      <List>{qnaDataList}</List>
     </Container>
   );
 };

@@ -78,6 +78,7 @@ const UserReservation = (props) => {
           <div>{scheduleTime}</div>
         </div>
         <div className="text">{reservationYmd}</div>
+        <div className="text">{v.personnel} 명</div>
         <div className="text">
           <div>
             {v.state === 0
@@ -129,6 +130,7 @@ const UserReservation = (props) => {
         <div>클래스 정보</div>
         <div>수강 일자</div>
         <div>예약 일자</div>
+        <div>예약 인원</div>
         <div>예약 상태</div>
       </Header>
       <List>{reservationList}</List>

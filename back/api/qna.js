@@ -5,6 +5,8 @@ const { Op } = require("sequelize");
 
 const Qna = require("../models").Qna;
 const Product = require("../models").Product;
+const User = require("../models").User;
+const Seller = require("../models").Seller;
 
 router.get("/", async (req, res, next) => {
   ///////////////////////////////////////////////////////////////////
@@ -12,6 +14,16 @@ router.get("/", async (req, res, next) => {
   ///////////////////////////////////////////////////////////////////
   try {
     const findAllQna = await Qna.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["img"],
+        },
+        {
+          model: Seller,
+          attributes: ["img"],
+        },
+      ],
       where: { productId: req.query.productId },
       order: [["createdAt", "Desc"]],
     });
@@ -87,6 +99,29 @@ router.get("/page", verifyToken, async (req, res, next) => {
       return v.dataValues;
     });
     response.count = findAndCountAllQna.count;
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
+router.get("/unanswered", verifyToken, async (req, res, next) => {
+  /////////////////////////////////////////////////////////////////////
+  //  미답변 문의
+  /////////////////////////////////////////////////////////////////////
+  try {
+    const findAllQna = await Qna.findAll({
+      where: { sellerId: req.decoded.id, state: 0 },
+      order: [["createdAt", "Desc"]],
+      include: [
+        {
+          model: Product,
+        },
+      ],
+    });
+    const response = findAllQna.map((v) => {
+      return v.dataValues;
+    });
     return res.status(200).send(response);
   } catch (error) {
     return res.status(500).send();

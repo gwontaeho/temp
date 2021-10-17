@@ -20,13 +20,15 @@ export const Nav = styled.div`
 `;
 
 export const Header = styled.div`
-  width: calc(100% - 24px);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
   height: 72px;
-  display: flex;
-  align-items: center;
-  padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const List = styled.div`
@@ -35,22 +37,34 @@ export const List = styled.div`
 
 export const Item = styled.div`
   width: 100%;
-  height: 144px;
+  height: 120px;
   border-bottom: 1px solid lightgray;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
 
-  img {
-    width: 144px;
-    height: 96px;
-    object-fit: cover;
+  .info {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
   }
 
-  div {
-    flex: 1;
+  img {
+    width: 120px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-right: 24px;
+  }
+
+  .text {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
+    a {
+      :hover {
+        color: lightgray;
+      }
+    }
   }
 `;

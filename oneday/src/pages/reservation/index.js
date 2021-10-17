@@ -78,6 +78,10 @@ const Reservation = (props) => {
     }
   }, [productData, schedule, personnel, name, phone]);
 
+  if (auth.type !== 1) {
+    return <Redirect to="/" />;
+  }
+
   return Object.keys(productData).length === 0 ? null : (
     <Container>
       <Header>예약 / 결제</Header>

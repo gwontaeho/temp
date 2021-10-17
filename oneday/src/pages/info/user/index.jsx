@@ -3,6 +3,7 @@ import { Link, Route, Switch } from "react-router-dom";
 import loadable from "@loadable/component";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { AiOutlineRight } from "react-icons/ai";
 import profile from "../../../images/profile.png";
 
 import {
@@ -85,11 +86,11 @@ const User = () => {
         </Info>
         <History>
           <div>
-            <div>진행중인 예약</div>
+            <div>진행중인 예약 ></div>
             <div>{reservationCountData.a}</div>
           </div>
           <div>
-            <div>후기 작성하기</div>
+            <div>후기 작성하기 ></div>
             <div>{reservationCountData.b}</div>
           </div>
         </History>

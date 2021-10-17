@@ -21,7 +21,7 @@ export const Nav = styled.div`
 
 export const Header = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
   height: 72px;
   border-bottom: 1px solid lightgray;
   div {
@@ -40,7 +40,7 @@ export const Item = styled.div`
   height: 120px;
   border-bottom: 1px solid lightgray;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
 
   .info {
     display: flex;

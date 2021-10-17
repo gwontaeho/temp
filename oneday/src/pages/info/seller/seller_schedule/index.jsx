@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { Container, Header, State, CalendarNList, List, Item } from "./styles";
 
-const SellerSchedule = () => {
+const SellerSchedule = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const today = new Date();
@@ -30,6 +30,7 @@ const SellerSchedule = () => {
 
   useEffect(() => {
     requestScheduleData();
+    console.log(props);
   }, [ym]);
 
   const requestScheduleData = useCallback(async () => {
@@ -49,7 +50,6 @@ const SellerSchedule = () => {
   }, []);
 
   const onChangeDate = useCallback((v) => {
-    console.log(v);
     setDate(v);
   }, []);
 

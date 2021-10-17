@@ -62,6 +62,7 @@ const SellerQnaDetail = (props) => {
         { headers: { token: auth.token } }
       );
       closeModal();
+      props.requestUnansweredQnaData(auth);
       requestQnaData();
     } catch (error) {
       console.log(error);

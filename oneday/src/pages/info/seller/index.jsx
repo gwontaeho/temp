@@ -27,21 +27,54 @@ const SellerReservationDetail = loadable(() =>
 );
 const SellerSchedule = loadable(() => import("./seller_schedule"));
 const SellerScheduleDetail = loadable(() => import("./seller_schedule_detail"));
+const SellerScheduleUnfinished = loadable(() =>
+  import("./seller_schedule_unfinished")
+);
 const SellerQna = loadable(() => import("./seller_qna"));
 const SellerQnaDetail = loadable(() => import("./seller_qna_detail"));
 
 const Seller = () => {
+  const today = new Date();
+  const todayYmd =
+    String(today.getFullYear()) +
+    String(
+      today.getMonth() + 1 < 10
+        ? "0" + String(today.getMonth() + 1)
+        : String(today.getMonth() + 1)
+    ) +
+    String(
+      today.getDate() + 1 < 10
+        ? "0" + String(today.getDate())
+        : String(today.getDate())
+    );
+
   const auth = useSelector((state) => state.auth);
 
   const [sellerData, setSellerData] = useState({});
   const [reservationCountData, setReservationCountData] = useState({});
+  const [unfinishedScheduleData, setUnfinishedScheduleData] = useState([]);
+  const [unansweredQnaData, setUnansweredQnaData] = useState([]);
 
   useEffect(() => {
     requestSellerData();
+    console.log(todayYmd);
   }, []);
 
   useEffect(() => {
     requestReservationCountData();
+    requestUnfinishedScheduleData(auth);
+    requestUnansweredQnaData(auth);
+  }, []);
+
+  const requestSellerData = useCallback(async () => {
+    try {
+      const response = await axios.get("/api/auth/seller", {
+        headers: { token: auth.token },
+      });
+      setSellerData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const requestReservationCountData = useCallback(async () => {
@@ -55,12 +88,26 @@ const Seller = () => {
     }
   }, []);
 
-  const requestSellerData = useCallback(async () => {
+  const requestUnfinishedScheduleData = useCallback(async (v) => {
     try {
-      const response = await axios.get("/api/auth/seller", {
-        headers: { token: auth.token },
+      const response = await axios.get(
+        `/api/schedule/unfinished?ymd=${todayYmd}`,
+        {
+          headers: { token: v.token },
+        }
+      );
+      setUnfinishedScheduleData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const requestUnansweredQnaData = useCallback(async (v) => {
+    try {
+      const response = await axios.get("/api/qna/unanswered", {
+        headers: { token: v.token },
       });
-      setSellerData(response.data);
+      setUnansweredQnaData(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -92,15 +139,19 @@ const Seller = () => {
         <History>
           <div>
             <div>진행중인 예약</div>
-            <div>1</div>
+            <div>{reservationCountData.a}</div>
           </div>
           <div>
-            <div>미 종료 일정</div>
-            <div>1</div>
+            <div>
+              <Link to="/info/schedule/unfinished">미종료 일정 ></Link>
+            </div>
+            <div>{unfinishedScheduleData.length}</div>
           </div>
           <div>
-            <div>미 답변 문의</div>
-            <div>1</div>
+            <div>
+              <Link to="/info/qna">미답변 문의 ></Link>
+            </div>
+            <div>{unansweredQnaData.length}</div>
           </div>
         </History>
       </InfoContainer>
@@ -158,11 +209,36 @@ const Seller = () => {
           <Route exact path="/info/schedule" component={SellerSchedule} />
           <Route
             exact
+            path="/info/schedule/unfinished"
+            render={(props) => (
+              <SellerScheduleUnfinished
+                {...props}
+                unfinishedScheduleData={unfinishedScheduleData}
+                requestUnfinishedScheduleData={requestUnfinishedScheduleData}
+              />
+            )}
+          />
+          <Route
+            exact
             path="/info/schedule/:id"
-            component={SellerScheduleDetail}
+            render={(props) => (
+              <SellerScheduleDetail
+                {...props}
+                requestUnfinishedScheduleData={requestUnfinishedScheduleData}
+              />
+            )}
           />
           <Route exact path="/info/qna" component={SellerQna} />
-          <Route exact path="/info/qna/:id" component={SellerQnaDetail} />
+          <Route
+            exact
+            path="/info/qna/:id"
+            render={(props) => (
+              <SellerQnaDetail
+                {...props}
+                requestUnansweredQnaData={requestUnansweredQnaData}
+              />
+            )}
+          />
         </Switch>
       </Routes>
     </Container>

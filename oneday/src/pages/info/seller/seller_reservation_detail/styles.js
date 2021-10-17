@@ -122,3 +122,14 @@ export const Map = styled.div`
     border-radius: 24px;
   }
 `;
+
+export const Review = styled.div`
+  width: calc(100% - 48px);
+  display: flex;
+  padding: 24px;
+  border-bottom: 1px solid lightgray;
+  flex-direction: column;
+  div:not(:last-child) {
+    margin-bottom: 12px;
+  }
+`;

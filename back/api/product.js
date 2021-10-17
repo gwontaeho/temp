@@ -5,7 +5,7 @@ const router = express.Router();
 const fs = require("fs");
 const { Op } = require("sequelize");
 
-const { sequelize } = require("../models");
+const { sequelize, Seller } = require("../models");
 const { verifyToken } = require("../jwt");
 const Product = require("../models").Product;
 const Schedule = require("../models").Schedule;
@@ -148,12 +148,20 @@ router.get("/:id", async (req, res, next) => {
           },
           required: false,
         },
+        {
+          model: Seller,
+          attributes: ["company"],
+        },
+        {
+          model: Review,
+        },
       ],
       order: [
         [Schedule, "ymd", "DESC"],
         [Schedule, "start", "ASC"],
       ],
     });
+
     return res.status(200).send(findProduct.dataValues);
   } catch (error) {
     console.log(error);

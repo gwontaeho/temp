@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import loadable from "@loadable/component";
@@ -19,10 +19,6 @@ const Reservation = loadable(() => import("../pages/reservation"));
 const Layout = () => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    console.log(auth);
-  }, []);
 
   const onClickLogout = useCallback(() => {
     dispatch(logOut());

@@ -8,36 +8,49 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-  width: calc(720px - 48px);
-  padding-left: 24px;
+  width: calc(100% - 48px);
   padding-right: 24px;
-  height: 120px;
+  padding-left: 24px;
+  height: 72px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-export const QnaList = styled.div`
-  width: 720px;
+export const List = styled.div`
+  width: calc(100% - 48px);
+  padding: 0 24px 0 24px;
 `;
 
-export const QnaItem = styled.div`
+export const Item = styled.div`
   width: 100%;
   margin-bottom: 24px;
 
-  .id {
+  img {
+    width: 48px;
     height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 24px;
   }
+
+  .text {
+    margin-left: 24px;
+  }
+
   .question {
+    width: calc(100% - 48px);
+    height: 60px;
+    display: flex;
     border: 1px solid lightgray;
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 12px;
   }
   .answer {
+    width: calc(100% - 48px - 48px);
+    height: 60px;
+    display: flex;
     padding: 24px;
     margin-left: 48px;
     background-color: lightgray;
