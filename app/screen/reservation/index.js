@@ -25,15 +25,11 @@ const Reservation = props => {
 
   const requestUserData = useCallback(async () => {
     try {
-      const response = await axios.post(
-        '/api/auth/user',
-        {},
-        {
-          headers: {
-            token: props.route.params.user.token,
-          },
+      const response = await axios.get('/api/auth/user', {
+        headers: {
+          token: props.route.params.user.token,
         },
-      );
+      });
       setName(response.data.name);
       setPhone(response.data.phone);
     } catch (error) {
@@ -49,7 +45,7 @@ const Reservation = props => {
   const onPressReserve = useCallback(async () => {
     try {
       const response = await axios.post(
-        '/api/reservation/create',
+        '/api/reservation',
         {
           name,
           phone,

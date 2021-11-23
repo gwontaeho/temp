@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Container, Head, Days, Dates } from "./styles";
+import { Container, Head, Days, Dates, Info } from "./styles";
 
 const Calendar = (props) => {
   const today = new Date();
@@ -123,6 +123,20 @@ const Calendar = (props) => {
         {emptyList}
         {bodyList}
       </Dates>
+      <Info>
+        <div>
+          <div className="icon a" />
+          <div className="text">오늘</div>
+        </div>
+        <div>
+          <div className="icon b" />
+          <div className="text">선택가능한 날짜</div>
+        </div>
+        <div>
+          <div className="icon c" />
+          <div className="text">선택한 날짜</div>
+        </div>
+      </Info>
     </Container>
   );
 };

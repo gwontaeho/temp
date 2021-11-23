@@ -11,9 +11,23 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
+`;
 
-  select {
-    margin-left: 24px;
+export const Condition = styled.div`
+  width: calc(100% - 48px);
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 24px;
+  padding-right: 24px;
+  > div {
+    display: flex;
+    align-items: center;
+    > * {
+      margin-right: 24px;
+    }
   }
 `;
 

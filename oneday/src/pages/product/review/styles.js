@@ -28,7 +28,7 @@ export const Item = styled.div`
   display: flex;
   border: 1px solid lightgray;
   border-radius: 12px;
-  height: 60px;
+  min-height: 60px;
 
   img {
     width: 48px;
@@ -41,5 +41,6 @@ export const Item = styled.div`
   .text {
     flex: 1;
     margin-left: 24px;
+    white-space: pre-wrap;
   }
 `;

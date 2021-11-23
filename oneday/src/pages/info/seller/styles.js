@@ -10,7 +10,6 @@ export const InfoContainer = styled.div`
   height: 240px;
   border-bottom: 1px solid lightgray;
   display: flex;
-  justify-content: center;
 `;
 
 export const Image = styled.div`
@@ -21,6 +20,7 @@ export const Image = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 
@@ -28,22 +28,25 @@ export const Info = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 60px;
   .id {
-    font-size: 5rem;
+    font-size: 3rem;
+  }
+  a {
+    display: flex;
+    align-items: center;
   }
 `;
-
 export const History = styled.div`
   display: flex;
+  flex: 1;
   align-items: center;
-
+  justify-content: center;
   > div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 240px;
-    font-size: 2rem;
+    width: 192px;
+    font-size: 1.5rem;
   }
 `;
 
@@ -63,8 +66,15 @@ export const Nav = styled.div`
   border-right: 1px solid lightgray;
 
   & a {
-    height: 72px;
-    line-height: 72px;
+    height: 96px;
+    line-height: 96px;
+    transition: 0.2s;
+  }
+
+  .location {
+    color: #1976d2;
+    font-weight: bold;
+    transition: 0.2s;
   }
 `;
 

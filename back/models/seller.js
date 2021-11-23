@@ -38,5 +38,8 @@ module.exports = (sequelize, DataTypes) => {
     img: {
       type: DataTypes.STRING(120),
     },
+    introduce: {
+      type: DataTypes.STRING(120),
+    },
   });
 };

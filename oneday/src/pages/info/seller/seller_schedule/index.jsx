@@ -30,7 +30,6 @@ const SellerSchedule = (props) => {
 
   useEffect(() => {
     requestScheduleData();
-    console.log(props);
   }, [ym]);
 
   const requestScheduleData = useCallback(async () => {
@@ -54,14 +53,19 @@ const SellerSchedule = (props) => {
   }, []);
 
   const scheduleList = scheduleData.map((v) => {
+    const waiting = v.reservations.reduce(
+      (cnt, element) => cnt + (element.state === 4),
+      0
+    );
     if (String(v.ymd) === date)
       return (
         <Item key={v.id}>
-          <div>{v.product.name}</div>
+          <div className="name">{v.product.name}</div>
           <div>{`${v.start.substr(0, 2)} : ${v.start.substr(
             2,
             2
           )} ~ ${v.end.substr(0, 2)} : ${v.end.substr(2, 2)}`}</div>
+          <div>{waiting}</div>
           <div>{v.reserved + "/" + v.personnel}</div>
           <div>{v.state === 0 ? "진행 중" : "종료"}</div>
           <div>
@@ -89,7 +93,6 @@ const SellerSchedule = (props) => {
               0
             )}
         </div>
-        <div>아직 종료되지 않은 일정이 있습니다</div>
       </State>
       <CalendarNList>
         <div className="calendar">
@@ -103,6 +106,7 @@ const SellerSchedule = (props) => {
           <Item>
             <div>클래스 명</div>
             <div>시간</div>
+            <div>예약대기</div>
             <div>인원</div>
             <div>상태</div>
           </Item>

@@ -18,32 +18,29 @@ export const Header = styled.div`
 `;
 
 export const List = styled.div`
-  width: 100%;
+  width: calc(100% - 48px);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-`;
-
-export const Product = styled.div`
-  width: 100%;
-  height: 240px;
-  display: flex;
-`;
-
-export const Image = styled.div`
-  width: calc(240px - 48px);
-  height: calc(240px - 48px);
+  grid-gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
   padding: 24px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 24px;
-  }
 `;
 
-export const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+export const Item = styled.div`
+  width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 12px;
+  a {
+    width: calc(100% - 48px);
+    padding: 0 24px 0 24px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+  }
+  img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-right: 24px;
+  }
 `;

@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   width: 1440px;
-  font-size: 1.3rem;
 `;
 
 export const Header = styled.div`
@@ -17,6 +16,16 @@ export const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  a {
+    height: 100%;
+  }
+
+  img {
+    width: 240px;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 export const Nav = styled.div`
@@ -24,7 +33,7 @@ export const Nav = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
+  font-size: 1.1rem;
   a {
     padding: 12px;
   }
@@ -38,6 +47,7 @@ export const Sign = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.1rem;
 
   a {
     padding: 12px;
@@ -50,6 +60,7 @@ export const Sign = styled.div`
 export const Footer = styled.div`
   width: 100%;
   height: 240px;
-  margin-top: 60px;
+  margin-top: 24px;
   background-color: lightgray;
+  border-radius: 24px;
 `;

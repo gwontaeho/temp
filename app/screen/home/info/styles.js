@@ -12,41 +12,71 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  header_text: {
+    color: 'black',
   },
 
-  line: {
+  title: {
     width: '100%',
     height: 60,
-    display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
+    paddingHorizontal: 12,
+    backgroundColor: 'white',
+    marginBottom: 12,
   },
-  modal: {
-    borderWidth: 1,
+  title_text: {
+    color: 'black',
   },
-  types: {
-    width: '100%',
-    height: 60,
+
+  info: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  type: {
-    borderWidth: 1,
-    width: 60,
-    height: 30,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginButton: {
     width: '100%',
-    height: 60,
+    height: 144,
+    marginBottom: 12,
+    backgroundColor: 'white',
+  },
+
+  info_image_container: {
+    flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  info_image: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+  },
+
+  info_sign: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  history: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: 120,
+    marginBottom: 12,
+    backgroundColor: 'white',
+  },
+  history_item: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  text: {
+    fontSize: 12,
+    color: 'black',
   },
 });
 

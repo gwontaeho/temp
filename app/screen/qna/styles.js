@@ -10,40 +10,46 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  header_text: {
+    color: 'black',
   },
 
   menu: {
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  menu_title: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
-  flatlist: {
-    padding: 12,
+  list: {
     flex: 1,
+    paddingHorizontal: 12,
   },
-
   list_item: {
-    borderColor: 'lightgray',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    paddingBottom: 12,
+    width: '100%',
+    padding: 12,
+    backgroundColor: 'white',
+    marginTop: 12,
+    borderRadius: 12,
+  },
+  list_ymd: {
+    flexDirection: 'row',
     marginBottom: 12,
   },
-  list_item_info: {
-    flexDirection: 'row',
+  list_text: {
+    color: 'black',
+    fontSize: 12,
   },
-  list_item_ymd: {
-    height: 60,
-    justifyContent: 'center',
-  },
-  list_item_img: {
-    width: 100,
-    height: 100,
-  },
-  list_item_texts: {
-    paddingLeft: 12,
-    justifyContent: 'center',
+  text: {
+    marginBottom: 12,
   },
 });
 

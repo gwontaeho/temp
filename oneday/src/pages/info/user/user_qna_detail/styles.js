@@ -46,8 +46,13 @@ export const Item = styled.div`
 
   div {
     display: flex;
-    justify-content: center;
     align-items: center;
+    :not(.propduct_info) {
+      justify-content: center;
+    }
+  }
+  .propduct_info {
+    padding-left: 24px;
   }
 
   a:hover {
@@ -61,34 +66,34 @@ export const Text = styled.div`
   border-bottom: 1px solid lightgray;
 `;
 
+export const ModalBox = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 720,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 6,
+};
+
 export const ModalHeader = styled.div`
-  width: 100%;
+  padding: 0 24px 0 24px;
+  width: calc(100% - 48px);
+  height: 72px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  > div {
+  justify-content: space-between;
+
+  .buttons {
     display: flex;
-    div {
-      margin-left: 24px;
+    > div:not(:last-child) {
+      margin-right: 24px;
     }
   }
 `;
 
-export const ModalText = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  textarea {
-    width: 80%;
-    margin-top: 24px;
-    margin-bottom: 24px;
-    resize: none;
-    border: 1px solid lightgray;
-    padding: 24px;
-  }
-
-  textarea:focus {
-    outline: none;
-  }
+export const QuestionText = styled.div`
+  width: 100%;
 `;

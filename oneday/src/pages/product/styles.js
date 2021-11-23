@@ -5,49 +5,90 @@ export const Container = styled.div`
 `;
 
 export const Info = styled.div`
-  width: 100%;
-  display: flex;
+  width: calc(100% - 48px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   border-bottom: 1px solid lightgray;
+  padding: 24px;
+  grid-gap: 24px;
 `;
 
 export const Image = styled.div`
-  flex: 1.5;
+  flex: 1;
   display: flex;
-  padding: 24px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  img {
+  > img {
     width: 100%;
-    height: 600px;
+    height: 480px;
     object-fit: cover;
     border-radius: 48px;
     margin-bottom: 24px;
   }
 
-  .title {
+  .name {
+    display: flex;
     width: calc(100% - 48px);
+    height: 72px;
     padding-left: 24px;
     padding-right: 24px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .rating {
-    height: 36px;
-    display: flex;
+    justify-content: center;
     align-items: center;
+    font-size: 2rem;
+    margin-bottom: 24px;
   }
 
-  .name {
-    font-size: 2rem;
+  .introduce {
+    width: calc(100% - 48px);
+    border: 1px solid lightgray;
+    padding: 24px;
+    display: flex;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-right: 24px;
+    }
+
+    > div {
+      flex: 1;
+    }
+
+    .company {
+      font-size: 1.5rem;
+    }
+  }
+
+  .info {
+    width: 100%;
+    height: 120px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    border: 1px solid lightgray;
+    border-radius: 12px;
+    > div {
+      display: flex;
+      align-items: center;
+      padding-left: 120px;
+      > div {
+        padding-left: 12px;
+      }
+    }
   }
 `;
 
 export const Schedule = styled.div`
   flex: 1;
-  padding: 24px;
+  > button {
+    width: 100%;
+    height: 72px;
+  }
 `;
 
 export const SelectBox = styled.div`
@@ -63,9 +104,10 @@ export const Select = styled.div`
   max-height: 72px;
   overflow: hidden;
   border: 1px solid lightgray;
-  border-radius: 24px;
-  transition: 1s;
+  border-radius: 12px;
+  transition: 0.8s;
   background-color: white;
+  z-index: 10;
 `;
 
 export const Title = styled.div`
@@ -92,64 +134,45 @@ export const ListItem = styled.div`
 `;
 
 export const Personnel = styled.div`
-  width: 100%;
+  width: calc(100% - 48px);
   height: 72px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  .selectNumber {
-    display: flex;
-    justify-content: center;
-    height: 36px;
-    & > div {
-      padding: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .selectNumberButton {
-      cursor: pointer;
-      border: 1px solid lightgray;
-    }
-  }
-`;
+  font-size: 1.5rem;
+  padding: 0 24px 0 24px;
 
-export const ApplyButton = styled.div`
-  border: 1px solid lightgray;
-  height: 72px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 24px;
-  cursor: pointer;
-`;
-
-export const Nav = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  height: 72px;
-  border-bottom: 1px solid lightgray;
-
-  div {
+  .buttons {
     display: flex;
     height: 100%;
-    width: 120px;
-    justify-content: center;
     align-items: center;
+
+    > *:not(:last-child) {
+      margin-right: 24px;
+    }
   }
 `;
 
 export const Box = styled.div`
+  width: calc(100% - 48px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 24px;
+  padding: 24px;
+`;
+
+export const Nav = styled.div`
   width: 100%;
+  height: 72px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
 `;
 
 export const Routes = styled.div`
   flex: 1;
   border: 1px solid lightgray;
   border-radius: 24px;
-  margin-top: 24px;
 `;

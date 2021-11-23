@@ -12,6 +12,9 @@ import History from './screen/history';
 import HistoryDetail from './screen/history_detail';
 import Qna from './screen/qna';
 import QnaDetail from './screen/qna_detail';
+import Review from './screen/review';
+
+console.disableYellowBox = true;
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +32,7 @@ const App = () => {
         <Stack.Screen name="HistoryDetail" component={HistoryDetail} />
         <Stack.Screen name="Qna" component={Qna} />
         <Stack.Screen name="QnaDetail" component={QnaDetail} />
+        <Stack.Screen name="Review" component={Review} />
       </Stack.Navigator>
     </NavigationContainer>
   );

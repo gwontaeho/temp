@@ -1,8 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
-import Modal from "react-modal";
 import { useSelector } from "react-redux";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
+import Button from "@mui/material/Button";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import AddIcon from "@mui/icons-material/Add";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
 import {
   Container,
@@ -13,30 +27,29 @@ import {
   Info,
   Address,
   Details,
+  ModalBox,
 } from "./styles";
 import axios from "axios";
 
-Modal.setAppElement("#root");
-
-const SellerClassModify = (props) => {
+const SellerProductUpdate = (props) => {
   const auth = useSelector((state) => state.auth);
 
+  const [open, setOpen] = useState(false);
+
   const [productData, setProductData] = useState([]);
+
   const [img, setImg] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [time, setTime] = useState("");
+  const [category, setCategory] = useState("");
   const [shortAddress, setShortAddress] = useState("");
   const [address, setAddress] = useState("");
   const [extraAd, setExtraAd] = useState("");
   const [detail, setDetail] = useState([]);
 
-  const [imgCheck, setImgCheck] = useState(0);
-  const [addressType, setAddressType] = useState("0");
-  const [newShortAddress, setNewShortAddress] = useState("");
-  const [newAddress, setNewAddress] = useState("");
-  const [newExtraAd, setNewExtraAd] = useState("");
-  const [isOpend, setIsOpend] = useState(false);
+  const [imgCheck, setImgCheck] = useState(false);
+  const [addressType, setAddressType] = useState(0);
 
   useEffect(() => {
     console.log(props);
@@ -49,39 +62,15 @@ const SellerClassModify = (props) => {
         `/api/product/seller/${props.match.params.id}`,
         { headers: { token: auth.token } }
       );
-      console.log(response.data);
       setProductData(response.data);
-      setImg(response.data.img.replace(/\\/gi, "/").replace(/public/gi, ""));
       setName(response.data.name);
       setPrice(response.data.price);
       setTime(response.data.time);
+      setCategory(response.data.category);
       setDetail(JSON.parse(response.data.detail));
-
-      if (response.data.address !== "&&") {
-        setShortAddress(response.data.address.split("&")[0]);
-        setAddress(response.data.address.split("&")[1]);
-        setExtraAd(response.data.address.split("&")[2]);
-      }
     } catch (error) {
       console.log(error);
     }
-  }, []);
-
-  const onChangeImg = useCallback((e) => {
-    setImgCheck(1);
-    setImg(e.target.files[0]);
-  }, []);
-  const onChangeName = useCallback((e) => {
-    setName(e.target.value);
-  }, []);
-  const onChangePrice = useCallback((e) => {
-    setPrice(e.target.value);
-  }, []);
-  const onChangeTime = useCallback((e) => {
-    setTime(e.target.value);
-  }, []);
-  const onChangeNewExtraAd = useCallback((e) => {
-    setNewExtraAd(e.target.value);
   }, []);
 
   const onclickRemove = useCallback((e) => {
@@ -111,7 +100,7 @@ const SellerClassModify = (props) => {
     details.appendChild(newDiv);
   }, []);
 
-  const onSubmit = useCallback(async () => {
+  const requestUpdateProduct = useCallback(async () => {
     let stringary = [];
     const details = document.getElementsByClassName("detail");
     [...details].forEach((v) => {
@@ -125,19 +114,16 @@ const SellerClassModify = (props) => {
     formData.append("productId", productData.id);
     formData.append("imgCheck", imgCheck);
     formData.append("img", img);
-    formData.append("oldImg", productData.img);
+    formData.append("originalImg", productData.img);
     formData.append("name", name);
     formData.append("price", price);
     formData.append("time", time);
     if (addressType === 0) {
-      formData.append("address", shortAddress + "&" + address + "&" + extraAd);
+      formData.append("address", productData.address);
     } else if (addressType === 1) {
       formData.append("address", props.sellerData.address);
     } else if (addressType === 2) {
-      formData.append(
-        "address",
-        newShortAddress + "&" + newAddress + "&" + newExtraAd
-      );
+      formData.append("address", shortAddress + "&" + address + "&" + extraAd);
     }
     formData.append("detail", JSON.stringify(stringary));
 
@@ -147,7 +133,6 @@ const SellerClassModify = (props) => {
           token: auth.token,
         },
       });
-      console.log(response);
       props.history.replace(`/info/product/${productData.id}`);
     } catch (error) {
       console.log(error);
@@ -161,20 +146,9 @@ const SellerClassModify = (props) => {
     shortAddress,
     address,
     extraAd,
-    newShortAddress,
-    newAddress,
-    newExtraAd,
     addressType,
     imgCheck,
   ]);
-
-  const openModal = useCallback(() => {
-    setIsOpend(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpend(false);
-  }, []);
 
   const handleComplete = useCallback((data) => {
     let short = data.sigungu + " " + data.bname;
@@ -192,30 +166,9 @@ const SellerClassModify = (props) => {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    setNewShortAddress(short);
-    setNewAddress(fullAddress);
-    closeModal();
-  }, []);
-
-  const onClickAddressButton = useCallback((e, v) => {
-    const inputs = document.getElementsByClassName("inputs")[0];
-    const addressButton1 = document.getElementsByClassName("addressButton")[0];
-    const addressButton2 = document.getElementsByClassName("addressButton")[1];
-    const addressButton3 = document.getElementsByClassName("addressButton")[2];
-    addressButton1.classList.remove("selected");
-    addressButton2.classList.remove("selected");
-    addressButton3.classList.remove("selected");
-    e.target.classList.add("selected");
-    if (v === 0) {
-      inputs.classList.remove("open");
-      setAddressType(0);
-    } else if (v === 1) {
-      inputs.classList.remove("open");
-      setAddressType(1);
-    } else if (v === 2) {
-      inputs.classList.add("open");
-      setAddressType(2);
-    }
+    setShortAddress(short);
+    setAddress(fullAddress);
+    setOpen(false);
   }, []);
 
   const detailList = detail.map((v) => {
@@ -232,107 +185,171 @@ const SellerClassModify = (props) => {
     );
   });
 
-  return (
+  return Object.keys(productData).length === 0 ? null : (
     <Container>
       <Modal
-        isOpen={isOpend}
-        onRequestClose={closeModal}
-        style={{
-          content: {
-            width: "600px",
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-          },
+        open={open}
+        onClose={() => {
+          setOpen(false);
         }}
       >
-        <DaumPostcode onComplete={handleComplete} />
+        <Box sx={ModalBox}>
+          <DaumPostcode onComplete={handleComplete} />
+        </Box>
       </Modal>
       <Header>클래스 수정</Header>
       <Buttons>
-        <a onClick={onSubmit}>수정</a>
-        <Link to={`/info/class/${productData.index}`}>취소</Link>
+        <Button variant="contained" onClick={requestUpdateProduct}>
+          수정
+        </Button>
+        <Button variant="outlined">취소</Button>
       </Buttons>
+
       <Infos>
         <Img>
           <div className="title">클래스 대표사진</div>
-          <label htmlFor="input-file">
-            <img src={imgCheck === 0 ? img : URL.createObjectURL(img)} />
+          <img
+            src={
+              !imgCheck
+                ? productData.img.replace(/\\/gi, "/").replace(/public/gi, "")
+                : URL.createObjectURL(img)
+            }
+          />
+          <label htmlFor="icon-button-file">
+            <input
+              accept="image/*"
+              id="icon-button-file"
+              type="file"
+              onChange={(e) => {
+                setImgCheck(true);
+                setImg(e.target.files[0]);
+              }}
+            />
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton>
           </label>
-          <input id="input-file" type="file" onChange={onChangeImg} />
+          {imgCheck ? (
+            <div className="button_img_back">
+              <IconButton
+                color="primary"
+                component="span"
+                onClick={() => {
+                  setImgCheck(false);
+                  setImg(props.sellerData.img);
+                }}
+              >
+                <SettingsBackupRestoreIcon />
+              </IconButton>
+            </div>
+          ) : null}
         </Img>
 
         <Info>
           <div className="title">클래스 이름</div>
-          <input type="text" value={name} onChange={onChangeName} />
+          <TextField
+            variant="outlined"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </Info>
 
         <Info>
           <div className="title">수강료 (원)</div>
-          <input type="number" value={price} onChange={onChangePrice} />
+          <TextField
+            variant="outlined"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
         </Info>
 
         <Info>
           <div className="title">수강시간 (분)</div>
-          <input type="number" value={time} onChange={onChangeTime} />
+          <TextField
+            variant="outlined"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+          />
+        </Info>
+
+        <Info>
+          <div className="title">카테고리</div>
+          <FormControl>
+            <Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <MenuItem value="플라워">플라워</MenuItem>
+              <MenuItem value="요리">요리</MenuItem>
+              <MenuItem value="미술">미술</MenuItem>
+              <MenuItem value="수공예">수공예</MenuItem>
+              <MenuItem value="액티비티">액티비티</MenuItem>
+              <MenuItem value="기타">기타</MenuItem>
+            </Select>
+          </FormControl>
         </Info>
 
         <Address>
           <div className="title">주소</div>
-          <div className="box">
-            <div className="oldAddress">{address + " " + extraAd}</div>
-            <div className="addressButtons">
-              <div
-                onClick={(e) => onClickAddressButton(e, 0)}
-                className="addressButton selected"
-              >
-                변경 안함
-              </div>
-              <div
-                onClick={(e) => onClickAddressButton(e, 1)}
-                className="addressButton"
-              >
-                계정에 등록된 주소 사용
-              </div>
-              <div
-                onClick={(e) => onClickAddressButton(e, 2)}
-                className="addressButton"
-              >
-                직접 입력
-              </div>
+          <div>
+            <div className="type">
+              <ButtonGroup>
+                <Button
+                  variant={addressType === 0 ? "contained" : "outlined"}
+                  onClick={() => setAddressType(0)}
+                >
+                  변경 안함
+                </Button>
+                <Button
+                  variant={addressType === 1 ? "contained" : "outlined"}
+                  onClick={() => setAddressType(1)}
+                >
+                  등록된 주소 사용
+                </Button>
+                <Button
+                  variant={addressType === 2 ? "contained" : "outlined"}
+                  onClick={() => setAddressType(2)}
+                >
+                  새로 입력
+                </Button>
+              </ButtonGroup>
             </div>
-            <div className="inputs">
-              <input
-                type="text"
-                value={newAddress}
-                readOnly
-                onClick={openModal}
-              />
-              <input
-                type="text"
-                value={newExtraAd}
-                onChange={onChangeNewExtraAd}
-                placeholder="상세 주소를 입력하세요."
-              />
-            </div>
+            {addressType === 2 ? (
+              <div className="type">
+                <TextField
+                  variant="outlined"
+                  value={address}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  onClick={() => setOpen(true)}
+                />
+                <TextField
+                  variant="outlined"
+                  error={extraAd === "" ? true : false}
+                  value={extraAd}
+                  onChange={(e) => setExtraAd(e.target.value)}
+                />
+              </div>
+            ) : null}
           </div>
         </Address>
-
-        <Details>
-          <div className="title">
-            <div>상세정보</div>
-            <div className="add" onClick={onClickAdd}>
-              영역 추가
-            </div>
-          </div>
-          <div className="details">{detailList}</div>
-        </Details>
       </Infos>
+      <Details>
+        <div className="title">
+          <div>상세정보</div>
+          <Button variant="outlined" endIcon={<AddIcon />} onClick={onClickAdd}>
+            영역 추가
+          </Button>
+        </div>
+        <div className="details">{detailList}</div>
+      </Details>
     </Container>
   );
 };
 
-export default SellerClassModify;
+export default SellerProductUpdate;

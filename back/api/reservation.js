@@ -44,7 +44,20 @@ router.post("/", verifyToken, async (req, res, next) => {
   }
 });
 
-router.get("/", verifyToken, async (req, res, next) => {
+router.post("/lookup", verifyToken, async (req, res, next) => {
+  let page = req.body.page;
+  let offset = 0;
+  if (page > 1) offset = 5 * (page - 1);
+  const createdAt = req.body.checked
+    ? {
+        [Op.between]: [
+          new Date(req.body.value[0]),
+          new Date(
+            new Date(new Date(req.body.value[1]).setHours(23)).setMinutes(59)
+          ),
+        ],
+      }
+    : { [Op.ne]: null };
   const userId = req.decoded.type === "1" ? req.decoded.id : { [Op.ne]: null };
   const sellerId =
     req.decoded.type === "2" ? req.decoded.id : { [Op.ne]: null };
@@ -52,7 +65,7 @@ router.get("/", verifyToken, async (req, res, next) => {
   //  예약 내역
   ///////////////////////////////////////////////////////////////
   try {
-    const findAllReservation = await Reservation.findAll({
+    const findAndCountAllReservation = await Reservation.findAndCountAll({
       include: [
         {
           model: Product,
@@ -66,13 +79,19 @@ router.get("/", verifyToken, async (req, res, next) => {
       where: {
         userId,
         sellerId,
-        state: req.query.state === "1" ? [1, 5] : req.query.state,
+        state: req.body.state === 1 ? [1, 5] : req.body.state,
+        createdAt,
       },
       order: [["createdAt", "DESC"]],
+      offset,
+      limit: 5,
     });
-    const response = findAllReservation.map((v) => {
+    let response = {};
+    response.data = findAndCountAllReservation.rows.map((v) => {
       return v.dataValues;
     });
+    response.count = findAndCountAllReservation.count;
+    console.log(response);
     return res.status(200).send(response);
   } catch (error) {
     return res.status(500).send();

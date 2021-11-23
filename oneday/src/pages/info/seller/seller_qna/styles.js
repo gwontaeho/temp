@@ -11,17 +11,43 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
+`;
 
-  select {
-    margin-left: 24px;
+export const Condition = styled.div`
+  width: calc(100% - 48px);
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 24px;
+  padding-right: 24px;
+  > div {
+    display: flex;
+    align-items: center;
+    > * {
+      margin-right: 24px;
+    }
   }
 `;
 
-export const Qnas = styled.div`
+export const QnaHeader = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  height: 72px;
+  border-bottom: 1px solid lightgray;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+export const List = styled.div`
   width: 100%;
 `;
 
-export const QnaItem = styled.div`
+export const Item = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
   height: 72px;
@@ -29,8 +55,14 @@ export const QnaItem = styled.div`
 
   div {
     display: flex;
-    justify-content: center;
     align-items: center;
+    :not(.product_info) {
+      justify-content: center;
+    }
+  }
+
+  .product_info {
+    padding-left: 24px;
   }
 
   a:hover {

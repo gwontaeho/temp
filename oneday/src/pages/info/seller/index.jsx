@@ -3,6 +3,7 @@ import { Link, Route, Switch } from "react-router-dom";
 import { useSelector } from "react-redux";
 import loadable from "@loadable/component";
 import axios from "axios";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import {
   Container,
@@ -14,7 +15,7 @@ import {
   Nav,
   Routes,
 } from "./styles";
-import profile from "../../../images/profile.png";
+import profile from "../../../images/profile/profile.png";
 
 const SellerInfoUpdate = loadable(() => import("./seller_info_update"));
 const SellerProduct = loadable(() => import("./seller_product"));
@@ -54,16 +55,13 @@ const Seller = () => {
   const [reservationCountData, setReservationCountData] = useState({});
   const [unfinishedScheduleData, setUnfinishedScheduleData] = useState([]);
   const [unansweredQnaData, setUnansweredQnaData] = useState([]);
+  const [location, setLocation] = useState(0);
 
   useEffect(() => {
     requestSellerData();
-    console.log(todayYmd);
-  }, []);
-
-  useEffect(() => {
     requestReservationCountData();
-    requestUnfinishedScheduleData(auth);
-    requestUnansweredQnaData(auth);
+    requestUnfinishedScheduleData();
+    requestUnansweredQnaData();
   }, []);
 
   const requestSellerData = useCallback(async () => {
@@ -88,12 +86,12 @@ const Seller = () => {
     }
   }, []);
 
-  const requestUnfinishedScheduleData = useCallback(async (v) => {
+  const requestUnfinishedScheduleData = useCallback(async () => {
     try {
       const response = await axios.get(
         `/api/schedule/unfinished?ymd=${todayYmd}`,
         {
-          headers: { token: v.token },
+          headers: { token: auth.token },
         }
       );
       setUnfinishedScheduleData(response.data);
@@ -102,10 +100,10 @@ const Seller = () => {
     }
   }, []);
 
-  const requestUnansweredQnaData = useCallback(async (v) => {
+  const requestUnansweredQnaData = useCallback(async () => {
     try {
       const response = await axios.get("/api/qna/unanswered", {
-        headers: { token: v.token },
+        headers: { token: auth.token },
       });
       setUnansweredQnaData(response.data);
     } catch (error) {
@@ -119,7 +117,7 @@ const Seller = () => {
         <Image>
           <img
             src={
-              sellerData.img === null
+              sellerData.img === null || sellerData.img === "null"
                 ? profile
                 : sellerData.img.replace(/\\/gi, "/").replace(/public/gi, "")
             }
@@ -127,18 +125,16 @@ const Seller = () => {
         </Image>
         <Info>
           <div className="id">{sellerData.id}</div>
-          <Link
-            to={{
-              pathname: "/info/update",
-              state: { sellerData },
-            }}
-          >
+          <Link to="/info/update">
+            <EditOutlinedIcon />
             수정
           </Link>
         </Info>
         <History>
           <div>
-            <div>진행중인 예약</div>
+            <div>
+              <Link to="/info">진행중인 예약 ></Link>
+            </div>
             <div>{reservationCountData.a}</div>
           </div>
           <div>
@@ -161,16 +157,50 @@ const Seller = () => {
   return Object.keys(sellerData).length === 0 ? null : (
     <Container>
       <Nav>
-        <Link to="/info">예약 관리</Link>
-        <Link to="/info/schedule">일정 관리</Link>
-        <Link to="/info/qna">문의 관리</Link>
-        <Link to="/info/product">클래스 관리</Link>
+        <Link
+          to="/info"
+          onClick={() => setLocation(0)}
+          className={location === 0 ? "location" : ""}
+        >
+          예약 관리{location === 0 ? " >" : ""}
+        </Link>
+        <Link
+          to="/info/schedule"
+          onClick={() => setLocation(1)}
+          className={location === 1 ? "location" : ""}
+        >
+          일정 관리{location === 1 ? " >" : ""}
+        </Link>
+        <Link
+          to="/info/qna"
+          onClick={() => setLocation(2)}
+          className={location === 2 ? "location" : ""}
+        >
+          문의 관리{location === 2 ? " >" : ""}
+        </Link>
+        <Link
+          to="/info/product"
+          onClick={() => setLocation(3)}
+          className={location === 3 ? "location" : ""}
+        >
+          클래스 관리{location === 3 ? " >" : ""}
+        </Link>
       </Nav>
       <Routes>
         <Header>내 정보</Header>
         <SellerInfo />
         <Switch>
-          <Route exact path="/info/update" component={SellerInfoUpdate} />
+          <Route
+            exact
+            path="/info/update"
+            render={(props) => (
+              <SellerInfoUpdate
+                {...props}
+                requestSellerData={requestSellerData}
+                sellerData={sellerData}
+              />
+            )}
+          />
           <Route exact path="/info/product" component={SellerProduct} />
           <Route
             exact
@@ -204,7 +234,12 @@ const Seller = () => {
           <Route
             exact
             path="/info/reservation/:id"
-            component={SellerReservationDetail}
+            render={(props) => (
+              <SellerReservationDetail
+                {...props}
+                requestReservationCountData={requestReservationCountData}
+              />
+            )}
           />
           <Route exact path="/info/schedule" component={SellerSchedule} />
           <Route
@@ -215,6 +250,7 @@ const Seller = () => {
                 {...props}
                 unfinishedScheduleData={unfinishedScheduleData}
                 requestUnfinishedScheduleData={requestUnfinishedScheduleData}
+                requestReservationCountData={requestReservationCountData}
               />
             )}
           />
@@ -225,6 +261,7 @@ const Seller = () => {
               <SellerScheduleDetail
                 {...props}
                 requestUnfinishedScheduleData={requestUnfinishedScheduleData}
+                requestReservationCountData={requestReservationCountData}
               />
             )}
           />

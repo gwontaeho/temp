@@ -3,8 +3,9 @@ import { Link, Route, Switch } from "react-router-dom";
 import loadable from "@loadable/component";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { AiOutlineRight } from "react-icons/ai";
-import profile from "../../../images/profile.png";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
+import profile from "../../../images/profile/profile.png";
 
 import {
   Container,
@@ -31,6 +32,7 @@ const User = () => {
 
   const [userData, setUserData] = useState({});
   const [reservationCountData, setReservationCountData] = useState({});
+  const [location, setLocation] = useState(0);
 
   useEffect(() => {
     console.log(auth);
@@ -75,22 +77,22 @@ const User = () => {
         </Image>
         <Info>
           <div className="id">{userData.id}</div>
-          <Link
-            to={{
-              pathname: "/info/update",
-              state: { userData },
-            }}
-          >
+          <Link to="/info/update">
+            <EditOutlinedIcon />
             수정
           </Link>
         </Info>
         <History>
           <div>
-            <div>진행중인 예약 ></div>
+            <div>
+              <Link to="/info">진행중인 예약 ></Link>
+            </div>
             <div>{reservationCountData.a}</div>
           </div>
           <div>
-            <div>후기 작성하기 ></div>
+            <div>
+              <Link to="/info/review/unwritten">후기 작성하기 ></Link>
+            </div>
             <div>{reservationCountData.b}</div>
           </div>
         </History>
@@ -101,9 +103,27 @@ const User = () => {
   return Object.keys(userData).length === 0 ? null : (
     <Container>
       <Nav>
-        <Link to="/info">예약 내역</Link>
-        <Link to="/info/qna">문의 내역</Link>
-        <Link to="/info/review">수강 후기</Link>
+        <Link
+          to="/info"
+          onClick={() => setLocation(0)}
+          className={location === 0 ? "location" : ""}
+        >
+          예약 내역{location === 0 ? " >" : ""}
+        </Link>
+        <Link
+          to="/info/qna"
+          onClick={() => setLocation(1)}
+          className={location === 1 ? "location" : ""}
+        >
+          문의 내역{location === 1 ? " >" : ""}
+        </Link>
+        <Link
+          to="/info/review"
+          onClick={() => setLocation(2)}
+          className={location === 2 ? "location" : ""}
+        >
+          수강 후기{location === 2 ? " >" : ""}
+        </Link>
       </Nav>
       <RouteContainer>
         <Header>내 정보</Header>
@@ -119,11 +139,26 @@ const User = () => {
               />
             )}
           />
-          <Route exact path="/info/update" component={UserInfoUpdate} />
+          <Route
+            exact
+            path="/info/update"
+            render={(props) => (
+              <UserInfoUpdate
+                {...props}
+                userData={userData}
+                requestUserData={requestUserData}
+              />
+            )}
+          />
           <Route
             exact
             path="/info/reservation/:id"
-            component={UserReservationDetail}
+            render={(props) => (
+              <UserReservationDetail
+                {...props}
+                requestReservationCountData={requestReservationCountData}
+              />
+            )}
           />
           <Route exact path="/info/qna" component={UserQna} />
           <Route exact path="/info/qna/:id" component={UserQnaDetail} />

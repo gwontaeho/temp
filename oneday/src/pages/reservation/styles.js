@@ -13,64 +13,70 @@ export const Header = styled.div`
   border-bottom: 1px solid lightgray;
 `;
 
-export const Info = styled.div`
-  width: calc(100% - 48px);
-  padding: 24px;
-  display: flex;
+export const ProductInfoHeader = styled.div`
+  width: 100%;
+  height: 72px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   border-bottom: 1px solid lightgray;
-  img {
-    width: 240px;
-    height: 180px;
-    object-fit: cover;
-  }
-  & > div {
-    flex: 1;
+  > div {
     display: flex;
     align-items: center;
-    padding: 24px;
+    justify-content: center;
   }
-  & > div > div {
-    flex: 1;
+`;
+
+export const ProductInfo = styled.div`
+  width: 100%;
+  height: 120px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  border-bottom: 1px solid lightgray;
+
+  .product_info {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+  }
+
+  img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 24px;
+    margin-right: 24px;
+  }
+  > div:not(.product_info) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
 export const UserInfo = styled.div`
-  width: calc(100% - 48px);
-  padding: 24px;
+  display: grid;
+  grid-template-columns: 240px 240px;
   border-bottom: 1px solid lightgray;
 
-  label {
-    height: 72px;
-    display: flex;
+  > div {
+    display: grid;
+    grid-template-rows: 72px 72px;
     align-items: center;
-    div {
-      width: 120px;
-    }
-  }
-
-  input {
-    width: 180px;
-    height: 42px;
-    border: 1px solid lightgray;
-    padding-left: 12px;
-    cursor: pointer;
+    padding-left: 24px;
   }
 `;
 
-export const Apply = styled.div`
-  width: calc(100% - 48px);
-  height: 72px;
-  padding: 24px;
+export const Buttons = styled.div`
   display: flex;
-  align-items: center;
+  width: calc(100% - 48px);
+  padding-left: 24px;
+  padding-right: 24px;
+  height: 120px;
   justify-content: flex-end;
-  div {
-    width: 180px;
-    height: 60px;
-    border: 1px solid lightgray;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+  align-items: center;
+  button {
+    height: 48px;
+    width: 96px;
+    margin-left: 24px;
   }
 `;

@@ -162,39 +162,75 @@ router.post("/seller/create", upload.single("img"), async (req, res, next) => {
   }
 });
 
-router.put("/user", verifyToken, async (req, res, next) => {
-  ///////////////////////////////////////////////////////////////////////
-  //  사용자 정보 수정
-  ///////////////////////////////////////////////////////////////////////
-  try {
-    await User.update(
-      { phone: req.body.phone },
-      { where: { id: req.decoded.id } }
-    );
-    return res.status(200).send();
-  } catch (error) {
-    return res.status(500).send();
+router.put(
+  "/user",
+  verifyToken,
+  upload.single("img"),
+  async (req, res, next) => {
+    try {
+      await User.update(
+        {
+          img:
+            req.body.imgCheck === "false"
+              ? req.body.originalImg
+              : req.file.path,
+          phone: req.body.phone,
+        },
+        { where: { id: req.decoded.id } }
+      );
+      if (req.body.imgCheck === "true") {
+        fs.unlink(req.body.originalImg, (error) => {
+          if (error) console.log(error);
+        });
+      }
+      return res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      if (req.file)
+        fs.unlink(req.file.path, (error) => {
+          if (error) console.log(error);
+        });
+      return res.status(500).send();
+    }
   }
-});
+);
 
-router.put("/seller", verifyToken, async (req, res, next) => {
-  ///////////////////////////////////////////////////////////////////////
-  //  판매자 정보 수정
-  ///////////////////////////////////////////////////////////////////////
-  try {
-    await Seller.update(
-      {
-        phone: req.body.phone,
-        company: req.body.company,
-        address: req.body.address,
-        category: req.body.category,
-      },
-      { where: { id: req.decoded.id } }
-    );
-    return res.status(200).send();
-  } catch (error) {
-    return res.status(500).send();
+router.put(
+  "/seller",
+  verifyToken,
+  upload.single("img"),
+  async (req, res, next) => {
+    console.log(req.body);
+    try {
+      await Seller.update(
+        {
+          img:
+            req.body.imgCheck === "false"
+              ? req.body.originalImg
+              : req.file.path,
+          phone: req.body.phone,
+          company: req.body.company,
+          address: req.body.address,
+          category: req.body.category,
+          introduce: req.body.introduce,
+        },
+        { where: { id: req.decoded.id } }
+      );
+      if (req.body.imgCheck === "true") {
+        fs.unlink(req.body.originalImg, (error) => {
+          if (error) console.log(error);
+        });
+      }
+      return res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      if (req.file)
+        fs.unlink(req.file.path, (error) => {
+          if (error) console.log(error);
+        });
+      return res.status(500).send();
+    }
   }
-});
+);
 
 module.exports = router;

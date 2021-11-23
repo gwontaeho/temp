@@ -11,20 +11,11 @@ const Login = props => {
 
   const onPressLogin = useCallback(async () => {
     try {
-      const response = await axios.post('/api/auth/login', {
-        id,
-        password,
-        type: 1,
-      });
+      const response = await axios.get(
+        `/api/auth?id=${id}&password=${password}&type=1`,
+      );
 
-      let jsonValue = {};
-
-      response.headers['set-cookie'][0].split('; ').map(v => {
-        if (v.split('=')[0] === 'token') {
-          jsonValue.token = v.split('=')[1];
-          jsonValue.id = id;
-        }
-      });
+      const jsonValue = {token: response.data, id};
 
       if (response.status === 200) {
         try {

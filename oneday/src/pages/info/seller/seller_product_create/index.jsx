@@ -1,8 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
-import Modal from "react-modal";
 import { useSelector } from "react-redux";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
+import Button from "@mui/material/Button";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import AddIcon from "@mui/icons-material/Add";
+import profile from "../../../../images/profile/profile.png";
 
 import {
   Container,
@@ -13,6 +27,7 @@ import {
   Info,
   Address,
   Details,
+  ModalBox,
 } from "./styles";
 import axios from "axios";
 
@@ -23,31 +38,12 @@ const SellerProductCreate = (props) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState();
   const [time, setTime] = useState();
-  const [useRegisteredAddress, setUseRegisteredAddress] = useState(true);
+  const [category, setCategory] = useState(props.sellerData.category);
   const [shortAddress, setShortAddress] = useState("");
   const [address, setAddress] = useState("");
   const [extraAd, setExtraAd] = useState("");
-  const [isOpend, setIsOpend] = useState(false);
-
-  useEffect(() => {
-    console.log(props);
-  }, []);
-
-  const onChangeImg = useCallback((e) => {
-    setImg(e.target.files[0]);
-  }, []);
-  const onChangeName = useCallback((e) => {
-    setName(e.target.value);
-  }, []);
-  const onChangePrice = useCallback((e) => {
-    setPrice(e.target.value);
-  }, []);
-  const onChangeTime = useCallback((e) => {
-    setTime(e.target.value);
-  }, []);
-  const onChangeExtraAd = useCallback((e) => {
-    setExtraAd(e.target.value);
-  }, []);
+  const [open, setOpen] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   const onclickRemove = useCallback((e) => {
     e.target.parentNode.parentNode.remove();
@@ -76,11 +72,9 @@ const SellerProductCreate = (props) => {
     details.appendChild(newDiv);
   }, []);
 
-  const onSubmit = useCallback(async () => {
-    console.log(price);
+  const requestCreateProduct = useCallback(async () => {
     if (img === undefined)
       return window.alert("클래스 대표사진을 등록해주세요");
-    if (name.length === 0) return window.alert("클래스 이름을 입력해주세요");
     if (price === "" || price === undefined)
       return window.alert("수강료를 입력해주세요");
     if (time === "" || time === undefined)
@@ -100,9 +94,8 @@ const SellerProductCreate = (props) => {
     formData.append("name", name);
     formData.append("price", price);
     formData.append("time", time);
-    formData.append("category", props.sellerData.category);
-    if (useRegisteredAddress)
-      formData.append("address", props.sellerData.address);
+    formData.append("category", category);
+    if (checked) formData.append("address", props.sellerData.address);
     else
       formData.append("address", shortAddress + "&" + address + "&" + extraAd);
     formData.append("detail", JSON.stringify(stringary));
@@ -113,7 +106,7 @@ const SellerProductCreate = (props) => {
           token: auth.token,
         },
       });
-      props.history.replace("/info");
+      props.history.replace("/info/product");
     } catch (error) {
       console.log(error);
     }
@@ -122,25 +115,17 @@ const SellerProductCreate = (props) => {
     name,
     price,
     time,
-    useRegisteredAddress,
+    category,
+    checked,
     shortAddress,
     address,
     extraAd,
   ]);
 
-  const openModal = useCallback(() => {
-    setIsOpend(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpend(false);
-  }, []);
-
   const handleComplete = useCallback((data) => {
     let short = data.sigungu + " " + data.bname;
     let fullAddress = data.address;
     let extraAddress = "";
-
     if (data.addressType === "R") {
       if (data.bname !== "") {
         extraAddress += data.bname;
@@ -151,123 +136,149 @@ const SellerProductCreate = (props) => {
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-
     setShortAddress(short);
     setAddress(fullAddress);
-    closeModal();
-  }, []);
-
-  const onClickAddressButton = useCallback((e) => {
-    const value = e.target.getAttribute("value");
-    const inputs = document.getElementsByClassName("inputs")[0];
-    const addressButton1 = document.getElementsByClassName("addressButton")[0];
-    const addressButton2 = document.getElementsByClassName("addressButton")[1];
-    addressButton1.classList.remove("selected");
-    addressButton2.classList.remove("selected");
-    e.target.classList.add("selected");
-    if (value === "1") {
-      inputs.classList.add("open");
-      setUseRegisteredAddress(false);
-    } else {
-      inputs.classList.remove("open");
-      setUseRegisteredAddress(true);
-    }
+    setOpen(false);
   }, []);
 
   return (
     <Container>
       <Modal
-        isOpen={isOpend}
-        onRequestClose={closeModal}
-        style={{
-          content: {
-            width: "600px",
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-          },
+        open={open}
+        onClose={() => {
+          setOpen(false);
         }}
       >
-        <DaumPostcode onComplete={handleComplete} />
+        <Box sx={ModalBox}>
+          <DaumPostcode onComplete={handleComplete} />
+        </Box>
       </Modal>
-      <Header>클래스 생성</Header>
+
+      <Header>클래스 등록</Header>
+
       <Buttons>
-        <a onClick={onSubmit}>등록</a>
-        <Link to="/info">취소</Link>
+        <Button variant="contained" onClick={requestCreateProduct}>
+          등록
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => props.history.replace("/info/product")}
+        >
+          취소
+        </Button>
       </Buttons>
+
       <Infos>
         <Img>
           <div className="title">클래스 대표사진</div>
-          <label htmlFor="input-file">
-            <img src={img ? URL.createObjectURL(img) : null} />
+          <img src={img ? URL.createObjectURL(img) : profile} />
+          <label htmlFor="icon-button-file">
+            <input
+              accept="image/*"
+              id="icon-button-file"
+              type="file"
+              onChange={(e) => {
+                setImg(e.target.files[0]);
+              }}
+            />
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton>
           </label>
-          <input
-            id="input-file"
-            type="file"
-            accept="image/gif,image/jpeg,image/png"
-            onChange={onChangeImg}
-          />
         </Img>
 
         <Info>
           <div className="title">클래스 이름</div>
-          <input type="text" value={name} onChange={onChangeName} />
+          <TextField
+            variant="outlined"
+            onChange={(e) => setName(e.target.value)}
+          />
         </Info>
 
         <Info>
           <div className="title">수강료 (원)</div>
-          <input type="number" value={price} onChange={onChangePrice} />
+          <TextField
+            variant="outlined"
+            onChange={(e) => setPrice(e.target.value)}
+          />
         </Info>
 
         <Info>
           <div className="title">수강시간 (분)</div>
-          <input type="number" value={time} onChange={onChangeTime} />
+          <TextField
+            variant="outlined"
+            onChange={(e) => setTime(e.target.value)}
+          />
+        </Info>
+
+        <Info>
+          <div className="title">카테고리</div>
+          <FormControl>
+            <Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <MenuItem value="플라워">플라워</MenuItem>
+              <MenuItem value="요리">요리</MenuItem>
+              <MenuItem value="미술">미술</MenuItem>
+              <MenuItem value="수공예">수공예</MenuItem>
+              <MenuItem value="액티비티">액티비티</MenuItem>
+              <MenuItem value="기타">기타</MenuItem>
+            </Select>
+          </FormControl>
         </Info>
 
         <Address>
           <div className="title">주소</div>
-          <div className="box">
-            <div className="addressButtons">
-              <div
-                value="0"
-                onClick={onClickAddressButton}
-                className="addressButton selected"
-              >
-                등록된 주소 사용
-              </div>
-              <div
-                value="1"
-                onClick={onClickAddressButton}
-                className="addressButton"
-              >
-                직접 입력
-              </div>
+          <div>
+            <div className="type">
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={checked}
+                      onChange={(e) => setChecked(e.target.checked)}
+                    />
+                  }
+                  label="계정에 등록된 주소 사용"
+                  labelPlacement="start"
+                />
+              </FormGroup>
             </div>
-            <div className="inputs">
-              <input type="text" value={address} readOnly onClick={openModal} />
-              <input
-                type="text"
-                value={extraAd}
-                onChange={onChangeExtraAd}
-                placeholder="상세 주소를 입력하세요."
-              />
-            </div>
+            {!checked ? (
+              <div className="type">
+                <TextField
+                  variant="outlined"
+                  value={address}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  onClick={() => setOpen(true)}
+                />
+                <TextField
+                  variant="outlined"
+                  error={extraAd === "" ? true : false}
+                  value={extraAd}
+                  onChange={(e) => setExtraAd(e.target.value)}
+                />
+              </div>
+            ) : null}
           </div>
         </Address>
-
-        <Details>
-          <div className="title">
-            <div>상세정보</div>
-            <div className="add" onClick={onClickAdd}>
-              영역 추가
-            </div>
-          </div>
-          <div className="details"></div>
-        </Details>
       </Infos>
+      <Details>
+        <div className="title">
+          <div>상세정보</div>
+          <Button variant="outlined" endIcon={<AddIcon />} onClick={onClickAdd}>
+            영역 추가
+          </Button>
+        </div>
+        <div className="details" />
+      </Details>
     </Container>
   );
 };

@@ -42,8 +42,13 @@ export const List = styled.div`
 export const Item = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 3fr 2fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 2fr 1fr 1fr 1fr 1fr;
   height: 72px;
+
+  .name {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 
   div {
     display: flex;

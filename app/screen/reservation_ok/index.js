@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
+import {Button, Divider, Dialog, Portal} from 'react-native-paper';
 
 import styles from './styles';
 
@@ -10,10 +11,15 @@ const ReservationOk = props => {
 
   return (
     <View style={styles.container}>
-      <Text>예약성공!</Text>
-      <TouchableOpacity onPress={onPressButton}>
-        <Text>메인으로 가기</Text>
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.header_text}>ONE DAY</Text>
+      </View>
+      <View style={styles.box}>
+        <Text style={styles.text}>예약완료!</Text>
+        <TouchableOpacity style={styles.button} onPress={() => onPressButton()}>
+          <Text style={styles.button_text}>돌아가기</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

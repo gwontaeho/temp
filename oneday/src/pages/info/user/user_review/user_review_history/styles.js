@@ -32,7 +32,7 @@ export const Item = styled.div`
     align-items: center;
     padding-left: 24px;
     img {
-      width: 120px;
+      width: 96px;
       height: 96px;
       margin-right: 24px;
       border-radius: 12px;

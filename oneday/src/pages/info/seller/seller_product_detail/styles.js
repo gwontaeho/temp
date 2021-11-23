@@ -114,17 +114,8 @@ export const AddSchedule = styled.div`
   border-bottom: 1px solid lightgray;
   width: calc(100% - 24px);
   padding-left: 24px;
-
-  > div {
-    padding-right: 24px;
-  }
-
-  input,
-  select {
-    width: 72px;
-    height: 36px;
-    border: 1px solid lightgray;
-    margin-right: 6px;
+  > * {
+    margin-right: 24px;
   }
 `;
 
@@ -134,7 +125,8 @@ export const Detail = styled.div`
   width: 100%;
 
   .details {
-    width: 100%;
+    width: calc(100% - 48px);
+    padding: 24px;
   }
 
   .detail {
@@ -150,5 +142,8 @@ export const Detail = styled.div`
 
   .detailText {
     font-size: 1.2rem;
+    pre {
+      white-space: pre-wrap;
+    }
   }
 `;

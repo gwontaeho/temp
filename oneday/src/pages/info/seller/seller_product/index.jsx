@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Button from "@mui/material/Button";
 
-import { Container, Header, List, Product, Image, Info } from "./styles";
+import { Container, Header, List, Item } from "./styles";
 
-const SellerProduct = () => {
+const SellerProduct = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const [productData, setProductData] = useState([]);
@@ -27,18 +28,12 @@ const SellerProduct = () => {
 
   const productList = productData.map((v) => {
     return (
-      <Product key={v.id}>
-        <Image>
+      <Item key={v.id}>
+        <Link to={`/info/product/${v.id}`}>
           <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
-        </Image>
-        <Info>
           <div>{v.name}</div>
-          <div>{v.price}원</div>
-          <div>{v.time}분</div>
-          <div>{v.sold}</div>
-          <Link to={`/info/product/${v.id}`}>자세히</Link>
-        </Info>
-      </Product>
+        </Link>
+      </Item>
     );
   });
 
@@ -46,7 +41,12 @@ const SellerProduct = () => {
     <Container>
       <Header>클래스 관리</Header>
       <Header>
-        <Link to="/info/create">클래스 생성</Link>
+        <Button
+          variant="outlined"
+          onClick={() => props.history.push("/info/create")}
+        >
+          클래스 생성
+        </Button>
       </Header>
       <List>{productList}</List>
     </Container>

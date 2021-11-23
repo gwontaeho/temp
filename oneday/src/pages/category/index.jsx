@@ -1,83 +1,126 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import qs from "qs";
-import { Container, Header, Nav, Products } from "./styles";
-import { IoLocationOutline } from "react-icons/io5";
+import { Container, Header, Nav, List, Item } from "./styles";
+import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from "@material-ui/lab/Rating";
+import Skeleton from "@mui/material/Skeleton";
 
 const Category = (props) => {
-  const query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
   const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    requestProductData();
+    requestProductData("rating");
   }, [props]);
 
-  const requestProductData = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        `/api/product/category?name=${query.name}&sort=${query.sort}`
-      );
-      setProductData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [props]);
+  const requestProductData = useCallback(
+    async (sort) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `/api/product/category?name=${props.match.params.category}&sort=${sort}`
+        );
+        setProductData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [props]
+  );
 
   // 클래스
   const productList = productData.map((v) => {
     const defaultValue =
       Array.isArray(v.reviews) && v.reviews.length !== 0
-        ? v.reviews[0].rating
-        : "0";
+        ? Number(v.reviews[0].rating)
+        : 0;
     return (
-      <Link to={`/product?id=${v.id}`} key={v.id}>
-        <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
-        <div className="address">
-          <IoLocationOutline />
-          {v.address.split("&")[0]}
-        </div>
-        <div className="rating">
-          {Array.isArray(v.reviews) && v.reviews.length !== 0 ? (
-            <Rating
-              name="half-rating-read"
-              defaultValue={Number(defaultValue)}
-              precision={0.1}
-              readOnly
-            />
-          ) : null}
-        </div>
-        <div>{v.name}</div>
-        <div>{v.price}원</div>
-      </Link>
+      <Item key={v.id}>
+        <Link to={`/product?id=${v.id}`}>
+          <div className="img">
+            <img src={v.img.replace(/\\/gi, "/").replace(/public/gi, "")} />
+            <div className="rating">
+              <Rating
+                name="half-rating-read"
+                defaultValue={defaultValue}
+                precision={0.1}
+                readOnly
+              />
+            </div>
+          </div>
+          <div className="info">
+            <div className="address">
+              <LocationOnOutlined />
+              <div>{v.address.split("&")[0]}</div>
+            </div>
+            <div>{`[${v.category}] ${v.name}`}</div>
+            <div>{v.price}원</div>
+          </div>
+        </Link>
+      </Item>
     );
   }, []);
+
+  const loadingList = Array.from(new Array(8)).map(() => {
+    return (
+      <Item>
+        <a>
+          <div className="img">
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              height={300}
+              sx={{ borderRadius: "12px", width: "100%" }}
+            />
+          </div>
+          <div className="info">
+            <Skeleton
+              animation="wave"
+              variant="text"
+              sx={{ marginTop: "18px" }}
+            />
+            <Skeleton
+              animation="wave"
+              variant="text"
+              sx={{ marginTop: "18px" }}
+            />
+            <Skeleton
+              animation="wave"
+              variant="text"
+              sx={{ marginTop: "18px" }}
+            />
+          </div>
+        </a>
+      </Item>
+    );
+  });
 
   return (
     <Container>
       <Header>
-        {query.name === "all"
+        {props.match.params.category === "all"
           ? "전체"
-          : query.name === "flower"
+          : props.match.params.category === "flower"
           ? "플라워"
-          : query.name === "art"
+          : props.match.params.category === "art"
           ? "미술"
-          : query.name === "cooking"
+          : props.match.params.category === "cooking"
           ? "요리"
-          : query.name === "handmade"
+          : props.match.params.category === "handmade"
           ? "수공예"
-          : query.name === "activity"
+          : props.match.params.category === "activity"
           ? "액티비티"
           : "기타"}
       </Header>
       <Nav>
-        <Link to={`/category?name=${query.name}&sort=rating`}>평점순</Link>
-        <Link to={`/category?name=${query.name}&sort=sold`}>판매순</Link>
-        <Link to={`/category?name=${query.name}&sort=low`}>낮은 가격순</Link>
-        <Link to={`/category?name=${query.name}&sort=high`}>높은 가격순</Link>
+        <div onClick={() => requestProductData("rating")}>평점순</div>
+        <div onClick={() => requestProductData("sold")}>판매순</div>
+        <div onClick={() => requestProductData("low")}>낮은 가격순</div>
+        <div onClick={() => requestProductData("high")}>높은 가격순</div>
       </Nav>
-      <Products>{productList}</Products>
+      <List>{!loading ? productList : loadingList}</List>
     </Container>
   );
 };

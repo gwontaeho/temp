@@ -1,99 +1,77 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {Text, View, TouchableOpacity, FlatList, Image} from 'react-native';
 import {Menu, Divider} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import axios from '../../axios';
+
 import styles from './styles';
 
 const History = props => {
   const [visible, setVisible] = useState(false);
-  const [state, setState] = useState('예약 중');
-  const [waiting, setWaiting] = useState([]);
-  const [ing, setIng] = useState([]);
-  const [past, setPast] = useState([]);
-  const [request, setRequest] = useState([]);
-  const [canceled, setCanceled] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [state, setState] = useState(0);
+  const [reservationData, setReservationData] = useState([]);
+  const [reservationCount, setReservationCount] = useState(0);
+  const [endPage, setEndPage] = useState(1);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    requesetHistoryData();
-  }, []);
+    requestHistoryData();
+  }, [state, page]);
 
-  const requesetHistoryData = useCallback(async () => {
-    try {
-      const response = await axios.post(
-        '/api/reservation/user',
-        {},
-        {
-          headers: {
-            token: props.route.params.user.token,
+  const requestHistoryData = useCallback(
+    async v => {
+      try {
+        const response = await axios.post(
+          '/api/reservation/lookup',
+          {
+            state,
+            checked: false,
+            page,
           },
-        },
-      );
-      let newWaiting = [];
-      let newIng = [];
-      let newPast = [];
-      let newRequest = [];
-      let newCancled = [];
-      response.data.map(v => {
-        if (v.state === 0) {
-          newIng.push(v);
-        } else if (v.state === 1) {
-          newPast.push(v);
-        } else if (v.state === 2) {
-          newRequest.push(v);
-        } else if (v.state === 3) {
-          newCancled.push(v);
-        } else if (v.state === 4) {
-          newWaiting.push(v);
+          {
+            headers: {
+              token: props.route.params.token,
+            },
+          },
+        );
+        console.log(response.data);
+        console.log(response.data.count);
+        if (page === 1) {
+          setReservationData(response.data.data);
+        } else {
+          setReservationData([...reservationData, ...response.data.data]);
         }
-      });
-      setWaiting(newWaiting);
-      setIng(newIng);
-      setPast(newPast);
-      setRequest(newRequest);
-      setCanceled(newCancled);
-      setSelected(newWaiting);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  const onClickState = useCallback(
-    v => {
-      if (v === 0) {
-        setState('예약 중');
-        setSelected(ing);
-      } else if (v === 1) {
-        setState('수강 완료');
-        setSelected(past);
-      } else if (v === 2) {
-        setState('취소 요청');
-        setSelected(request);
-      } else if (v === 3) {
-        setState('예약 취소');
-        setSelected(canceled);
-      } else if (v === 4) {
-        setState('예약 대기');
-        setSelected(waiting);
+        setReservationCount(response.data.count);
+        setEndPage(Math.ceil(response.data.count / 5));
+      } catch (error) {
+        console.log(error);
       }
-      closeMenu();
     },
-    [ing, past, request, canceled, waiting],
+    [reservationData, state, page],
   );
 
   const onPressItem = useCallback(v => {
     props.navigation.navigate('HistoryDetail', {
-      user: props.route.params.user,
+      token: props.route.params.token,
       id: v,
     });
   }, []);
+
+  const onEndReached = useCallback(() => {
+    console.log('end');
+    if (page < endPage) {
+      setPage(page + 1);
+      console.log('pagignation');
+    }
+  }, [page, endPage]);
 
   const openMenu = useCallback(() => setVisible(true), []);
 
   const closeMenu = useCallback(() => setVisible(false), []);
 
   const renderList = ({item}) => {
+    console.log(item);
     const uri =
       'http://172.30.1.27:3005' +
       item.product.img.replace(/\\/gi, '/').replace(/public/gi, '');
@@ -101,26 +79,47 @@ const History = props => {
       <TouchableOpacity
         onPress={() => onPressItem(item.id)}
         style={styles.list_item}>
+        <View style={styles.list_item_info}>
+          <View style={styles.list_item_img_container}>
+            <Image
+              source={{
+                uri,
+              }}
+              style={styles.list_item_img}
+            />
+          </View>
+          <View style={styles.list_item_texts}>
+            <Text>[{item.product.category}]</Text>
+            <Text>{item.product.name}</Text>
+          </View>
+        </View>
         <View style={styles.list_item_ymd}>
-          <Text>
+          <Text style={styles.text}>예약 일자 : </Text>
+          <Text style={styles.text}>
             {item.createdAt.substr(0, 4) +
-              '.' +
+              '. ' +
               item.createdAt.substr(5, 2) +
-              '.' +
+              '. ' +
               item.createdAt.substr(8, 2)}
           </Text>
         </View>
-        <View style={styles.list_item_info}>
-          <Image
-            source={{
-              uri,
-            }}
-            style={styles.list_item_img}
-          />
-          <View style={styles.list_item_texts}>
-            <Text>{item.state}</Text>
-            <Text>{item.product.name}</Text>
-          </View>
+        <View style={styles.list_item_ymd}>
+          <Text style={styles.text}>수강 일자 : </Text>
+          <Text style={styles.text}>
+            {String(item.schedule.ymd).substr(0, 4) +
+              '. ' +
+              String(item.schedule.ymd).substr(4, 2) +
+              '. ' +
+              String(item.schedule.ymd).substr(6, 2) +
+              ' / ' +
+              item.schedule.start.substr(0, 2) +
+              ':' +
+              item.schedule.start.substr(2, 2) +
+              ' ~ ' +
+              item.schedule.end.substr(0, 2) +
+              ' : ' +
+              item.schedule.start.substr(2, 2)}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -137,49 +136,72 @@ const History = props => {
           visible={visible}
           onDismiss={closeMenu}
           anchor={
-            <TouchableOpacity onPress={openMenu}>
-              <Text>{state}</Text>
+            <TouchableOpacity onPress={openMenu} style={styles.menu_title}>
+              <Text>
+                {state === 0
+                  ? '예약 중 '
+                  : state === 1
+                  ? '수강 완료 '
+                  : state === 2
+                  ? '취소 요청 '
+                  : state === 3
+                  ? '취소 '
+                  : '예약 대기 '}
+              </Text>
+              <Text>{`${reservationCount}건 `}</Text>
+              <Icon name="chevron-down-outline" color="black" size={15} />
             </TouchableOpacity>
           }>
           <Menu.Item
             onPress={() => {
-              onClickState(4);
+              setState(4);
+              setPage(1);
+              closeMenu();
             }}
             title="예약 대기"
           />
           <Menu.Item
             onPress={() => {
-              onClickState(0);
+              setState(0);
+              setPage(1);
+              closeMenu();
             }}
             title="예약 중"
           />
           <Menu.Item
             onPress={() => {
-              onClickState(1);
+              setState(1);
+              setPage(1);
+              closeMenu();
             }}
             title="수강 완료"
           />
           <Menu.Item
             onPress={() => {
-              onClickState(2);
+              setState(2);
+              setPage(1);
+              closeMenu();
             }}
             title="취소 요청"
           />
           <Menu.Item
             onPress={() => {
-              onClickState(3);
+              setState(3);
+              setPage(1);
+              closeMenu();
             }}
             title="취소"
           />
         </Menu>
       </View>
-      <Divider />
 
       <View style={styles.flatlist}>
         <FlatList
-          data={selected}
+          data={reservationData}
           renderItem={renderList}
           keyExtractor={item => item.id}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.1}
         />
       </View>
     </View>

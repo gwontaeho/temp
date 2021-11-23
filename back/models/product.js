@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("product", {
     name: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING(36),
       allowNull: false,
     },
     price: {

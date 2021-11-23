@@ -1,32 +1,72 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
+import DateRangePicker from "@mui/lab/DateRangePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
+import Button from "@mui/material/Button";
 
 import axios from "axios";
 
-import { Container, Nav, Header, List, Item } from "./styles";
+import {
+  Container,
+  Header,
+  Nav,
+  Condition,
+  ListHeader,
+  List,
+  Item,
+} from "./styles";
 
 const SellerReservation = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const [reservationData, setReservationData] = useState([]);
+  const [reservationCount, setReservationCount] = useState(0);
   const [state, setState] = useState(0);
+  const [checked, setChecked] = useState(false);
+  const [value, setValue] = useState([null, null]);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
 
   useEffect(() => {
-    requestReservationData(0);
-  }, [state]);
+    requestReservationData();
+  }, [state, page]);
+
+  useEffect(() => {
+    if (!checked) requestReservationData();
+  }, [checked]);
 
   const requestReservationData = useCallback(async () => {
+    console.log("조회합니다");
+    console.log(props.reservationCountData);
     try {
-      const response = await axios.get(`/api/reservation?state=${state}`, {
-        headers: { token: auth.token },
-      });
-      console.log(response.data);
-      setReservationData(response.data);
+      const response = await axios.post(
+        "/api/reservation/lookup",
+        {
+          state,
+          value,
+          checked,
+          page,
+        },
+        {
+          headers: { token: auth.token },
+        }
+      );
+
+      setReservationCount(response.data.count);
+      setPages(Math.ceil(response.data.count / 5));
+      setReservationData(response.data.data);
     } catch (error) {
       console.log(error);
     }
-  }, [state]);
+  }, [state, value, checked, page]);
 
   const reservationList = reservationData.map((v) => {
     const scheduleYmd =
@@ -56,21 +96,7 @@ const SellerReservation = (props) => {
             src={v.product.img.replace(/\\/gi, "/").replace(/public/gi, "")}
           />
           <div>
-            <div>
-              [
-              {v.product.category === "flower"
-                ? "플라워"
-                : v.product.category === "art"
-                ? "미술"
-                : v.product.category === "cooking"
-                ? "요리"
-                : v.product.category === "handmade"
-                ? "수공예"
-                : v.product.category === "activity"
-                ? "액티비티"
-                : "기타"}
-              ]
-            </div>
+            <div>[{v.product.category}]</div>
             <div>{v.product.name}</div>
           </div>
         </div>
@@ -102,37 +128,110 @@ const SellerReservation = (props) => {
 
   return (
     <Container>
+      <Header>예약 내역</Header>
       <Nav>
-        <div onClick={() => setState(4)}>
+        <div
+          onClick={() => {
+            setState(4);
+            setPage(1);
+          }}
+          className={state === 4 ? "current" : ""}
+        >
           <div>예약 대기</div>
           <div>{props.reservationCountData.e}</div>
         </div>
-        <div onClick={() => setState(0)}>
+        <div
+          onClick={() => {
+            setState(0);
+            setPage(1);
+          }}
+          className={state === 0 ? "current" : ""}
+        >
           <div>예약 중</div>
           <div>{props.reservationCountData.a}</div>
         </div>
-        <div onClick={() => setState(1)}>
+        <div
+          onClick={() => {
+            setState(1);
+            setPage(1);
+          }}
+          className={state === 1 ? "current" : ""}
+        >
           <div>수강 완료</div>
           <div>
             {props.reservationCountData.b + props.reservationCountData.f}
           </div>
         </div>
-        <div onClick={() => setState(2)}>
+        <div
+          onClick={() => {
+            setState(2);
+            setPage(1);
+          }}
+          className={state === 2 ? "current" : ""}
+        >
           <div>취소 요청</div>
           <div>{props.reservationCountData.c}</div>
         </div>
-        <div onClick={() => setState(3)}>
+        <div
+          onClick={() => {
+            setState(3);
+            setPage(1);
+          }}
+          className={state === 3 ? "current" : ""}
+        >
           <div>취소</div>
           <div>{props.reservationCountData.d}</div>
         </div>
       </Nav>
-      <Header>
+      <Condition>
+        <div>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={checked}
+                  onChange={(e) => setChecked(e.target.checked)}
+                />
+              }
+              label="날짜 선택"
+              labelPlacement="start"
+            />
+          </FormGroup>
+          {checked ? (
+            <>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DateRangePicker
+                  startText=""
+                  endText=""
+                  value={value}
+                  onChange={(newValue) => {
+                    setValue(newValue);
+                  }}
+                  renderInput={(startProps, endProps) => (
+                    <React.Fragment>
+                      <TextField {...startProps} />
+                      <Box sx={{ mx: 1 }} />
+                      <TextField {...endProps} />
+                    </React.Fragment>
+                  )}
+                />
+              </LocalizationProvider>
+              <Button variant="outlined" onClick={requestReservationData}>
+                조회
+              </Button>
+              <div>{reservationCount} 건</div>
+            </>
+          ) : null}
+        </div>
+        <Pagination page={page} count={pages} onChange={(e, v) => setPage(v)} />
+      </Condition>
+      <ListHeader>
         <div>클래스 정보</div>
         <div>수강 일자</div>
         <div>예약 일자</div>
         <div>예약 인원</div>
         <div>예약 상태</div>
-      </Header>
+      </ListHeader>
       <List>{reservationList}</List>
     </Container>
   );

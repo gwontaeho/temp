@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Modal from "react-modal";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -10,15 +13,13 @@ import {
   QnaItem,
   Text,
   ModalHeader,
-  QnaTextarea,
+  ModalBox,
 } from "./styles";
-
-Modal.setAppElement("#root");
 
 const SellerQnaDetail = (props) => {
   const auth = useSelector((state) => state.auth);
 
-  const [isOpend, setIsOpend] = useState(false);
+  const [open, setOpen] = useState(false);
   const [qnaData, setQnaData] = useState({});
   const [answerText, setAnswerText] = useState("");
 
@@ -38,20 +39,7 @@ const SellerQnaDetail = (props) => {
     }
   }, []);
 
-  const openModal = useCallback(() => {
-    setIsOpend(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpend(false);
-  }, []);
-
-  const onChangeAnserText = useCallback((e) => {
-    setAnswerText(e.target.value);
-    console.log(e.target.value);
-  }, []);
-
-  const onClickSave = useCallback(async () => {
+  const requestUpdateQna = useCallback(async () => {
     try {
       await axios.put(
         "/api/qna/answer",
@@ -61,9 +49,9 @@ const SellerQnaDetail = (props) => {
         },
         { headers: { token: auth.token } }
       );
-      closeModal();
       props.requestUnansweredQnaData(auth);
       requestQnaData();
+      setOpen(false);
     } catch (error) {
       console.log(error);
     }
@@ -72,49 +60,58 @@ const SellerQnaDetail = (props) => {
   return Object.keys(qnaData).length === 0 ? null : (
     <Container>
       <Modal
-        isOpen={isOpend}
-        onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={false}
-        style={{
-          content: {
-            width: "720px",
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-          },
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setAnswerText("");
         }}
       >
-        <ModalHeader>
-          <div>문의 답변</div>
-          <div className="header-btns">
-            <div onClick={onClickSave}>저장</div>
-            <div onClick={closeModal}>닫기</div>
-          </div>
-        </ModalHeader>
-        <QnaTextarea>
-          <textarea
-            maxLength="200"
-            rows="5"
+        <Box sx={ModalBox}>
+          <ModalHeader>
+            <div>답변작성</div>
+            <div className="buttons">
+              <div
+                onClick={() => {
+                  requestUpdateQna();
+                  setOpen(false);
+                  setAnswerText("");
+                }}
+              >
+                저장
+              </div>
+              <div
+                onClick={() => {
+                  setOpen(false);
+                  setAnswerText("");
+                }}
+              >
+                취소
+              </div>
+            </div>
+          </ModalHeader>
+          <TextField
+            maxlength={60}
+            fullWidth
+            multiline
+            maxRows={4}
             value={answerText}
-            onChange={onChangeAnserText}
+            onChange={(e) => setAnswerText(e.target.value)}
           />
-        </QnaTextarea>
+        </Box>
       </Modal>
+
       <Header>문의 상세</Header>
       <Qnas>
         <QnaItem>
-          <div>작성자</div>
           <div>클래스 명</div>
+          <div>작성자</div>
           <div>문의일자</div>
           <div>답변일자</div>
           <div>상태</div>
         </QnaItem>
         <QnaItem>
+          <div className="product_info">{`[${qnaData.product.category}] ${qnaData.product.name}`}</div>
           <div>{qnaData.userId}</div>
-          <div>{qnaData.product.name}</div>
           <div>{qnaData.createdAt.substr(0, 10)}</div>
           {qnaData.state === 0 ? (
             <div></div>
@@ -122,9 +119,11 @@ const SellerQnaDetail = (props) => {
             <div>{qnaData.updatedAt.substr(0, 10)}</div>
           )}
           <div>{qnaData.state === 0 ? "미답변" : "답변완료"}</div>
-          <div onClick={openModal}>
-            {qnaData.state === 0 ? "답변하기" : null}
-          </div>
+          {qnaData.state === 0 ? (
+            <div onClick={() => setOpen(true)} className="answer">
+              "답변하기"
+            </div>
+          ) : null}
         </QnaItem>
       </Qnas>
       <Header>문의 내용</Header>

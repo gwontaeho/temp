@@ -10,6 +10,10 @@ export const Container = styled.div`
 
 export const IndexContainer = styled.div`
   width: 720px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Title = styled.div`
@@ -18,6 +22,8 @@ export const Title = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
 `;
 
 export const TypeContainer = styled.div`
@@ -26,12 +32,19 @@ export const TypeContainer = styled.div`
   justify-content: center;
   align-items: center;
   & a {
-    border: 1px solid black;
+    width: 240px;
+    height: 240px;
+    margin: 24px;
+    background-color: rgba(25, 118, 210, 0.4);
     border-radius: 50%;
-    flex: 1;
-    height: 100%;
+    font-size: 2rem;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    :hover {
+      background-color: rgba(25, 118, 210, 0.8);
+      transition: 0.2s;
+    }
   }
 `;

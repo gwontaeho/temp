@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, TextInput, Image} from 'react-native';
 import {Divider} from 'react-native-paper';
-
+import Profile from '../../../image/profile/profile.png';
 import axios from '../../../axios';
 
 import styles from './styles';
@@ -19,7 +19,7 @@ const Qna = props => {
   const requestQnaData = useCallback(async () => {
     try {
       const response = await axios.get(`/api/qna?productId=${props.productId}`);
-
+      console.log(response.data);
       setQnaData(response.data);
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ const Qna = props => {
   const requestCreateQna = useCallback(async () => {
     try {
       const response = await axios.post(
-        '/api/qna/question',
+        '/api/qna',
         {
           question,
           sellerId: props.sellerId,
@@ -45,23 +45,53 @@ const Qna = props => {
     }
   }, [question]);
 
-  const onPressCreate = useCallback(() => {
-    console.log(question);
-  }, [question]);
-
   const dataList = qnaData.map(v => {
     return (
       <View key={v.id} style={styles.data}>
         <View style={styles.question}>
-          <Text>{v.userId}</Text>
-          <Text>{v.createdAt.substr(0, 10)}</Text>
-          <Text>{v.question}</Text>
+          <View style={styles.img_container}>
+            <Image
+              source={
+                v.user.img === null
+                  ? Profile
+                  : {
+                      uri:
+                        'http://172.30.1.27:3005' +
+                        v.user.img.replace(/\\/gi, '/').replace(/public/gi, ''),
+                    }
+              }
+              style={styles.img}
+            />
+          </View>
+          <View>
+            <Text style={styles.qna_text}>{v.userId}</Text>
+            <Text style={styles.qna_text}>{v.createdAt.substr(0, 10)}</Text>
+            <Text style={styles.qna_text}>{v.question}</Text>
+          </View>
         </View>
         {v.state === 0 ? null : (
           <View style={styles.answer}>
-            <Text>{v.sellerId}</Text>
-            <Text>{v.updatedAt.substr(0, 10)}</Text>
-            <Text>{v.answer}</Text>
+            <View style={styles.img_container}>
+              <Image
+                source={
+                  v.seller.img === null
+                    ? Profile
+                    : {
+                        uri:
+                          'http://172.30.1.27:3005' +
+                          v.seller.img
+                            .replace(/\\/gi, '/')
+                            .replace(/public/gi, ''),
+                      }
+                }
+                style={styles.img}
+              />
+            </View>
+            <View>
+              <Text style={styles.qna_text}>{v.sellerId}</Text>
+              <Text style={styles.qna_text}>{v.updatedAt.substr(0, 10)}</Text>
+              <Text style={styles.qna_text}>{v.answer}</Text>
+            </View>
           </View>
         )}
       </View>
@@ -74,10 +104,10 @@ const Qna = props => {
         <TouchableOpacity
           style={styles.write}
           onPress={() => setDisplay('flex')}>
-          <Text>문의 작성하기</Text>
+          <Text style={styles.qna_text}>문의 작성하기</Text>
         </TouchableOpacity>
       </View>
-      <View style={{display: display}}>
+      <View style={[{display: display}, styles.write_question]}>
         <TextInput
           style={styles.input}
           multiline={true}
@@ -87,12 +117,12 @@ const Qna = props => {
         />
         <View style={styles.buttons}>
           <TouchableOpacity style={styles.button} onPress={requestCreateQna}>
-            <Text>확인</Text>
+            <Text style={styles.qna_text}>확인</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => setDisplay('none')}>
-            <Text>취소</Text>
+            <Text style={styles.qna_text}>취소</Text>
           </TouchableOpacity>
         </View>
       </View>

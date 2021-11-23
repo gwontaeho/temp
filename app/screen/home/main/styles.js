@@ -12,36 +12,62 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  logo_image: {
+    height: '100%',
+    width: '30%',
   },
 
   banner: {
     width: '100%',
     height: 180,
-    backgroundColor: 'ivory',
+  },
+  banner_image: {
+    width: '100%',
+    height: '100%',
   },
 
   categories: {
+    backgroundColor: 'white',
+    paddingVertical: 12,
     width: '100%',
     display: 'flex',
-    borderWidth: 1,
   },
   row: {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
+    height: 72,
   },
+  row_all: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 48,
+    flexDirection: 'row',
+  },
+
   category: {
+    padding: 6,
     flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 60,
+  },
+  category_image: {
+    width: 36,
+    height: 36,
+  },
+  category_text: {
+    fontSize: 12,
+    color: 'black',
   },
 
   classList: {
     width: '100%',
-    backgroundColor: 'lightgray',
-    borderWidth: 1,
+    backgroundColor: 'white',
+    paddingBottom: 12,
   },
   title: {
     width: '100%',
@@ -49,6 +75,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     paddingLeft: 24,
+  },
+  title_text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
   },
   list: {
     width: '100%',
@@ -65,14 +96,25 @@ const styles = StyleSheet.create({
   },
   content_address: {
     position: 'absolute',
-    bottom: 48,
-    color: 'white',
+    bottom: 0,
+  },
+  content_view: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 6,
   },
   content_text: {
-    height: 24,
-    lineHeight: 24,
     fontSize: 10,
-    paddingLeft: 12,
+  },
+  content_price: {
+    fontSize: 13,
+    color: 'black',
+  },
+
+  footer: {
+    width: '100%',
+    height: 120,
   },
 });
 

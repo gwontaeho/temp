@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
+    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -16,7 +17,6 @@ const styles = StyleSheet.create({
   header_space: {
     flex: 1,
     padding: 12,
-    borderWidth: 1,
   },
 
   sort: {
@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
   content: {
     width: '50%',
     padding: 6,
-    marginBottom: 60,
   },
   content_image: {
     width: '100%',
@@ -49,15 +48,16 @@ const styles = StyleSheet.create({
   },
   content_address: {
     position: 'absolute',
-    bottom: 54,
-    color: 'white',
-    marginLeft: 6,
+    bottom: 0,
+  },
+  content_view: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 6,
   },
   content_text: {
     fontSize: 10,
-    height: 24,
-    lineHeight: 24,
-    paddingLeft: 12,
   },
 });
 

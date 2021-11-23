@@ -13,9 +13,9 @@ const Detail = props => {
     return (
       <View key={v.title}>
         <View style={styles.title}>
-          <Text>{v.title}</Text>
+          <Text style={styles.title_text}>{v.title}</Text>
         </View>
-        <Text>{v.text}</Text>
+        <Text style={styles.text}>{v.text}</Text>
       </View>
     );
   });

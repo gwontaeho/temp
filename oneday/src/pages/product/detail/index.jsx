@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Container, List, Item, Map } from "./styles";
+import { Container, Header, List, Item, Map } from "./styles";
 
 const { kakao } = window;
 const Detail = (props) => {
@@ -41,6 +41,7 @@ const Detail = (props) => {
 
   return (
     <Container>
+      <Header>상세정보</Header>
       <List>{detailList}</List>
       <Map>
         <div className="header">찾아오시는 길</div>

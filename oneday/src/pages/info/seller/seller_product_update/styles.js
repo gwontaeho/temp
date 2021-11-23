@@ -11,49 +11,40 @@ export const Header = styled.div`
   align-items: center;
   padding-left: 24px;
   border-bottom: 1px solid lightgray;
-  margin-bottom: 24px;
 `;
 
 export const Buttons = styled.div`
   height: 72px;
   width: calc(100% - 24px);
-  margin-bottom: 24px;
   display: flex;
   align-items: center;
-  border: 1px solid lightgray;
   padding-left: 24px;
-
-  a {
+  border-bottom: 1px solid lightgray;
+  button {
     margin-right: 24px;
-    cursor: pointer;
   }
 `;
 
 export const Infos = styled.div`
   width: 100%;
+  .title {
+    width: 240px;
+  }
+  border-bottom: 1px solid lightgray;
 `;
 
 export const Img = styled.div`
   display: flex;
   width: calc(100% - 24px);
+  height: 240px;
   align-items: center;
-  border: 1px solid lightgray;
   padding-left: 24px;
-  margin-bottom: 24px;
-  border-style: dotted;
 
   img {
-    width: 360px;
-    height: 240px;
-    margin: 24px 0 24px 0;
+    width: 196px;
+    height: 196px;
+    border-radius: 24px;
     object-fit: cover;
-  }
-
-  .title {
-    display: flex;
-    align-items: center;
-    width: 240px;
-    height: 72px;
   }
 
   input {
@@ -67,127 +58,93 @@ export const Info = styled.div`
   width: calc(100% - 24px);
   align-items: center;
   padding-left: 24px;
-  margin-bottom: 24px;
-  border: 1px solid lightgray;
-  border-style: dotted;
-  .title {
-    width: 240px;
-  }
-  input {
-    width: 240px;
-    height: 48px;
-    border: 0;
-    border-bottom: 1px solid gray;
-  }
 `;
 
 export const Address = styled.div`
   display: flex;
   align-items: center;
   width: calc(100% - 24px);
-  border: 1px solid lightgray;
   padding-left: 24px;
-  margin-bottom: 24px;
-  border-style: dotted;
 
-  .title {
-    width: 240px;
-  }
-
-  .box {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .oldAddress {
+  .type {
     display: flex;
     align-items: center;
     height: 72px;
-  }
-
-  .addressButtons {
-    height: 72px;
-    display: flex;
-    align-items: center;
-    .addressButton {
-      cursor: pointer;
+    > * {
       margin-right: 24px;
-      color: gray;
     }
-    .selected {
-      color: black;
-    }
-  }
-  .inputs {
-    display: none;
-    flex-direction: column;
-  }
-  input {
-    width: 360px;
-    height: 48px;
-    border: 0;
-    border-bottom: 1px solid gray;
-    margin-bottom: 24px;
-  }
-  .open {
-    display: flex;
   }
 `;
 
 export const Details = styled.div`
-  width: calc(100% - 48px);
-  padding: 0 24px 0 24px;
-  border: 1px solid lightgray;
-  border-style: dotted;
+  width: 100%;
+
   .title {
+    padding-left: 24px;
+    width: calc(100% - 24px);
     display: flex;
     align-items: center;
     height: 72px;
+    line-height: 72px;
+    > * {
+      margin-right: 24px;
+    }
   }
-  .add {
-    display: flex;
-    align-items: center;
-    height: 72px;
-    margin-left: 24px;
-  }
+
   .details {
+    width: calc(100% - 24px);
+    padding-left: 24px;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    border-bottom: 1px solid lightgray;
 
     .detail {
       display: flex;
-      width: 100%;
       flex-direction: column;
       margin-bottom: 24px;
 
       .header {
-        height: 72px;
+        height: 96px;
         display: flex;
         align-items: center;
-        margin-bottom: 24px;
-
         input {
-          width: 240px;
-          height: 48px;
-          border: 0;
-          border-bottom: 1px solid gray;
-        }
-
-        .removeButton {
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          padding-left: 12px;
+          padding-right: 12px;
+          width: 600px;
           height: 36px;
-          width: 48px;
-          background-color: white;
+          border: 1px solid lightgray;
+        }
+        .removeButton {
+          border: 1px solid lightgray;
+          margin-left: 24px;
+          padding: 6px;
+          border-radius: 6px;
+          cursor: pointer;
+          color: gray;
+          :hover {
+            color: lightgray;
+          }
         }
       }
       textarea {
+        padding: 12px;
         height: 240px;
+        width: 600px;
         resize: none;
         border: 1px solid lightgray;
       }
     }
   }
 `;
+
+export const ModalBox = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 720,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 6,
+};

@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
-import profile from "../../../images/profile.png";
+import profile from "../../../images/profile/profile.png";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
-import { Container, Img, Buttons } from "./styles";
+import { Container, Img } from "./styles";
 
 const User = (props) => {
   const idRegExp = /^[a-zA-Z0-9]{4,12}$/;
@@ -11,13 +13,6 @@ const User = (props) => {
   const birthRegExp = /^[0-9]{8}$/;
   const phoneRegExp = /^[0-9]{1,11}$/;
 
-  const idRef = React.createRef();
-  const passwordRef = React.createRef();
-  const passwordCheckRef = React.createRef();
-  const nameRef = React.createRef();
-  const birthRef = React.createRef();
-  const phoneRef = React.createRef();
-
   const [img, setImg] = useState();
   const [id, setId] = useState("");
   const [idCheck, setIdCheck] = useState(false);
@@ -25,7 +20,7 @@ const User = (props) => {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [name, setName] = useState("");
   const [birth, setBirth] = useState("");
-  const [gender, setGender] = useState("M");
+  const [gender, setGender] = useState("m");
   const [phone, setPhone] = useState("");
 
   const onClickSignUp = useCallback(async () => {
@@ -64,10 +59,6 @@ const User = (props) => {
     }
   }, [img, id, idCheck, password, passwordCheck, name, birth, gender, phone]);
 
-  const validation = useCallback((v) => {
-    v.current.style.display = "block";
-  }, []);
-
   const onClickCheckId = useCallback(async () => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
 
@@ -80,67 +71,6 @@ const User = (props) => {
     }
   }, [id]);
 
-  const onChangeId = useCallback(
-    (e) => {
-      validation(idRef);
-      setIdCheck(false);
-      setId(e.target.value);
-    },
-    [idRef]
-  );
-
-  const onChangePassword = useCallback(
-    (e) => {
-      validation(passwordRef);
-      setPassword(e.target.value);
-    },
-    [passwordRef]
-  );
-
-  const onChangePasswordCheck = useCallback(
-    (e) => {
-      validation(passwordCheckRef);
-      setPasswordCheck(e.target.value);
-    },
-    [passwordCheckRef]
-  );
-
-  const onChangeName = useCallback(
-    (e) => {
-      validation(nameRef);
-      setName(e.target.value);
-    },
-    [nameRef]
-  );
-
-  const onChangeBirth = useCallback(
-    (e) => {
-      validation(birthRef);
-      setBirth(e.target.value);
-    },
-    [birthRef]
-  );
-
-  const onChangeGender = useCallback((e) => {
-    setGender(e.target.value);
-  }, []);
-
-  const onChangePhone = useCallback(
-    (e) => {
-      validation(phoneRef);
-      setPhone(e.target.value);
-    },
-    [phoneRef]
-  );
-
-  const onChangeImg = useCallback((e) => {
-    setImg(e.target.files[0]);
-  }, []);
-
-  const onClickCancel = useCallback(() => {
-    return props.history.replace("/");
-  }, []);
-
   return (
     <Container>
       <Img>
@@ -150,115 +80,82 @@ const User = (props) => {
             id="input-file"
             type="file"
             accept="image/gif,image/jpeg,image/png"
-            onChange={onChangeImg}
+            onChange={(e) => setImg(e.target.files[0])}
           />
         </label>
       </Img>
-
-      <label>
-        <div className="title">
-          <div>아이디</div>
-          <div className="idCheck" onClick={onClickCheckId}>
-            중복확인
-          </div>
-        </div>
-        <div className="contents">
-          <input
-            value={id}
-            type="text"
-            maxLength="12"
-            autoFocus
-            onChange={onChangeId}
-          />
-          <div ref={idRef}>{idRegExp.test(id) && idCheck ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">비밀번호</div>
-        <div className="contents">
-          <input
-            value={password}
-            type="password"
-            maxLength="24"
-            onChange={onChangePassword}
-          />
-          <div ref={passwordRef}>
-            {passwordRegExp.test(password) ? "o" : "x"}
-          </div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">비밀번호 확인</div>
-        <div className="contents">
-          <input
-            value={passwordCheck}
-            type="password"
-            maxLength="24"
-            onChange={onChangePasswordCheck}
-          />
-          <div ref={passwordCheckRef}>
-            {passwordRegExp.test(passwordCheck) && password === passwordCheck
-              ? "o"
-              : "x"}
-          </div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">이름</div>
-        <div className="contents">
-          <input
-            value={name}
-            type="text"
-            maxLength="12"
-            onChange={onChangeName}
-          />
-          <div ref={nameRef}>{nameRegExp.test(name) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">생년월일</div>
-        <div className="contents">
-          <input
-            value={birth}
-            type="text"
-            placeholder="생년월일 (8자리)"
-            maxLength="8"
-            onChange={onChangeBirth}
-          />
-          <div ref={birthRef}>{birthRegExp.test(birth) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">성별</div>
-        <select onChange={onChangeGender}>
-          <option value="M">남자</option>
-          <option value="F">여자</option>
-          <option value="N">선택안함</option>
-        </select>
-      </label>
-
-      <label>
-        <div className="title">휴대전화</div>
-        <div className="contents">
-          <input
-            value={phone}
-            type="text"
-            maxLength="11"
-            onChange={onChangePhone}
-          />
-          <div ref={phoneRef}>{phoneRegExp.test(phone) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <Buttons>
-        <div onClick={onClickSignUp}>가입하기</div>
-        <div onClick={onClickCancel}>취소</div>
-      </Buttons>
+      <div className="overlap">
+        <Button variant="contained" onClick={onClickCheckId}>
+          중복확인
+        </Button>
+      </div>
+      <TextField
+        label="아이디"
+        variant="outlined"
+        error={!idRegExp.test(id) ? true : !idCheck ? true : false}
+        onChange={(e) => {
+          setIdCheck(false);
+          setId(e.target.value);
+        }}
+      />
+      <TextField
+        label="비밀번호"
+        variant="outlined"
+        type="password"
+        error={!passwordRegExp.test(password) ? true : false}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        label="비밀번호 확인"
+        variant="outlined"
+        type="password"
+        error={
+          !passwordRegExp.test(passwordCheck)
+            ? true
+            : password !== passwordCheck
+            ? true
+            : false
+        }
+        onChange={(e) => setPasswordCheck(e.target.value)}
+      />
+      <TextField
+        label="이름"
+        variant="outlined"
+        error={!nameRegExp.test(name) ? true : false}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <div className="gender">
+        <Button
+          variant={gender === "m" ? "outlined" : "text"}
+          onClick={() => setGender("m")}
+        >
+          남자
+        </Button>
+        <Button
+          variant={gender === "f" ? "outlined" : "text"}
+          onClick={() => setGender("f")}
+        >
+          여자
+        </Button>
+      </div>
+      <TextField
+        label="생년월일"
+        variant="outlined"
+        error={!birthRegExp.test(birth) ? true : false}
+        onChange={(e) => setBirth(e.target.value)}
+      />
+      <TextField
+        label="연락처"
+        variant="outlined"
+        error={!phoneRegExp.test(phone) ? true : false}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <Button variant="contained" onClick={onClickSignUp}>
+        회원가입
+      </Button>
+      <Button variant="outlined" onClick={() => props.history.replace("/")}>
+        취소
+      </Button>
     </Container>
   );
 };

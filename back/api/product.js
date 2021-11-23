@@ -5,11 +5,8 @@ const router = express.Router();
 const fs = require("fs");
 const { Op } = require("sequelize");
 
-const { sequelize, Seller } = require("../models");
+const { sequelize, Seller, Product, Schedule, Review } = require("../models");
 const { verifyToken } = require("../jwt");
-const Product = require("../models").Product;
-const Schedule = require("../models").Schedule;
-const Review = require("../models").Review;
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -34,17 +31,54 @@ router.get("/main", async (req, res, next) => {
   ////////////////////////////////////////////////////////////////////////
   try {
     const popProduct = await Product.findAll({
-      attributes: ["id", "name", "address", "category", "price", "img"],
+      include: [
+        {
+          model: Review,
+          attributes: [
+            "productId",
+            [
+              sequelize.fn(
+                "round",
+                sequelize.fn("avg", sequelize.col("rating")),
+                1
+              ),
+              "rating",
+            ],
+          ],
+        },
+      ],
+      attributes: { exclude: ["detail"] },
+      subQuery: false,
+      group: ["id"],
       order: [["sold", "DESC"]],
       limit: 10,
     });
     const newProduct = await Product.findAll({
-      attributes: ["id", "name", "address", "category", "price", "img"],
+      include: [
+        {
+          model: Review,
+          attributes: [
+            "productId",
+            [
+              sequelize.fn(
+                "round",
+                sequelize.fn("avg", sequelize.col("rating")),
+                1
+              ),
+              "rating",
+            ],
+          ],
+        },
+      ],
+      attributes: { exclude: ["detail"] },
+      subQuery: false,
+      group: ["id"],
       order: [["createdAt", "DESC"]],
       limit: 10,
     });
     return res.status(200).send({ popProduct, newProduct });
   } catch (error) {
+    console.log(error);
     return res.status(500).send();
   }
 });
@@ -53,6 +87,33 @@ router.get("/category", async (req, res, next) => {
   /////////////////////////////////////////////////////////////////
   //  카테고리
   /////////////////////////////////////////////////////////////////
+  let category = "";
+  switch (req.query.name) {
+    case "all":
+      category = { [Op.ne]: null };
+      break;
+    case "flower":
+      category = "플라워";
+      break;
+    case "art":
+      category = "미술";
+      break;
+    case "cooking":
+      category = "요리";
+      break;
+    case "handmade":
+      category = "수공예";
+      break;
+    case "activity":
+      category = "액티비티";
+      break;
+    case "etc":
+      category = "기타";
+      break;
+    default:
+      break;
+  }
+
   let order = [[]];
   switch (req.query.sort) {
     case "rating":
@@ -89,13 +150,14 @@ router.get("/category", async (req, res, next) => {
         },
       ],
       where: {
-        category: req.query.name === "all" ? { [Op.ne]: null } : req.query.name,
+        category,
       },
       group: ["id"],
       order: order,
     });
     return res.status(200).json(findClass);
   } catch (error) {
+    console.log(error);
     return res.status(500).send();
   }
 });
@@ -150,7 +212,7 @@ router.get("/:id", async (req, res, next) => {
         },
         {
           model: Seller,
-          attributes: ["company"],
+          attributes: ["company", "img", "introduce"],
         },
         {
           model: Review,
@@ -201,23 +263,27 @@ router.put(
   verifyToken,
   upload.single("img"),
   async (req, res, next) => {
-    if (req.body.imgCheck === "1") {
-      fs.unlink(req.body.oldImg, (error) => {
-        if (error) console.log(error);
-      });
-    }
     try {
       await Product.update(
         {
-          img: req.body.imgCheck === "0" ? req.body.oldImg : req.file.path,
+          img:
+            req.body.imgCheck === "false"
+              ? req.body.originalImg
+              : req.file.path,
           name: req.body.name,
           price: req.body.price,
           time: req.body.time,
           address: req.body.address,
           detail: req.body.detail,
+          category: req.body.category,
         },
         { where: { id: req.body.productId } }
       );
+      if (req.body.imgCheck === "true") {
+        fs.unlink(req.body.originalImg, (error) => {
+          if (error) console.log(error);
+        });
+      }
       return res.status(200).send();
     } catch (error) {
       if (req.file)

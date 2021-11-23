@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import constants from "./constants";
+import TextField from "@mui/material/TextField";
 
 import Calendar from "./calendar/index";
 
@@ -21,7 +21,7 @@ import {
   Detail,
 } from "./styles";
 
-const ClassDetail = ({ match }) => {
+const SellerProductDetail = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const today = new Date();
@@ -42,33 +42,46 @@ const ClassDetail = ({ match }) => {
   const [detail, setDetail] = useState([]);
   const [ym, setYm] = useState(todayYmd.substr(0, 6));
   const [scheduleData, setScheduleData] = useState([]); // 스케줄 데이터
+  const [rating, setRating] = useState({ rating: 0, count: 0 });
 
   const [date, setDate] = useState(todayYmd); // 클릭된 날짜 (기본값 오늘)
 
-  const [hour, setHour] = useState("00"); // 스케줄 시작 시각
-  const [minute, setMinute] = useState("00"); // 스케줄 시작 분
-  const [endHour, setEndHour] = useState("00"); // 스케줄 종료 시각
-  const [endMinute, setEndMinute] = useState("00"); // 스케줄 종료 분
   const [personnel, setPersonnel] = useState(1); // 스케줄 인원
+
+  const [start, setStart] = useState("0000");
+  const [end, setEnd] = useState("0000");
 
   //클래스 데이터 요청
   useEffect(() => {
     requestProductData();
+    requestRating();
   }, []);
 
   useEffect(() => {
-    requestScheduleData(match.params.id);
+    requestScheduleData(props.match.params.id);
   }, [ym]);
 
   const requestProductData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `/api/product/seller/${match.params.id}`,
+        `/api/product/seller/${props.match.params.id}`,
         { headers: { token: auth.token } }
       );
       console.log(response.data);
       setProductData(response.data);
       setDetail(JSON.parse(response.data.detail));
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const requestRating = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `/api/review/rating/${props.match.params.id}`,
+        { headers: { token: auth.token } }
+      );
+      setRating(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -94,10 +107,7 @@ const ClassDetail = ({ match }) => {
 
   // 스케줄 추가
   const onClickAdd = useCallback(async () => {
-    const start = hour + minute;
-    const end = endHour + endMinute;
-
-    if (date < todayYmd) {
+    if (date <= todayYmd) {
       return alert("지난 날짜는 추가할 수 없습니다.");
     } else if (Number(start) >= Number(end)) {
       return alert("클래스 시작시간이 종료시간보다 큽니다.");
@@ -126,16 +136,7 @@ const ClassDetail = ({ match }) => {
       console.log(error);
     }
     requestScheduleData(productData.id);
-  }, [
-    productData,
-    date,
-    hour,
-    minute,
-    endHour,
-    endMinute,
-    personnel,
-    requestScheduleData,
-  ]);
+  }, [productData, date, start, end, personnel, requestScheduleData]);
 
   const onChangeYm = useCallback((v) => {
     setYm(v);
@@ -144,22 +145,6 @@ const ClassDetail = ({ match }) => {
   const onChangeDate = useCallback((v) => {
     console.log(v);
     setDate(v);
-  }, []);
-
-  const onChangeHour = useCallback((e) => {
-    setHour(e.target.value);
-  }, []);
-  const onChangeMinute = useCallback((e) => {
-    setMinute(e.target.value);
-  }, []);
-  const onChangeEndHour = useCallback((e) => {
-    setEndHour(e.target.value);
-  }, []);
-  const onChangeEndMinute = useCallback((e) => {
-    setEndMinute(e.target.value);
-  }, []);
-  const onChangePersonnel = useCallback((e) => {
-    setPersonnel(e.target.value);
   }, []);
 
   const scheduleList = scheduleData.map((v) => {
@@ -186,9 +171,9 @@ const ClassDetail = ({ match }) => {
       );
   });
 
-  const details = detail.map((v) => {
+  const details = detail.map((v, i) => {
     return (
-      <div className="detail">
+      <div className="detail" key={i}>
         <div className="detailTitle">{v.title}</div>
         <div className="detailText">
           <pre>{v.text}</pre>
@@ -200,6 +185,9 @@ const ClassDetail = ({ match }) => {
   return Object.keys(productData).length === 0 ? null : (
     <Container>
       <Header>클래스 상세</Header>
+      <Header>
+        <Link to={`update/${productData.id}`}>수정</Link>
+      </Header>
       <Product>
         <Image>
           <img
@@ -232,10 +220,9 @@ const ClassDetail = ({ match }) => {
             <div>{productData.price} 원</div>
             <div>{productData.time} 분</div>
             <div>{productData.sold} 회</div>
-            <div>평점</div>
-            <div>리뷰</div>
+            <div>{rating.rating}</div>
+            <div>{rating.count} 건</div>
           </InfoHeaderB>
-          <Link to={`update/${productData.id}`}>수정</Link>
         </div>
       </Product>
       <Header>클래스 일정</Header>
@@ -254,7 +241,6 @@ const ClassDetail = ({ match }) => {
               0
             )}
         </div>
-        <div>아직 종료되지 않은 일정이 있습니다</div>
       </State>
       <Schedule>
         <div className="calendar">
@@ -279,54 +265,35 @@ const ClassDetail = ({ match }) => {
           6,
           2
         )}`}</div>
-        <select onChange={onChangeHour}>
-          {constants.hours.map((v) => {
-            return (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            );
-          })}
-        </select>
-        <select onChange={onChangeMinute}>
-          {constants.minutes.map((v) => {
-            return (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            );
-          })}
-        </select>
+        <TextField
+          type="time"
+          defaultValue="00:00"
+          inputProps={{
+            step: 600, // 5 min
+          }}
+          sx={{ width: 150 }}
+          onChange={(e) => setStart(e.target.value.replace(":", ""))}
+        />
         <div>부터</div>
-        <select onChange={onChangeEndHour}>
-          {constants.hours.map((v) => {
-            return (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            );
-          })}
-        </select>
-        <select onChange={onChangeEndMinute}>
-          {constants.minutes.map((v) => {
-            return (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            );
-          })}
-        </select>
+        <TextField
+          type="time"
+          defaultValue="00:00"
+          inputProps={{
+            step: 600, // 5 min
+          }}
+          sx={{ width: 150 }}
+          onChange={(e) => setEnd(e.target.value.replace(":", ""))}
+        />
         <div>까지</div>
-        <input
+        <TextField
           type="number"
-          value={personnel}
-          onChange={onChangePersonnel}
-          min="1"
-          placeholder="모집인원"
+          sx={{ width: 50 }}
+          onChange={(e) => setPersonnel(e.target.value)}
         />
         <div>명</div>
         <div onClick={onClickAdd}>생성</div>
       </AddSchedule>
+      <div></div>
       <Detail>
         <Header>상세 정보</Header>
         <div className="details">{details}</div>
@@ -335,4 +302,4 @@ const ClassDetail = ({ match }) => {
   );
 };
 
-export default ClassDetail;
+export default SellerProductDetail;

@@ -3,9 +3,7 @@ const router = express.Router();
 const { verifyToken } = require("../jwt");
 const { Op } = require("sequelize");
 
-const Schedule = require("../models").Schedule;
-const Product = require("../models").Product;
-const { Reservation } = require("../models");
+const { Reservation, Schedule, Product } = require("../models");
 
 router.get("/", verifyToken, async (req, res, next) => {
   //////////////////////////////////////////////////////////////////////
@@ -18,7 +16,10 @@ router.get("/", verifyToken, async (req, res, next) => {
       include: [
         {
           model: Product,
-          attributes: ["name"],
+          attributes: ["name", "sellerId"],
+        },
+        {
+          model: Reservation,
         },
       ],
       where: {
@@ -26,6 +27,7 @@ router.get("/", verifyToken, async (req, res, next) => {
           [Op.startsWith]: req.query.ym,
         },
         productId: productId,
+        "$Product.sellerId$": req.decoded.id,
       },
       order: [
         ["start", "asc"],
@@ -37,6 +39,7 @@ router.get("/", verifyToken, async (req, res, next) => {
     });
     return res.status(200).send(response);
   } catch (error) {
+    console.log(error);
     return res.status(500).send();
   }
 });
@@ -51,7 +54,7 @@ router.get("/unfinished", verifyToken, async (req, res, next) => {
       include: [
         {
           model: Product,
-          attributes: ["name"],
+          attributes: ["name", "sellerId"],
         },
       ],
       where: {
@@ -59,6 +62,7 @@ router.get("/unfinished", verifyToken, async (req, res, next) => {
           [Op.lt]: req.query.ymd,
         },
         state: 0,
+        "$Product.sellerId$": req.decoded.id,
       },
       order: [
         ["ymd", "desc"],

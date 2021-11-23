@@ -1,15 +1,18 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {Text, View, FlatList, Image, TouchableOpacity} from 'react-native';
 import axios from '../../axios';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Divider} from 'react-native-paper';
 
 import styles from './styles';
 
 const Category = props => {
-  const [products, setProducts] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [sort, setSort] = useState('rating');
 
   useEffect(() => {
     requestCategoryData();
+    console.log(props);
   }, [sort]);
 
   const requestCategoryData = useCallback(async () => {
@@ -17,7 +20,7 @@ const Category = props => {
       const response = await axios.get(
         `/api/product/category?name=${props.route.params.categoryName}&sort=${sort}`,
       );
-      setProducts(response.data);
+      setProductData(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -37,17 +40,29 @@ const Category = props => {
       <TouchableOpacity
         style={styles.content}
         onPress={() => onPressContent(item)}>
-        <Image
-          source={{
-            uri,
-          }}
-          style={styles.content_image}
-        />
-        <Text style={[styles.content_text, styles.content_address]}>
-          {item.address.split('&')[0]}
-        </Text>
-        <Text style={styles.content_text}>{item.name}</Text>
-        <Text style={styles.content_text}>{item.price}원</Text>
+        <View>
+          <Image
+            source={{
+              uri,
+            }}
+            style={styles.content_image}
+          />
+          <View style={[styles.content_view, styles.content_address]}>
+            <Icon name="location-outline" color="white" />
+            <Text style={[{color: 'white'}, styles.content_text]}>
+              {item.address.split('&')[0]}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.content_view}>
+          <Text style={[styles.content_text, {minHeight: 36}]}>
+            {`[${item.category}] ${item.name}`}
+          </Text>
+        </View>
+        <View style={styles.content_view}>
+          <Text style={styles.content_text}>{item.price}원</Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -60,11 +75,9 @@ const Category = props => {
             <Text>뒤로</Text>
           </TouchableOpacity>
         </View>
-
         <View>
-          <Text>aas</Text>
+          <Text>{props.route.params.title}</Text>
         </View>
-
         <View style={styles.header_space} />
       </View>
 
@@ -82,10 +95,11 @@ const Category = props => {
           <Text style={styles.sort_text}>높은 가격순</Text>
         </TouchableOpacity>
       </View>
+      <Divider />
 
       <View style={styles.contents}>
         <FlatList
-          data={products}
+          data={productData}
           renderItem={renderItem}
           numColumns={2}
           keyExtractor={item => item.id}

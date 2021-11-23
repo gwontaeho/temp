@@ -24,6 +24,7 @@ const Calendar = (props) => {
   const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
+    console.log(props.scheduleData);
     createBody();
   }, [date]);
 
@@ -108,6 +109,10 @@ const Calendar = (props) => {
   });
 
   const bodyList = body.map((v) => {
+    const count = props.scheduleData.reduce(
+      (c, e) => c + (v === String(e.ymd)),
+      0
+    );
     return (
       <div
         className={
@@ -119,6 +124,7 @@ const Calendar = (props) => {
         onClick={() => onClickDate(v)}
       >
         {v.substr(6, 2)}
+        {count === 0 ? "" : ` (${count})`}
       </div>
     );
   });

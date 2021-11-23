@@ -43,10 +43,10 @@ export const Dates = styled.div`
     align-items: center;
     border-radius: 12px;
     color: lightgray;
+    cursor: pointer;
   }
   .includes {
     color: black;
-    cursor: pointer;
   }
   .today {
     border: 1px solid lightgray;

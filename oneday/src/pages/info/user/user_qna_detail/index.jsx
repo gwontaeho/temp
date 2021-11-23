@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Modal from "react-modal";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
 
 import {
   Container,
   ModalHeader,
-  ModalText,
   Header,
   Nav,
   List,
   Item,
   Text,
+  ModalBox,
 } from "./styles";
-Modal.setAppElement("#root");
 
 const SellerQnaDetail = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const [qnaData, setQnaData] = useState({});
   const [question, setQuestion] = useState("");
-  const [isOpend, setIsOpend] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     requestQnaData();
@@ -38,7 +39,7 @@ const SellerQnaDetail = (props) => {
     }
   }, []);
 
-  const onClickModify = useCallback(async () => {
+  const requestUpdateQuestion = useCallback(async () => {
     try {
       const response = await axios.put(
         "/api/qna",
@@ -49,62 +50,59 @@ const SellerQnaDetail = (props) => {
         { headers: { token: auth.token } }
       );
       requestQnaData();
-      closeModal();
+      setOpen(false);
     } catch (error) {
       console.log(error);
     }
   }, [qnaData, question]);
 
-  const openModal = useCallback(() => {
-    setIsOpend(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpend(false);
-  }, []);
-
-  const onChangeQuestion = useCallback((e) => {
-    setQuestion(e.target.value);
-  }, []);
-
   return Object.keys(qnaData).length === 0 ? null : (
     <Container>
       <Modal
-        isOpen={isOpend}
-        onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={false}
-        style={{
-          content: {
-            width: "720px",
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "1.3rem",
-          },
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setQuestion("");
         }}
       >
-        <ModalHeader>
-          <div>문의 수정</div>
-          <div className="header-btns">
-            <div onClick={onClickModify}>수정</div>
-            <div onClick={closeModal}>닫기</div>
-          </div>
-        </ModalHeader>
-        <ModalText>
-          <textarea
-            maxLength="200"
-            rows="5"
+        <Box sx={ModalBox}>
+          <ModalHeader>
+            <div>문의수정</div>
+            <div className="buttons">
+              <div
+                onClick={() => {
+                  requestUpdateQuestion();
+                  setOpen(false);
+                  setQuestion("");
+                }}
+              >
+                저장
+              </div>
+              <div
+                onClick={() => {
+                  setOpen(false);
+                  setQuestion("");
+                }}
+              >
+                취소
+              </div>
+            </div>
+          </ModalHeader>
+          <TextField
+            maxlength={60}
+            fullWidth
+            multiline
+            maxRows={4}
             value={question}
-            onChange={onChangeQuestion}
+            onChange={(e) => setQuestion(e.target.value)}
           />
-        </ModalText>
+        </Box>
       </Modal>
       <Header>문의 상세</Header>
       <Nav>
-        {qnaData.state === 0 ? <div onClick={openModal}>문의 수정</div> : null}
+        {qnaData.state === 0 ? (
+          <div onClick={() => setOpen(true)}>문의 수정</div>
+        ) : null}
       </Nav>
       <List>
         <Item>
@@ -114,19 +112,7 @@ const SellerQnaDetail = (props) => {
           <div>상태</div>
         </Item>
         <Item>
-          <div>{`[${
-            qnaData.product.category === "flower"
-              ? "플라워"
-              : qnaData.product.category === "art"
-              ? "미술"
-              : qnaData.product.category === "cooking"
-              ? "요리"
-              : qnaData.product.category === "handmade"
-              ? "수공예"
-              : qnaData.product.category === "activity"
-              ? "액티비티"
-              : "기타"
-          }] ${qnaData.product.name}`}</div>
+          <div className="propduct_info">{`[${qnaData.product.category}] ${qnaData.product.name}`}</div>
           <div>{qnaData.createdAt.substr(0, 10)}</div>
           {qnaData.state === 0 ? (
             <div></div>

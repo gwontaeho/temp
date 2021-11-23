@@ -1,28 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import Rating from "@material-ui/lab/Rating";
-import Profile from "../../../images/profile.png";
+import Profile from "../../../images/profile/profile.png";
 
 import { Container, Header, List, Item } from "./styles";
 
-import axios from "axios";
-
 const Review = (props) => {
-  const [reviewData, setReviewData] = useState([]);
-
-  useEffect(() => {
-    requestReviewData();
-  }, []);
-
-  const requestReviewData = useCallback(async () => {
-    try {
-      const response = await axios.get(`/api/review/${props.productId}`);
-      setReviewData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  const reviewList = reviewData.map((v) => {
+  const reviewList = props.reviewData.map((v) => {
     return (
       <Item key={v.id}>
         <img
@@ -51,7 +34,7 @@ const Review = (props) => {
   return (
     <Container>
       <Header>
-        <div>클래스 리뷰 (총 {reviewData.length}건)</div>
+        <div>클래스 리뷰 (총 {props.reviewData.length}건)</div>
       </Header>
       <List>{reviewList}</List>
     </Container>

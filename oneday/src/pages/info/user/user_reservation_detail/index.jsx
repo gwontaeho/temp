@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Modal from "react-modal";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
 import Rating from "@material-ui/lab/Rating";
 import axios from "axios";
+
 import {
   Container,
   ModalHeader,
-  ModalText,
+  ModalBox,
+  ModalRating,
   Nav,
   Header,
   InfoHeader,
@@ -17,13 +21,14 @@ import {
   Map,
   Review,
 } from "./styles";
+
 const { kakao } = window;
-Modal.setAppElement("#root");
-const UserReservationDetail = ({ match }) => {
+
+const UserReservationDetail = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const [reservationData, setReservationData] = useState({});
-  const [isOpend, setIsOpend] = useState(false);
+  const [open, setOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(2);
   const [reviewText, setReviewText] = useState("");
 
@@ -58,9 +63,12 @@ const UserReservationDetail = ({ match }) => {
 
   const requestReservationData = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/reservation/${match.params.id}`, {
-        headers: { token: auth.token },
-      });
+      const response = await axios.get(
+        `/api/reservation/${props.match.params.id}`,
+        {
+          headers: { token: auth.token },
+        }
+      );
       console.log(response.data);
       if (response.data.review !== null) {
         setReviewRating(response.data.review.rating);
@@ -121,21 +129,7 @@ const UserReservationDetail = ({ match }) => {
     }
   }, [reservationData]);
 
-  const openModal = useCallback(() => {
-    setIsOpend(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpend(false);
-  }, []);
-
-  const onChangeReviewText = useCallback((e) => {
-    setReviewText(e.target.value);
-    console.log(e.target.value);
-    console.log(reviewRating);
-  }, []);
-
-  const onClickSave = useCallback(async () => {
+  const requestCreateReview = useCallback(async () => {
     try {
       const response = await axios.post(
         "/api/review",
@@ -147,9 +141,9 @@ const UserReservationDetail = ({ match }) => {
         },
         { headers: { token: auth.token } }
       );
-      console.log(response.data);
-      closeModal();
-      window.location.reload();
+      setOpen(false);
+      props.requestReservationCountData();
+      requestReservationData();
     } catch (error) {
       console.log(error);
     }
@@ -158,46 +152,52 @@ const UserReservationDetail = ({ match }) => {
   return Object.keys(reservationData).length === 0 ? null : (
     <Container>
       <Modal
-        isOpen={isOpend}
-        onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={false}
-        style={{
-          content: {
-            width: "720px",
-            padding: "24px",
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "1.3rem",
-          },
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setReviewText("");
         }}
       >
-        <ModalHeader>
-          <div>리뷰 작성</div>
-          <div className="header-btns">
-            <div onClick={onClickSave}>저장</div>
-            <div onClick={closeModal}>닫기</div>
-          </div>
-        </ModalHeader>
-        <ModalText>
-          <Rating
-            name="simple-controlled"
-            value={reviewRating}
-            onChange={(event, newValue) => {
-              console.log(newValue);
-              setReviewRating(newValue);
-            }}
-          />
-          <textarea
-            maxLength="200"
-            rows="5"
+        <Box sx={ModalBox}>
+          <ModalHeader>
+            <div>후기작성</div>
+            <div className="buttons">
+              <div
+                onClick={() => {
+                  requestCreateReview();
+                  setOpen(false);
+                  setReviewText("");
+                }}
+              >
+                저장
+              </div>
+              <div
+                onClick={() => {
+                  setOpen(false);
+                  setReviewText("");
+                }}
+              >
+                취소
+              </div>
+            </div>
+          </ModalHeader>
+          <ModalRating>
+            <Rating
+              name="simple-controlled"
+              value={reviewRating}
+              onChange={(event, newValue) => {
+                setReviewRating(newValue);
+              }}
+            />
+          </ModalRating>
+          <TextField
+            fullWidth
+            multiline
+            maxRows={4}
             value={reviewText}
-            onChange={onChangeReviewText}
+            onChange={(e) => setReviewText(e.target.value)}
           />
-        </ModalText>
+        </Box>
       </Modal>
 
       <Header>예약 상세 내역</Header>
@@ -209,9 +209,11 @@ const UserReservationDetail = ({ match }) => {
           <div onClick={onClickCancelWaiting}>예약 취소</div>
         ) : null}
         {reservationData.state === 1 ? (
-          <div onClick={openModal}>리뷰 작성</div>
+          <div onClick={() => setOpen(true)}>후기 작성</div>
         ) : null}
-        {reservationData.state === 5 ? <div>후기 작성 완료</div> : null}
+        {reservationData.state === 5 ? (
+          <div className="written">후기 작성 완료</div>
+        ) : null}
       </Nav>
       <InfoHeader>
         <div>클래스 정보</div>
@@ -228,21 +230,7 @@ const UserReservationDetail = ({ match }) => {
               .replace(/public/gi, "")}
           />
           <div>
-            <div>
-              [
-              {reservationData.product.category === "flower"
-                ? "플라워"
-                : reservationData.product.category === "art"
-                ? "미술"
-                : reservationData.product.category === "cooking"
-                ? "요리"
-                : reservationData.product.category === "handmade"
-                ? "수공예"
-                : reservationData.product.category === "activity"
-                ? "액티비티"
-                : "기타"}
-              ]
-            </div>
+            <div>[{reservationData.product.category}]</div>
             <div>{reservationData.product.name}</div>
           </div>
         </div>

@@ -1,13 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Redirect } from "react-router";
-import { Container, Header, Info, UserInfo, Apply } from "./styles";
+import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+
+import {
+  Container,
+  Header,
+  ProductInfoHeader,
+  ProductInfo,
+  UserInfo,
+  Buttons,
+} from "./styles";
 
 const Reservation = (props) => {
   const auth = useSelector((state) => state.auth);
 
-  const [user, setUser] = useState({});
   const [productData, setProductData] = useState(
     props.location.state.productData
   );
@@ -15,6 +26,7 @@ const Reservation = (props) => {
   const [personnel, setPersonnel] = useState(props.location.state.personnel);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     requestUserData();
@@ -22,17 +34,9 @@ const Reservation = (props) => {
 
   const requestUserData = useCallback(async () => {
     try {
-      const response = await axios.post(
-        "/api/auth/user",
-        {},
-        {
-          headers: {
-            token: auth.token,
-          },
-        }
-      );
-      console.log(response.data);
-      setUser(response.data);
+      const response = await axios.get("/api/auth/user", {
+        headers: { token: auth.token },
+      });
       setName(response.data.name);
       setPhone(response.data.phone);
     } catch (error) {
@@ -40,21 +44,7 @@ const Reservation = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(productData);
-    console.log(schedule);
-    console.log(personnel);
-  }, []);
-
-  const onChangeName = useCallback((e) => {
-    setName(e.target.value);
-  }, []);
-
-  const onChangePhone = useCallback((e) => {
-    setPhone(e.target.value);
-  }, []);
-
-  const onClickApply = useCallback(async () => {
+  const requestCreateReservation = useCallback(async () => {
     try {
       const response = await axios.post(
         "/api/reservation",
@@ -72,11 +62,16 @@ const Reservation = (props) => {
           },
         }
       );
-      if (response.status === 200) props.history.replace("/");
+      if (response.status === 200) setOpen(true);
     } catch (error) {
       console.log(error);
     }
   }, [productData, schedule, personnel, name, phone]);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    props.history.replace("/");
+  }, []);
 
   if (auth.type !== 1) {
     return <Redirect to="/" />;
@@ -84,37 +79,67 @@ const Reservation = (props) => {
 
   return Object.keys(productData).length === 0 ? null : (
     <Container>
+      <Snackbar
+        open={open}
+        autoHideDuration={1000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          예약되었습니다
+        </Alert>
+      </Snackbar>
       <Header>예약 / 결제</Header>
-      <Info>
-        <img
-          src={productData.img.replace(/\\/gi, "/").replace(/public/gi, "")}
-        />
-        <div>
-          <div>{productData.name}</div>
-          <div>{productData.sellerId}</div>
-          <div>{personnel}</div>
-          <div>{productData.price * personnel}</div>
+      <Header>클래스 일정</Header>
+      <ProductInfoHeader>
+        <div>클래스 정보</div>
+        <div>수강 일자</div>
+        <div>예약 인원</div>
+        <div>수강료</div>
+      </ProductInfoHeader>
+      <ProductInfo>
+        <div className="product_info">
+          <img
+            src={productData.img.replace(/\\/gi, "/").replace(/public/gi, "")}
+          />
+          <div>
+            <div>{productData.seller.company}</div>
+            <div>
+              [{productData.category}] {productData.name}
+            </div>
+          </div>
         </div>
-      </Info>
+        <div>{productData.name}</div>
+        <div>{personnel} 명</div>
+        <div>{productData.price * personnel} 원</div>
+      </ProductInfo>
       <Header>예약자 정보</Header>
       <UserInfo>
-        <label className="name">
+        <div>
           <div>이름</div>
-          <input type="text" value={name} onChange={onChangeName} />
-        </label>
-        <label className="phone">
           <div>연락처</div>
-          <input
-            type="text"
-            maxLength={11}
-            value={phone}
-            onChange={onChangePhone}
+        </div>
+        <div>
+          <TextField
+            variant="outlined"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-        </label>
+          <TextField
+            variant="outlined"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
       </UserInfo>
-      <Apply>
-        <div onClick={onClickApply}>신청하기</div>
-      </Apply>
+      <Buttons>
+        <Button variant="contained" onClick={requestCreateReservation}>
+          예약
+        </Button>
+        <Button variant="outlined" onClick={() => props.history.goBack()}>
+          취소
+        </Button>
+      </Buttons>
     </Container>
   );
 };

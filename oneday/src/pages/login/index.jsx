@@ -2,11 +2,13 @@ import React, { useCallback, useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 import { useSelector, useDispatch } from "react-redux";
 import { logIn } from "../../features/auth";
 
-import { Container, Inputs, Section } from "./styles";
+import { Container, Title, Inner, Inputs, Buttons } from "./styles";
 
 const Login = (props) => {
   const auth = useSelector((state) => state.auth);
@@ -24,9 +26,6 @@ const Login = (props) => {
     setPassword(e.target.value);
   }, []);
 
-  const changeType = useCallback((e) => {
-    setType(Number(e.target.value));
-  }, []);
   const onClickLogin = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -46,48 +45,43 @@ const Login = (props) => {
 
   return (
     <Container>
-      <Section>
-        <label htmlFor="1">일반</label>
-        <input
-          id="1"
-          value={1}
-          type="radio"
-          name="checkType"
-          defaultChecked
-          onClick={changeType}
-        />
-        <label htmlFor="2">업체</label>
-        <input
-          id="2"
-          value={2}
-          type="radio"
-          name="checkType"
-          onClick={changeType}
-        />
-      </Section>
-      <Inputs>
-        <input
-          value={id}
-          type="text"
-          placeholder="아이디"
-          maxLength="12"
-          autoFocus
-          onChange={onChangeId}
-        />
-        <input
-          value={password}
-          type="password"
-          placeholder="비밀번호"
-          maxLength="24"
-          onChange={onChangePassword}
-        />
-        <div className="button" onClick={onClickLogin}>
+      <Title>로그인</Title>
+      <Inner>
+        <Buttons>
+          <Button
+            variant={type === 1 ? "contained" : "outlined"}
+            onClick={() => setType(1)}
+          >
+            일반
+          </Button>
+          <Button
+            variant={type === 2 ? "contained" : "outlined"}
+            onClick={() => setType(2)}
+          >
+            판매자
+          </Button>
+        </Buttons>
+        <Inputs>
+          <TextField
+            id="outlined-basic"
+            label="아이디"
+            type="text"
+            variant="outlined"
+            onChange={onChangeId}
+          />
+          <TextField
+            id="outlined-basic"
+            label="비밀번호"
+            variant="outlined"
+            type="password"
+            onChange={onChangePassword}
+          />
+        </Inputs>
+        <Button variant="contained" onClick={onClickLogin}>
           로그인
-        </div>
-      </Inputs>
-      <Section>
+        </Button>
         <Link to="/signup">회원가입</Link>
-      </Section>
+      </Inner>
     </Container>
   );
 };

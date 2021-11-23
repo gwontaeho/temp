@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
         },
         {
           model: Seller,
-          attributes: ["img"],
+          attributes: ["img", "company"],
         },
       ],
       where: { productId: req.query.productId },
@@ -39,7 +39,7 @@ router.get("/", async (req, res, next) => {
 /////////////////////////////////////////////////////////////////
 //  앱 문의내역
 /////////////////////////////////////////////////////////////////
-router.post("/app/user", verifyToken, async (req, res, next) => {
+router.get("/app", verifyToken, async (req, res, next) => {
   try {
     const findAllQna = await Qna.findAll({
       where: { userId: req.decoded.id },
@@ -47,7 +47,7 @@ router.post("/app/user", verifyToken, async (req, res, next) => {
       include: [
         {
           model: Product,
-          attributes: ["name"],
+          attributes: ["name", "category"],
         },
       ],
     });
@@ -60,22 +60,32 @@ router.post("/app/user", verifyToken, async (req, res, next) => {
   }
 });
 
-router.get("/page", verifyToken, async (req, res, next) => {
+router.post("/lookup", verifyToken, async (req, res, next) => {
   /////////////////////////////////////////////////////////////
   //  문의 내역 페이지
   /////////////////////////////////////////////////////////////
   const userId = req.decoded.type === "1" ? req.decoded.id : { [Op.ne]: null };
   const sellerId =
     req.decoded.type === "2" ? req.decoded.id : { [Op.ne]: null };
+  const createdAt = req.body.checked
+    ? {
+        [Op.between]: [
+          new Date(req.body.value[0]),
+          new Date(
+            new Date(new Date(req.body.value[1]).setHours(23)).setMinutes(59)
+          ),
+        ],
+      }
+    : { [Op.ne]: null };
 
   let state;
-  if (req.query.state == "2") {
+  if (req.body.state == 2) {
     state = [0, 1];
   } else {
-    state = req.query.state;
+    state = req.body.state;
   }
 
-  let page = req.query.page;
+  let page = req.body.page;
   let offset = 0;
   if (page > 1) offset = 5 * (page - 1);
   try {
@@ -84,6 +94,7 @@ router.get("/page", verifyToken, async (req, res, next) => {
         userId,
         sellerId,
         state,
+        createdAt,
       },
       order: [["createdAt", "Desc"]],
       offset,

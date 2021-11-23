@@ -13,7 +13,7 @@ router.get("/", verifyToken, async (req, res, next) => {
       include: [
         {
           model: Product,
-          attributes: ["name", "img"],
+          attributes: ["name", "img", "category"],
         },
       ],
       where: { userId: req.decoded.id },
@@ -63,6 +63,7 @@ router.get("/rating/:productId", async (req, res, next) => {
           ),
           "rating",
         ],
+        [sequelize.fn("count", sequelize.col("id")), "count"],
       ],
       where: { productId: req.params.productId },
     });

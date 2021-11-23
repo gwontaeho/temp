@@ -8,6 +8,8 @@ import {
   Image,
 } from 'react-native';
 import axios from '../../../axios';
+import {Divider} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
 import SplashScreen from 'react-native-splash-screen';
 
 import styles from './styles';
@@ -33,9 +35,10 @@ const Main = props => {
   }, []);
 
   const onPressCategory = useCallback(
-    v => {
+    (v, vv) => {
       props.navigation.navigate('Category', {
         categoryName: v,
+        title: vv,
       });
     },
     [props.navigation],
@@ -56,17 +59,29 @@ const Main = props => {
       <TouchableOpacity
         style={styles.content}
         onPress={() => onPressProduct(item)}>
-        <Image
-          source={{
-            uri,
-          }}
-          style={styles.content_image}
-        />
-        <Text style={[styles.content_text, styles.content_address]}>
-          {item.address.split('&')[0]}
-        </Text>
-        <Text style={styles.content_text}>{item.name}</Text>
-        <Text style={styles.content_text}>{item.price}원</Text>
+        <View>
+          <Image
+            source={{
+              uri,
+            }}
+            style={styles.content_image}
+          />
+          <View style={[styles.content_view, styles.content_address]}>
+            <Icon name="location-outline" color="white" />
+            <Text style={[{color: 'white'}, styles.content_text]}>
+              {item.address.split('&')[0]}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.content_view}>
+          <Text style={[styles.content_text, {minHeight: 36}]}>
+            {`[${item.category}] ${item.name}`}
+          </Text>
+        </View>
+        <View style={styles.content_view}>
+          <Text style={styles.content_price}>{item.price}원</Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -74,59 +89,94 @@ const Main = props => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text>로고</Text>
+        <Image
+          source={require('../../../image/logo/logo.png')}
+          style={styles.logo_image}
+        />
       </View>
+      <Divider />
 
       <ScrollView>
         <View style={styles.banner}>
-          <Text>광고ㅇ창</Text>
+          <Image
+            source={require('../../../image/ad/ad.png')}
+            style={styles.banner_image}
+          />
         </View>
+        <Divider />
 
         <View style={styles.categories}>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.category}
-              onPress={() => onPressCategory('all')}>
-              <Text>전체</Text>
+              onPress={() => onPressCategory('flower', '플라워')}>
+              <Image
+                source={require('../../../image/category/flower.png')}
+                style={styles.category_image}
+              />
+              <Text style={styles.category_text}>플라워</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.category}
-              onPress={() => onPressCategory('flower')}>
-              <Text>플라워</Text>
+              onPress={() => onPressCategory('art', '미술')}>
+              <Image
+                source={require('../../../image/category/art.png')}
+                style={styles.category_image}
+              />
+              <Text style={styles.category_text}>미술</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.category}
-              onPress={() => onPressCategory('art')}>
-              <Text>미술</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.category}
-              onPress={() => onPressCategory('cooking')}>
-              <Text>요리</Text>
+              onPress={() => onPressCategory('cooking', '요리')}>
+              <Image
+                source={require('../../../image/category/cooking.png')}
+                style={styles.category_image}
+              />
+              <Text style={styles.category_text}>요리</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity
               style={styles.category}
-              onPress={() => onPressCategory('handmade')}>
-              <Text>수공예</Text>
+              onPress={() => onPressCategory('handmade', '수공예')}>
+              <Image
+                source={require('../../../image/category/handmade.png')}
+                style={styles.category_image}
+              />
+              <Text style={styles.category_text}>수공예</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.category}
-              onPress={() => onPressCategory('activity')}>
-              <Text>액티비티</Text>
+              onPress={() => onPressCategory('activity', '액티비티')}>
+              <Image
+                source={require('../../../image/category/activity.png')}
+                style={styles.category_image}
+              />
+              <Text style={styles.category_text}>액티비티</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.category}
-              onPress={() => onPressCategory('etc')}>
-              <Text>기타</Text>
+              onPress={() => onPressCategory('etc', '기타')}>
+              <Image
+                source={require('../../../image/category/etc.png')}
+                style={styles.category_image}
+              />
+              <Text style={styles.category_text}>기타</Text>
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            style={styles.row_all}
+            onPress={() => onPressCategory('all', '전체')}>
+            <Text style={styles.category_text}>전체</Text>
+            <Icon name="chevron-down-outline" color="black" size={15} />
+          </TouchableOpacity>
         </View>
+
+        <Divider />
 
         <View style={styles.classList}>
           <View style={styles.title}>
-            <Text>인기 클래스</Text>
+            <Text style={styles.title_text}>인기 클래스</Text>
           </View>
           <View style={styles.list}>
             <FlatList
@@ -138,9 +188,11 @@ const Main = props => {
           </View>
         </View>
 
+        <Divider />
+
         <View style={styles.classList}>
           <View style={styles.title}>
-            <Text>신규 클래스</Text>
+            <Text style={styles.title_text}>신규 클래스</Text>
           </View>
           <View style={styles.list}>
             <FlatList
@@ -151,6 +203,7 @@ const Main = props => {
             />
           </View>
         </View>
+        <View style={styles.footer}></View>
       </ScrollView>
     </View>
   );

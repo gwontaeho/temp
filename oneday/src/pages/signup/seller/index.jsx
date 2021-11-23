@@ -1,12 +1,18 @@
 import React from "react";
 import { useState, useCallback } from "react";
-import Modal from "react-modal";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 import axios from "axios";
 import DaumPostcode from "react-daum-postcode";
-import { Container, Img, Buttons } from "./styles";
-import profile from "../../../images/profile.png";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-Modal.setAppElement("#root");
+import { Container, Img, ModalBox } from "./styles";
+import profile from "../../../images/profile/profile.png";
 
 const Seller = (props) => {
   const idRegExp = /^[a-zA-Z0-9]{4,12}$/;
@@ -16,15 +22,7 @@ const Seller = (props) => {
   const phoneRegExp = /^[0-9]{1,11}$/;
   const regRegExp = /^[0-9]{10}$/;
 
-  const idRef = React.createRef();
-  const passwordRef = React.createRef();
-  const passwordCheckRef = React.createRef();
-  const companyRef = React.createRef();
-  const nameRef = React.createRef();
-  const phoneRef = React.createRef();
-  const regRef = React.createRef();
-
-  const [isOpend, setIsOpend] = useState(false);
+  const [open, setOpen] = useState(false);
   const [img, setImg] = useState();
   const [id, setId] = useState("");
   const [idCheck, setIdCheck] = useState(false);
@@ -36,20 +34,8 @@ const Seller = (props) => {
   const [shortAddress, setShortAddress] = useState("");
   const [address, setAddress] = useState("");
   const [extraAd, setExtraAd] = useState("");
-  const [category, setCategory] = useState("etc");
+  const [category, setCategory] = useState("기타");
   const [reg, setReg] = useState("");
-
-  const openModal = useCallback(() => {
-    setIsOpend(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpend(false);
-  }, []);
-
-  const validation = useCallback((v) => {
-    v.current.style.display = "block";
-  }, []);
 
   const onClickCheckId = useCallback(async () => {
     if (!idRegExp.test(id)) return window.alert("아이디를 정확히 입력해주세요");
@@ -62,75 +48,6 @@ const Seller = (props) => {
       console.log(error);
     }
   }, [id]);
-
-  const onChangeId = useCallback(
-    (e) => {
-      validation(idRef);
-      setIdCheck(false);
-      setId(e.target.value);
-    },
-    [idRef]
-  );
-
-  const onChangePassword = useCallback(
-    (e) => {
-      validation(passwordRef);
-      setPassword(e.target.value);
-    },
-    [passwordRef]
-  );
-
-  const onChangePasswordCheck = useCallback(
-    (e) => {
-      validation(passwordCheckRef);
-      setPasswordCheck(e.target.value);
-    },
-    [passwordCheckRef]
-  );
-
-  const onChangeCompany = useCallback(
-    (e) => {
-      validation(companyRef);
-      setCompany(e.target.value);
-    },
-    [companyRef]
-  );
-
-  const onChangeName = useCallback(
-    (e) => {
-      validation(nameRef);
-      setName(e.target.value);
-    },
-    [nameRef]
-  );
-
-  const onChangePhone = useCallback(
-    (e) => {
-      validation(phoneRef);
-      setPhone(e.target.value);
-    },
-    [phoneRef]
-  );
-
-  const onChangeExtraAd = useCallback((e) => {
-    setExtraAd(e.target.value);
-  }, []);
-
-  const onChangeCategory = useCallback((e) => {
-    setCategory(e.target.value);
-  }, []);
-
-  const onChangeImg = useCallback((e) => {
-    setImg(e.target.files[0]);
-  }, []);
-
-  const onChangeReg = useCallback(
-    (e) => {
-      validation(regRef);
-      setReg(e.target.value);
-    },
-    [regRef]
-  );
 
   const handleComplete = useCallback((data) => {
     let short = data.sigungu + " " + data.bname;
@@ -149,7 +66,7 @@ const Seller = (props) => {
     }
     setShortAddress(short);
     setAddress(fullAddress);
-    closeModal();
+    setOpen(false);
   }, []);
 
   const onClickSignUp = useCallback(async () => {
@@ -208,29 +125,19 @@ const Seller = (props) => {
     reg,
   ]);
 
-  const onClickCancel = useCallback(() => {
-    return props.history.replace("/");
-  }, []);
-
   return (
     <Container>
       <Modal
-        isOpen={isOpend}
-        onRequestClose={closeModal}
-        style={{
-          content: {
-            width: "600px",
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-          },
+        open={open}
+        onClose={() => {
+          setOpen(false);
         }}
       >
-        <DaumPostcode onComplete={handleComplete} />
+        <Box sx={ModalBox}>
+          <DaumPostcode onComplete={handleComplete} />
+        </Box>
       </Modal>
+
       <Img>
         <label htmlFor="input-file">
           <img src={img ? URL.createObjectURL(img) : profile} />
@@ -238,140 +145,108 @@ const Seller = (props) => {
             id="input-file"
             type="file"
             accept="image/gif,image/jpeg,image/png"
-            onChange={onChangeImg}
+            onChange={(e) => setImg(e.target.files[0])}
           />
         </label>
       </Img>
-      <label>
-        <div className="title">
-          <div>아이디</div>
-          <div className="idCheck" onClick={onClickCheckId}>
-            중복확인
-          </div>
-        </div>
-        <div className="contents">
-          <input
-            value={id}
-            type="text"
-            maxLength="12"
-            autoFocus
-            onChange={onChangeId}
-          />
-          <div ref={idRef}>{idRegExp.test(id) && idCheck ? "o" : "x"}</div>
-        </div>
-      </label>
 
-      <label>
-        <div className="title">비밀번호</div>
-        <div className="contents">
-          <input
-            value={password}
-            type="password"
-            maxLength="24"
-            onChange={onChangePassword}
-          />
-          <div ref={passwordRef}>
-            {passwordRegExp.test(password) ? "o" : "x"}
-          </div>
-        </div>
-      </label>
+      <div className="overlap">
+        <Button variant="contained" onClick={onClickCheckId}>
+          중복확인
+        </Button>
+      </div>
+      <TextField
+        label="아이디"
+        variant="outlined"
+        error={!idRegExp.test(id) ? true : !idCheck ? true : false}
+        onChange={(e) => {
+          setIdCheck(false);
+          setId(e.target.value);
+        }}
+      />
+      <TextField
+        label="비밀번호"
+        variant="outlined"
+        type="password"
+        error={!passwordRegExp.test(password) ? true : false}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        label="비밀번호 확인"
+        variant="outlined"
+        type="password"
+        error={
+          !passwordRegExp.test(passwordCheck)
+            ? true
+            : password !== passwordCheck
+            ? true
+            : false
+        }
+        onChange={(e) => setPasswordCheck(e.target.value)}
+      />
+      <TextField
+        label="업체명"
+        variant="outlined"
+        error={!companyRegExp.test(company) ? true : false}
+        onChange={(e) => setCompany(e.target.value)}
+      />
+      <TextField
+        label="대표자"
+        variant="outlined"
+        error={!nameRegExp.test(name) ? true : false}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        label="대표번호"
+        variant="outlined"
+        error={!phoneRegExp.test(phone) ? true : false}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <TextField
+        label="사업자등록번호"
+        variant="outlined"
+        error={!regRegExp.test(reg) ? true : false}
+        onChange={(e) => setReg(e.target.value)}
+      />
+      <TextField
+        label="주소"
+        variant="outlined"
+        InputProps={{
+          readOnly: true,
+        }}
+        value={address}
+        onClick={() => setOpen(true)}
+      />
+      <TextField
+        label="상세주소"
+        variant="outlined"
+        error={extraAd === "" ? true : false}
+        onChange={(e) => setExtraAd(e.target.value)}
+      />
 
-      <label>
-        <div className="title">비밀번호 확인</div>
-        <div className="contents">
-          <input
-            value={passwordCheck}
-            type="password"
-            maxLength="24"
-            onChange={onChangePasswordCheck}
-          />
-          <div ref={passwordCheckRef}>
-            {passwordRegExp.test(passwordCheck) && password === passwordCheck
-              ? "o"
-              : "x"}
-          </div>
-        </div>
-      </label>
+      <FormControl fullWidth>
+        <InputLabel id="category-label">카테고리</InputLabel>
+        <Select
+          labelId="category-label"
+          value={category}
+          label="카테고리"
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <MenuItem value="플라워">플라워</MenuItem>
+          <MenuItem value="요리">요리</MenuItem>
+          <MenuItem value="미술">미술</MenuItem>
+          <MenuItem value="수공예">수공예</MenuItem>
+          <MenuItem value="액티비티">액티비티</MenuItem>
+          <MenuItem value="기타">기타</MenuItem>
+        </Select>
+      </FormControl>
 
-      <label>
-        <div className="title">업체명</div>
-        <div className="contents">
-          <input
-            value={company}
-            type="text"
-            maxLength="12"
-            onChange={onChangeCompany}
-          />
-          <div ref={companyRef}>{companyRegExp.test(company) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">대표자</div>
-        <div className="contents">
-          <input
-            value={name}
-            type="text"
-            maxLength="12"
-            onChange={onChangeName}
-          />
-          <div ref={nameRef}>{nameRegExp.test(name) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <label>
-        <div className="title">대표번호</div>
-        <div className="contents">
-          <input
-            value={phone}
-            type="text"
-            maxLength="11"
-            onChange={onChangePhone}
-          />
-          <div ref={phoneRef}>{phoneRegExp.test(phone) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <label className="address">
-        <div className="title">주소</div>
-        <input type="text" value={address} readOnly onClick={openModal} />
-        <input
-          type="text"
-          value={extraAd}
-          onChange={onChangeExtraAd}
-          placeholder="상세주소를 입력하세요"
-        />
-      </label>
-
-      <label>
-        <div className="title">카테고리</div>
-        <select onChange={onChangeCategory} defaultValue="기타">
-          <option value="플라워">플라워</option>
-          <option value="요리">요리</option>
-          <option value="미술">미술</option>
-          <option value="수공예">수공예</option>
-          <option value="액티비티">액티비티</option>
-          <option value="기타">기타</option>
-        </select>
-      </label>
-
-      <label>
-        <div className="title">사업자등록번호</div>
-        <div className="contents">
-          <input
-            value={reg}
-            type="text"
-            maxLength="10"
-            onChange={onChangeReg}
-          />
-          <div ref={regRef}>{regRegExp.test(reg) ? "o" : "x"}</div>
-        </div>
-      </label>
-
-      <Buttons>
-        <div onClick={onClickSignUp}>가입하기</div>
-        <div onClick={onClickCancel}>취소</div>
-      </Buttons>
+      <Button variant="contained" onClick={onClickSignUp}>
+        회원가입
+      </Button>
+      <Button variant="outlined" onClick={() => props.history.replace("/")}>
+        취소
+      </Button>
     </Container>
   );
 };

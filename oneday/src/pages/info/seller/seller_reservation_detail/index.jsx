@@ -82,6 +82,7 @@ const SellerReservationDetail = (props) => {
           }
         );
         window.alert("예약이 확정되었습니다.");
+        props.requestReservationCountData();
         requestReservationData();
       } catch (error) {
         console.log(error);
@@ -105,6 +106,7 @@ const SellerReservationDetail = (props) => {
           }
         );
         window.alert("예약이 취소되었습니다.");
+        props.requestReservationCountData();
         requestReservationData();
       } catch (error) {
         console.log(error);

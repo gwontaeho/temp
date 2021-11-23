@@ -24,6 +24,7 @@ const SellerScheduleUnfinished = (props) => {
         );
         console.log(response);
         props.requestUnfinishedScheduleData(auth);
+        props.requestReservationCountData();
         window.alert("일정이 종료되었습니다.");
       } catch (error) {
         console.log(error);
