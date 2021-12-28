@@ -1,0 +1,29 @@
+.Nav > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-height: 0;
+  top: 0;
+  left: 0;
+  background-color: #64c864;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  transition: 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.Nav > .screen {
+  background-color: black;
+}
+
+.Nav > .screen2 > div {
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  margin: 2%;
+}
+
+.Nav > .screen2 > div:hover {
+  color: black;
+}

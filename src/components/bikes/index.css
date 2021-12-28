@@ -1,0 +1,28 @@
+.Bikes {
+  display: flex;
+}
+
+.Bikes-bike {
+  width: 500px;
+  height: 400px;
+  perspective: 500px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.Bikes-bike-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  transition: 0.1s;
+}
+
+.Bikes-bike-card img {
+  width: 390px;
+  height: 270px;
+  object-fit: cover;
+  transition: 0.1s;
+}
