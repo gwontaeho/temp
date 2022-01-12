@@ -16,10 +16,6 @@ const Calendar = () => {
   const [dates, setDates] = useState([]);
 
   useEffect(() => {
-    console.log(date);
-  }, [date]);
-
-  useEffect(() => {
     const lastDate = new Date(
       firstDate.getFullYear(),
       firstDate.getMonth() + 1,

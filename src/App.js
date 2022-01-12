@@ -10,7 +10,6 @@ function App() {
   const cardRef = useRef();
 
   useEffect(() => {
-    console.log(screen);
     if (screen.current) cardRef.current.style.transform = "rotateY(180deg)";
     else cardRef.current.style.transform = "";
   }, [screen]);
