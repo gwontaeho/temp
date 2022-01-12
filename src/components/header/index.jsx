@@ -8,7 +8,6 @@ import { Container, Inner, Logo, Nav, Buttons, Search } from "./styles";
 const Header = () => {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.mode);
-  const menu = useSelector((state) => state.menu);
 
   const containerRef = useRef();
   const searchRef = useRef();
@@ -32,17 +31,17 @@ const Header = () => {
   }, [scrolled]);
 
   useEffect(() => {
-    const routes = document.getElementsByClassName("routes")[0];
+    const home = document.getElementsByClassName("home")[0];
     if (open) {
       containerRef.current.classList.add("open");
       searchRef.current.classList.add("open");
       document.body.style.position = "fixed";
-      routes.style.opacity = 0.5;
+      home.style.opacity = 0.5;
     } else {
       containerRef.current.classList.remove("open");
       searchRef.current.classList.remove("open");
       document.body.style.position = "static";
-      routes.style.opacity = 1;
+      home.style.opacity = 1;
     }
   }, [open]);
 

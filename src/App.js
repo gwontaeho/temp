@@ -1,4 +1,3 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
@@ -18,18 +17,12 @@ function App() {
   }, [mode]);
 
   return (
-    <BrowserRouter>
-      <div className="App" ref={appRef}>
-        <Menu />
-        <Header />
-        <div className="routes">
-          <Routes>
-            <Route index element={<Home />} />
-          </Routes>
-        </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <div className="App" ref={appRef}>
+      <Menu />
+      <Header />
+      <Home />
+      <Footer />
+    </div>
   );
 }
 

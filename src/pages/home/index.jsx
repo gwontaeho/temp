@@ -35,7 +35,7 @@ const Home = () => {
   }, [mode]);
 
   return (
-    <Container ref={containerRef}>
+    <Container ref={containerRef} className="home">
       <Title>
         <div className="calendar">오늘의 카카오</div>
         <div>1월 3일 월요일 소식입니다</div>

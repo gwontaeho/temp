@@ -10,25 +10,3 @@
   background-color: black;
   color: white;
 }
-
-.routes {
-  width: 1296px;
-}
-
-@media screen and (max-width: 1440px) {
-  .routes {
-    width: 952px;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .routes {
-    width: 630px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .routes {
-    width: 364px;
-  }
-}

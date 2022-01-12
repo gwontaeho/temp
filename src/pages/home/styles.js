@@ -7,7 +7,7 @@ import recruit from "../../images/home/bg_home_recruit.png";
 import tit_card from "../../images/home/tit_card.svg";
 
 export const Container = styled.div`
-  width: 100%;
+  width: 1296px;
   padding-bottom: 182px;
 
   &.dark {
@@ -27,6 +27,18 @@ export const Container = styled.div`
     .collection > div {
       background-color: #444;
     }
+  }
+
+  @media screen and (max-width: 1440px) {
+    width: 952px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: 630px;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 364px;
   }
 `;
 
