@@ -97,11 +97,9 @@ export const Buttons = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    margin-left: 12px;
     :hover {
       background-color: #eee;
-    }
-    :not(:first-child) {
-      margin-left: 12px;
     }
   }
 
