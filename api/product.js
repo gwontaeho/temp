@@ -10,38 +10,38 @@ const { verifyToken } = require("../jwt");
 const { sequelize, Product, User, Wish, Comment } = require("../models");
 const { Op } = require("sequelize");
 
-// const upload = multer({
-//   storage: multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, "public/image/product/");
-//     },
-//     filename: function (req, file, cb) {
-//       cb(
-//         null,
-//         req.decoded.id +
-//           "_" +
-//           new Date().valueOf() +
-//           path.extname(file.originalname)
-//       );
-//     },
-//   }),
-// });
-
 const upload = multer({
-  storage: multerS3({
-    s3,
-    bucket: "taeho-market",
-    acl: "public-read",
-    key(req, file, cb) {
-      const fileName =
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "public/image/product/");
+    },
+    filename: function (req, file, cb) {
+      cb(
+        null,
         req.decoded.id +
-        "_" +
-        new Date().valueOf() +
-        path.extname(file.originalname);
-      cb(null, `product/${fileName}`);
+          "_" +
+          new Date().valueOf() +
+          path.extname(file.originalname)
+      );
     },
   }),
 });
+
+// const upload = multer({
+//   storage: multerS3({
+//     s3,
+//     bucket: "taeho-market",
+//     acl: "public-read",
+//     key(req, file, cb) {
+//       const fileName =
+//         req.decoded.id +
+//         "_" +
+//         new Date().valueOf() +
+//         path.extname(file.originalname);
+//       cb(null, `product/${fileName}`);
+//     },
+//   }),
+// });
 
 // 메인
 router.get("/", async (req, res, next) => {
