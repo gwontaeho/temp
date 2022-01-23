@@ -19,3 +19,5 @@
 ### `lodash`
 
 ### `react-slick`
+
+### `http-proxy-middleware`
