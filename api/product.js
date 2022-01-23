@@ -2,7 +2,12 @@ const express = require("express");
 const router = express();
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const s3 = require("../index");
+const aws = require("aws-sdk");
+aws.config.update({
+  accessKeyId: "AKIAXMCCKLJBLDFTPR4J",
+  secretAccessKey: "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",
+  region: "ap-northeast-2",
+});
 const path = require("path");
 const fs = require("fs");
 
@@ -29,7 +34,7 @@ const { Op } = require("sequelize");
 
 const upload = multer({
   storage: multerS3({
-    s3,
+    s3: new AWS.S3(),
     bucket: "taeho-market",
     key(req, file, cb) {
       const fileName =
