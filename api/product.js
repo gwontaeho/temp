@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express();
 const multer = require("multer");
+const multerS3 = require("multer-s3");
+const s3 = require("../index");
 const path = require("path");
 const fs = require("fs");
 
@@ -8,19 +10,35 @@ const { verifyToken } = require("../jwt");
 const { sequelize, Product, User, Wish, Comment } = require("../models");
 const { Op } = require("sequelize");
 
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, "public/image/product/");
+//     },
+//     filename: function (req, file, cb) {
+//       cb(
+//         null,
+//         req.decoded.id +
+//           "_" +
+//           new Date().valueOf() +
+//           path.extname(file.originalname)
+//       );
+//     },
+//   }),
+// });
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "public/image/product/");
-    },
-    filename: function (req, file, cb) {
-      cb(
-        null,
+  storage: multerS3({
+    s3,
+    bucket: "taeho-market",
+    acl: "public-read",
+    key(req, file, cb) {
+      const fileName =
         req.decoded.id +
-          "_" +
-          new Date().valueOf() +
-          path.extname(file.originalname)
-      );
+        "_" +
+        new Date().valueOf() +
+        path.extname(file.originalname);
+      cb(null, `product/${fileName}`);
     },
   }),
 });
