@@ -2,12 +2,8 @@ const express = require("express");
 const router = express();
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const aws = require("aws-sdk");
-aws.config.update({
-  accessKeyId: "AKIAXMCCKLJBLDFTPR4J",
-  secretAccessKey: "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",
-  region: "ap-northeast-2",
-});
+const s3 = require("../aws");
+
 const path = require("path");
 const fs = require("fs");
 
@@ -34,7 +30,7 @@ const { Op } = require("sequelize");
 
 const upload = multer({
   storage: multerS3({
-    s3: new aws.S3(),
+    s3,
     bucket: "taeho-market",
     key(req, file, cb) {
       const fileName =
@@ -352,7 +348,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", verifyToken, upload.array("img"), async (req, res, next) => {
   const img = JSON.stringify(
     req.files.map((file) => {
-      return file.path;
+      return file.location;
     })
   );
   try {
@@ -375,7 +371,7 @@ router.put("/", verifyToken, upload.array("img"), async (req, res, next) => {
   if (req.body.updateImg === "true") {
     img = JSON.stringify(
       req.files.map((file) => {
-        return file.path;
+        return file.location;
       })
     );
     try {
