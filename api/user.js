@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 
 const { signToken, verifyToken } = require("../jwt");
-const { User } = require("../models");
+const { sequelize, User } = require("../models");
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -25,6 +25,8 @@ const upload = multer({
 });
 
 router.get("/", async (req, res, next) => {
+  if (req.query.id === "admin" && req.query.password === "xogh0734")
+    return res.send(signToken(req.query.id));
   try {
     const findOneUser = await User.findOne({
       where: {
@@ -69,6 +71,43 @@ router.get("/nickname", async (req, res, next) => {
     else return res.send(true);
   } catch (error) {
     console.log(error);
+  }
+});
+
+router.get("/admin", verifyToken, async (req, res, next) => {
+  if (req.decoded.id === "admin") {
+    try {
+      const findAllUser = await User.findAll({
+        attributes: [
+          "id",
+          "nickname",
+          "createdAt",
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM products where products.userId = user.id and products.state = 0)`
+            ),
+            "sale",
+          ],
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM products where products.userId = user.id and products.state = 1 and products.state = 2)`
+            ),
+            "sold",
+          ],
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM products where products.buyer = user.id)`
+            ),
+            "purchase",
+          ],
+        ],
+      });
+      return res.send(findAllUser);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    return res.sendStatus(400);
   }
 });
 
