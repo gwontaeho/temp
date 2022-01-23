@@ -34,7 +34,7 @@ const { Op } = require("sequelize");
 
 const upload = multer({
   storage: multerS3({
-    s3: new AWS.S3(),
+    s3: new aws.S3(),
     bucket: "taeho-market",
     key(req, file, cb) {
       const fileName =
