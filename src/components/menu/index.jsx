@@ -23,71 +23,92 @@ const Menu = () => {
   return (
     <Drawer anchor="right" open={menu.open} onClose={() => dispatch(close())}>
       <StyledList>
-        <ListItem
-          button
-          onClick={() => {
-            navigate(`/user/${auth.id}`);
-            dispatch(close());
-          }}
-        >
-          <ListItemIcon>
-            <PersonOutlineOutlinedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="내 정보" />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            navigate(`/sale`);
-            dispatch(close());
-          }}
-        >
-          <ListItemIcon>
-            <ListOutlinedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="판매 내역" />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            navigate(`/purchase`);
-            dispatch(close());
-          }}
-        >
-          <ListItemIcon>
-            <ListOutlinedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="구매 내역" />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            navigate(`/wish`);
-            dispatch(close());
-          }}
-        >
-          <ListItemIcon>
-            <ListOutlinedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="관심 목록" color="primary" />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            navigate(`/write`);
-            dispatch(close());
-          }}
-        >
-          <ListItemIcon>
-            <CreateOutlinedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText primary="글 쓰기" />
-        </ListItem>
+        {auth.id === "admin" ? (
+          <>
+            <ListItem
+              button
+              onClick={() => {
+                navigate(`/users`);
+                dispatch(close());
+              }}
+            >
+              <ListItemIcon>
+                <PersonOutlineOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="유저 목록" />
+            </ListItem>
+          </>
+        ) : (
+          <>
+            <ListItem
+              button
+              onClick={() => {
+                navigate(`/user/${auth.id}`);
+                dispatch(close());
+              }}
+            >
+              <ListItemIcon>
+                <PersonOutlineOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="내 정보" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                navigate(`/sale`);
+                dispatch(close());
+              }}
+            >
+              <ListItemIcon>
+                <ListOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="판매 내역" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                navigate(`/purchase`);
+                dispatch(close());
+              }}
+            >
+              <ListItemIcon>
+                <ListOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="구매 내역" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                navigate(`/wish`);
+                dispatch(close());
+              }}
+            >
+              <ListItemIcon>
+                <ListOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="관심 목록" color="primary" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                navigate(`/write`);
+                dispatch(close());
+              }}
+            >
+              <ListItemIcon>
+                <CreateOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="글 쓰기" />
+            </ListItem>
+          </>
+        )}
+
         <Divider />
         <ListItem
           button
           onClick={() => {
             dispatch(logout());
+            navigate(`/`);
             dispatch(close());
           }}
         >

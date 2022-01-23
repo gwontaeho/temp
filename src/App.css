@@ -1,5 +1,6 @@
 .App {
   width: 100vw;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,4 +10,14 @@
   width: 100%;
   padding: 50px 100px;
   box-sizing: border-box;
+  flex: 1;
+}
+
+@media screen and (max-width: 1023px) {
+  .route {
+    padding: 50px 50px;
+  }
+}
+
+@media screen and (max-width: 767px) {
 }

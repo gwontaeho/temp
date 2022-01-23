@@ -11,6 +11,9 @@ export const Contents = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (max-width: 767px) {
+    width: 450px;
+  }
 `;
 
 export const Header = styled.div`

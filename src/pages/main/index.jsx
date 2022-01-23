@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Slider from "react-slick";
+import { debounce } from "lodash";
 
 import { Container, Title, Item } from "./styles";
 import alt from "../../image/alt.png";
@@ -15,12 +16,26 @@ const Main = () => {
     popularProduct: [],
     newProduct: [],
   });
+  const [show, setShow] = useState(3);
   const [fetch, setFetch] = useState(false);
 
   useEffect(() => {
     getProduct();
     setFetch(true);
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const handleResize = debounce(() => {
+    if (window.innerWidth > 1024) setShow(3);
+    if (window.innerWidth >= 768 && window.innerWidth < 1024) setShow(2);
+    if (window.innerWidth < 768) setShow(1);
+  }, 500);
 
   const getProduct = useCallback(async () => {
     try {
@@ -85,7 +100,10 @@ const Main = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: products.popularProduct.length < 3 ? 1 : 3,
+    slidesToShow:
+      products.popularProduct.length < 3
+        ? products.popularProduct.length
+        : show,
     slidesToScroll: 1,
     arrows: false,
     autoplay: true,
@@ -96,7 +114,8 @@ const Main = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: products.newProduct.length < 3 ? 1 : 3,
+    slidesToShow:
+      products.newProduct.length < 3 ? products.newProduct.length : show,
     slidesToScroll: 1,
     arrows: false,
     autoplay: true,

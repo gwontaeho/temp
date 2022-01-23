@@ -47,7 +47,6 @@ const Sale = () => {
   }, []);
 
   const productList = products.map((product) => {
-    console.log(product);
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt

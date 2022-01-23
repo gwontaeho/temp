@@ -14,10 +14,10 @@ export const Header = styled.div`
   margin-bottom: 50px;
 `;
 
-export const Contents = styled.div`
+export const Inputs = styled.div`
+  width: 400px;
   display: flex;
   flex-direction: column;
-  width: 400px;
   > div {
     margin-bottom: 25px;
   }

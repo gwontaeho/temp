@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-
 import { login } from "../../features/auth";
-import "./index.css";
+
+import { Main, Header, Inputs } from "./styles";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -26,10 +26,17 @@ const Login = () => {
     }
   }, [id, password]);
 
+  const onKeyDown = useCallback(
+    (e) => {
+      if (e.code === "Enter") getUser();
+    },
+    [getUser]
+  );
+
   return (
-    <div className="login-container">
-      <div className="login-header">로그인</div>
-      <div className="login-input">
+    <Main>
+      <Header>로그인</Header>
+      <Inputs>
         <TextField
           label="아이디"
           variant="outlined"
@@ -40,12 +47,13 @@ const Login = () => {
           variant="outlined"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={onKeyDown}
         />
         <Button variant="contained" size="large" onClick={getUser}>
           로그인
         </Button>
-      </div>
-    </div>
+      </Inputs>
+    </Main>
   );
 };
 

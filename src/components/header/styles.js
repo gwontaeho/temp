@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const Container = styled.header`
   width: 100%;
   height: 100px;
-  z-index: 1;
+  z-index: 2;
   background-color: white;
   position: sticky;
   top: 0;
@@ -30,6 +30,10 @@ export const Search = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
 `;
 
 export const Controls = styled.div`

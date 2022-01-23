@@ -11,6 +11,7 @@ import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import {
   Container,
   Article,
+  SoldTag,
   Img,
   Controls,
   Wish,
@@ -188,8 +189,8 @@ const Product = () => {
   const imglist = imgs.map((img) => {
     const src = img.replace(/\\/gi, "/").replace(/public/gi, "");
     return (
-      <Img>
-        <img key={img} src={src} alt="img" onError={onError} />
+      <Img key={img}>
+        <img src={src} alt="img" onError={onError} />
       </Img>
     );
   });
@@ -308,6 +309,10 @@ const Product = () => {
         </StyledModal>
 
         <Article>
+          {(product.state === "1" || product.state === "2") && (
+            <SoldTag>판매 완료</SoldTag>
+          )}
+
           <Slider {...settings}>{imglist}</Slider>
 
           {product.userId === auth.id && (
@@ -374,17 +379,19 @@ const Product = () => {
                 ? "판매자에게 댓글로 문의해보세요"
                 : " 판매완료된 상품에는 댓글을 달 수 없습니다"}
             </div>
-            <div className="write">
-              <TextField
-                variant="standard"
-                fullWidth
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-              <Button variant="text" onClick={postComment}>
-                작성
-              </Button>
-            </div>
+            {product.state === "0" && (
+              <div className="write">
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+                <Button variant="text" onClick={postComment}>
+                  작성
+                </Button>
+              </div>
+            )}
             <div className="list">{commentList}</div>
           </Comment>
         </Article>

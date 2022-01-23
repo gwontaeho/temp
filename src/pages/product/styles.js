@@ -58,6 +58,27 @@ export const StyledModal = styled(Modal)`
 
 export const Article = styled.article`
   width: 700px;
+  position: relative;
+
+  @media screen and (max-width: 767px) {
+    width: 450px;
+  }
+`;
+
+export const SoldTag = styled.div`
+  width: 100%;
+  height: 500px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(238, 238, 238, 0.3);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  font-weight: bold;
+  color: #ddd;
 `;
 
 export const Img = styled.div`

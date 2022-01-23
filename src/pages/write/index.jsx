@@ -84,7 +84,15 @@ const Write = () => {
   return (
     <Main>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="write-modal-container">
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
           <DaumPostcode onComplete={handleComplete} />
         </div>
       </Modal>

@@ -26,7 +26,6 @@ const Wish = () => {
           token: auth.token,
         },
       });
-      console.log(response.data);
       setPages(Math.ceil(response.data.count / 6));
       setCount(response.data.count);
       setWishes(response.data.rows);

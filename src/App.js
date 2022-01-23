@@ -17,10 +17,11 @@ import Search from "./pages/search";
 import Sale from "./pages/sale";
 import Purchase from "./pages/purchase";
 import Wish from "./pages/wish";
+import Users from "./pages/users";
 
 function App() {
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
   window.addEventListener("storage", () => {
     dispatch(logout());
   });
@@ -67,6 +68,16 @@ function App() {
             <Route
               path="wish"
               element={!auth.loggedIn ? <Navigate to="/" /> : <Wish />}
+            />
+            <Route
+              path="users"
+              element={
+                !auth.loggedIn || auth.id !== "admin" ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Users />
+                )
+              }
             />
           </Routes>
         </div>

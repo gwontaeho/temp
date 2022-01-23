@@ -90,7 +90,6 @@ const Update = () => {
   }, []);
 
   const originalImgList = originalImgs.map((img) => {
-    console.log(img);
     const src = !img ? alt : img.replace(/\\/gi, "/").replace(/public/gi, "");
     return <img key={img} src={src} alt={img} onError={onError} />;
   });
@@ -112,7 +111,15 @@ const Update = () => {
   return (
     <Main>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="update-modal-container">
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
           <DaumPostcode onComplete={handleComplete} />
         </div>
       </Modal>

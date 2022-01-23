@@ -9,6 +9,12 @@ export const Info = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media screen and (max-width: 767px) {
+    span {
+      display: none;
+    }
+  }
 `;
 
 export const Profile = styled.div`
@@ -34,6 +40,13 @@ export const Profile = styled.div`
       text-decoration: underline;
     }
   }
+
+  @media screen and (max-width: 1023px) {
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
 `;
 
 export const Controls = styled.div`
@@ -49,6 +62,14 @@ export const List = styled.div`
   display: grid;
   grid-gap: 100px;
   grid-template-columns: repeat(3, 1fr);
+
+  @media screen and (max-width: 1023px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const Item = styled.div`
