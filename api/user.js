@@ -132,7 +132,7 @@ router.put(
       try {
         const updateUser = await User.update(
           {
-            img: req.file.path,
+            img: req.file.location,
           },
           {
             where: { id: req.decoded.id },

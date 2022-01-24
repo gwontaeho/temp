@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express();
 const s3 = require("../aws");
+const { productUpload } = require("../multer");
 const { sequelize, Product, User, Wish, Comment } = require("../models");
 const { verifyToken } = require("../jwt");
 const { Op } = require("sequelize");
@@ -307,66 +308,76 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", verifyToken, upload.array("img"), async (req, res, next) => {
-  const img = JSON.stringify(
-    req.files.map((file) => {
-      return file.location;
-    })
-  );
-  try {
-    await Product.create({
-      name: req.body.name,
-      price: req.body.price,
-      address: req.body.address,
-      intro: req.body.intro,
-      img,
-      userId: req.decoded.id,
-    });
-    res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.put("/", verifyToken, upload.array("img"), async (req, res, next) => {
-  let img;
-  if (req.body.updateImg === "true") {
-    img = JSON.stringify(
+router.post(
+  "/",
+  verifyToken,
+  productUpload.array("img"),
+  async (req, res, next) => {
+    const img = JSON.stringify(
       req.files.map((file) => {
         return file.location;
       })
     );
     try {
-      const findOneProduct = await Product.findByPk(req.body.id);
-      JSON.parse(findOneProduct.dataValues.img).forEach((path) => {
-        s3.deleteObject(
-          {
-            Bucket: "taeho-market",
-            Key: path,
-          },
-          function (err, data) {}
-        );
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  } else img = sequelize.literal("img");
-  try {
-    await Product.update(
-      {
+      await Product.create({
         name: req.body.name,
         price: req.body.price,
         address: req.body.address,
         intro: req.body.intro,
         img,
-      },
-      { where: { id: req.body.id, userId: req.decoded.id } }
-    );
-    res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
+        userId: req.decoded.id,
+      });
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
+
+router.put(
+  "/",
+  verifyToken,
+  productUpload.array("img"),
+  async (req, res, next) => {
+    let img;
+    if (req.body.updateImg === "true") {
+      img = JSON.stringify(
+        req.files.map((file) => {
+          return file.location;
+        })
+      );
+      try {
+        const findOneProduct = await Product.findByPk(req.body.id);
+        JSON.parse(findOneProduct.dataValues.img).forEach((path) => {
+          s3.deleteObject(
+            {
+              Bucket: "taeho-market",
+              Key: path,
+            },
+            function (err, data) {}
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else img = sequelize.literal("img");
+    try {
+      await Product.update(
+        {
+          name: req.body.name,
+          price: req.body.price,
+          address: req.body.address,
+          intro: req.body.intro,
+          img,
+        },
+        { where: { id: req.body.id, userId: req.decoded.id } }
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 router.put("/1", verifyToken, async (req, res, next) => {
   const state = req.body.buyer === "" ? 2 : 1;
