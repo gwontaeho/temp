@@ -47,7 +47,7 @@ exports.userUpload = multer({
         "_" +
         new Date().valueOf() +
         path.extname(file.originalname);
-      cb(null, `product/${fileName}`);
+      cb(null, `user/${fileName}`);
     },
   }),
 });

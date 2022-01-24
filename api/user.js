@@ -146,10 +146,15 @@ router.put(
       try {
         const findOneUser = await User.findByPk(req.decoded.id);
 
+        const key =
+          findOneUser.dataValues.img.split("/")[3] +
+          "/" +
+          findOneUser.dataValues.img.split("/")[4];
+
         s3.deleteObject(
           {
             Bucket: "taeho-market",
-            Key: findOneUser.dataValues.img,
+            Key: key,
           },
           function (err, data) {}
         );

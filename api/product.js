@@ -349,10 +349,11 @@ router.put(
       try {
         const findOneProduct = await Product.findByPk(req.body.id);
         JSON.parse(findOneProduct.dataValues.img).forEach((path) => {
+          const key = path.split("/")[3] + "/" + path.split("/")[4];
           s3.deleteObject(
             {
               Bucket: "taeho-market",
-              Key: path,
+              Key: key,
             },
             function (err, data) {}
           );
