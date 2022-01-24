@@ -1,28 +1,10 @@
 const express = require("express");
 const router = express();
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 
-const { signToken, verifyToken } = require("../jwt");
 const { sequelize, User } = require("../models");
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "public/image/user/");
-    },
-    filename: function (req, file, cb) {
-      cb(
-        null,
-        req.decoded.id +
-          "_" +
-          new Date().valueOf() +
-          path.extname(file.originalname)
-      );
-    },
-  }),
-});
+const { userUpload } = require("../multer");
+const { signToken, verifyToken } = require("../jwt");
+const s3 = require("../aws");
 
 router.get("/", async (req, res, next) => {
   if (req.query.id === "admin" && req.query.password === "xogh0734")
@@ -144,7 +126,7 @@ router.post("/", async (req, res, next) => {
 router.put(
   "/img",
   verifyToken,
-  upload.single("img"),
+  userUpload.single("img"),
   async (req, res, next) => {
     if (req.file) {
       try {
@@ -163,9 +145,14 @@ router.put(
     } else {
       try {
         const findOneUser = await User.findByPk(req.decoded.id);
-        fs.unlink(findOneUser.dataValues.img, (error) => {
-          if (error) console.log(error);
-        });
+
+        s3.deleteObject(
+          {
+            Bucket: "taeho-market",
+            Key: findOneUser.dataValues.img,
+          },
+          function (err, data) {}
+        );
       } catch (error) {
         console.log(error);
       }

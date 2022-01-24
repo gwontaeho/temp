@@ -1,53 +1,9 @@
 const express = require("express");
 const router = express();
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-const aws = require("aws-sdk");
-const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
-
-const path = require("path");
-const fs = require("fs");
-
-const { verifyToken } = require("../jwt");
+const s3 = require("../aws");
 const { sequelize, Product, User, Wish, Comment } = require("../models");
+const { verifyToken } = require("../jwt");
 const { Op } = require("sequelize");
-
-// const upload = multer({
-//   storage: multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, "public/image/product/");
-//     },
-//     filename: function (req, file, cb) {
-//       cb(
-//         null,
-//         req.decoded.id +
-//           "_" +
-//           new Date().valueOf() +
-//           path.extname(file.originalname)
-//       );
-//     },
-//   }),
-// });
-
-const upload = multer({
-  storage: multerS3({
-    s3,
-    bucket: "taeho-market",
-    acl: "public-read",
-    key(req, file, cb) {
-      const fileName =
-        req.decoded.id +
-        "_" +
-        new Date().valueOf() +
-        path.extname(file.originalname);
-      cb(null, `product/${fileName}`);
-    },
-  }),
-});
 
 // 메인
 router.get("/", async (req, res, next) => {
@@ -383,9 +339,13 @@ router.put("/", verifyToken, upload.array("img"), async (req, res, next) => {
     try {
       const findOneProduct = await Product.findByPk(req.body.id);
       JSON.parse(findOneProduct.dataValues.img).forEach((path) => {
-        fs.unlink(path, (error) => {
-          if (error) console.log(error);
-        });
+        s3.deleteObject(
+          {
+            Bucket: "taeho-market",
+            Key: path,
+          },
+          function (err, data) {}
+        );
       });
     } catch (error) {
       console.log(error);
