@@ -37,6 +37,7 @@ const upload = multer({
   storage: multerS3({
     s3,
     bucket: "taeho-market",
+    acl: "public-read",
     key(req, file, cb) {
       const fileName =
         req.decoded.id +
