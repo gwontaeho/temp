@@ -72,7 +72,7 @@ router.get("/admin", verifyToken, async (req, res, next) => {
           ],
           [
             sequelize.literal(
-              `(SELECT COUNT(*) FROM products where products.userId = user.id and products.state = 1 and products.state = 2)`
+              `(SELECT COUNT(*) FROM products where products.userId = user.id and (products.state = 1 or products.state = 2))`
             ),
             "sold",
           ],
