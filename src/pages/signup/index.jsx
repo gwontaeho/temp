@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import axios from "axios";
+import axiosInstance from "../../axios";
 
 import { Main, Header, Contents } from "./styles";
 
@@ -36,9 +36,10 @@ const Signup = () => {
   }, []);
 
   const checkId = useCallback(async () => {
+    if (id === "admin") return window.alert("사용할 수 없는 아이디입니다");
     if (!idRegExp.test(id)) return;
     try {
-      const response = await axios.get(`/api/user/id?id=${id}`);
+      const response = await axiosInstance.get(`/api/user/id?id=${id}`);
       setIdCheck(true);
       if (response.status === 200 && response.data) setIdCheckResult(true);
     } catch (error) {
@@ -49,7 +50,7 @@ const Signup = () => {
   const checkNickname = useCallback(async () => {
     if (!nicknameRegExp.test(nickname)) return;
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/api/user/nickname?nickname=${nickname}`
       );
       setNicknameCheck(true);
@@ -71,7 +72,7 @@ const Signup = () => {
       return window.alert("정보를 정확히 입력해주세요");
 
     try {
-      const response = await axios.post("/api/user", {
+      const response = await axiosInstance.post("/api/user", {
         id,
         password,
         nickname,

@@ -1,15 +1,15 @@
-import { useSelector } from "react-redux";
 import { useState, useCallback, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
-import Divider from "@mui/material/Divider";
-
-import axios from "axios";
+import axiosInstance from "../../axios";
+import { start, end } from "../../features/loading";
 
 import { Main, Info, Profile, Controls, List, Item } from "./styles";
 import alt from "../../image/alt.png";
 
 const User = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const params = useParams();
 
@@ -29,16 +29,19 @@ const User = () => {
 
   const getUser = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/user/${params.id}`);
+      dispatch(start());
+      const response = await axiosInstance.get(`/api/user/${params.id}`);
       if (response.status === 200) setUser(response.data);
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, []);
 
   const getProduct = useCallback(async () => {
     try {
-      const response = await axios.get(
+      dispatch(start());
+      const response = await axiosInstance.get(
         `/api/product/seller?userId=${params.id}&page=${page}`
       );
       setProducts(response.data.rows);
@@ -47,24 +50,19 @@ const User = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [page]);
-
-  const onError = useCallback((e) => {
-    e.target.src = alt;
-  }, []);
 
   const productList = products.map((product) => {
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt
-        : JSON.parse(product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(product.img)[0];
 
     return (
       <Item key={product.id}>
         <Link to={`/product/${product.id}`}>
-          <img src={src} alt="sale" onError={onError} />
+          <img src={src} alt="sale" onError={(e) => (e.target.src = alt)} />
         </Link>
         <div className="name">{product.name}</div>
         <div className="price">{product.price}원</div>
@@ -80,14 +78,7 @@ const User = () => {
     <Main>
       <Info>
         <Profile>
-          <img
-            src={
-              user.img
-                ? user.img.replace(/\\/gi, "/").replace(/public/gi, "")
-                : alt
-            }
-            alt="profile"
-          />
+          <img src={user.img ? user.img : alt} alt="profile" />
           <div>
             <div className="name">{user.nickname}</div>
             {auth.id === params.id && <Link to="/profile">수정</Link>}

@@ -7,9 +7,13 @@ export const Container = styled.header`
   background-color: white;
   position: sticky;
   top: 0;
+  border-bottom: 1px solid #eee;
+`;
+export const HeaderContainer = styled.div`
+  width: 100%;
+  height: 100px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #eee;
 `;
 
 export const Logo = styled.div`

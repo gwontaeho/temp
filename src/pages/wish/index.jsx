@@ -1,14 +1,16 @@
 import { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
-import axios from "axios";
-
+import axiosInstance from "../../axios";
+import { start, end } from "../../features/loading";
 import alt from "../../image/alt.png";
 import { Main, Header, Controls, List, Item } from "./styles";
 
 const Wish = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+  const loading = useSelector((state) => state.loading);
 
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -21,7 +23,8 @@ const Wish = () => {
 
   const getWish = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/wish?page=${page}`, {
+      dispatch(start());
+      const response = await axiosInstance.get(`/api/wish?page=${page}`, {
         headers: {
           token: auth.token,
         },
@@ -32,24 +35,23 @@ const Wish = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [page]);
-
-  const onError = useCallback((e) => {
-    e.target.src = alt;
-  }, []);
 
   const list = wishes.map((wish) => {
     const src =
       JSON.parse(wish.product.img).length === 0 || !wish.product.img
         ? alt
-        : JSON.parse(wish.product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(wish.product.img)[0];
 
     return (
       <Item key={wish.id}>
         <Link to={`/product/${wish.product.id}`}>
-          <img src={src} alt={wish.name} onError={onError} />
+          <img
+            src={src}
+            alt={wish.name}
+            onError={(e) => (e.target.src = alt)}
+          />
         </Link>
         <div className="name">{wish.product.name}</div>
         <div className="price">
@@ -66,9 +68,10 @@ const Wish = () => {
   return (
     <Main>
       <Header>
-        {count === 0
-          ? `관심목록에 추가한 상품이 없습니다`
-          : `${count}건의 관심상품이 있습니다`}
+        {!loading.current &&
+          (count === 0
+            ? `관심목록에 추가한 상품이 없습니다`
+            : `${count}건의 관심상품이 있습니다`)}
       </Header>
       <Controls>
         <Pagination count={pages} onChange={(e, v) => setPage(v)} />

@@ -9,7 +9,6 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-
 import { logout } from "../../features/auth";
 import { close } from "../../features/menu";
 import { StyledList } from "./styles";

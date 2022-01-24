@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import axiosInstance from "../../axios";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -23,7 +23,7 @@ const Users = () => {
 
   const getUsers = useCallback(async () => {
     try {
-      const response = await axios.get("/api/user/admin", {
+      const response = await axiosInstance.get("/api/user/admin", {
         headers: {
           token: auth.token,
         },

@@ -4,13 +4,15 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Divider from "@mui/material/Divider";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../../axios";
+import { start, end } from "../../features/loading";
 
 import { Container, Title, Img, Contents } from "./styles";
 import alt from "../../image/alt.png";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
   const nicknameRegExp = /^[가-힣]{2,6}$/;
@@ -32,7 +34,8 @@ const Profile = () => {
 
   const getUser = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/user/${auth.id}`);
+      dispatch(start());
+      const response = await axiosInstance.get(`/api/user/${auth.id}`);
       if (response.status === 200) {
         setUser(response.data);
         setImg();
@@ -46,12 +49,14 @@ const Profile = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, []);
 
   const checkNickname = useCallback(async () => {
     if (!nicknameRegExp.test(nickname)) return;
     try {
-      const response = await axios.get(
+      dispatch(start());
+      const response = await axiosInstance.get(
         `/api/user/nickname?nickname=${nickname}`
       );
       if (response.status === 200 && response.data) setNicknameCheck(true);
@@ -61,11 +66,13 @@ const Profile = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [nickname]);
 
   const putNickname = useCallback(async () => {
     try {
-      const response = await axios.put(
+      dispatch(start());
+      const response = await axiosInstance.put(
         "/api/user/nickname",
         { nickname },
         {
@@ -79,11 +86,13 @@ const Profile = () => {
     } catch (error) {
       getUser();
     }
+    dispatch(end());
   }, [nickname]);
 
   const putPassword = useCallback(async () => {
     try {
-      const response = await axios.put(
+      dispatch(start());
+      const response = await axiosInstance.put(
         "/api/user/password",
         { password, newPassword },
         {
@@ -98,6 +107,7 @@ const Profile = () => {
       window.alert("잘못된 비밀번호입니다.");
       getUser();
     }
+    dispatch(end());
   }, [password, newPassword]);
 
   const putImg = useCallback(async () => {
@@ -105,13 +115,15 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("img", img);
     try {
-      const response = await axios.put("/api/user/img", formData, {
+      dispatch(start());
+      const response = await axiosInstance.put("/api/user/img", formData, {
         headers: { token: auth.token },
       });
       getUser();
     } catch (error) {
       getUser();
     }
+    dispatch(end());
   }, [img]);
 
   const onClickUpload = useCallback(() => {
@@ -123,11 +135,7 @@ const Profile = () => {
     <Container>
       <Title>프로필 수정</Title>
       <Img
-        src={
-          user.img && !deleteImg && !src
-            ? user.img.replace(/\\/gi, "/").replace(/public/gi, "")
-            : src || alt
-        }
+        src={user.img && !deleteImg && !src ? user.img : src || alt}
         alt="profile"
       />
       <Contents>

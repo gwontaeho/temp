@@ -2,13 +2,14 @@ import { useState, useCallback, useEffect } from "react";
 import Slider from "react-slick";
 import DaumPostcode from "react-daum-postcode";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import axiosInstance from "../../axios";
+import { start, end } from "../../features/loading";
 
-import axios from "axios";
-import { useSelector } from "react-redux";
 import {
   AddPhotoAlternateOutlined,
   SettingsBackupRestoreOutlined,
@@ -18,6 +19,7 @@ import alt from "../../image/alt.png";
 import { Main, Header, Contents, Img, Icons, Inputs, Buttons } from "./styles";
 
 const Update = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const params = useParams();
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ const Update = () => {
 
   const getProduct = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/product/${params.id}`);
+      const response = await axiosInstance.get(`/api/product/${params.id}`);
       if (response.status === 200) {
         setOriginalImgs(JSON.parse(response.data.img));
         setName(response.data.name);
@@ -68,13 +70,16 @@ const Update = () => {
     formData.append("updateImg", updateImg);
 
     try {
-      const response = await axios.put("/api/product", formData, {
+      dispatch(start());
+      const response = await axiosInstance.put("/api/product", formData, {
         headers: {
           token: auth.token,
         },
       });
-      if (response.status === 200)
+      if (response.status === 200) {
+        dispatch(end());
         navigate(`/product/${params.id}`, { replace: true });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -85,13 +90,16 @@ const Update = () => {
     setOpen(false);
   }, []);
 
-  const onError = useCallback((e) => {
-    e.target.src = alt;
-  }, []);
-
   const originalImgList = originalImgs.map((img) => {
-    const src = !img ? alt : img.replace(/\\/gi, "/").replace(/public/gi, "");
-    return <img key={img} src={src} alt={img} onError={onError} />;
+    const src = !img ? alt : img;
+    return (
+      <img
+        key={img}
+        src={src}
+        alt={img}
+        onError={(e) => (e.target.src = alt)}
+      />
+    );
   });
 
   const imgList = Array.from(imgs).map((img) => {

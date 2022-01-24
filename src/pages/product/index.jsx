@@ -1,12 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../../axios";
 import Slider from "react-slick";
 import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
 import Button from "@mui/material/Button";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { start, end } from "../../features/loading";
 
 import {
   Container,
@@ -24,11 +25,10 @@ import {
   StyledModal,
 } from "./styles";
 import alt from "../../image/alt.png";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const Product = () => {
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
 
@@ -49,7 +49,8 @@ const Product = () => {
 
   const getProduct = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/product/${params.id}`);
+      dispatch(start());
+      const response = await axiosInstance.get(`/api/product/${params.id}`);
       if (response.status === 200) {
         let users = [];
         response.data.comments.forEach((comment) => {
@@ -86,12 +87,14 @@ const Product = () => {
     } catch (error) {
       return navigate("/", { replace: true });
     }
+    dispatch(end());
   }, []);
 
   const postWish = useCallback(async () => {
     if (!auth.loggedIn) return window.alert("로그인을 해주세요");
     try {
-      const response = await axios.post(
+      dispatch(start());
+      const response = await axiosInstance.post(
         "/api/wish",
         {
           productId: product.id,
@@ -106,14 +109,16 @@ const Product = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [product]);
 
   const postComment = useCallback(async () => {
     if (!auth.loggedIn) return window.alert("로그인을 해주세요");
     if (comment === "") return window.alert("내용을 입력해주세요");
     try {
-      const response = await axios.post(
-        "/api/comment",
+      dispatch(start());
+      const response = await axiosInstance.post(
+        `/api/comment`,
         {
           productId: params.id,
           comment,
@@ -131,13 +136,15 @@ const Product = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [comment]);
 
   const putComment = useCallback(async (e, id) => {
     const parentNode = e.target.parentNode;
     const answer = e.target.parentNode.getElementsByTagName("input")[0].value;
     try {
-      const response = await axios.put(
+      dispatch(start());
+      const response = await axiosInstance.put(
         "/api/comment",
         {
           id,
@@ -153,12 +160,14 @@ const Product = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
     parentNode.style.display = "none";
   }, []);
 
   const putProduct = useCallback(async () => {
     try {
-      const response = await axios.put(
+      dispatch(start());
+      const response = await axiosInstance.put(
         "/api/product/1",
         {
           id: params.id,
@@ -174,11 +183,8 @@ const Product = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [buyer]);
-
-  const onError = useCallback((e) => {
-    e.target.src = alt;
-  }, []);
 
   const onClickReply = useCallback((e) => {
     if (e.target.nextSibling.style.display === "flex")
@@ -187,26 +193,25 @@ const Product = () => {
   }, []);
 
   const imglist = imgs.map((img) => {
-    const src = img.replace(/\\/gi, "/").replace(/public/gi, "");
     return (
       <Img key={img}>
-        <img src={src} alt="img" onError={onError} />
+        <img src={img} alt="img" onError={(e) => (e.target.src = alt)} />
       </Img>
     );
   });
 
   const commentList = comments.map((comment) => {
-    const userProfileImg = comment.user.img
-      ? comment.user.img.replace(/\\/gi, "/").replace(/public/gi, "")
-      : alt;
-    const sellerProfileImg = product.user.img
-      ? product.user.img.replace(/\\/gi, "/").replace(/public/gi, "")
-      : alt;
+    const userProfileImg = comment.user.img ? comment.user.img : alt;
+    const sellerProfileImg = product.user.img ? product.user.img : alt;
     if (comment.userId === auth.id || product.userId === auth.id)
       return (
         <CommentItem key={comment.id}>
           <Question>
-            <img src={userProfileImg} alt="profile" onError={onError} />
+            <img
+              src={userProfileImg}
+              alt="profile"
+              onError={(e) => (e.target.src = alt)}
+            />
             <div>
               <div className="nickname">{comment.user.nickname}</div>
               <div className="date">{comment.createdAt.substr(0, 10)}</div>
@@ -231,7 +236,11 @@ const Product = () => {
           </Question>
           {comment.answer !== null && (
             <Answer>
-              <img src={sellerProfileImg} alt="profile" onError={onError} />
+              <img
+                src={sellerProfileImg}
+                alt="profile"
+                onError={(e) => (e.target.src = alt)}
+              />
               <div>
                 <div className="nickname">{product.user.nickname}</div>
                 <div className="date">{comment.updatedAt.substr(0, 10)}</div>
@@ -244,13 +253,11 @@ const Product = () => {
   });
 
   const userList = users.map((user) => {
-    const src = user.img
-      ? user.img.replace(/\\/gi, "/").replace(/public/gi, "")
-      : alt;
+    const src = user.img ? user.img : alt;
     return (
       <div key={user.id} className="item">
         <div className="profile">
-          <img src={src} alt="img" onError={onError} />
+          <img src={src} alt="img" onError={(e) => (e.target.src = alt)} />
           <div>{user.nickname}</div>
         </div>
         <Radio

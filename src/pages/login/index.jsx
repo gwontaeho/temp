@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { login } from "../../features/auth";
+import axiosInstance from "../../axios";
 
 import { Main, Header, Inputs } from "./styles";
 
@@ -15,7 +15,7 @@ const Login = () => {
 
   const getUser = useCallback(async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/api/user?id=${id}&password=${password}`
       );
       if (response.status === 200)

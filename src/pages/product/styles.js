@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
 import Modal from "@mui/material/Modal";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export const Container = styled.main`
   width: 100%;

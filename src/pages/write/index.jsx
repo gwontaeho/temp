@@ -1,13 +1,15 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import DaumPostcode from "react-daum-postcode";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import axiosInstance from "../../axios";
+import { start, end } from "../../features/loading";
+
 import {
   AddPhotoAlternateOutlined,
   SettingsBackupRestoreOutlined,
@@ -18,7 +20,7 @@ import alt from "../../image/alt.png";
 
 const Write = () => {
   const auth = useSelector((state) => state.auth);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const settings = {
@@ -64,12 +66,16 @@ const Write = () => {
     formData.append("intro", intro);
 
     try {
-      const response = await axios.post("/api/product", formData, {
+      dispatch(start());
+      const response = await axiosInstance.post("/api/product", formData, {
         headers: {
           token: auth.token,
         },
       });
-      if (response.status === 200) navigate("/", { replace: true });
+      if (response.status === 200) {
+        dispatch(end());
+        navigate("/", { replace: true });
+      }
     } catch (error) {
       console.log(error);
     }

@@ -1,11 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-
-const persistConfig = {
-  key: "root",
-  storage,
-};
 
 export const authSlice = createSlice({
   name: "auth",
@@ -31,4 +24,4 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { login, logout } = authSlice.actions;
 
-export default persistReducer(persistConfig, authSlice.reducer);
+export default authSlice.reducer;

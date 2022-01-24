@@ -1,18 +1,19 @@
 import { useState, useCallback, useEffect } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import axiosInstance from "../../axios";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-
+import { start, end } from "../../features/loading";
 import { Main, Header, Controls, List, Text, Item } from "./styles";
 import alt from "../../image/alt.png";
 
 const Purchase = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.auth);
+  const loading = useSelector((state) => state.loading);
 
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -32,7 +33,8 @@ const Purchase = () => {
 
   const getProduct = useCallback(async () => {
     try {
-      const response = await axios.get(
+      dispatch(start());
+      const response = await axiosInstance.get(
         `/api/product/purchase?state=2&page=${page}`,
         {
           headers: {
@@ -48,11 +50,13 @@ const Purchase = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [page]);
 
   const getProduct2 = useCallback(async () => {
     try {
-      const response = await axios.get(
+      dispatch(start());
+      const response = await axiosInstance.get(
         `/api/product/uncertain?state=1&page=${page2}`,
         {
           headers: {
@@ -67,11 +71,13 @@ const Purchase = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [page2]);
 
   const putProduct = useCallback(async (id, boolean) => {
     try {
-      const response = await axios.put(
+      dispatch(start());
+      const response = await axiosInstance.put(
         "/api/product/2",
         {
           id,
@@ -90,25 +96,21 @@ const Purchase = () => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
-
-  const onError = useCallback((e) => {
-    e.target.src = alt;
+    dispatch(end());
   }, []);
 
   const productList = products.map((product) => {
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt
-        : JSON.parse(product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(product.img)[0];
+
     return (
       <Item key={product.id}>
         <img
           src={src}
           alt={product.name}
-          onError={onError}
+          onError={(e) => (e.target.src = alt)}
           onClick={() => navigate(`/product/${product.id}`)}
         />
         <div className="name">{product.name}</div>
@@ -125,16 +127,14 @@ const Purchase = () => {
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt
-        : JSON.parse(product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(product.img)[0];
 
     return (
       <Item key={product.id}>
         <img
           src={src}
           alt={product.name}
-          onError={onError}
+          onError={(e) => (e.target.src = alt)}
           onClick={() => navigate(`/product/${product.id}`)}
         />
         <div className="name">{product.name}</div>
@@ -156,9 +156,10 @@ const Purchase = () => {
   return (
     <Main>
       <Header>
-        {count === 0
-          ? `아직 구매한 상품이 없습니다`
-          : `${count}건의 구매한 상품이 있습니다`}
+        {!loading.current &&
+          (count === 0
+            ? `아직 구매한 상품이 없습니다`
+            : `${count}건의 구매한 상품이 있습니다`)}
       </Header>
       <Controls>
         <Pagination page={page} count={pages} onChange={(e, v) => setPage(v)} />

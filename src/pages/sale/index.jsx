@@ -1,17 +1,19 @@
 import { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../axios";
 import Pagination from "@mui/material/Pagination";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
+import { start, end } from "../../features/loading";
 import { Main, Header, Controls, Text, List, Item } from "./styles";
 
 import alt from "../../image/alt.png";
 
 const Sale = () => {
   const auth = useSelector((state) => state.auth);
+  const loading = useSelector((state) => state.loading);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
@@ -26,7 +28,8 @@ const Sale = () => {
 
   const getProduct = useCallback(async () => {
     try {
-      const response = await axios.get(
+      dispatch(start());
+      const response = await axiosInstance.get(
         `/api/product/sale?page=${page}&state=${state}`,
         {
           headers: {
@@ -40,26 +43,21 @@ const Sale = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, [page, state]);
-
-  const onError = useCallback((e) => {
-    e.target.src = alt;
-  }, []);
 
   const productList = products.map((product) => {
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt
-        : JSON.parse(product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(product.img)[0];
 
     return (
       <Item key={product.id}>
         <img
           src={src}
           alt={product.name}
-          onError={onError}
+          onError={(e) => (e.target.src = alt)}
           onClick={() => navigate(`/product/${product.id}`)}
         />
         <div className="name">{product.name}</div>
@@ -80,13 +78,14 @@ const Sale = () => {
   return (
     <Main>
       <Header>
-        {state === 0
-          ? count === 0
-            ? `판매중인 상품이 없습니다`
-            : `${count}건의 판매중인 상품이 있습니다`
-          : count === 0
-          ? `판매완료된 상품이 없습니다`
-          : `${count}건의 판매완료된 상품이 있습니다`}
+        {!loading.current &&
+          (state === 0
+            ? count === 0
+              ? `판매중인 상품이 없습니다`
+              : `${count}건의 판매중인 상품이 있습니다`
+            : count === 0
+            ? `판매완료된 상품이 없습니다`
+            : `${count}건의 판매완료된 상품이 있습니다`)}
       </Header>
       <Controls>
         <div>

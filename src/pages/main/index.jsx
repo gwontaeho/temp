@@ -1,16 +1,16 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
 import Slider from "react-slick";
 import { debounce } from "lodash";
-
+import axiosInstance from "../../axios";
+import { start, end } from "../../features/loading";
 import { Container, Title, Item } from "./styles";
 import alt from "../../image/alt.png";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const Main = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [products, setProducts] = useState({
     popularProduct: [],
@@ -39,20 +39,20 @@ const Main = () => {
 
   const getProduct = useCallback(async () => {
     try {
-      const response = await axios.get("/api/product");
+      dispatch(start());
+      const response = await axiosInstance.get("/api/product");
       if (response.status === 200) setProducts(response.data);
     } catch (error) {
       console.log(error);
     }
+    dispatch(end());
   }, []);
 
   const popularList = products.popularProduct.map((product) => {
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt
-        : JSON.parse(product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(product.img)[0];
     return (
       <Item key={product.id}>
         <img
@@ -75,9 +75,7 @@ const Main = () => {
     const src =
       JSON.parse(product.img).length === 0 || !product.img
         ? alt
-        : JSON.parse(product.img)[0]
-            .replace(/\\/gi, "/")
-            .replace(/public/gi, "");
+        : JSON.parse(product.img)[0];
     return (
       <Item key={product.id}>
         <img
