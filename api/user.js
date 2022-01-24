@@ -128,6 +128,22 @@ router.put(
   verifyToken,
   userUpload.single("img"),
   async (req, res, next) => {
+    try {
+      const findOneUser = await User.findByPk(req.decoded.id);
+      const key =
+        findOneUser.dataValues.img.split("/")[3] +
+        "/" +
+        findOneUser.dataValues.img.split("/")[4];
+      s3.deleteObject(
+        {
+          Bucket: "taeho-market",
+          Key: key,
+        },
+        function (err, data) {}
+      );
+    } catch (error) {
+      console.log(error);
+    }
     if (req.file) {
       try {
         const updateUser = await User.update(
@@ -143,24 +159,6 @@ router.put(
         console.log(error);
       }
     } else {
-      try {
-        const findOneUser = await User.findByPk(req.decoded.id);
-
-        const key =
-          findOneUser.dataValues.img.split("/")[3] +
-          "/" +
-          findOneUser.dataValues.img.split("/")[4];
-
-        s3.deleteObject(
-          {
-            Bucket: "taeho-market",
-            Key: key,
-          },
-          function (err, data) {}
-        );
-      } catch (error) {
-        console.log(error);
-      }
       try {
         const updateUser = await User.update(
           {
