@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ReactComponent as GitHubIcon } from "../../images/etc/github.svg";
 import { ReactComponent as GitHubPagesIcon } from "../../images/etc/githubpages.svg";
 import Tooltip from "@mui/material/Tooltip";
@@ -22,6 +22,7 @@ const Project = () => {
   const navigate = useNavigate();
   const project = useSelector((state) => state.project);
   const containerRef = useRef();
+  console.log(project);
 
   useEffect(() => {
     setTimeout(() => {
