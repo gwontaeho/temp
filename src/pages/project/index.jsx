@@ -52,6 +52,7 @@ const Project = () => {
           <div>
             <Tooltip title="GitHub" arrow>
               <a href={project.current.github} target="_blank" rel="noreferrer">
+                <span>소스 코드 : </span>
                 <GitHubIcon fill="#181717" className="github" />
               </a>
             </Tooltip>
@@ -61,15 +62,22 @@ const Project = () => {
                 target="_blank"
                 rel="noreferrer"
               >
+                <span>시연 : </span>
                 <GitHubPagesIcon fill="#222222" className="githubpages" />
               </a>
             </Tooltip>
           </div>
         </Section>
         <Section2>
-          <Title2>Intro</Title2>
+          <Title2>소개</Title2>
           <Text>{project.current.text}</Text>
-          <Title2>Skills</Title2>
+          <Title2>기능</Title2>
+          <Text>{project.current.fn}</Text>
+          <Title2>기간 및 인원</Title2>
+          <Text>
+            {project.current.term} / {project.current.personnel}
+          </Text>
+          <Title2>사용기술</Title2>
           <Skills>
             {project.current.skills.map((skill) => {
               return (

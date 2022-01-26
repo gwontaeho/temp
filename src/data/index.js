@@ -97,151 +97,14 @@ export const skills = {
 export const projects = [
   {
     open: true,
-    name: "Todos",
-    title: "T o d o s",
-    github: "https://github.com/gwontaeho/todos",
-    githubpages: "https://gwontaeho.github.io/todos/",
-    text: "할 일들을 기록, 확인, 삭제 할 수 있는 투두리스트입니다. 리스트 상태관리는 REDUX로 하였습니다.",
-    video: todos,
-    tooltip: "투두리스트",
-    skills: [
-      {
-        name: "HTML5",
-        icon: <Html5Icon fill="#E34F26" />,
-      },
-      {
-        name: "CSS3",
-        icon: <Css3Icon fill="#1572B6" />,
-      },
-      {
-        name: "JavaScript",
-        icon: <JavaScriptIcon fill="#F7DF1E" />,
-      },
-      {
-        name: "React",
-        icon: <ReactIcon fill="#61DAFB" />,
-      },
-      {
-        name: "Redux",
-        icon: <ReduxIcon fill="#764ABC" />,
-      },
-    ],
-  },
-  {
-    open: true,
-    name: "Gym",
-    title: "G y m",
-    github: "https://github.com/gwontaeho/gym",
-    githubpages: "https://gwontaeho.github.io/gym/",
-    text: "선택한 날짜에 운동을 기록할 수 있는 프로젝트입니다. 날짜를 선택해 운동을 기록하고 삭제할 수 있으며 운동별 세부운동을 추가할 수 있습니다.",
-    video: gym,
-    tooltip: "운동 기록 프로젝트",
-    skills: [
-      {
-        name: "HTML5",
-        icon: <Html5Icon fill="#E34F26" />,
-      },
-      {
-        name: "CSS3",
-        icon: <Css3Icon fill="#1572B6" />,
-      },
-      {
-        name: "JavaScript",
-        icon: <JavaScriptIcon fill="#F7DF1E" />,
-      },
-      {
-        name: "React",
-        icon: <ReactIcon fill="#61DAFB" />,
-      },
-      {
-        name: "Redux",
-        icon: <ReduxIcon fill="#764ABC" />,
-      },
-    ],
-  },
-  {
-    open: true,
-    name: "Zara",
-    title: "Z a r a",
-    github: "https://github.com/gwontaeho/zara",
-    githubpages: "https://gwontaeho.github.io/zara/",
-    text: "자라의 공식 홈페이지를 클론한 프로젝트입니다.",
-    video: zara,
-    tooltip: "자라 홈페이지 클론",
-    skills: [
-      {
-        name: "HTML5",
-        icon: <Html5Icon fill="#E34F26" />,
-      },
-      {
-        name: "CSS3",
-        icon: <Css3Icon fill="#1572B6" />,
-      },
-      {
-        name: "JavaScript",
-        icon: <JavaScriptIcon fill="#F7DF1E" />,
-      },
-      {
-        name: "React",
-        icon: <ReactIcon fill="#61DAFB" />,
-      },
-      {
-        name: "React Router",
-        icon: <ReactRouterIcon fill="#CA4245" />,
-      },
-      {
-        name: "Redux",
-        icon: <ReduxIcon fill="#764ABC" />,
-      },
-      {
-        name: "Emotion",
-        icon: <img src={Emotion} alt="Emotion" />,
-      },
-    ],
-  },
-  {
-    open: true,
-    name: "Kakao",
-    title: "K a k a o",
-    github: "https://github.com/gwontaeho/kakao",
-    githubpages: "https://gwontaeho.github.io/kakao/",
-    text: "카카오의 공식 홈페이지를 클론한 프로젝트입니다.",
-    video: kakao,
-    tooltip: "카카오 홈페이지 클론",
-    skills: [
-      {
-        name: "HTML5",
-        icon: <Html5Icon fill="#E34F26" />,
-      },
-      {
-        name: "CSS3",
-        icon: <Css3Icon fill="#1572B6" />,
-      },
-      {
-        name: "JavaScript",
-        icon: <JavaScriptIcon fill="#F7DF1E" />,
-      },
-      {
-        name: "React",
-        icon: <ReactIcon fill="#61DAFB" />,
-      },
-      {
-        name: "Redux",
-        icon: <ReduxIcon fill="#764ABC" />,
-      },
-      {
-        name: "Emotion",
-        icon: <img src={Emotion} alt="Emotion" />,
-      },
-    ],
-  },
-  {
-    open: true,
     name: "Market",
     title: "M a r k e t",
     github: "https://github.com/gwontaeho/market.git",
     githubpages: "https://gwontaeho.github.io/market/",
-    text: "사용자들 간에 거래를 할 수 있는 사이트입니다. NODE JS API서버와 SEQUELIZE로 생성한 DB를 헤로쿠에 배포하였고 이미지 관리는 AWS S3를 이용했습니다. 회원가입, 상품등록, 댓글 등의 기능이 있습니다.",
+    text: "사용자들 간에 거래를 할 수 있는 사이트입니다. 회원가입을 하면 누구나 판매 등록을 할 수 있고 댓글로 거래가 이루어지며 판매종료 시 댓글을 달거나 상품을 관심목록에 추가한 사람 중 구매자를 선택할 수 있습니다. Node.js API서버와 Sequelize로 생성한 DB를 헤로쿠에 배포하였고 이미지 관리는 AWS S3를 이용했습니다. 이 프로젝트를 하며 백엔드 부분을 많이 공부할 수 있었습니다.",
+    fn: "회원가입, 로그인, 정보 수정, 상품등록 및 수정, 판매내역, 구매내역, 댓글, 관심목록 추가 및 확인, 반응형",
+    term: "약 3주",
+    personnel: "개인",
     video: market,
     tooltip: "중고거래 사이트",
     skills: [
@@ -312,18 +175,162 @@ export const projects = [
     ],
   },
   {
+    open: true,
+    name: "Zara",
+    title: "Z a r a",
+    github: "https://github.com/gwontaeho/zara",
+    githubpages: "https://gwontaeho.github.io/zara/",
+    text: "자라의 공식 홈페이지를 클론한 프로젝트입니다. 자라 홈페이지의 반응형 디자인을 참고하여 만들었습니다.",
+    fn: "메인페이지, 카테고리 1페이지, 상품상세 1페이지, 반응형",
+    term: "약 1주",
+    personnel: "개인",
+    video: zara,
+    tooltip: "자라 홈페이지 클론",
+    skills: [
+      {
+        name: "HTML5",
+        icon: <Html5Icon fill="#E34F26" />,
+      },
+      {
+        name: "CSS3",
+        icon: <Css3Icon fill="#1572B6" />,
+      },
+      {
+        name: "JavaScript",
+        icon: <JavaScriptIcon fill="#F7DF1E" />,
+      },
+      {
+        name: "React",
+        icon: <ReactIcon fill="#61DAFB" />,
+      },
+      {
+        name: "React Router",
+        icon: <ReactRouterIcon fill="#CA4245" />,
+      },
+      {
+        name: "Redux",
+        icon: <ReduxIcon fill="#764ABC" />,
+      },
+      {
+        name: "Emotion",
+        icon: <img src={Emotion} alt="Emotion" />,
+      },
+    ],
+  },
+  {
+    open: true,
+    name: "Kakao",
+    title: "K a k a o",
+    github: "https://github.com/gwontaeho/kakao",
+    githubpages: "https://gwontaeho.github.io/kakao/",
+    text: "카카오의 공식 홈페이지를 클론한 프로젝트입니다. 카카오 홈페이지의 반응형 디자인을 참고하여 만들었습니다.",
+    fn: "다크모드, 반응형 ",
+    term: "약 1주",
+    personnel: "개인",
+    video: kakao,
+    tooltip: "카카오 홈페이지 클론",
+    skills: [
+      {
+        name: "HTML5",
+        icon: <Html5Icon fill="#E34F26" />,
+      },
+      {
+        name: "CSS3",
+        icon: <Css3Icon fill="#1572B6" />,
+      },
+      {
+        name: "JavaScript",
+        icon: <JavaScriptIcon fill="#F7DF1E" />,
+      },
+      {
+        name: "React",
+        icon: <ReactIcon fill="#61DAFB" />,
+      },
+      {
+        name: "Redux",
+        icon: <ReduxIcon fill="#764ABC" />,
+      },
+      {
+        name: "Emotion",
+        icon: <img src={Emotion} alt="Emotion" />,
+      },
+    ],
+  },
+  {
+    open: true,
+    name: "Todos",
+    title: "T o d o s",
+    github: "https://github.com/gwontaeho/todos",
+    githubpages: "https://gwontaeho.github.io/todos/",
+    text: "할 일들을 기록 할 수 있는 투두리스트입니다.",
+    fn: "추가, 삭제, 수행여부 변경",
+    term: "1일",
+    personnel: "개인",
+    video: todos,
+    tooltip: "투두리스트",
+    skills: [
+      {
+        name: "HTML5",
+        icon: <Html5Icon fill="#E34F26" />,
+      },
+      {
+        name: "CSS3",
+        icon: <Css3Icon fill="#1572B6" />,
+      },
+      {
+        name: "JavaScript",
+        icon: <JavaScriptIcon fill="#F7DF1E" />,
+      },
+      {
+        name: "React",
+        icon: <ReactIcon fill="#61DAFB" />,
+      },
+      {
+        name: "Redux",
+        icon: <ReduxIcon fill="#764ABC" />,
+      },
+    ],
+  },
+  {
+    open: true,
+    name: "Gym",
+    title: "G y m",
+    github: "https://github.com/gwontaeho/gym",
+    githubpages: "https://gwontaeho.github.io/gym/",
+    text: "선택한 날짜에 운동을 기록할 수 있는 프로젝트입니다. 운동 기록은 로컬스토리지에 저장됩니다.",
+    fn: "기록, 세부운동 추가, 삭제, 날짜 별 기록 확인",
+    term: "1일",
+    personnel: "개인",
+    video: gym,
+    tooltip: "운동 기록 프로젝트",
+    skills: [
+      {
+        name: "HTML5",
+        icon: <Html5Icon fill="#E34F26" />,
+      },
+      {
+        name: "CSS3",
+        icon: <Css3Icon fill="#1572B6" />,
+      },
+      {
+        name: "JavaScript",
+        icon: <JavaScriptIcon fill="#F7DF1E" />,
+      },
+      {
+        name: "React",
+        icon: <ReactIcon fill="#61DAFB" />,
+      },
+      {
+        name: "Redux",
+        icon: <ReduxIcon fill="#764ABC" />,
+      },
+    ],
+  },
+
+  {
     open: false,
     name: "Jeju Road",
     title: "J e j u R o a d",
-    github: null,
-    githubpages: null,
-    text: "",
-    tooltip: "",
-  },
-  {
-    open: false,
-    name: "Kawasaki",
-    title: "K a w a s a k i",
     github: null,
     githubpages: null,
     text: "",

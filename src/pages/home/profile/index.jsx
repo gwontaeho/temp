@@ -56,10 +56,7 @@ const Profile = () => {
               있으며
             </div>
             <div>heroku와 aws를 사용한 개인 프로젝트 배포 경험이있습니다.</div>
-            <div>
-              학교 졸업작품시 react native를 사용한 안드로이드 앱 개발 경험이
-              있습니다.
-            </div>
+            <div>react native를 사용한 안드로이드 앱 개발 경험이 있습니다.</div>
           </Intro2>
           <Info>
             <div>권태호</div>
