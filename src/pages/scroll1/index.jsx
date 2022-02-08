@@ -141,8 +141,8 @@ const Scroll1 = () => {
         <Section></Section>
       </Article>
       <Nav>
-        <span onClick={() => setDemo(0)}>Demo 0</span>
-        <span onClick={() => setDemo(1)}>Demo 1</span>
+        <span onClick={() => setDemo(0)}>01.</span>
+        <span onClick={() => setDemo(1)}>02.</span>
       </Nav>
     </Main>
   );

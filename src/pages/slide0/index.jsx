@@ -153,9 +153,13 @@ const Slide0 = () => {
         <path ref={frameRef} fill="#f1f1f1" d={paths.initial} />
       </Frame>
       <Nav>
-        <button onClick={slideToPrev}>Previous</button>
+        <span className="button" onClick={slideToPrev}>
+          Previous
+        </span>
         <span>/</span>
-        <button onClick={slideToNext}>Next</button>
+        <span className="button" onClick={slideToNext}>
+          Next
+        </span>
       </Nav>
     </Main>
   );

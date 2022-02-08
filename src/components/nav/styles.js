@@ -33,5 +33,8 @@ export const List = styled.div`
   > a {
     color: white;
     text-decoration: none;
+    :hover {
+      color: #f0b579;
+    }
   }
 `;

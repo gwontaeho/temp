@@ -49,5 +49,8 @@ export const Nav = styled.nav`
     padding: 1rem;
     margin: 1rem;
     cursor: pointer;
+    :hover {
+      color: #f0b579;
+    }
   }
 `;

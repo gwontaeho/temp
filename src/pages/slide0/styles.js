@@ -43,10 +43,20 @@ export const Frame = styled.svg`
 
 export const Nav = styled.nav`
   position: absolute;
-  width: 300px;
-  margin-left: -150px;
-  left: 50%;
-  bottom: 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  bottom: 5vh;
   text-align: center;
-  padding: 2em;
+
+  .button {
+    cursor: pointer;
+    padding: 1rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    :hover {
+      color: #f0b579;
+    }
+  }
 `;

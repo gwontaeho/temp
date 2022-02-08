@@ -57,7 +57,7 @@ export const Nav = styled.nav`
     gap: 10vw;
     > span {
       color: white;
-      font-size: 3rem;
+      font-size: 2rem;
       cursor: pointer;
       :hover {
         color: #f0b579;
