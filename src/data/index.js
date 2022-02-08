@@ -97,6 +97,20 @@ export const skills = {
 export const projects = [
   {
     open: true,
+    name: "Effects",
+    title: "E f f e c t s",
+    github: "https://github.com/gwontaeho/drag",
+    githubpages: "https://gwontaeho.github.io/drag/",
+    text: "사용해보고싶은 기술이나 효과들을 페이지별로 구현 한 프로젝트입니다.",
+    fn: "hover, scroll, drag, slide",
+    term: "진행 중",
+    personnel: "개인",
+    video: null,
+    tooltip: "여러 효과들을 구현해본 프로젝트",
+    skills: [],
+  },
+  {
+    open: true,
     name: "Market",
     title: "M a r k e t",
     github: "https://github.com/gwontaeho/market.git",

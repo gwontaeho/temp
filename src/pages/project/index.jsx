@@ -45,9 +45,13 @@ const Project = () => {
       <Title>{project.current.title}</Title>
       <Article>
         <Section>
-          <video autoPlay loop muted>
-            <source src={project.current.video} type="video/mp4" />
-          </video>
+          {project.current.video ? (
+            <video autoPlay loop muted>
+              <source src={project.current.video} type="video/mp4" />
+            </video>
+          ) : (
+            <div className="alt">시연영상X</div>
+          )}
 
           <div>
             <Tooltip title="GitHub" arrow>

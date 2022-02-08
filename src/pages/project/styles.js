@@ -64,6 +64,15 @@ export const Section = styled.section`
       width: 100px;
     }
   }
+  .alt {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #eee;
+    border-radius: 10px;
+  }
 
   @media screen and (max-width: 1439px) {
     width: 100%;
