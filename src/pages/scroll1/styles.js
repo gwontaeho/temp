@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const Main = styled.main`
-  width: 100vw;
+  width: 100%;
   font-family: "Roboto Mono", monospace;
   &.demo0 {
     background-color: #1d1b22;

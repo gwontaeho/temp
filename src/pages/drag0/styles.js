@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
 
 export const Main = styled.main`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
   background-color: black;
+  font-family: "Roboto Mono", monospace;
+  position: relative;
 `;
 
 export const SliderContainer = styled.div`
@@ -24,15 +26,17 @@ export const Slider = styled.div`
 `;
 
 export const Item = styled.div`
+  margin: 0 1rem;
   > div {
     overflow: hidden;
+    border-radius: 1rem;
     > div {
       background-size: cover;
     }
   }
   > span {
     color: white;
-    padding: 10px;
+    padding: 1rem;
     display: block;
   }
 `;

@@ -1,9 +1,10 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import { gsap } from "gsap";
 import { Main, SliderContainer, Slider, Item, Cover } from "./styles";
-import { data } from "../../data";
+import { data } from "./data";
 
 const Drag0 = () => {
+  const mainRef = useRef();
   const sliderRef = useRef();
   const itemRef = useRef([]);
   const imgRef = useRef([]);
@@ -26,10 +27,10 @@ const Drag0 = () => {
 
   const dragStart = useCallback((e) => {
     itemRef.current.forEach((el) => {
-      gsap.to(el, { scale: 0.8 });
+      gsap.to(el, { scale: 0.9 });
     });
     imgRef.current.forEach((el) => {
-      gsap.to(el, { scale: 1.6 });
+      gsap.to(el, { scale: 1.4 });
     });
     gsap.to(coverRef.current, { opacity: 1 });
 
@@ -54,7 +55,8 @@ const Drag0 = () => {
     (e) => {
       if (isDown) {
         if (
-          sliderRef.current.getBoundingClientRect().left > 0 ||
+          sliderRef.current.getBoundingClientRect().left >
+            window.innerWidth - mainRef.current.getBoundingClientRect().width ||
           sliderRef.current.getBoundingClientRect().right < window.innerWidth
         ) {
           setX((prevState) => prevState + (e.clientX - pos) / 3);
@@ -68,16 +70,24 @@ const Drag0 = () => {
   );
 
   const fixPos = useCallback(() => {
-    if (!isDown && sliderRef.current.getBoundingClientRect().left > 0) setX(0);
+    if (
+      !isDown &&
+      sliderRef.current.getBoundingClientRect().left >
+        window.innerWidth - mainRef.current.getBoundingClientRect().width
+    )
+      setX(0);
     if (
       !isDown &&
       sliderRef.current.getBoundingClientRect().right < window.innerWidth
     )
-      setX(window.innerWidth - sliderRef.current.getBoundingClientRect().width);
+      setX(
+        mainRef.current.getBoundingClientRect().width -
+          sliderRef.current.getBoundingClientRect().width
+      );
   }, [isDown]);
 
   return (
-    <Main>
+    <Main ref={mainRef}>
       <SliderContainer
         onPointerDown={dragStart}
         onPointerUp={dragEnd}

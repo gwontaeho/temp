@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { gsap } from "gsap";
 
-import imgsrc from "../../images/1.jpg";
+import imgsrc from "./images/1.jpg";
 import { Main, Columns, Column, Item, Scroll } from "./styles";
 
 const Scroll0 = () => {

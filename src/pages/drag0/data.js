@@ -1,4 +1,4 @@
-import imgSrc from "../images/1.jpg";
+import imgSrc from "./images/1.jpg";
 
 const genWidth = () => 300 + 100 * Math.random();
 const genHeight = () => 300 + 150 * Math.random();
