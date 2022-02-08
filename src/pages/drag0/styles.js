@@ -23,15 +23,18 @@ export const Slider = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
+  will-change: transform;
 `;
 
 export const Item = styled.div`
   margin: 0 1rem;
+  will-change: transform;
   > div {
     overflow: hidden;
     border-radius: 1rem;
     > div {
       background-size: cover;
+      will-change: transform;
     }
   }
   > span {

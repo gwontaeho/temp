@@ -3,7 +3,7 @@ import img1 from "./images/1.jpg";
 import img2 from "./images/2.jpg";
 import img3 from "./images/3.jpg";
 
-export const imgs = [
+export const data = [
   {
     id: 0,
     img: img0,

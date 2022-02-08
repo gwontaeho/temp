@@ -22,17 +22,17 @@ const Drag0 = () => {
   }, []);
 
   useEffect(() => {
-    gsap.to(sliderRef.current, { x: x, onComplete: fixPos });
+    gsap.to(sliderRef.current, { duration: 0.4, x: x, onComplete: fixPos });
   }, [x, isDown]);
 
   const dragStart = useCallback((e) => {
     itemRef.current.forEach((el) => {
-      gsap.to(el, { scale: 0.9 });
+      gsap.to(el, { duration: 0.4, scale: 0.9 });
     });
     imgRef.current.forEach((el) => {
-      gsap.to(el, { scale: 1.4 });
+      gsap.to(el, { duration: 0.4, scale: 1.4 });
     });
-    gsap.to(coverRef.current, { opacity: 1 });
+    gsap.to(coverRef.current, { duration: 0.4, opacity: 1 });
 
     setPos(e.clientX);
     setIsDown(true);
@@ -40,12 +40,12 @@ const Drag0 = () => {
 
   const dragEnd = useCallback(() => {
     itemRef.current.forEach((el) => {
-      gsap.to(el, { scale: 1 });
+      gsap.to(el, { duration: 0.4, scale: 1 });
     });
     imgRef.current.forEach((el) => {
-      gsap.to(el, { scale: 1 });
+      gsap.to(el, { duration: 0.4, scale: 1 });
     });
-    gsap.to(coverRef.current, { opacity: 0 });
+    gsap.to(coverRef.current, { duration: 0.4, opacity: 0 });
 
     fixPos();
     setIsDown(false);

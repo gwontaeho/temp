@@ -1,120 +1,161 @@
-import { useRef, useState, useEffect, useCallback } from "react";
-import { gsap } from "gsap";
-
-import { Main, Slide, Nav } from "./styles";
-import { imgs } from "./data";
+import { useRef, useEffect, useState, useCallback } from "react";
+import anime from "animejs/lib/anime.es.js";
+import { Main, Slides, Slide, Frame, Nav } from "./styles";
+import { data } from "./data";
 
 const Slide0 = () => {
-  const wrapRef = useRef([]);
+  const mainRef = useRef();
+  const frameRef = useRef();
+  const slideRef = useRef([]);
   const imgRef = useRef([]);
-  const [prev, setPrev] = useState(-1);
+  const [mainRect, setMainRect] = useState({ width: 0, height: 0 });
+  const [paths, setPaths] = useState({ initial: "", final: "" });
+  const [prev, setPrev] = useState(0);
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
-  useEffect(() => {
-    if (prev !== -1) {
-      if (direction === 0) leftEffect();
-      if (direction === 1) rightEffect();
-    }
-  }, [direction, prev, current]);
+  const [isAnimating, setIsAnimating] = useState(0);
 
-  const slideToLeft = useCallback(() => {
+  const settings = {
+    slides: {
+      duration: 600,
+      easing: "easeOutQuint",
+    },
+    frame: {
+      duration: 300,
+      easing: { in: "easeOutQuint", out: "easeOutQuad" },
+    },
+  };
+
+  useEffect(() => {
+    if (prev !== current) animate();
+  }, [current]);
+
+  useEffect(() => {
+    resize();
+    window.addEventListener("resize", resize);
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  const resize = useCallback(() => {
+    const mainWidth = mainRef.current.getBoundingClientRect().width;
+    const mainHeight = mainRef.current.getBoundingClientRect().height;
+    const frameSize = mainWidth / 12;
+
+    setMainRect({
+      width: mainWidth,
+      height: mainHeight,
+    });
+
+    setPaths({
+      initial: `M 0,0 0,${mainHeight} ${mainWidth},${mainHeight} ${mainWidth},0 0,0 Z M 0,0 ${mainWidth},0 ${mainWidth},${mainHeight} 0,${mainHeight} Z`,
+      final: `M 0,0 0,${mainHeight} ${mainWidth},${mainHeight} ${mainWidth},0 0,0 Z M ${frameSize},${frameSize} ${
+        mainWidth - frameSize
+      },${frameSize} ${mainWidth - frameSize},${
+        mainHeight - frameSize
+      } ${frameSize},${mainHeight - frameSize} Z`,
+    });
+  }, []);
+
+  const animate = useCallback(() => {
+    const frameIn = anime({
+      targets: frameRef.current,
+      duration: settings.frame.duration,
+      easing: settings.frame.easing.in,
+      d: paths.final,
+    });
+
+    const slide = () => {
+      anime({
+        targets: slideRef.current[prev],
+        duration: settings.slides.duration,
+        easing: settings.slides.easing,
+        translateX: direction ? -1 * mainRect.width : mainRect.width,
+        complete: () => {
+          slideRef.current[prev].style.opacity = 0;
+        },
+      }).finished.then(frameOut);
+
+      anime({
+        targets: slideRef.current[current],
+        duration: settings.slides.duration,
+        easing: settings.slides.easing,
+        translateX: [direction ? mainRect.width : -1 * mainRect.width, 0],
+        begin: () => {
+          slideRef.current[current].style.opacity = 1;
+        },
+      });
+
+      anime({
+        targets: imgRef.current[current],
+        duration: settings.slides.duration * 4,
+        easing: settings.slides.easing,
+        translateX: [direction ? 200 : -200, 0],
+      });
+    };
+
+    const frameOut = () => {
+      anime({
+        targets: frameRef.current,
+        duration: settings.frame.duration,
+        delay: 150,
+        easing: settings.frame.easing.out,
+        d: paths.initial,
+        complete: () => {
+          setIsAnimating(0);
+        },
+      });
+    };
+
+    frameIn.finished.then(slide);
+  }, [mainRect, prev, current, direction, paths]);
+
+  const slideToPrev = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(1);
     setDirection(0);
     setPrev(current);
-    if (current === 0) setCurrent(imgRef.current.length - 1);
-    else setCurrent((prevState) => prevState - 1);
-  }, [current]);
+    setCurrent((prevState) => {
+      if (prevState === 0) return slideRef.current.length - 1;
+      return prevState - 1;
+    });
+  }, [isAnimating, current]);
 
-  const slideToRight = useCallback(() => {
+  const slideToNext = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(1);
     setDirection(1);
     setPrev(current);
-    if (current === imgRef.current.length - 1) setCurrent(0);
-    else setCurrent((prevState) => prevState + 1);
-  }, [current]);
-
-  const leftEffect = useCallback(() => {
-    gsap.to(wrapRef.current[prev], {
-      startAt: { x: "100%" },
-      duration: 1.2,
-      ease: "Expo.easeInOut",
-      x: "0%",
+    setCurrent((prevState) => {
+      if (prevState === slideRef.current.length - 1) return 0;
+      return prevState + 1;
     });
-
-    gsap.to(imgRef.current[prev], {
-      duration: 1.2,
-      ease: "Expo.easeInOut",
-      x: "100%",
-      scale: 1.1,
-      onComplete: () => (imgRef.current[prev].style.opacity = "0"),
-    });
-    gsap.to(imgRef.current[current], {
-      startAt: { zIndex: 100, opacity: 1, x: "-100%", scale: 1.1 },
-      duration: 1.2,
-      ease: "Expo.easeInOut",
-      x: "0%",
-      scale: 1,
-      onComplete: () => (imgRef.current[current].style.zIndex = 99),
-    });
-  }, [prev, current]);
-
-  const rightEffect = useCallback(() => {
-    gsap.to(wrapRef.current[prev], {
-      startAt: { x: "-100%" },
-      duration: 1.2,
-      ease: "Expo.easeInOut",
-      x: "0%",
-    });
-
-    gsap.to(imgRef.current[prev], {
-      duration: 1.2,
-      ease: "Expo.easeInOut",
-      x: "-100%",
-      scale: 1.1,
-    });
-    gsap.to(imgRef.current[current], {
-      startAt: { zIndex: 100, opacity: 1, x: "100%", scale: 1.1 },
-      duration: 1.2,
-      ease: "Expo.easeInOut",
-      x: "0%",
-      scale: 1,
-      onComplete: () => (imgRef.current[current].style.zIndex = 99),
-    });
-  }, [prev, current]);
+  }, [isAnimating, current]);
 
   return (
-    <Main>
-      <Slide>
-        <div ref={(ref) => (wrapRef.current[0] = ref)}>
-          <div
-            ref={(ref) => (imgRef.current[0] = ref)}
-            style={{ backgroundImage: `url(${imgs[0].img})` }}
-          ></div>
-        </div>
-        <div ref={(ref) => (wrapRef.current[1] = ref)}>
-          <div
-            ref={(ref) => (imgRef.current[1] = ref)}
-            style={{ backgroundImage: `url(${imgs[1].img})` }}
-          ></div>
-        </div>
-        <div ref={(ref) => (wrapRef.current[2] = ref)}>
-          <div
-            ref={(ref) => (imgRef.current[2] = ref)}
-            style={{ backgroundImage: `url(${imgs[2].img})` }}
-          ></div>
-        </div>
-        <div ref={(ref) => (wrapRef.current[3] = ref)}>
-          <div
-            ref={(ref) => (imgRef.current[3] = ref)}
-            style={{ backgroundImage: `url(${imgs[3].img})` }}
-          ></div>
-        </div>
-      </Slide>
+    <Main ref={mainRef}>
+      <Slides>
+        {data.map((data, i) => (
+          <Slide
+            key={data.id}
+            ref={(ref) => (slideRef.current[i] = ref)}
+            style={{ opacity: i === 0 && 1 }}
+          >
+            <div
+              ref={(ref) => (imgRef.current[i] = ref)}
+              style={{ backgroundImage: `url(${data.img})` }}
+            />
+          </Slide>
+        ))}
+      </Slides>
+      <Frame viewBox={`0 0 ${mainRect.width} ${mainRect.height}`}>
+        <path ref={frameRef} fill="#f1f1f1" d={paths.initial} />
+      </Frame>
       <Nav>
-        <svg onClick={slideToLeft} viewBox="0 0 16 24">
-          <path d="M15.45 2.8L12.65 0l-12 12 12 12 2.8-2.8-9.2-9.2z" />
-        </svg>
-        <svg onClick={slideToRight} className="rotate" viewBox="0 0 16 24">
-          <path d="M15.45 2.8L12.65 0l-12 12 12 12 2.8-2.8-9.2-9.2z" />
-        </svg>
+        <button onClick={slideToPrev}>Previous</button>
+        <span>/</span>
+        <button onClick={slideToNext}>Next</button>
       </Nav>
     </Main>
   );
