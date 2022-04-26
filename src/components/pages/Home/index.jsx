@@ -1,16 +1,19 @@
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-
-import { useCallback, useEffect, useState } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    TableFooter,
+    TablePagination,
+    Typography,
+} from "@mui/material";
+import { Flex, Spacer } from "../../atoms";
 
 export const Home = () => {
     const [page, setPage] = useState(0);
@@ -32,45 +35,53 @@ export const Home = () => {
     }, []);
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>id</TableCell>
-                        <TableCell align="right">name</TableCell>
-                        <TableCell align="right">category</TableCell>
-                        <TableCell align="right">address</TableCell>
-                        <TableCell />
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell component="th" scope="row">
-                                {row.id}
-                            </TableCell>
-                            <TableCell align="right">{row.name}</TableCell>
-                            <TableCell align="right">{row.name}</TableCell>
-                            <TableCell align="right">{row.address}</TableCell>
-                            <TableCell align="right">
-                                <Link to={`/restaurant/${row.id}`}>edit</Link>
-                            </TableCell>
+        <Flex vertical>
+            <Typography variant="h3">식당 목록</Typography>
+            <Spacer size="l" />
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>id</TableCell>
+                            <TableCell align="right">name</TableCell>
+                            <TableCell align="right">category</TableCell>
+                            <TableCell align="right">address</TableCell>
+                            <TableCell />
                         </TableRow>
-                    ))}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25]}
-                            count={13}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={(e, newPage) => setPage(newPage)}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </TableRow>
-                </TableFooter>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow key={row.id}>
+                                <TableCell component="th" scope="row">
+                                    {row.id}
+                                </TableCell>
+                                <TableCell align="right">{row.name}</TableCell>
+                                <TableCell align="right">{row.name}</TableCell>
+                                <TableCell align="right">
+                                    {row.address}
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Link to={`/restaurant/${row.id}`}>
+                                        edit
+                                    </Link>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 25]}
+                                count={13}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={(e, newPage) => setPage(newPage)}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </TableContainer>
+        </Flex>
     );
 };
