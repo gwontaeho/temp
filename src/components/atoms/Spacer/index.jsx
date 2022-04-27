@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { Container } from "./styles";
 
 export const Spacer = forwardRef((props, ref) => (
