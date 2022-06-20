@@ -10,6 +10,7 @@ module.exports = {
           '#screens': './src/screens',
           '#api': './src/api',
           '#redux': './src/redux',
+          '#apollo': './src/apollo',
         },
       },
     ],

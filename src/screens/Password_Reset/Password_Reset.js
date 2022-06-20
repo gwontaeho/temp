@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {login, logout, getProfile} from '@react-native-seoul/kakao-login';
 import {Input, Divider, Button} from 'native-base';
 
-export const Login = ({navigation}) => {
+export const Password_Reset = () => {
   const handlePressLogin = useCallback(async () => {
     console.log('a');
     try {
@@ -17,23 +17,21 @@ export const Login = ({navigation}) => {
     }
   }, []);
 
+  const handlePressLogout = useCallback(async () => {
+    try {
+      const LogoutResult = await logout();
+      console.log(LogoutResult);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
-      <Text>이메일</Text>
+      <Text>비밀번호를 재설정합니다</Text>
+      <Text>가입한 이메일 주소를 입력해주세요</Text>
       <Input size="2xl" />
-      <Text>비밀번호</Text>
-      <Input size="2xl" />
-      <Pressable onPress={() => navigation.navigate('Password_Reset')}>
-        <Text>비밀번호를 잃어버리셨나요?</Text>
-      </Pressable>
-      <Button onPress={handlePressLogin}>로그인</Button>
-      <Button onPress={() => navigation.navigate('Signup')}>회원가입</Button>
-      <View style={styles.oauthContainer}>
-        <Text>카카오</Text>
-        <Text>구글</Text>
-        <Text>애플</Text>
-      </View>
+      <Button>이메일로 변경</Button>
     </View>
   );
 };

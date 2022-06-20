@@ -3,10 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   Pressable,
   FlatList,
+  Image,
+  ImageBackground,
 } from 'react-native';
+import {Progress} from 'native-base';
 
 export const Fundings = ({navigation}) => {
   const data = [
@@ -44,25 +46,30 @@ export const Fundings = ({navigation}) => {
     const {id, text} = item;
 
     return (
-      <View style={styles.renderItem}>
-        <View>
-          <Text>아이디</Text>
-          <Text>아이디</Text>
-          <Text>아이디</Text>
-          <Text>아이디</Text>
+      <Pressable
+        style={styles.renderItem}
+        onPress={() => navigation.navigate('Funding')}>
+        <ImageBackground
+          source={{uri: 'https://picsum.photos/200'}}
+          style={styles.imageBackground}>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressText}>
+              <Text>39.5% 모집</Text>
+              <Text>145명 참여</Text>
+            </View>
+            <Progress value={45} />
+          </View>
+        </ImageBackground>
+        <View style={styles.fundingText}>
+          <Text>펀드이름</Text>
+          <Text>작가</Text>
         </View>
-        <Pressable onPress={() => navigation.navigate('Funding')}>
-          <Text>to Funding</Text>
-        </Pressable>
-      </View>
+      </Pressable>
     );
   };
 
   return (
-    <View>
-      <View>
-        <Text>펀딩 프로젝트</Text>
-      </View>
+    <View style={styles.container}>
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -76,22 +83,27 @@ export const Fundings = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  deposit: {
-    borderWidth: 1,
-    height: 200,
-    padding: 20,
-    marginBottom: 20,
-  },
-  history: {
-    flex: 1,
-    borderWidth: 1,
-    padding: 20,
-  },
-  flatList: {
-    marginTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
   },
   renderItem: {
-    borderWidth: 1,
+    paddingBottom: 20,
+  },
+  imageBackground: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    justifyContent: 'flex-end',
+  },
+  progressContainer: {
+    padding: 20,
+  },
+  progressText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  fundingText: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
   },
 });

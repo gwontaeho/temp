@@ -1,10 +1,25 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, ScrollView, Pressable} from 'react-native';
+import {FlatList} from 'native-base';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+  Image,
+  Dimensions,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import Toast from 'react-native-toast-message';
 
 export const Home = () => {
+  const screenWidth = Dimensions.get('screen').width;
   const [visible, setVisible] = useState(false);
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    console.log(page);
+  }, [page]);
 
   const showToast = () => {
     Toast.show({
@@ -15,8 +30,66 @@ export const Home = () => {
     });
   };
 
+  const DATA = [
+    {
+      id: 1,
+      text: '1',
+    },
+    {
+      id: 2,
+      text: '2',
+    },
+    {
+      id: 3,
+      text: '3',
+    },
+    {
+      id: 4,
+      text: '3',
+    },
+    {
+      id: 5,
+      text: '3',
+    },
+    {
+      id: 6,
+      text: '3',
+    },
+    {
+      id: 7,
+      text: '3',
+    },
+  ];
+
+  const renderItem = () => {
+    return (
+      <Image
+        source={{uri: 'https://picsum.photos/200'}}
+        style={{height: 300, width: screenWidth}}
+      />
+    );
+  };
+
+  const handleScroll = useCallback(e => {
+    setPage(
+      Math.round(
+        e.nativeEvent.contentOffset.x / e.nativeEvent.layoutMeasurement.width,
+      ),
+    );
+  }, []);
+
   return (
     <View>
+      <FlatList
+        horizontal
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        disableIntervalMomentum
+        pagingEnabled
+        onScroll={handleScroll}
+      />
+
       <View>
         <Text>home</Text>
         <Pressable onPress={() => setVisible(true)}>

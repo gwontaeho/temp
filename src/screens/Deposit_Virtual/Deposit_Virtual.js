@@ -1,19 +1,17 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Button, Divider, Select, Input} from 'native-base';
+import {Button, Divider} from 'native-base';
 
-export const Deposit_Account = () => {
+export const Deposit_Virtual = () => {
   return (
     <View style={styles.container}>
       <View style={styles.account}>
         <Text>계좌정보</Text>
-        <View style={styles.accountUpdate}>
-          <View style={{flexDirection: 'row'}}>
-            <Text>예금주</Text>
-            <Text>누아트</Text>
-          </View>
-          <Select size="2xl"></Select>
-          <Input size="2xl" />
+        <View style={styles.accountCreate}>
+          <Text style={{marginBottom: 10}}>아직 발급된 계좌가 없습니다</Text>
+          <Text>예치금 입금을 위한 가상계좌가 발급되지 않았습니다.</Text>
+          <Text>간단하게 계좌를 발급해보세요!</Text>
+          <Button style={{marginTop: 10}}>가상계좌 발급하기</Button>
         </View>
         {/* <View style={styles.accountInfo}>
           <Text>신한은행</Text>
@@ -50,13 +48,14 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
   },
-  accountUpdate: {
+  accountCreate: {
     marginTop: 20,
     padding: 20,
     borderRadius: 10,
     backgroundColor: '#eee',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
     height: 200,
-    justifyContent: 'space-around',
   },
   accountInfo: {
     height: 200,
