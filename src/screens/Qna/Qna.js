@@ -7,12 +7,11 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import api from '#api';
 
-export const Feed = ({navigation}) => {
+export const Qna = ({navigation}) => {
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -46,40 +45,25 @@ export const Feed = ({navigation}) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  const getPosts = useCallback(async () => {
-    try {
-      const response = await api.get('post');
-      console.log(response.data);
-      setPosts(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  const handleRefresh = useCallback(async () => {
+  const handleRefresh = useCallback(() => {
     setRefreshing(true);
-    await getPosts();
     setRefreshing(false);
+    console.log('as');
   }, []);
 
   const renderItem = ({item}) => {
-    const {id, text, user, images} = item;
+    const {id, text} = item;
+    const image = item.Images?.[0];
 
     return (
-      <Pressable
-        style={styles.renderItem}
-        onPress={() => navigation.navigate('Post', {id})}>
+      <View style={styles.renderItem}>
         <Image
           source={{uri: 'https://picsum.photos/200'}}
           style={styles.image}
         />
         <View style={styles.user}>
-          <Text>{user?.nickname}</Text>
-          <TouchableOpacity>
+          <Text>아이디</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Post', {id})}>
             <Text>asd</Text>
           </TouchableOpacity>
         </View>
@@ -87,7 +71,7 @@ export const Feed = ({navigation}) => {
         <Text style={styles.text} numberOfLines={1}>
           {text}
         </Text>
-      </Pressable>
+      </View>
     );
   };
 
@@ -98,11 +82,13 @@ export const Feed = ({navigation}) => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         numColumns={2}
+        ListFooterComponent={<View />}
+        ListFooterComponentStyle={{paddingBottom: 5}}
+        ListHeaderComponent={<View />}
+        ListHeaderComponentStyle={{paddingTop: 5}}
         style={styles.flatList}
         onRefresh={handleRefresh}
         refreshing={refreshing}
-        ListHeaderComponent={<View />}
-        ListHeaderComponentStyle={{paddingTop: 10}}
       />
     </View>
   );
@@ -122,12 +108,11 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    aspectRatio: 1,
+    height: 200,
     borderRadius: 10,
   },
   renderItem: {
     flex: 1,
-    paddingHorizontal: 5,
-    paddingBottom: 10,
+    padding: 5,
   },
 });

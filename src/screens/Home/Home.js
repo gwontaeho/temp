@@ -20,30 +20,28 @@ export const Home = () => {
       behavior="padding"
       style={{flex: 1, padding: 20}}
       keyboardVerticalOffset={headerHeight}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{flex: 1, justifyContent: 'space-around'}}>
-          <View>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Text>asda</Text>
-            <Input variant="underlined" />
-            <Text>asda</Text>
+      <View style={{flex: 1, justifyContent: 'space-around'}}>
+        <View>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Text>asda</Text>
+          <Input variant="underlined" />
+          <Text>asda</Text>
 
-            <TextArea />
-            <Input variant="underlined" />
-            <Button>버튼</Button>
-          </View>
+          <TextArea />
+          <Input variant="underlined" />
+          <Button>버튼</Button>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </KeyboardAvoidingView>
   );
 };

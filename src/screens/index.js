@@ -6,3 +6,4 @@ export * from './User/User';
 export * from './Feed/Feed';
 export * from './Write/Write';
 export * from './Sign/Sign';
+export * from './Qna/Qna';

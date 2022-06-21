@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
   Keyboard,
@@ -11,10 +10,13 @@ import {
 import {Input, Button} from 'native-base';
 import {useHeaderHeight} from '@react-navigation/elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {setToken} from '#redux/features/token/tokenSlice';
 
 import api from '#api';
 
 export const Sign = ({navigation}) => {
+  const dispatch = useDispatch();
   const headerHeight = useHeaderHeight();
 
   const [phone, setPhone] = useState('');
@@ -25,10 +27,11 @@ export const Sign = ({navigation}) => {
     // 인증번호 전송
 
     // if (phone.length < 11) return;
+
     try {
       //   const confirmation = await auth().signInWithPhoneNumber(`+82${phone}`);
       const confirmation = await auth().signInWithPhoneNumber(
-        `+44 7444 555666`,
+        phone ? `+44 7444 555666` : '+44 7445 556666',
       );
       setConfirm(confirmation);
       console.log(confirmation);
@@ -53,11 +56,11 @@ export const Sign = ({navigation}) => {
       });
       console.log(response.data);
 
-      // async storage에 회원토큰 저장
+      // async storage에 토큰 저장
+      // redux storedp 토큰 저장
 
-      const jsonValue = JSON.stringify({token: response.data});
-      await AsyncStorage.setItem('user', jsonValue);
-
+      await AsyncStorage.setItem('token', response.data);
+      dispatch(setToken(response.data));
       navigation.navigate('Tabs');
     } catch (error) {
       console.log('Invalid code.');

@@ -4,10 +4,12 @@ import {Button, TextArea} from 'native-base';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {Spacer} from '#components';
 import api from '#api';
+import {useSelector} from 'react-redux';
 
 const windowWidth = Dimensions.get('window').width;
 
 export const Write = ({navigation}) => {
+  const token = useSelector(state => state.token.value);
   const [images, setImages] = useState([]);
   const [text, setText] = useState('');
 
@@ -34,7 +36,12 @@ export const Write = ({navigation}) => {
       formData.append('images', file);
     });
     try {
-      const response = await api.post('post', formData);
+      const response = await api.post('post', formData, {
+        headers: {
+          token,
+        },
+      });
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
