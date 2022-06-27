@@ -1,77 +1,61 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Button, Divider, Select, Input} from 'native-base';
+import {
+  Button,
+  Select,
+  Input,
+  useDisclose,
+  Flex,
+  Text,
+  Divider,
+  HStack,
+} from 'native-base';
 
-export const Deposit_Account = () => {
+import {Pin} from '#components/modals/Pin';
+
+export const Deposit_Account = ({navigation}) => {
+  const {isOpen, onOpen, onClose} = useDisclose();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.account}>
-        <Text>계좌정보</Text>
-        <View style={styles.accountUpdate}>
-          <View style={{flexDirection: 'row'}}>
-            <Text>예금주</Text>
+    <Flex flex={1}>
+      <Flex p={5} bg="#fff" mb={5}>
+        <Text bold mb={5}>
+          계좌정보
+        </Text>
+        {/* <Flex p={5} bg="#eee" h={200} justify="space-around" borderRadius={10}>
+          <HStack space={1}>
+            <Text bold>예금주</Text>
             <Text>누아트</Text>
-          </View>
+          </HStack>
           <Select size="2xl"></Select>
           <Input size="2xl" />
-        </View>
-        {/* <View style={styles.accountInfo}>
-          <Text>신한은행</Text>
+        </Flex> */}
+        <Flex p={5} bg="#eee" h={200} justify="space-around" borderRadius={10}>
+          <Text bold fontSize="md">
+            신한은행
+          </Text>
           <Text>152853123212</Text>
           <Divider />
-          <View style={styles.accountText}>
-            <Text>예금주</Text>
+          <HStack space={1}>
+            <Text bold>예금주</Text>
             <Text>비홀드 홍길동</Text>
-          </View>
-          <View style={styles.accountText}>
-            <Text>생성일</Text>
+          </HStack>
+          <HStack space={1}>
+            <Text bold>생성일</Text>
             <Text>2022년 6월 1일</Text>
-          </View>
-        </View> */}
-      </View>
-      <View style={styles.precautions}>
-        <Text>주의사항</Text>
+          </HStack>
+        </Flex>
+      </Flex>
+      <Flex flex={1} bg="#fff" p={5}>
+        <Text bold mb={5}>
+          주의사항
+        </Text>
         <Text>주의사항1</Text>
         <Text>주의사항2</Text>
         <Text>주의사항3</Text>
         <Text>주의사항4</Text>
-      </View>
-      <Button>확인</Button>
-    </View>
+      </Flex>
+      <Button onPress={onOpen}>확인</Button>
+      <Pin onComplete={onClose} isOpen={isOpen} onClose={onClose} />
+    </Flex>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  account: {
-    backgroundColor: '#fff',
-    padding: 20,
-    marginBottom: 20,
-  },
-  accountUpdate: {
-    marginTop: 20,
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: '#eee',
-    height: 200,
-    justifyContent: 'space-around',
-  },
-  accountInfo: {
-    height: 200,
-    marginTop: 20,
-    padding: 20,
-    borderRadius: 10,
-    justifyContent: 'space-around',
-    backgroundColor: '#eee',
-  },
-  accountText: {
-    flexDirection: 'row',
-  },
-  precautions: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-});

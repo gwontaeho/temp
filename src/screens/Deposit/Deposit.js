@@ -1,6 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList, Pressable} from 'react-native';
-import {Button} from 'native-base';
+import {Button, HStack, Flex, Text, FlatList} from 'native-base';
 
 export const Deposit = ({navigation}) => {
   const data = [
@@ -38,79 +37,49 @@ export const Deposit = ({navigation}) => {
     const {id, text} = item;
 
     return (
-      <View style={styles.renderItem}>
-        <View>
+      <Flex>
+        <Flex>
           <Text>아이디</Text>
           <Text>아이디</Text>
-          <Text>아이디</Text>
-          <Text>아이디</Text>
-        </View>
+        </Flex>
         <Text>{text}</Text>
-      </View>
+      </Flex>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.deposit}>
-        <View style={styles.depositCard}>
+    <Flex flex={1}>
+      <Flex bg="#fff" p={5} mb={5}>
+        <Flex bg="#eee" p={5} borderRadius={10}>
           <Text>예치금</Text>
-          <Text>1,500,000원</Text>
-          <View style={styles.depositButtons}>
+          <Text fontSize="xl" bold mb={5}>
+            1,500,000원
+          </Text>
+          <HStack space={5}>
             <Button
               onPress={() => navigation.navigate('Deposit_Account')}
-              style={{width: 100, marginRight: 20}}>
+              width={20}>
               출금
             </Button>
             <Button
               onPress={() => navigation.navigate('Deposit_Virtual')}
-              style={{flex: 1}}>
+              flex={1}>
               충전
             </Button>
-          </View>
-        </View>
-      </View>
-      <View style={styles.history}>
-        <Text>내역보기</Text>
+          </HStack>
+        </Flex>
+      </Flex>
+      <Flex bg="#fff" flex={1}>
+        <Text p={5} bold>
+          내역보기
+        </Text>
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-          style={styles.flatList}
+          _contentContainerStyle={{p: 5}}
         />
-      </View>
-    </View>
+      </Flex>
+    </Flex>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  deposit: {
-    padding: 20,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-  },
-  depositCard: {
-    backgroundColor: '#eee',
-    borderRadius: 10,
-    padding: 20,
-  },
-  depositButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  history: {
-    flex: 1,
-    borderWidth: 1,
-    padding: 20,
-  },
-  flatList: {
-    marginTop: 20,
-  },
-  renderItem: {
-    borderWidth: 1,
-  },
-});

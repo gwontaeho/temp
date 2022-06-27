@@ -1,4 +1,5 @@
-import {FlatList} from 'native-base';
+import {useFocusEffect} from '@react-navigation/native';
+import {Button, Input, useToast} from 'native-base';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -8,15 +9,15 @@ import {
   Pressable,
   Image,
   Dimensions,
+  FlatList,
 } from 'react-native';
-import Modal from 'react-native-modal';
 import Toast from 'react-native-toast-message';
 
-export const Home = () => {
+export const Home = ({navigation, route}) => {
   const screenWidth = Dimensions.get('screen').width;
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
-
+  const toast = useToast();
   useEffect(() => {
     console.log(page);
   }, [page]);
@@ -27,6 +28,12 @@ export const Home = () => {
       text1: 'Hello',
       text2: 'This is some something 👋',
       position: 'bottom',
+    });
+  };
+
+  const showBaseToast = () => {
+    toast.show({
+      description: 'Hello world',
     });
   };
 
@@ -91,23 +98,13 @@ export const Home = () => {
       />
 
       <View>
-        <Text>home</Text>
-        <Pressable onPress={() => setVisible(true)}>
-          <Text>모달</Text>
-        </Pressable>
+        <Text>homㅁㄴㅇe</Text>
 
-        <Pressable onPress={() => showToast()}>
+        <Pressable onPress={() => showBaseToast()}>
           <Text>토스트</Text>
         </Pressable>
       </View>
-
-      <Modal isVisible={visible} style={styles.modalContainer}>
-        <View style={styles.modalView}>
-          <Pressable onPress={() => setVisible(false)}>
-            <Text>asd</Text>
-          </Pressable>
-        </View>
-      </Modal>
+      <Input />
     </View>
   );
 };

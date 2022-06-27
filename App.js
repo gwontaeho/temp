@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ApolloProvider} from '@apollo/client';
 import {store} from '#redux/app/store';
 import {setToken} from '#redux/features/token/tokenSlice';
-import {client} from '#apollo/apollo';
+import {client} from '#apollo/client';
 
 import {
   Home,

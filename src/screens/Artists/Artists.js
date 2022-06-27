@@ -88,9 +88,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 20,
   },
-  flatList: {
-    marginTop: 20,
-  },
   renderItem: {
     borderWidth: 1,
   },

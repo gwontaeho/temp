@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  FlatList,
-  Image,
-  ImageBackground,
-} from 'react-native';
-import {Progress} from 'native-base';
+import {StyleSheet, ImageBackground} from 'react-native';
+import {Progress, Text, FlatList, Flex, Pressable} from 'native-base';
 
 export const Fundings = ({navigation}) => {
   const data = [
@@ -46,64 +38,50 @@ export const Fundings = ({navigation}) => {
     const {id, text} = item;
 
     return (
-      <Pressable
-        style={styles.renderItem}
-        onPress={() => navigation.navigate('Funding')}>
+      <Pressable onPress={() => navigation.navigate('Funding')}>
         <ImageBackground
           source={{uri: 'https://picsum.photos/200'}}
           style={styles.imageBackground}>
-          <View style={styles.progressContainer}>
-            <View style={styles.progressText}>
-              <Text>39.5% 모집</Text>
-              <Text>145명 참여</Text>
-            </View>
+          <Flex p={3}>
+            <Flex
+              direction="row"
+              align="center"
+              justify="space-between"
+              mb={3}
+              mx={1}>
+              <Text color="#fff" fontSize="md" bold>
+                39.5% 모집
+              </Text>
+              <Text color="#fff">145명 참여</Text>
+            </Flex>
             <Progress value={45} />
-          </View>
+          </Flex>
         </ImageBackground>
-        <View style={styles.fundingText}>
-          <Text>펀드이름</Text>
+        <Flex mx={1}>
+          <Text bold fontSize="md" my={1}>
+            펀드이름
+          </Text>
           <Text>작가</Text>
-        </View>
+        </Flex>
       </Pressable>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        style={styles.flatList}
-      />
-    </View>
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      _contentContainerStyle={{p: 7}}
+      ItemSeparatorComponent={() => <Flex m={3.5} />}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  renderItem: {
-    paddingBottom: 20,
-  },
   imageBackground: {
     width: '100%',
     aspectRatio: 4 / 3,
     justifyContent: 'flex-end',
-  },
-  progressContainer: {
-    padding: 20,
-  },
-  progressText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  fundingText: {
-    paddingTop: 10,
-    paddingHorizontal: 10,
   },
 });
