@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'native-base';
 
 export const User = () => {
-  return <View></View>;
+  return <ScrollView></ScrollView>;
 };

@@ -1,48 +1,10 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
+import {Text, FlatList, Image, Pressable, HStack, Avatar} from 'native-base';
 import api from '#api';
 
 export const Feed = ({navigation}) => {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      text: 'asqwdqwdd',
-    },
-    {
-      id: 2,
-      text: 'asdaqwdq dw qwd wqdwdqwsd',
-    },
-    {
-      id: 3,
-      text: 'asdasd',
-    },
-    {
-      id: 4,
-      text: 'asdasd',
-    },
-    {
-      id: 5,
-      text: 'asdasd',
-    },
-    {
-      id: 6,
-      text: 'asdasd',
-    },
-    {
-      id: 7,
-      text: 'asdasd',
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -68,23 +30,25 @@ export const Feed = ({navigation}) => {
 
   const renderItem = ({item}) => {
     const {id, text, user, images} = item;
+    console.log(item);
 
     return (
       <Pressable
-        style={styles.renderItem}
-        onPress={() => navigation.navigate('Post', {id})}>
+        onPress={() => navigation.navigate('Post', {id})}
+        flex={1 / 2}
+        m={1}>
         <Image
           source={{uri: 'https://picsum.photos/200'}}
-          style={styles.image}
+          alt="image"
+          width="full"
+          aspectRatio={1}
+          borderRadius="md"
         />
-        <View style={styles.user}>
-          <Text>{user?.nickname}</Text>
-          <TouchableOpacity>
-            <Text>asd</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.text} numberOfLines={1}>
+        <HStack space={2} p={2} alignItems="center">
+          <Avatar size="xs" />
+          <Text>닉네임</Text>
+        </HStack>
+        <Text numberOfLines={2} px={2}>
           {text}
         </Text>
       </Pressable>
@@ -92,42 +56,15 @@ export const Feed = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        style={styles.flatList}
-        onRefresh={handleRefresh}
-        refreshing={refreshing}
-        ListHeaderComponent={<View />}
-        ListHeaderComponentStyle={{paddingTop: 10}}
-      />
-    </View>
+    <FlatList
+      data={posts}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      numColumns={2}
+      onRefresh={handleRefresh}
+      refreshing={refreshing}
+      flex={1}
+      p={1}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  flatList: {
-    paddingHorizontal: 5,
-  },
-  user: {
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  text: {
-    paddingHorizontal: 10,
-  },
-  image: {
-    width: '100%',
-    aspectRatio: 1,
-    borderRadius: 10,
-  },
-  renderItem: {
-    flex: 1,
-    paddingHorizontal: 5,
-    paddingBottom: 10,
-  },
-});
