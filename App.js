@@ -29,6 +29,8 @@ import {
   Payment_Check,
   Payment_Complete,
   Password_Reset,
+  Certification,
+  Funding_History,
 } from '#screens';
 
 const Stack = createNativeStackNavigator();
@@ -60,6 +62,8 @@ const Root = () => {
         <Stack.Screen name="Payment_Check" component={Payment_Check} />
         <Stack.Screen name="Payment_Complete" component={Payment_Complete} />
         <Stack.Screen name="Password_Reset" component={Password_Reset} />
+        <Stack.Screen name="Certification" component={Certification} />
+        <Stack.Screen name="Funding_History" component={Funding_History} />
       </Stack.Navigator>
     </NavigationContainer>
   );

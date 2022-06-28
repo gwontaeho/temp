@@ -13,3 +13,5 @@ export * from './Payment/Payment';
 export * from './Payment_Check/Payment_Check';
 export * from './Payment_Complete/Payment_Complete';
 export * from './Password_Reset/Password_Reset';
+export * from './Certification/Certification';
+export * from './Funding_History/Funding_History';

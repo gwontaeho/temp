@@ -7,10 +7,12 @@ export const Settings = ({navigation}) => {
       <Flex mb={7} direction="row">
         <Avatar mr={5} />
         <Flex justify="center">
-          <Text fontSize="md" bold>
+          <Text fontSize="md" bold onPress={() => navigation.navigate('Login')}>
             이름
           </Text>
-          <Text fontSize="xs">이메일</Text>
+          <Text fontSize="xs" onPress={() => navigation.navigate('Signup')}>
+            이메일
+          </Text>
         </Flex>
       </Flex>
       <Text fontSize="xs" mb={5}>
@@ -24,7 +26,11 @@ export const Settings = ({navigation}) => {
         justify="space-between"
         align="center">
         <Text bold>0원</Text>
-        <Text fontSize="xs">충전하기</Text>
+        <Text
+          fontSize="xs"
+          onPress={() => navigation.navigate('Certification')}>
+          충전하기
+        </Text>
       </Flex>
       <VStack space={5}>
         <Text fontSize="xs">비홀드 서비스</Text>
@@ -34,7 +40,9 @@ export const Settings = ({navigation}) => {
         <Divider />
         <Text fontSize="xs">비홀드 플러스</Text>
         <Text bold>나의 작가 리스트</Text>
-        <Text bold>나의 투자 현황</Text>
+        <Text bold onPress={() => navigation.navigate('Funding_History')}>
+          나의 투자 현황
+        </Text>
         <Divider />
         <Text fontSize="xs">관리</Text>
         <Text bold onPress={() => navigation.navigate('Deposit')}>
