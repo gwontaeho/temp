@@ -1,6 +1,7 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {Text, FlatList, Image, Pressable, HStack, Avatar} from 'native-base';
+import {SafeAreaView} from 'react-native';
+import {FlatList, Image, Pressable} from 'native-base';
 import api from '#api';
 
 export const Feed = ({navigation}) => {
@@ -42,29 +43,22 @@ export const Feed = ({navigation}) => {
           alt="image"
           width="full"
           aspectRatio={1}
-          borderRadius="md"
         />
-        <HStack space={2} p={2} alignItems="center">
-          <Avatar size="xs" />
-          <Text>닉네임</Text>
-        </HStack>
-        <Text numberOfLines={2} px={2}>
-          {text}
-        </Text>
       </Pressable>
     );
   };
 
   return (
-    <FlatList
-      data={posts}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-      numColumns={2}
-      onRefresh={handleRefresh}
-      refreshing={refreshing}
-      flex={1}
-      p={1}
-    />
+    <SafeAreaView flex={1}>
+      <FlatList
+        data={posts}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        numColumns={2}
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
+        _contentContainerStyle={{p: 1}}
+      />
+    </SafeAreaView>
   );
 };

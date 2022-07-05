@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {Dimensions} from 'react-native';
 import {useSelector} from 'react-redux';
+import {Dimensions, SafeAreaView} from 'react-native';
 import {
   Button,
   Input,
@@ -14,6 +14,7 @@ import {
   Image,
   Flex,
   VStack,
+  HStack,
 } from 'native-base';
 import {useHeaderHeight} from '@react-navigation/elements';
 
@@ -67,51 +68,54 @@ export const Post = ({navigation, route}) => {
       behavior="padding"
       flex={1}
       keyboardVerticalOffset={headerHeight}>
-      <ScrollView>
-        <FlatList
-          horizontal
-          data={post.Images}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          disableIntervalMomentum
-          pagingEnabled
-        />
-        <VStack p={5} space={5}>
-          <Flex direction="row" justify="space-between">
-            <Flex direction="row" align="center">
-              <Avatar mr={2.5} />
-              <View>
-                <Text>닉네임</Text>
-                <Text>ㅋㅋ</Text>
-              </View>
+      <SafeAreaView flex={1}>
+        <ScrollView>
+          <FlatList
+            horizontal
+            data={post.Images}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            disableIntervalMomentum
+            pagingEnabled
+          />
+          <VStack p={5} space={5}>
+            <Flex direction="row" justify="space-between">
+              <HStack space={2.5} alignItems="center">
+                <Avatar />
+                <Text bold>아나나오이이</Text>
+              </HStack>
+              <HStack alignItems="center">
+                <Button variant="link">follow</Button>
+                <Button variant="link" onPress={handlePressLike}>
+                  like
+                </Button>
+              </HStack>
             </Flex>
-            <Button onPress={handlePressLike}>좋아요</Button>
-            <Button>팔로우</Button>
-          </Flex>
-          <Text>{post.text}</Text>
-          <Divider />
-          <VStack space={5}>
-            {[0, 1, 2, 3].map(v => (
-              <Flex key={v} direction="row">
-                <Avatar mr={2.5} />
-                <Flex flex={1}>
-                  <Text>
-                    <Text bold>닉네임&nbsp;</Text>
-                    <Text>태그</Text>ㄴㅇㅁㄴㅇㅁ암ㄴ암ㄴ ㅇㄴ망ㅁ낭마
-                    ㅇㄴ마아나
-                  </Text>
-                  <Text mt={2.5}>3시간전 답글쓰기</Text>
-                </Flex>
-              </Flex>
-            ))}
+            <Text>{post.text}</Text>
+            <Divider />
+            <VStack space={5}>
+              {[0, 1, 2, 3].map(v => (
+                <HStack key={v} space={2.5}>
+                  <Avatar />
+                  <VStack flex={1} space={2.5}>
+                    <Text>
+                      <Text bold>닉네임&nbsp;</Text>
+                      <Text color="blue.900">@태그</Text>
+                      <Text>ㄴㅇㅁㄴㅇㅁ암ㄴ암ㄴ ㅇㄴ망ㅁ낭마 ㅇㄴ마아나</Text>
+                    </Text>
+                    <Text>3시간전 답글쓰기</Text>
+                  </VStack>
+                </HStack>
+              ))}
+            </VStack>
           </VStack>
-        </VStack>
-      </ScrollView>
-      <Input
-        placeholder="Value Controlled Input"
-        rounded="none"
-        InputRightElement={<Button rounded="none">아아</Button>}
-      />
+        </ScrollView>
+        <Input
+          placeholder="Value Controlled Input"
+          rounded="none"
+          InputRightElement={<Button rounded="none">submit</Button>}
+        />
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };

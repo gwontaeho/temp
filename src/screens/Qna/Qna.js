@@ -1,13 +1,16 @@
 import React, {useState, useCallback, useEffect} from 'react';
+import {Dimensions, SafeAreaView} from 'react-native';
 import {
-  Dimensions,
+  VStack,
   FlatList,
   Text,
+  HStack,
   View,
   Image,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+  Avatar,
+  Divider,
+  Flex,
+} from 'native-base';
 import {useFocusEffect} from '@react-navigation/native';
 import api from '#api';
 
@@ -41,6 +44,10 @@ export const Qna = ({navigation}) => {
       id: 7,
       text: 'asdasd',
     },
+    {
+      id: 8,
+      text: 'asdasd',
+    },
   ]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -53,66 +60,37 @@ export const Qna = ({navigation}) => {
 
   const renderItem = ({item}) => {
     const {id, text} = item;
-    const image = item.Images?.[0];
 
     return (
-      <View style={styles.renderItem}>
-        <Image
-          source={{uri: 'https://picsum.photos/200'}}
-          style={styles.image}
-        />
-        <View style={styles.user}>
-          <Text>아이디</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Post', {id})}>
-            <Text>asd</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.text} numberOfLines={1}>
-          {text}
-        </Text>
-      </View>
+      <VStack space={2.5} py={5}>
+        <HStack>
+          <Text numberOfLines={2} flex={1}>
+            FlatList는 항목, 여러 열, 무한 스크롤 로드 또는 기본적으로 지원하는
+            기타 기능 간의 구분 기호를 렌더링하려는 경우에도 유용합니다.
+          </Text>
+        </HStack>
+        <Flex direction="row" align="center" justify="space-between">
+          <HStack alignItems="center" space={2.5}>
+            <Avatar size="sm" />
+            <Text>김민성</Text>
+          </HStack>
+          <Text fontSize="xs">3시간전</Text>
+        </Flex>
+      </VStack>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView flex={1}>
       <FlatList
         data={posts}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        numColumns={2}
-        ListFooterComponent={<View />}
-        ListFooterComponentStyle={{paddingBottom: 5}}
-        ListHeaderComponent={<View />}
-        ListHeaderComponentStyle={{paddingTop: 5}}
-        style={styles.flatList}
         onRefresh={handleRefresh}
         refreshing={refreshing}
+        ItemSeparatorComponent={() => <Divider />}
+        _contentContainerStyle={{px: 5}}
       />
-    </View>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  flatList: {
-    paddingHorizontal: 5,
-  },
-  user: {
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  text: {
-    paddingHorizontal: 10,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-  },
-  renderItem: {
-    flex: 1,
-    padding: 5,
-  },
-});

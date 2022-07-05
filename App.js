@@ -9,10 +9,42 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {store} from '#redux/app/store';
 import {setToken} from '#redux/features/token/tokenSlice';
-import {Feed, Sign, Post, Ranking, Settings, User, Write, Qna} from '#screens';
+import {
+  Feed,
+  Sign,
+  Post,
+  Ranking,
+  Settings,
+  User,
+  Write,
+  Qna,
+  Follow,
+} from '#screens';
 
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const Tabs = ({navigation}) => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Feed"
+        component={Feed}
+        options={{
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Write')}>
+              <Text>글쓰기</Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen name="Qna" component={Qna} />
+      <Tab.Screen name="Shop" component={Qna} />
+      <Tab.Screen name="Ranking" component={Ranking} />
+      <Tab.Screen name="Settings" component={Settings} />
+    </Tab.Navigator>
+  );
+};
 
 const Root = () => {
   const dispatch = useDispatch();
@@ -41,29 +73,9 @@ const Root = () => {
         <Stack.Screen name="User" component={User} />
         <Stack.Screen name="Sign" component={Sign} />
         <Stack.Screen name="Write" component={Write} />
+        <Stack.Screen name="Follow" component={Follow} />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-};
-
-const Tabs = ({navigation}) => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen
-        name="Feed"
-        component={Feed}
-        options={{
-          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('Write')}>
-              <Text>글쓰기</Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Tab.Screen name="Qna" component={Qna} />
-      <Tab.Screen name="Ranking" component={Ranking} />
-      <Tab.Screen name="Settings" component={Settings} />
-    </Tab.Navigator>
   );
 };
 

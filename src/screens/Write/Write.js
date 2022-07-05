@@ -1,14 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, FlatList, View, Image} from 'react-native';
-import {Button, TextArea} from 'native-base';
+import {Dimensions, SafeAreaView} from 'react-native';
+import {Button, TextArea, Image, FlatList, View, VStack} from 'native-base';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {Spacer} from '#components';
 import api from '#api';
 import {useSelector} from 'react-redux';
 
-const windowWidth = Dimensions.get('window').width;
-
 export const Write = ({navigation}) => {
+  const screenWidth = Dimensions.get('screen').width;
+
   const token = useSelector(state => state.token.value);
   const [images, setImages] = useState([]);
   const [text, setText] = useState('');
@@ -53,60 +52,37 @@ export const Write = ({navigation}) => {
   }, [images]);
 
   const renderItem = ({item}) => (
-    <View>
-      <Image source={{uri: item.uri}} style={styles.image} />
-    </View>
+    <Image
+      source={{uri: item.uri}}
+      w={screenWidth}
+      aspectRatio={1}
+      alt="image"
+    />
   );
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView flex={1}>
       {Boolean(images.length) ? (
         <FlatList
-          style={styles.flatList}
-          snapToInterval={windowWidth}
-          data={images}
-          keyExtractor={item => item.fileName}
-          renderItem={renderItem}
           horizontal
+          data={images}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          disableIntervalMomentum
+          pagingEnabled
+          flexGrow={0}
         />
       ) : (
-        <View style={styles.image}></View>
+        <View></View>
       )}
-      <View style={styles.contents}>
-        <View>
-          <Button onPress={handleClickAddImage}>이미지 추가</Button>
-          <Spacer _m={30} />
-          <TextArea
-            variant="underlined"
-            value={text}
-            onChange={e => setText(e.currentTarget.value)}
-          />
-        </View>
+      <VStack>
+        <Button onPress={handleClickAddImage}>이미지 추가</Button>
+        <TextArea
+          variant="underlined"
+          value={text}
+          onChange={e => setText(e.currentTarget.value)}
+        />
         <Button onPress={handleClickSubmit}>완료</Button>
-      </View>
-    </View>
+      </VStack>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contents: {
-    flex: 1,
-    padding: 30,
-    justifyContent: 'space-between',
-  },
-  h1: {
-    fontSize: 30,
-  },
-  flatList: {
-    flexGrow: 0,
-  },
-  image: {
-    width: windowWidth,
-    height: windowWidth,
-    borderBottomWidth: 1,
-    borderColor: 'gray',
-  },
-});
