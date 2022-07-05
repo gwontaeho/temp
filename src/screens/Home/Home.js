@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {Dimensions} from 'react-native';
+import {Dimensions, Animated} from 'react-native';
 import {
   VStack,
   ScrollView,
@@ -12,33 +12,18 @@ import {
   Center,
   Flex,
   Button,
+  Box,
 } from 'native-base';
-import Toast from 'react-native-toast-message';
+import {ImageLoader} from '#components/ImageLoader';
 
 export const Home = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(0);
-  const toast = useToast();
   const screenWidth = Dimensions.get('screen').width;
 
   useEffect(() => {
     console.log(page);
   }, [page]);
-
-  const showToast = () => {
-    Toast.show({
-      type: 'custom',
-      text1: 'Hello',
-      text2: 'This is some something 👋',
-      position: 'bottom',
-    });
-  };
-
-  const showBaseToast = () => {
-    toast.show({
-      description: 'Hello world',
-    });
-  };
 
   const DATA = [
     {
@@ -65,22 +50,26 @@ export const Home = ({navigation, route}) => {
 
   const renderItem = () => {
     return (
-      <Image
-        source={{uri: 'https://picsum.photos/200'}}
-        w={screenWidth}
-        aspectRatio={1}
+      <ImageLoader
+        source={{uri: 'https://picsum.photos/1000'}}
         alt="image"
+        style={{
+          width: screenWidth,
+          aspectRatio: 1,
+        }}
       />
     );
   };
 
   const renderItem2 = () => {
     return (
-      <Image
-        source={{uri: 'https://picsum.photos/200'}}
-        w={screenWidth / 2}
-        aspectRatio={1}
+      <ImageLoader
+        source={{uri: 'https://picsum.photos/1000'}}
         alt="image"
+        style={{
+          width: screenWidth / 2,
+          aspectRatio: 1,
+        }}
       />
     );
   };

@@ -3,9 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SplashScreen from 'react-native-splash-screen';
-import Toast from 'react-native-toast-message';
-import {View} from 'react-native';
-import {NativeBaseProvider} from 'native-base';
+import {NativeBaseProvider, extendTheme} from 'native-base';
 import {Provider, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ApolloProvider} from '@apollo/client';
@@ -36,16 +34,14 @@ import {
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const toastConfig = {
-  custom: props => (
-    <View style={{height: 60, width: '90%', backgroundColor: 'black'}} />
-  ),
-};
-
 const Root = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerBackTitleVisible: false,
+          headerShadowVisible: false,
+        }}>
         <Stack.Screen
           name="Tabs"
           component={Tabs}
@@ -71,7 +67,7 @@ const Root = () => {
 
 const Tabs = ({navigation}) => (
   <Tab.Navigator>
-    <Tab.Screen name="Home" component={Home} />
+    <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
     <Tab.Screen name="Fundings" component={Fundings} />
     <Tab.Screen name="Artists" component={Artists} />
     <Tab.Screen name="Settings" component={Settings} />
@@ -83,12 +79,31 @@ const App = () => {
     SplashScreen.hide();
   }, []);
 
+  const theme = extendTheme({
+    colors: {
+      primary: {
+        600: '#007AB8',
+      },
+    },
+    components: {
+      Input: {
+        baseStyle: {
+          h: 12,
+        },
+      },
+      Button: {
+        baseStyle: {
+          h: 12,
+        },
+      },
+    },
+  });
+
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <NativeBaseProvider>
+        <NativeBaseProvider theme={theme}>
           <Root />
-          <Toast config={toastConfig} />
         </NativeBaseProvider>
       </Provider>
     </ApolloProvider>

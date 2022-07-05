@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {TouchableWithoutFeedback, Keyboard, SafeAreaView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMutation} from '@apollo/client';
-import {CREATE_USER} from '#apollo/gql';
 import {useHeaderHeight} from '@react-navigation/elements';
-import {TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {CREATE_USER} from '#apollo/gql';
 
 import {
   Input,
@@ -16,112 +16,117 @@ import {
   VStack,
   KeyboardAvoidingView,
   Divider,
+  Checkbox,
+  HStack,
 } from 'native-base';
 
 export const Signup = ({navigation}) => {
   const headerHeight = useHeaderHeight();
 
   const [email, setEmail] = useState('');
+  const [certification, setCertification] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
 
   const [createUser] = useMutation(CREATE_USER, {
-    onCompleted: data => {
+    onCompleted: async data => {
+      const {user, token} = data.signup;
+      try {
+        await AsyncStorage.setItem('token', token);
+      } catch (error) {
+        console.log(error);
+      }
       navigation.navigate('Home');
     },
+    onError: error => console.error(error),
   });
 
-  useEffect(() => {
-    console.log(password);
-    console.log(passwordCheck);
-    console.log(email);
-  }, [password, passwordCheck, email]);
-
-  const handlePressCreate = useCallback(() => {
-    createUser({
+  const handlePressCreate = useCallback(async () => {
+    console.log(email, password);
+    await createUser({
       variables: {
         email,
         password,
-        role: 'INVESTOR',
       },
     });
   }, [email, password, passwordCheck]);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <Flex flex={1} p={5} bg="#fff">
-        <VStack space={2.5}>
-          <Text fontSize="4xl">Bigpot</Text>
-          <Text>이메일</Text>
-          <Input
-            size="2xl"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={text => setEmail(text)}
-          />
-          <Text>비밀번호</Text>
-          <Input
-            size="2xl"
-            value={password}
-            onChangeText={text => setPassword(text)}
-          />
-          <Input
-            size="2xl"
-            value={passwordCheck}
-            onChangeText={text => setPasswordCheck(text)}
-          />
-        </VStack>
-        <VStack space={2.5}>
-          <Text>약관 전체 동의</Text>
-          <Divider />
-          <Text>[필수] 개인정보 수집 및 이용동의 전문보기</Text>
-          <Text>[필수] 개인정보 수집 및 이용동의 전문보기</Text>
-          <Text>[필수] 개인정보 수집 및 이용동의 전문보기</Text>
-        </VStack>
+    <SafeAreaView flex={1}>
+      <KeyboardAvoidingView
+        flex={1}
+        behavior="padding"
+        keyboardVerticalOffset={headerHeight}>
+        <ScrollView
+          flex={1}
+          bg="#fff"
+          borderWidth={1}
+          _contentContainerStyle={{p: 5}}>
+          <VStack space={2.5}>
+            <Text fontSize="2xl">회원가입</Text>
+            <Text>이메일</Text>
+            <Input
+              keyboardType="email-address"
+              value={email}
+              onChangeText={text => setEmail(text)}
+              InputRightElement={
+                <Button rounded="none" h="full">
+                  인증번호 전송
+                </Button>
+              }
+            />
+            <Input
+              keyboardType="number-pad"
+              value={certification}
+              onChangeText={text => setCertification(text)}
+              InputRightElement={
+                <Button rounded="none" h="full">
+                  인증번호 확인
+                </Button>
+              }
+            />
+            <Text>비밀번호</Text>
+            <Input value={password} onChangeText={text => setPassword(text)} />
+            <Input
+              value={passwordCheck}
+              onChangeText={text => setPasswordCheck(text)}
+            />
+          </VStack>
+
+          <VStack space={2.5}>
+            <Flex direction="row" justify="space-between">
+              <Text>약관 전체 동의</Text>
+              <Checkbox />
+            </Flex>
+            <Divider />
+            <Flex direction="row" justify="space-between">
+              <HStack space={1}>
+                <Text bold>[필수]</Text>
+                <Text>개인정보 수집 및 이용동의</Text>
+                <Text underline>전문보기</Text>
+              </HStack>
+              <Checkbox />
+            </Flex>
+            <Flex direction="row" justify="space-between">
+              <HStack space={1}>
+                <Text bold>[필수]</Text>
+                <Text>서비스 이용약관</Text>
+                <Text underline>전문보기</Text>
+              </HStack>
+              <Checkbox />
+            </Flex>
+            <Flex direction="row" justify="space-between">
+              <HStack space={1}>
+                <Text bold>[선택]</Text>
+                <Text>마케팅 활용 및 광고정보 수신 동의</Text>
+                <Text underline>전문보기</Text>
+              </HStack>
+              <Checkbox />
+            </Flex>
+          </VStack>
+        </ScrollView>
         <Button onPress={handlePressCreate}>회원가입</Button>
-      </Flex>
-    </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
-
-{
-  /* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-<Flex p={5} bg="#fff" flex={1}>
-  <VStack space={10}>
-    <Text fontSize="4xl">Bigpot</Text>
-    <VStack space={2.5}>
-      <Text>이메일</Text>
-      <Input
-        size="2xl"
-        value={email}
-        onChangeText={text => setEmail(text)}
-      />
-      <Text>비밀번호</Text>
-      <Input
-        size="2xl"
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      <Text
-        onPress={() => navigation.navigate('Password_Reset')}
-        alignSelf="flex-end">
-        비밀번호를 잃어버리셨나요?
-      </Text>
-    </VStack>
-    <VStack space={2.5}>
-      <Button size="lg" onPress={handlePressLogin}>
-        로그인
-      </Button>
-      <Button size="lg" onPress={() => navigation.navigate('Signup')}>
-        회원가입
-      </Button>
-    </VStack>
-    <HStack justifyContent="center" space={2.5}>
-      <Button>카카오</Button>
-      <Button>구글</Button>
-      <Button onPress={handlePressApple}>애플</Button>
-    </HStack>
-  </VStack>
-</Flex>
-</TouchableWithoutFeedback> */
-}

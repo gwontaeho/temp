@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,8 @@ import {
   Pressable,
   FlatList,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
 export const Artists = ({navigation}) => {
   const data = [
@@ -39,6 +41,13 @@ export const Artists = ({navigation}) => {
       text: '3',
     },
   ];
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        await AsyncStorage.removeItem('token');
+      })();
+    }, []),
+  );
 
   const renderItem = ({item}) => {
     const {id, text} = item;

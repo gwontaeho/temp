@@ -1,5 +1,14 @@
 import React from 'react';
-import {Button, HStack, Flex, Text, FlatList} from 'native-base';
+import {SafeAreaView} from 'react-native';
+import {
+  Button,
+  HStack,
+  Flex,
+  Text,
+  FlatList,
+  ScrollView,
+  VStack,
+} from 'native-base';
 
 export const Deposit = ({navigation}) => {
   const data = [
@@ -37,18 +46,21 @@ export const Deposit = ({navigation}) => {
     const {id, text} = item;
 
     return (
-      <Flex>
-        <Flex>
-          <Text>아이디</Text>
-          <Text>아이디</Text>
+      <VStack p={2} space={2}>
+        <Flex direction="row" justify="space-between">
+          <Text bold>예치금 충전</Text>
+          <Text>+500,000원</Text>
         </Flex>
-        <Text>{text}</Text>
-      </Flex>
+        <Flex direction="row" justify="space-between">
+          <Text>18:00</Text>
+          <Text>1,800,000</Text>
+        </Flex>
+      </VStack>
     );
   };
 
   return (
-    <Flex flex={1}>
+    <SafeAreaView flex={1}>
       <Flex bg="#fff" p={5} mb={5}>
         <Flex bg="#eee" p={5} borderRadius={10}>
           <Text>예치금</Text>
@@ -80,6 +92,6 @@ export const Deposit = ({navigation}) => {
           _contentContainerStyle={{p: 5}}
         />
       </Flex>
-    </Flex>
+    </SafeAreaView>
   );
 };

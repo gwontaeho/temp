@@ -87,7 +87,7 @@ export const Pin = ({isOpen, onClose, onComplete}) => {
                 w={2}
                 h={2}
                 borderWidth={1}
-                borderRadius={2}
+                borderRadius={4}
                 bg={pin[i] ? '#000' : '#fff'}
               />
             ))}
