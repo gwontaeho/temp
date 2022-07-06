@@ -8,3 +8,5 @@ export * from './Write/Write';
 export * from './Sign/Sign';
 export * from './Qna/Qna';
 export * from './Follow/Follow';
+export * from './Message/Message';
+export * from './Room/Room';

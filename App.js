@@ -19,6 +19,8 @@ import {
   Write,
   Qna,
   Follow,
+  Message,
+  Room,
 } from '#screens';
 
 const Tab = createBottomTabNavigator();
@@ -40,7 +42,7 @@ const Tabs = ({navigation}) => {
       />
       <Tab.Screen name="Qna" component={Qna} />
       <Tab.Screen name="Shop" component={Qna} />
-      <Tab.Screen name="Ranking" component={Ranking} />
+      <Tab.Screen name="Message" component={Message} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
@@ -74,6 +76,7 @@ const Root = () => {
         <Stack.Screen name="Sign" component={Sign} />
         <Stack.Screen name="Write" component={Write} />
         <Stack.Screen name="Follow" component={Follow} />
+        <Stack.Screen name="Room" component={Room} />
       </Stack.Navigator>
     </NavigationContainer>
   );
