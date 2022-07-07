@@ -6,7 +6,7 @@ export * from './User/User';
 export * from './Feed/Feed';
 export * from './Write/Write';
 export * from './Sign/Sign';
-export * from './Qna/Qna';
+export * from './Board/Board';
 export * from './Follow/Follow';
 export * from './Message/Message';
 export * from './Room/Room';

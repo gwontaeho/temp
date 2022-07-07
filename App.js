@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {TouchableOpacity, Text} from 'react-native';
-import {NativeBaseProvider} from 'native-base';
+import {NativeBaseProvider, extendTheme} from 'native-base';
 import {Provider, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -17,7 +17,7 @@ import {
   Settings,
   User,
   Write,
-  Qna,
+  Board,
   Follow,
   Message,
   Room,
@@ -40,8 +40,8 @@ const Tabs = ({navigation}) => {
           ),
         }}
       />
-      <Tab.Screen name="Qna" component={Qna} />
-      <Tab.Screen name="Shop" component={Qna} />
+      <Tab.Screen name="Board" component={Board} />
+      {/* <Tab.Screen name="Shop" component={Board} /> */}
       <Tab.Screen name="Message" component={Message} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
@@ -83,9 +83,11 @@ const Root = () => {
 };
 
 const App = () => {
+  const theme = extendTheme({});
+
   return (
     <Provider store={store}>
-      <NativeBaseProvider>
+      <NativeBaseProvider theme={theme}>
         <Root />
       </NativeBaseProvider>
     </Provider>

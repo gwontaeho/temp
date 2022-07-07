@@ -1,18 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import auth from '@react-native-firebase/auth';
-import {
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-} from 'react-native';
-import {Input, Button} from 'native-base';
+import {TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {Input, Button, Text, KeyboardAvoidingView, VStack} from 'native-base';
 import {useHeaderHeight} from '@react-navigation/elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setToken} from '#redux/features/token/tokenSlice';
-
 import api from '#api';
 
 export const Sign = ({navigation}) => {
@@ -69,51 +62,34 @@ export const Sign = ({navigation}) => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
       behavior="padding"
-      keyboardVerticalOffset={headerHeight}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.innerContainer}>
-          {confirm ? (
-            <>
-              <Input
-                size="2xl"
-                maxLength={6}
-                value={code}
-                onChangeText={text => setCode(text)}
-                style={styles.input}
-              />
-              <Button onPress={handlePressConfirm}>인증번호 확인</Button>
-            </>
-          ) : (
-            <>
-              <Input
-                keyboardType="number-pad"
-                size="2xl"
-                maxLength={11}
-                value={phone}
-                onChangeText={text => setPhone(text)}
-                style={styles.input}
-              />
-              <Button onPress={handlePressSend}>인증번호 전송</Button>
-            </>
-          )}
-        </View>
+      keyboardVerticalOffset={headerHeight}
+      flex={1}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} flex={1}>
+        <VStack
+          justifyContent="center"
+          alignItems="center"
+          space={5}
+          flex={1}
+          p={5}>
+          <Text fontSize="2xl">
+            {confirm
+              ? '인증번호 확인 후 로그인됩니다'
+              : '휴대폰 번호를 입력해주세요'}
+          </Text>
+          <Input
+            size="2xl"
+            maxLength={6}
+            value={confirm ? code : phone}
+            onChangeText={text => (confirm ? setCode(text) : setPhone(text))}
+          />
+          <Button
+            w="full"
+            onPress={confirm ? handlePressConfirm : handlePressSend}>
+            {confirm ? '로그인' : '인증번호 전송'}
+          </Button>
+        </VStack>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: {
-    padding: 30,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  input: {
-    textAlign: 'center',
-  },
-});

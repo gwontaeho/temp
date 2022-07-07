@@ -20,36 +20,7 @@ export const Settings = ({navigation}) => {
 
   const dispatch = useDispatch();
 
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      text: 'asqwdqwdd',
-    },
-    {
-      id: 2,
-      text: 'asdaqwdq dw qwd wqdwdqwsd',
-    },
-    {
-      id: 3,
-      text: 'asdasd',
-    },
-    {
-      id: 4,
-      text: 'asdasd',
-    },
-    {
-      id: 5,
-      text: 'asdasd',
-    },
-    {
-      id: 6,
-      text: 'asdasd',
-    },
-    {
-      id: 7,
-      text: 'asdasd',
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   useFocusEffect(
     useCallback(() => {

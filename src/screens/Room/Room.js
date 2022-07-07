@@ -23,21 +23,30 @@ export const Room = ({route, navigation}) => {
 
   const renderItem = ({item}) => {
     return (
-      <Text key={item} p={5} borderWidth={1}>
-        {item}
+      <Text p={5} borderWidth={1}>
+        {item.text}
       </Text>
     );
     s;
   };
 
   useEffect(() => {
+    let firstRender = true;
     const ref = database().ref(`/rooms/${room}/messages`);
-    const onValueChange = ref.orderByChild('date').on('value', snapshot => {
-      snapshot.forEach(v => console.log(v.val()));
-      if (snapshot.val()) console.log(Object.values(snapshot.val()));
-    });
-    return () => ref.off('value', onValueChange);
+    const onChildAdd = ref
+      .orderByChild('date')
+      .limitToLast(1)
+      .on('child_added', snapshot => {
+        console.log(snapshot);
+        if (firstRender) return (firstRender = false);
+        setMessages(prev => [snapshot.val(), ...prev]);
+      });
+    return () => ref.off('child_added', onChildAdd);
   }, []);
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
 
   const handlePressTest = useCallback(() => {
     const ref = database().ref(`/rooms/${room}/messages`);
@@ -48,9 +57,9 @@ export const Room = ({route, navigation}) => {
     <SafeAreaView flex={1}>
       <FlatList
         inverted
-        data={data}
+        data={messages}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.date}
       />
       <KeyboardAvoidingView
         behavior="padding"

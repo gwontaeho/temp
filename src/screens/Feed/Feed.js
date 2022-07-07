@@ -1,6 +1,6 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useLayoutEffect} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, Button} from 'react-native';
 import {FlatList, Image, Pressable} from 'native-base';
 import api from '#api';
 
@@ -8,6 +8,17 @@ export const Feed = ({navigation}) => {
   const [posts, setPosts] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="write"
+          onPress={() => navigation.navigate('Write', {type: 'F'})}
+        />
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     getPosts();
