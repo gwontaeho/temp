@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {TouchableOpacity, Text} from 'react-native';
+import {TouchableOpacity, Text, Button} from 'react-native';
 import {NativeBaseProvider, extendTheme} from 'native-base';
 import {Provider, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,7 +28,11 @@ const Stack = createNativeStackNavigator();
 
 const Tabs = ({navigation}) => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: () => <Text>{route.name}</Text>,
+        tabBarShowLabel: false,
+      })}>
       <Tab.Screen
         name="Feed"
         component={Feed}
@@ -51,6 +55,15 @@ const Tabs = ({navigation}) => {
 const Root = () => {
   const dispatch = useDispatch();
 
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: '#cccccc',
+      card: '#cccccc',
+    },
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -64,7 +77,7 @@ const Root = () => {
   }, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Stack.Navigator>
         <Stack.Screen
           name="Tabs"
