@@ -1,14 +1,12 @@
 import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import {Button, Dimensions, SafeAreaView} from 'react-native';
-import {Input, TextArea, Image, FlatList, View, VStack} from 'native-base';
+import {Input, TextArea, Image, FlatList, VStack} from 'native-base';
 import {launchImageLibrary} from 'react-native-image-picker';
 import api from '#api';
-import {useSelector} from 'react-redux';
 
 export const Write = ({route, navigation}) => {
   const type = route.params?.type;
   const screenWidth = Dimensions.get('screen').width;
-  const token = useSelector(state => state.token.value);
 
   const [images, setImages] = useState([]);
   const [title, setTitle] = useState('');
@@ -31,30 +29,28 @@ export const Write = ({route, navigation}) => {
   }, []);
 
   const handleClickSubmit = useCallback(async () => {
-    console.log(text);
-    return console.log({title, text, images});
+    // console.log(text);
+    // return console.log({title, text, images});
 
-    // const formData = new FormData();
-    // const text =
-    //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultrices lectus et arcu condimentum tempor. Vestibulum in hendrerit purus, eu.';
-    // formData.append('text', text);
-    // images.forEach(image => {
-    //   const file = {
-    //     name: image.fileName,
-    //     uri: image.uri,
-    //   };
-    //   formData.append('images', file);
-    // });
-    // try {
-    //   const response = await api.post('post', formData, {
-    //     headers: {
-    //       token,
-    //     },
-    //   });
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const formData = new FormData();
+    const text =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultrices lectus et arcu condimentum tempor. Vestibulum in hendrerit purus, eu.';
+    formData.append('text', text);
+    formData.append('type', 'F');
+    images.forEach(image => {
+      const file = {
+        name: image.fileName,
+        uri: image.uri,
+      };
+      formData.append('images', file);
+    });
+
+    try {
+      const response = await api.post('post', formData);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   }, [images, title, text]);
 
   useEffect(() => {
@@ -96,7 +92,7 @@ export const Write = ({route, navigation}) => {
           onChangeText={v => setText(v)}
           placeholder="text..."
         />
-        <Button title="이미지 등록" />
+        <Button title="이미지 등록" onPress={handleClickAddImage} />
       </VStack>
     </SafeAreaView>
   );

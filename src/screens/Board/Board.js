@@ -37,7 +37,7 @@ export const Board = ({navigation}) => {
   const getPosts = useCallback(async () => {
     try {
       const response = await api.get('post/?type=B');
-      console.log(response.data);
+      console.log(response);
       setPosts(response.data);
     } catch (error) {
       console.log(error);
@@ -53,7 +53,6 @@ export const Board = ({navigation}) => {
 
   const renderItem = ({item}) => {
     const {id, title} = item;
-    console.log(item);
 
     return (
       <VStack space={2.5} py={5} key={id}>

@@ -26,7 +26,7 @@ export const Feed = ({navigation}) => {
 
   const getPosts = useCallback(async () => {
     try {
-      const response = await api.get('post');
+      const response = await api.get('post?type=F');
       console.log(response.data);
       setPosts(response.data);
     } catch (error) {

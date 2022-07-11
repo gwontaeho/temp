@@ -47,13 +47,13 @@ export const Sign = ({navigation}) => {
         fb_phone: phoneNumber,
         fb_uid: uid,
       });
-      console.log(response.data);
-
+      const token = response.headers.authorization;
+      console.log(token);
       // async storage에 토큰 저장
       // redux storedp 토큰 저장
 
-      await AsyncStorage.setItem('token', response.data);
-      dispatch(setToken(response.data));
+      await AsyncStorage.setItem('token', token);
+      dispatch(setToken(token));
       navigation.navigate('Tabs');
     } catch (error) {
       console.log('Invalid code.');
