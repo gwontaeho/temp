@@ -14,7 +14,7 @@ export const Feed = ({navigation}) => {
       headerRight: () => (
         <Button
           title="write"
-          onPress={() => navigation.navigate('Write', {type: 'F'})}
+          onPress={() => navigation.navigate('Write_Image', {type: 'F'})}
         />
       ),
     });

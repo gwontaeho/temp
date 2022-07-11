@@ -16,7 +16,8 @@ import {
   Ranking,
   Settings,
   User,
-  Write,
+  Write_Image,
+  Write_Text,
   Board,
   Follow,
   Message,
@@ -87,7 +88,8 @@ const Root = () => {
         <Stack.Screen name="Post" component={Post} />
         <Stack.Screen name="User" component={User} />
         <Stack.Screen name="Sign" component={Sign} />
-        <Stack.Screen name="Write" component={Write} />
+        <Stack.Screen name="Write_Image" component={Write_Image} />
+        <Stack.Screen name="Write_Text" component={Write_Text} />
         <Stack.Screen name="Follow" component={Follow} />
         <Stack.Screen name="Room" component={Room} />
       </Stack.Navigator>

@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {useSelector} from 'react-redux';
 import {Dimensions, SafeAreaView} from 'react-native';
 import {
   Button,
@@ -21,7 +20,6 @@ import {useHeaderHeight} from '@react-navigation/elements';
 import api from '#api';
 
 export const Post = ({navigation, route}) => {
-  const token = useSelector(state => state.token.value);
   const id = route.params.id;
   const screenWidth = Dimensions.get('screen').width;
   const headerHeight = useHeaderHeight();
@@ -42,17 +40,17 @@ export const Post = ({navigation, route}) => {
   const handlePressCreateComment = useCallback(async () => {
     try {
       const response = await api.post('comment');
+      console.log(response);
     } catch (error) {}
   }, []);
 
   const handlePressLike = useCallback(async () => {
     try {
-      const response = await api.get(`like/?PostId=${1}`, {headers: {token}});
+      const response = await api.get(`like/?PostId=${1}`);
     } catch (error) {}
-  }, [token]);
+  }, []);
 
   const renderItem = ({item}) => {
-    console.log(item);
     return (
       <Image
         source={{uri: item.path}}
