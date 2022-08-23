@@ -1,0 +1,195 @@
+// paper & background
+$paper: white;
+$page: #f2f3f7;
+$line: #c0c1c4;
+
+// primary
+$primaryLight: #e7f2ff;
+$primaryMain: #177fff;
+$primaryDark: #3d6ef5;
+$primary100: #f4f7fb;
+$primary200: #edf3fb;
+$primary300: #bddef7;
+$primary400: #d1e5ff;
+$primary800: #1565c0;
+
+// secondary
+$secondaryLight: #323744;
+$secondaryMain: #673ab7;
+$secondaryDark: #ffffff;
+$secondary200: #b39ddb;
+$secondary800: #4527a0;
+
+// success Colors
+$successLight: #b9f6ca;
+$success200: #e5f1dd;
+$successMain: #1d5934;
+$successDark: #1d5934;
+
+// error
+$errorLight: #f8c7c2;
+$errorMain: #de552b;
+$errorDark: #c62828;
+$error100: #fdefe8;
+
+
+// orange
+$orangeLight: #fbe9e7;
+$orangeMain: #eb7a43;
+$orangeDark: #d84315;
+
+// warning
+$warningLight: #fff8e1;
+$warningMain: #f0c03f;
+$warningDark: #ffc107;
+
+// grey
+$grey50: #fafafa;
+$grey100: #f5f5f5;
+$grey200: #eeeeee;
+$grey300: #e0e0e0;
+$grey400: #9e9e9e;
+$grey500: #8a8a8a;
+$grey600: #757575;
+$grey700: #656565;
+$grey800: #414141;
+$grey900: #212121;
+
+// chart
+$chartMain1: #2591e5;
+$chartMain2: #30cce3;
+$chartMain3: #f0c03f;
+$chartMain4: #eb7a43;
+$chartLight1: #d3e9fa;
+$chartLight2: #c6f6ff;
+$chartLight3: #faecc5;
+$chartLight4: #f7cab4;
+
+
+// ==============================|| DARK THEME VARIANTS ||============================== //
+
+// paper & background
+$darkBackground: #1a223f; // level 3
+$darkPaper: #111936; // level 4
+
+// dark 800 & 900
+$darkLevel1: #29314f; // level 1
+$darkLevel2: #212946; // level 2
+
+// primary dark
+$darkPrimaryLight: #e3f2fd;
+$darkPrimaryMain: #2196f3;
+$darkPrimaryDark: #1e88e5;
+$darkPrimary200: #90caf9;
+$darkPrimary800: #1565c0;
+
+// secondary dark
+$darkSecondaryLight: #d1c4e9;
+$darkSecondaryMain: #7c4dff;
+$darkSecondaryDark: #651fff;
+$darkSecondary200: #b39ddb;
+$darkSecondary800: #6200ea;
+
+// text variants
+$darkTextTitle: #d7dcec;
+$darkTextPrimary: #bdc8f0;
+$darkTextSecondary: #8492c4;
+
+// ==============================|| JAVASCRIPT ||============================== //
+
+:export {
+	// paper & background
+	paper: $paper;
+	page: $page;
+	line: $line;
+
+	// primary
+	primaryLight: $primaryLight;
+	primary100: $primary100;
+	primary200: $primary200;
+	primary300: $primary300;
+	primary400: $primary400;
+	primaryMain: $primaryMain;
+	primaryDark: $primaryDark;
+	primary800: $primary800;
+
+	// secondary
+	secondaryLight: $secondaryLight;
+	secondary200: $secondary200;
+	secondaryMain: $secondaryMain;
+	secondaryDark: $secondaryDark;
+	secondary800: $secondary800;
+
+	// success
+	successLight: $successLight;
+	success200: $success200;
+	successMain: $successMain;
+	successDark: $successDark;
+
+	// error
+	errorLight: $errorLight;
+	errorMain: $errorMain;
+	errorDark: $errorDark;
+	error100: $error100;
+
+	// orange
+	orangeLight: $orangeLight;
+	orangeMain: $orangeMain;
+	orangeDark: $orangeDark;
+
+	// warning
+	warningLight: $warningLight;
+	warningMain: $warningMain;
+	warningDark: $warningDark;
+
+	// grey
+	grey50: $grey50;
+	grey100: $grey100;
+	grey200: $grey200;
+	grey300: $grey300;
+	grey400: $grey400;
+	grey500: $grey500;
+	grey600: $grey600;
+	grey700: $grey700;
+	grey800: $grey800;
+	grey900: $grey900;
+
+	// chart
+	chartMain1: $chartMain1;
+	chartMain2: $chartMain2;
+	chartMain3: $chartMain3;
+	chartMain4: $chartMain4;
+	chartLight1: $chartLight1;
+	chartLight2: $chartLight2;
+	chartLight3: $chartLight3;
+	chartLight4: $chartLight4;
+
+	// ==============================|| DARK THEME VARIANTS ||============================== //
+
+	// paper & background
+	darkPaper: $darkPaper;
+	darkBackground: $darkBackground;
+
+	// dark 800 & 900
+	darkLevel1: $darkLevel1;
+	darkLevel2: $darkLevel2;
+
+	// text variants
+	darkTextTitle: $darkTextTitle;
+	darkTextPrimary: $darkTextPrimary;
+	darkTextSecondary: $darkTextSecondary;
+
+	// primary dark
+	darkPrimaryLight: $darkPrimaryLight;
+	darkPrimaryMain: $darkPrimaryMain;
+	darkPrimaryDark: $darkPrimaryDark;
+	darkPrimary200: $darkPrimary200;
+	darkPrimary800: $darkPrimary800;
+
+	// secondary dark
+	darkSecondaryLight: $darkSecondaryLight;
+	darkSecondaryMain: $darkSecondaryMain;
+	darkSecondaryDark: $darkSecondaryDark;
+	darkSecondary200: $darkSecondary200;
+	darkSecondary800: $darkSecondary800;
+}
