@@ -1,14 +1,20 @@
-import { Typography, Stack, Pagination, Select, MenuItem } from "@mui/material";
+import { Typography, Stack, Pagination, Select, MenuItem, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { SubscriptionIcon } from "../../ui-component/icons/icons";
 import MainCard from "../../ui-component/cards/MainCard";
 
 export default function Qna() {
+    const navigate = useNavigate();
+
     return (
         <Stack spacing={3}>
-            <Typography variant="h2">
-                {SubscriptionIcon()}
-                <label style={{ marginLeft: "0.8rem" }}>문의</label>
-            </Typography>
+            <Stack direction="row" alignItems="center">
+                <Typography variant="h2">
+                    {SubscriptionIcon()}
+                    <label style={{ marginLeft: "0.8rem" }}>문의</label>
+                </Typography>
+                <Button onClick={() => navigate("/support/qna/create")}>문의하기</Button>
+            </Stack>
             <MainCard>
                 <Stack minHeight="50vh" justifyContent="space-between">
                     <Stack sx={{ "&>*:not(:last-child)": { borderBottom: "1px solid #eee" } }}>

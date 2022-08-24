@@ -1,9 +1,12 @@
 import { Typography, Stack, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { SubscriptionIcon } from "../../ui-component/icons/icons";
 import MainCard from "../../ui-component/cards/MainCard";
 
 export default function Team() {
-    const isExisted = true;
+    const navigate = useNavigate();
+
+    const isExisted = false;
 
     return (
         <Stack spacing={3}>
@@ -37,7 +40,9 @@ export default function Team() {
                 ) : (
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                         <Typography>등록된 기관 정보가 없습니다.</Typography>
-                        <Button color="primary">기관 등록</Button>
+                        <Button color="primary" onClick={() => navigate("/account/team/create")}>
+                            기관 등록
+                        </Button>
                     </Stack>
                 )}
             </MainCard>
