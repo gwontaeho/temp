@@ -6,7 +6,8 @@ import MainCard from "../../ui-component/cards/MainCard";
 export default function Team() {
     const navigate = useNavigate();
 
-    const isExisted = false;
+    // 기관 등록여부
+    const isExisted = true;
 
     return (
         <Stack spacing={3}>
@@ -15,7 +16,11 @@ export default function Team() {
                     {SubscriptionIcon()}
                     <label style={{ marginLeft: "0.8rem" }}>기관정보</label>
                 </Typography>
-                {isExisted && <Button color="primary">수정</Button>}
+                {isExisted && (
+                    <Button color="primary" onClick={() => navigate("/account/team/update")}>
+                        수정
+                    </Button>
+                )}
             </Stack>
             <MainCard>
                 {isExisted ? (

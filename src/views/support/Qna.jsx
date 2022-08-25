@@ -20,7 +20,15 @@ export default function Qna() {
                     <Stack sx={{ "&>*:not(:last-child)": { borderBottom: "1px solid #eee" } }}>
                         {[0, 1, 2].map((v) => {
                             return (
-                                <Stack key={v} direction="row" alignItems="center" spacing={5} height={80}>
+                                <Stack
+                                    key={v}
+                                    sx={{ cursor: "pointer" }}
+                                    direction="row"
+                                    alignItems="center"
+                                    spacing={5}
+                                    height={80}
+                                    onClick={() => navigate("/support/qna/detail")}
+                                >
                                     <Typography variant="caption">사용문의</Typography>
                                     <Typography variant="caption" flex={1}>
                                         환불 가능한가요?

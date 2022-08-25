@@ -54,7 +54,7 @@ export default function QnaCreate() {
                             <Typography onClick={() => navigate(-1)}>뒤로가기</Typography>
                             <Typography variant="h4">문의하기</Typography>
                         </Stack>
-                        <Stack sx={{ "&>*": { minHeight: 80, flexDirection: "row", alignItems: "center", "&>:first-child": { width: 130 } } }}>
+                        <Stack sx={{ "&>div": { minHeight: 80, flexDirection: "row", alignItems: "center", "& >p": { width: 130 } } }}>
                             <Stack>
                                 <Typography>문의 유형</Typography>
                                 <FormControl>
@@ -108,7 +108,10 @@ export default function QnaCreate() {
                             </Stack>
                             <Stack>
                                 <Typography>첨부파일</Typography>
-                                <Button>파일 업로드</Button>
+                                <Button component="label">
+                                    파일 업로드
+                                    <input hidden type="file" />
+                                </Button>
                             </Stack>
                         </Stack>
                         <Button color="primary" sx={{ alignSelf: "flex-end" }} onClick={handleClickSubmit}>

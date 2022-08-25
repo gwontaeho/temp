@@ -79,11 +79,13 @@ const DialogAuth = ({ open, setOpen }) => {
     );
 };
 
-const TeamCreate = () => {
+export default function TeamUpdate() {
+    const navigate = useNavigate();
+
     const [openAddress, setOpenAddress] = useState(false);
     const [openAuth, setOpenAuth] = useState(false);
 
-    const [address, setAddress] = useState({ code: "", full: "", detail: "" });
+    const [address, setAddress] = useState({ code: "code", full: "full", detail: "detail" });
 
     return (
         <>
@@ -96,22 +98,15 @@ const TeamCreate = () => {
                 </Stack>
                 <MainCard>
                     <Stack spacing={5}>
-                        <Typography variant="h3">기관등록</Typography>
+                        <Typography variant="h3">기관정보 수정</Typography>
                         <Stack spacing={5} maxWidth={600}>
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>기관명</Typography>
-                                <Stack flex={1}>
-                                    <TextField fullWidth />
-                                </Stack>
+                                <Typography>기관명</Typography>
                             </Stack>
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>사업자등록번호</Typography>
-                                <Stack direction="row" spacing={3} flex={1}>
-                                    <Stack flex={1}>
-                                        <TextField fullWidth />
-                                    </Stack>
-                                    <Button color="primary">중복 확인</Button>
-                                </Stack>
+                                <Typography>191911919</Typography>
                             </Stack>
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>대표자 이름</Typography>
@@ -150,11 +145,9 @@ const TeamCreate = () => {
                             </Stack>
                         </Stack>
                         <Stack direction="row" alignSelf="center" spacing={5}>
+                            <Button sx={{ width: 200 }}>취소</Button>
                             <Button color="primary" sx={{ width: 200 }}>
-                                발신번호 등록
-                            </Button>
-                            <Button color="primary" sx={{ width: 200 }}>
-                                작성 완료
+                                저장
                             </Button>
                         </Stack>
                     </Stack>
@@ -165,6 +158,4 @@ const TeamCreate = () => {
             <DialogAuth open={openAuth} setOpen={setOpenAuth} />
         </>
     );
-};
-
-export default TeamCreate;
+}
