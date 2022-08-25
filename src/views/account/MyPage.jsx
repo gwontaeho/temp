@@ -79,6 +79,9 @@ const Withdrawal = ({ open, setOpen }) => {
     const [text, setText] = useState("");
 
     const handleClickWithdrawal = useCallback(() => {
+        if (text.length < 10) return alert("탈퇴사유의 상세내용을 10자 이상 작성해주셔야 합니다");
+
+        alert("탈퇴 신청되었습니다. 탈퇴 심사 후 탈퇴 처리 결과를 안내하겠습니다.");
         setOpen(false);
     }, [type, text]);
 
@@ -97,7 +100,7 @@ const Withdrawal = ({ open, setOpen }) => {
                     <Stack sx={{ "& > *": { height: 120, alignItems: "center", display: "flex", p: 3 } }} flex={1}>
                         <Stack justifyContent="center" alignItems="flex-start">
                             <FormControl>
-                                <RadioGroup defaultValue="0" row>
+                                <RadioGroup value={type} row onChange={(e) => setType(e.target.value)}>
                                     <FormControlLabel value="0" control={<Radio />} label="퇴사" />
                                     <FormControlLabel value="1" control={<Radio />} label="부서이동" />
                                     <FormControlLabel value="2" control={<Radio />} label="서비스 미사용" />
@@ -106,7 +109,14 @@ const Withdrawal = ({ open, setOpen }) => {
                             </FormControl>
                         </Stack>
                         <Stack justifyContent="center">
-                            <TextField fullWidth multiline rows={3} placeholder="탈퇴사유의 상세 내용을 작성해주세요." />
+                            <TextField
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                fullWidth
+                                multiline
+                                rows={3}
+                                placeholder="탈퇴사유의 상세 내용을 작성해주세요."
+                            />
                         </Stack>
                     </Stack>
                 </Stack>
