@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { Stack, Typography, Button, Divider } from "@mui/material";
 
 const Header = () => {
@@ -14,6 +14,8 @@ const Header = () => {
 };
 
 const Nav = () => {
+    const { pathname } = useLocation();
+
     const member = [
         {
             title: "회원 관리",
@@ -74,40 +76,47 @@ const Nav = () => {
         },
     ];
 
+    const admin = [
+        {
+            title: "운영자 관리",
+            path: "/admin",
+        },
+    ];
+
+    const navOptions = [
+        { title: "회원 관리", option: member },
+        { title: "청구 / 정산", option: billing },
+        { title: "요금제 / 구독", option: subscribe },
+        { title: "고객 지원", option: support },
+        { title: "Admin 운영자", option: admin },
+    ];
+
     return (
         <Stack width={300} height="100%" p={5} spacing={3} overflow="auto">
-            <Typography>회원 관리</Typography>
-            {member.map((v) => (
-                <Link key={v.title} to={v.path}>
-                    <Typography>{v.title}</Typography>
-                </Link>
-            ))}
-            <Divider />
-            <Typography>청구 / 정산</Typography>
-            {billing.map((v) => (
-                <Link key={v.title} to={v.path}>
-                    <Typography>{v.title}</Typography>
-                </Link>
-            ))}
-            <Divider />
-            <Typography>요금제 / 구독</Typography>
-            {subscribe.map((v) => (
-                <Link key={v.title} to={v.path}>
-                    <Typography>{v.title}</Typography>
-                </Link>
-            ))}
-            <Divider />
-            <Typography>고객 지원</Typography>
-            {support.map((v) => (
-                <Link key={v.title} to={v.path}>
-                    <Typography>{v.title}</Typography>
-                </Link>
-            ))}
-            <Divider />
-            <Typography>Admin 운영자</Typography>
-            <Link to="/admin">
-                <Typography>운영자 관리</Typography>
-            </Link>
+            {navOptions.map(({ title, option }, i) => {
+                return (
+                    <>
+                        <Stack spacing={1}>
+                            <Typography variant="body2" fontWeight="bold" mb={1}>
+                                {title}
+                            </Typography>
+                            {option.map((v) => (
+                                <Link key={v.title} to={v.path}>
+                                    <Typography
+                                        p={1}
+                                        borderRadius={2}
+                                        {...(pathname === v.path && { color: "primary", fontWeight: "bold" })}
+                                        sx={{ "&:hover": { bgcolor: "#eeeeee88" } }}
+                                    >
+                                        {v.title}
+                                    </Typography>
+                                </Link>
+                            ))}
+                        </Stack>
+                        {navOptions.length - 1 !== i && <Divider />}
+                    </>
+                );
+            })}
         </Stack>
     );
 };

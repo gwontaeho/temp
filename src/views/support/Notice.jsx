@@ -17,8 +17,8 @@ export const Notice = () => {
                 <Table sx={{ minWidth: 650 }}>
                     <TableHead bgColor="#eee">
                         <TableRow>
-                            <TableCell>
-                                <Checkbox size="small" />
+                            <TableCell sx={{ position: "relative" }}>
+                                <Checkbox size="small" sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
                             </TableCell>
                             <TableCell>ID</TableCell>
                             <TableCell>카테고리</TableCell>
@@ -32,8 +32,8 @@ export const Notice = () => {
                         {[0, 1, 2].map((v) => {
                             return (
                                 <TableRow key={v}>
-                                    <TableCell>
-                                        <Checkbox size="small" />
+                                    <TableCell sx={{ position: "relative" }}>
+                                        <Checkbox size="small" sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
                                     </TableCell>
                                     <TableCell>ID</TableCell>
                                     <TableCell>카테고리</TableCell>

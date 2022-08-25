@@ -1,7 +1,23 @@
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Routes from "./routes";
 
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: "#177fff",
+        },
+    },
+    typography: {
+        fontFamily: ["NanumSquareRound"].join(","),
+    },
+});
+
 function App() {
-    return <Routes />;
+    return (
+        <ThemeProvider theme={theme}>
+            <Routes />
+        </ThemeProvider>
+    );
 }
 
 export default App;
