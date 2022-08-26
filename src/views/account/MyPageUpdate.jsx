@@ -1,11 +1,24 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Stack, TextField, Button } from "@mui/material";
 import { sampleIcon } from "../../ui-component/icons/icons";
 import MainCard from "../../ui-component/cards/MainCard";
 
+const initialState = { name: "", phone: "" };
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "setName":
+            return { ...state, name: action.payload };
+        case "setPhone":
+            return { ...state, phone: action.payload };
+    }
+};
+
 const MyPageUpdate = () => {
     const navigate = useNavigate();
+
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     const [name, setName] = useState("set origin name");
     const [phone, setPhone] = useState("set origin phone");
@@ -33,10 +46,10 @@ const MyPageUpdate = () => {
                         <Stack sx={{ "& > *": { height: 80, alignItems: "center", display: "flex", p: 3 } }}>
                             <Typography>U2cloud@U2check.com</Typography>
                             <Stack>
-                                <TextField value={name} onChange={(e) => setName(e.target.value)} />
+                                <TextField variant="standard" value={state.name} onChange={(e) => dispatch({ type: "setName", payload: e.target.value })} />
                             </Stack>
                             <Stack>
-                                <TextField value={phone} onChange={(e) => setPhone(e.target.value)} />
+                                <TextField variant="standard" value={state.phone} onChange={(e) => dispatch({ type: "setPhone", payload: e.target.value })} />
                             </Stack>
                         </Stack>
                     </Stack>

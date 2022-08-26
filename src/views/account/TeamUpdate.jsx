@@ -97,59 +97,54 @@ export default function TeamUpdate() {
                     </Typography>
                 </Stack>
                 <MainCard>
-                    <Stack spacing={5}>
-                        <Typography variant="h3">기관정보 수정</Typography>
-                        <Stack spacing={5} maxWidth={600}>
-                            <Stack direction="row" alignItems="center">
-                                <Typography width={200}>기관명</Typography>
-                                <Typography>기관명</Typography>
+                    <Stack direction="row" maxWidth={600}>
+                        <Stack sx={{ borderRadius: 2, bgcolor: "#eee", width: 160, "*": { height: 80, alignItems: "center", display: "flex", p: 3 } }}>
+                            <Typography>기관명</Typography>
+                            <Typography>사업자등록번호</Typography>
+                            <Typography>대표자 이름</Typography>
+                            <Typography>대표번호</Typography>
+                            <Typography height={200} alignItems="flex-start" mt={0.7}>
+                                주소
+                            </Typography>
+                            <Typography>요양기관번호</Typography>
+                        </Stack>
+                        <Stack flex={1} sx={{ "& > *": { height: 80, alignItems: "center", display: "flex", p: 3 } }}>
+                            <Typography>유투바이오</Typography>
+                            <Typography>123-45-789-10</Typography>
+                            <Stack alignItems="flex-start">
+                                <TextField variant="standard" fullWidth />
                             </Stack>
-                            <Stack direction="row" alignItems="center">
-                                <Typography width={200}>사업자등록번호</Typography>
-                                <Typography>191911919</Typography>
+                            <Stack direction="row" spacing={1}>
+                                <Select variant="standard"></Select>
+                                <Typography>-</Typography>
+                                <TextField fullWidth variant="standard" />
                             </Stack>
-                            <Stack direction="row" alignItems="center">
-                                <Typography width={200}>대표자 이름</Typography>
-                                <Stack flex={1}>
-                                    <TextField fullWidth />
-                                </Stack>
-                            </Stack>
-                            <Stack direction="row" alignItems="center">
-                                <Typography width={200}>대표번호</Typography>
-                                <Stack direction="row" spacing={1} alignItems="center" flex={1}>
-                                    <Select></Select>
-                                    <Typography>-</Typography>
-                                    <TextField fullWidth />
-                                </Stack>
-                            </Stack>
-                            <Stack direction="row">
-                                <Typography width={200}>주소</Typography>
-                                <Stack spacing={3} flex={1}>
-                                    <Stack direction="row" spacing={3}>
-                                        <Stack flex={1}>
-                                            <TextField fullWidth value={address.code} InputProps={{ readOnly: true }} />
-                                        </Stack>
-                                        <Button color="primary" onClick={() => setOpenAddress(true)}>
-                                            주소 검색
-                                        </Button>
+
+                            <Stack spacing={3} alignItems="flex-start" minHeight={200}>
+                                <Stack direction="row" spacing={3} alignItems="center" width="100%">
+                                    <Stack flex={1}>
+                                        <TextField variant="standard" fullWidth value={address.code} InputProps={{ readOnly: true }} />
                                     </Stack>
-                                    <TextField value={address.full} InputProps={{ readOnly: true }} />
-                                    <TextField value={address.detail} onChange={(e) => setAddress((prev) => ({ ...prev, detail: e.target.value }))} />
+                                    <Button color="primary" onClick={() => setOpenAddress(true)}>
+                                        주소 검색
+                                    </Button>
                                 </Stack>
+                                <TextField fullWidth variant="standard" value={address.full} InputProps={{ readOnly: true }} />
+                                <TextField
+                                    fullWidth
+                                    variant="standard"
+                                    value={address.detail}
+                                    onChange={(e) => setAddress((prev) => ({ ...prev, detail: e.target.value }))}
+                                />
                             </Stack>
-                            <Stack direction="row" alignItems="center">
-                                <Typography width={200}>U2Check 연계</Typography>
-                                <Button color="primary" onClick={() => setOpenAuth(true)}>
-                                    U2Check 회원인증
-                                </Button>
+                            <Stack alignItems="flex-start">
+                                <TextField fullWidth variant="standard" />
                             </Stack>
                         </Stack>
-                        <Stack direction="row" alignSelf="center" spacing={5}>
-                            <Button sx={{ width: 200 }}>취소</Button>
-                            <Button color="primary" sx={{ width: 200 }}>
-                                저장
-                            </Button>
-                        </Stack>
+                    </Stack>
+                    <Stack direction="row" justifyContent="center" spacing={3}>
+                        <Button onClick={() => navigate("/account/team", { replace: true })}>취소</Button>
+                        <Button color="primary">저장</Button>
                     </Stack>
                 </MainCard>
             </Stack>

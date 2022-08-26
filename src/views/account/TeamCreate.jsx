@@ -31,53 +31,53 @@ const DialogAddress = ({ open, setOpen, setAddress }) => {
     );
 };
 
-const DialogAuth = ({ open, setOpen }) => {
-    const [id, setId] = useState("");
-    const [password, setPassword] = useState("");
-    // 연동 전 null, 후 true || false
-    const [auth, setAuth] = useState(null);
+// const DialogAuth = ({ open, setOpen }) => {
+//     const [id, setId] = useState("");
+//     const [password, setPassword] = useState("");
+//     // 연동 전 null, 후 true || false
+//     const [auth, setAuth] = useState(null);
 
-    const handleClickLookup = useCallback(() => {
-        // 연동 성공
-        // setAuth(true)
-        // 연동 실패
-        // setAuth(false)
-    }, [id, password]);
+//     const handleClickLookup = useCallback(() => {
+//         // 연동 성공
+//         // setAuth(true)
+//         // 연동 실패
+//         // setAuth(false)
+//     }, [id, password]);
 
-    return (
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm">
-            <Stack p={3} spacing={5}>
-                <Typography variant="h4">U2Check 회원 인증</Typography>
-                <Stack>
-                    <Stack direction="row" alignItems="center" p={3}>
-                        <Typography width={150}>U2Check ID</Typography>
-                        <TextField value={id} onChange={(e) => setId(e.target.value)} />
-                    </Stack>
-                    <Stack direction="row" alignItems="center" p={3}>
-                        <Typography width={150}>U2Check 비밀번호</Typography>
+//     return (
+//         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm">
+//             <Stack p={3} spacing={5}>
+//                 <Typography variant="h4">U2Check 회원 인증</Typography>
+//                 <Stack>
+//                     <Stack direction="row" alignItems="center" p={3}>
+//                         <Typography width={150}>U2Check ID</Typography>
+//                         <TextField value={id} onChange={(e) => setId(e.target.value)} />
+//                     </Stack>
+//                     <Stack direction="row" alignItems="center" p={3}>
+//                         <Typography width={150}>U2Check 비밀번호</Typography>
 
-                        <Stack position="relative">
-                            <Stack direction="row" alignItems="center" spacing={3}>
-                                <TextField value={password} onChange={(e) => setPassword(e.target.value)} />
-                                <Button color="primary" onClick={handleClickLookup}>
-                                    연동 조회
-                                </Button>
-                            </Stack>
-                            {auth !== null && (
-                                <Typography color={auth ? "primary" : "red"} position="absolute" variant="caption" bottom={-30} left={0}>
-                                    {auth ? "정상적으로 연동되었습니다." : "연동 실패"}
-                                </Typography>
-                            )}
-                        </Stack>
-                    </Stack>
-                </Stack>
-                <Button color="primary" sx={{ width: 120, alignSelf: "center" }}>
-                    확인
-                </Button>
-            </Stack>
-        </Dialog>
-    );
-};
+//                         <Stack position="relative">
+//                             <Stack direction="row" alignItems="center" spacing={3}>
+//                                 <TextField value={password} onChange={(e) => setPassword(e.target.value)} />
+//                                 <Button color="primary" onClick={handleClickLookup}>
+//                                     연동 조회
+//                                 </Button>
+//                             </Stack>
+//                             {auth !== null && (
+//                                 <Typography color={auth ? "primary" : "red"} position="absolute" variant="caption" bottom={-30} left={0}>
+//                                     {auth ? "정상적으로 연동되었습니다." : "연동 실패"}
+//                                 </Typography>
+//                             )}
+//                         </Stack>
+//                     </Stack>
+//                 </Stack>
+//                 <Button color="primary" sx={{ width: 120, alignSelf: "center" }}>
+//                     확인
+//                 </Button>
+//             </Stack>
+//         </Dialog>
+//     );
+// };
 
 const TeamCreate = () => {
     const [openAddress, setOpenAddress] = useState(false);
@@ -97,18 +97,24 @@ const TeamCreate = () => {
                 <MainCard>
                     <Stack spacing={5}>
                         <Typography variant="h3">기관등록</Typography>
-                        <Stack spacing={5} maxWidth={600}>
+                        <Divider />
+                        <Stack spacing={5} maxWidth={700}>
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>기관명</Typography>
                                 <Stack flex={1}>
-                                    <TextField fullWidth />
+                                    <TextField placeholder="병원명 또는 기관명을 입력해주세요" variant="standard" fullWidth />
                                 </Stack>
                             </Stack>
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>사업자등록번호</Typography>
                                 <Stack direction="row" spacing={3} flex={1}>
                                     <Stack flex={1}>
-                                        <TextField fullWidth />
+                                        <TextField
+                                            inputProps={{ maxLength: 8 }}
+                                            placeholder="사업자등록번호10자리를-없이 입력해주세요"
+                                            variant="standard"
+                                            fullWidth
+                                        />
                                     </Stack>
                                     <Button color="primary">중복 확인</Button>
                                 </Stack>
@@ -116,15 +122,15 @@ const TeamCreate = () => {
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>대표자 이름</Typography>
                                 <Stack flex={1}>
-                                    <TextField fullWidth />
+                                    <TextField placeholder="대표자명을 입력해주세요" variant="standard" fullWidth inputProps={{ maxLength: 8 }} />
                                 </Stack>
                             </Stack>
                             <Stack direction="row" alignItems="center">
                                 <Typography width={200}>대표번호</Typography>
                                 <Stack direction="row" spacing={1} alignItems="center" flex={1}>
-                                    <Select></Select>
+                                    <Select variant="standard"></Select>
                                     <Typography>-</Typography>
-                                    <TextField fullWidth />
+                                    <TextField placeholder="전화번호를-없이 입력해주세요" variant="standard" fullWidth />
                                 </Stack>
                             </Stack>
                             <Stack direction="row">
@@ -132,27 +138,35 @@ const TeamCreate = () => {
                                 <Stack spacing={3} flex={1}>
                                     <Stack direction="row" spacing={3}>
                                         <Stack flex={1}>
-                                            <TextField fullWidth value={address.code} InputProps={{ readOnly: true }} />
+                                            <TextField
+                                                placeholder="우편번호"
+                                                variant="standard"
+                                                fullWidth
+                                                value={address.code}
+                                                InputProps={{ readOnly: true }}
+                                            />
                                         </Stack>
                                         <Button color="primary" onClick={() => setOpenAddress(true)}>
                                             주소 검색
                                         </Button>
                                     </Stack>
-                                    <TextField value={address.full} InputProps={{ readOnly: true }} />
-                                    <TextField value={address.detail} onChange={(e) => setAddress((prev) => ({ ...prev, detail: e.target.value }))} />
+                                    <TextField placeholder="주소" variant="standard" value={address.full} InputProps={{ readOnly: true }} />
+                                    <TextField
+                                        placeholder="상세주소"
+                                        variant="standard"
+                                        value={address.detail}
+                                        onChange={(e) => setAddress((prev) => ({ ...prev, detail: e.target.value }))}
+                                    />
                                 </Stack>
                             </Stack>
                             <Stack direction="row" alignItems="center">
-                                <Typography width={200}>U2Check 연계</Typography>
-                                <Button color="primary" onClick={() => setOpenAuth(true)}>
-                                    U2Check 회원인증
-                                </Button>
+                                <Typography width={200}>요양기관번호</Typography>
+                                <Stack flex={1}>
+                                    <TextField placeholder="요양기관번호 8자리를-없이 입력해주세요" variant="standard" fullWidth />
+                                </Stack>
                             </Stack>
                         </Stack>
                         <Stack direction="row" alignSelf="center" spacing={5}>
-                            <Button color="primary" sx={{ width: 200 }}>
-                                발신번호 등록
-                            </Button>
                             <Button color="primary" sx={{ width: 200 }}>
                                 작성 완료
                             </Button>
@@ -162,7 +176,7 @@ const TeamCreate = () => {
             </Stack>
 
             <DialogAddress open={openAddress} setOpen={setOpenAddress} setAddress={setAddress} />
-            <DialogAuth open={openAuth} setOpen={setOpenAuth} />
+            {/* <DialogAuth open={openAuth} setOpen={setOpenAuth} /> */}
         </>
     );
 };

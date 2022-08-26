@@ -4,7 +4,7 @@ import MainLayout from "../layout/MainLayout";
 import Loadable from "../ui-component/Loadable";
 
 const Dashboard = Loadable(lazy(() => import("../views/home/Dashboard")));
-const MyPage = Loadable(lazy(() => import("../views/account/MyPage")));
+const MyPage = Loadable(lazy(() => import("../views/account/Mypage")));
 const MyPageUpdate = Loadable(lazy(() => import("../views/account/MyPageUpdate")));
 const Team = Loadable(lazy(() => import("../views/account/Team")));
 const TeamCreate = Loadable(lazy(() => import("../views/account/TeamCreate")));
@@ -15,6 +15,7 @@ const Fee = Loadable(lazy(() => import("../views/subscribe/Fee")));
 const Bill = Loadable(lazy(() => import("../views/subscribe/Bill")));
 const Subscription = Loadable(lazy(() => import("../views/subscribe/Subscription")));
 const Notice = Loadable(lazy(() => import("../views/support/Notice")));
+const NoticeDetail = Loadable(lazy(() => import("../views/support/NoticeDetail")));
 const Qna = Loadable(lazy(() => import("../views/support/Qna")));
 const QnaDetail = Loadable(lazy(() => import("../views/support/QnaDetail")));
 const QnaCreate = Loadable(lazy(() => import("../views/support/QnaCreate")));
@@ -73,6 +74,10 @@ const MainRoutes = {
         {
             path: "/support/notice",
             element: <Notice />,
+        },
+        {
+            path: "/support/notice/detail",
+            element: <NoticeDetail />,
         },
         {
             path: "/support/qna",

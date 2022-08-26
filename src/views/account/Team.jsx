@@ -31,6 +31,7 @@ export default function Team() {
                             <Typography>대표자 이름</Typography>
                             <Typography>대표번호</Typography>
                             <Typography>주소</Typography>
+                            <Typography>요양기관번호</Typography>
                             <Typography>U2Check 연계</Typography>
                         </Stack>
                         <Stack sx={{ "& > *": { height: 80, alignItems: "center", display: "flex", p: 3 } }}>
@@ -39,6 +40,7 @@ export default function Team() {
                             <Typography>홍길동</Typography>
                             <Typography>1577-1338</Typography>
                             <Typography>서울특별시 거마로 65 여명빌딩 유투바이오</Typography>
+                            <Typography>요양기관번호</Typography>
                             <Typography>인증완료</Typography>
                         </Stack>
                     </Stack>

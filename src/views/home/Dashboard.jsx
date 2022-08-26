@@ -1,36 +1,21 @@
 import { useSelector } from "react-redux";
-import { makeStyles } from "@mui/styles";
 import { Typography, Stack, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import MainCard from "../../ui-component/cards/MainCard";
 
-const useStyles = makeStyles(() => ({
-    Dashboard: {
-        display: "flex",
-        flexDirection: "column",
-    },
-    title: {
-        display: "flex",
-        alignItems: "baseline",
-    },
-}));
-
 const Dashboard = () => {
     const navigate = useNavigate();
-    const classes = useStyles();
     const memberInfo = useSelector((state) => state.session?.memberInfo);
 
     return (
-        <div className={classes.Dashboard}>
-            <div className={classes.title}>
-                <Typography component="label" variant="h2" sx={{ mb: 3, mr: 1, flexGrow: "unset" }}>
-                    {memberInfo.memberName}
+        <Stack spacing={3}>
+            <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="h2" flexGrow={0}>
+                    {memberInfo.memberName || "홍길동"}
                 </Typography>
-                <Typography component="label" sx={{ mb: 3 }}>
-                    {`홍길동 님 반갑습니다.`}
-                </Typography>
-            </div>
+                <Typography>님 반갑습니다.</Typography>
+            </Stack>
             <Stack spacing={3}>
                 <MainCard>
                     <Stack spacing={5}>
@@ -132,6 +117,7 @@ const Dashboard = () => {
                         <Typography>아이콘</Typography>
                     </Stack>
                 </MainCard>
+
                 <MainCard sx={{ cursor: "pointer" }}>
                     <Stack direction="row" spacing={5}>
                         <Typography variant="h4">최근알림</Typography>
@@ -141,7 +127,7 @@ const Dashboard = () => {
                     </Stack>
                 </MainCard>
             </Stack>
-        </div>
+        </Stack>
     );
 };
 
