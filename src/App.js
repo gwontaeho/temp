@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Routes from "./routes";
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: "#177fff",
+        },
+    },
+    typography: {
+        fontFamily: ["NanumSquareRound"].join(","),
+        body1: { fontSize: "15px" },
+    },
+    components: {
+        MuiFormHelperText: { styleOverrides: { root: { position: "absolute", top: "100%", fontSize: "11px" } } },
+    },
+});
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <ThemeProvider theme={theme}>
+            <Routes />
+        </ThemeProvider>
+    );
 }
 
 export default App;
