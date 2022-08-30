@@ -121,7 +121,9 @@ const Nav = () => {
 export const View = () => {
     return (
         <Stack flex={1} height="100%" p={3} overflow="auto" bgcolor="#f2f3f7">
-            <Outlet />
+            <Stack maxWidth="lg">
+                <Outlet />
+            </Stack>
         </Stack>
     );
 };

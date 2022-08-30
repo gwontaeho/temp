@@ -8,7 +8,7 @@ export const QnaCreate = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="h6">문의등록</Typography>
+                <Typography variant="subtitle1">문의등록</Typography>
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
                 <Stack maxWidth="sm" spacing={3}>

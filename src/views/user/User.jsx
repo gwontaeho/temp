@@ -40,7 +40,7 @@ const Withdrawal = ({ open, setOpen }) => {
 
     return (
         <>
-            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
                     <Typography>탈퇴 신청</Typography>
                     <Stack>
@@ -50,10 +50,10 @@ const Withdrawal = ({ open, setOpen }) => {
                             </Typography>
                             <FormControl>
                                 <RadioGroup row defaultValue="female">
-                                    <FormControlLabel value="female" control={<Radio />} label="퇴사" />
-                                    <FormControlLabel value="male" control={<Radio />} label="부서이동" />
-                                    <FormControlLabel value="other" control={<Radio />} label="서비스 미사용" />
-                                    <FormControlLabel value="other" control={<Radio />} label="기타" />
+                                    <FormControlLabel value="female" control={<Radio size="small" />} label="퇴사" />
+                                    <FormControlLabel value="male" control={<Radio size="small" />} label="부서이동" />
+                                    <FormControlLabel value="other" control={<Radio size="small" />} label="서비스 미사용" />
+                                    <FormControlLabel value="other" control={<Radio size="small" />} label="기타" />
                                 </RadioGroup>
                             </FormControl>
                         </Stack>
@@ -74,7 +74,9 @@ const Withdrawal = ({ open, setOpen }) => {
 
                     <Stack alignItems="center">
                         <Typography>탈퇴 신청하시겠습니까?</Typography>
-                        <Typography>탈퇴시 회원정보 및 이용기록은 복구되지 않습니다.</Typography>
+                        <Typography color="red" fontWeight="bold">
+                            탈퇴시 회원정보 및 이용기록은 복구되지 않습니다.
+                        </Typography>
                     </Stack>
 
                     <Stack direction="row" spacing={3} justifyContent="center">
@@ -115,7 +117,7 @@ export const User = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="h6">내 정보</Typography>
+                    <Typography variant="subtitle1">내 정보</Typography>
                     <Stack direction="row" spacing={3}>
                         <Button variant="contained" onClick={() => setOpeWithdrawal(true)} size="small">
                             탈퇴신청
@@ -142,7 +144,7 @@ export const User = () => {
                         <Typography width={150} px={2} py={3} bgcolor="#f2f3f7">
                             비밀번호
                         </Typography>
-                        <Button variant="contained" onClick={() => setOpen(true)} size="small">
+                        <Button color="_gray" variant="contained" onClick={() => setOpen(true)} size="small">
                             비밀번호 변경
                         </Button>
                     </Stack>

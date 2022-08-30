@@ -7,7 +7,7 @@ export const BillDetail = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="h6">청구서</Typography>
+                <Typography variant="subtitle1">청구서</Typography>
             </Stack>
             <Stack spacing={5}>
                 <Stack spacing={3}>

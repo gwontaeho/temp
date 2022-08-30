@@ -7,7 +7,7 @@ export const TeamCreate = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="h6">기관 관리</Typography>
+                <Typography variant="subtitle1">기관 관리</Typography>
             </Stack>
 
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
@@ -28,7 +28,7 @@ export const TeamCreate = () => {
                                 <Stack flex={1}>
                                     <TextField size="small" fullWidth />
                                 </Stack>
-                                <Button variant="contained" size="small">
+                                <Button color="_gray" variant="contained" size="small">
                                     중복확인
                                 </Button>
                             </Stack>
@@ -59,7 +59,7 @@ export const TeamCreate = () => {
                             <Stack height="100%" justifyContent="space-around" flex={1}>
                                 <Stack direction="row" spacing={3} alignItems="center">
                                     <TextField size="small" fullWidth />
-                                    <Button variant="contained" size="small">
+                                    <Button color="_gray" variant="contained" size="small">
                                         검색
                                     </Button>
                                 </Stack>

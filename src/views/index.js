@@ -12,7 +12,7 @@ export * from "./management/Subscribe";
 export * from "./subscribe/Fee";
 export * from "./subscribe/Bill";
 export * from "./subscribe/BillDetail";
-export * from "./subscribe/SubscribeList";
+export * from "./subscribe/subscribeList/SubscribeList";
 export * from "./subscribe/SubscribeCreate";
 
 export * from "./support/Notice";

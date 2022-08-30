@@ -1,0 +1,19 @@
+import { Typography, Stack, IconButton } from "@mui/material";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
+export const Notice = () => {
+    return (
+        <Stack direction="row" bgcolor="#fff" borderRadius={3} p={3} alignItems="center" justifyContent="space-between">
+            <Stack direction="row" spacing={10} alignItems="center">
+                <Typography fontWeight="bold">공지사항</Typography>
+                <Typography>U2알리미 오픈 안내</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="body2">22-05-14</Typography>
+                <IconButton>
+                    <ChevronRightIcon />
+                </IconButton>
+            </Stack>
+        </Stack>
+    );
+};

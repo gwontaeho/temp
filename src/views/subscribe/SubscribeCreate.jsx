@@ -7,7 +7,7 @@ export const SubscribeCreate = () => {
     return (
         <Stack spacing={3} mb="120px">
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="h6">구독신청</Typography>
+                <Typography variant="subtitle1">구독신청</Typography>
             </Stack>
 
             <Stack spacing={1}>
@@ -28,7 +28,7 @@ export const SubscribeCreate = () => {
                         <Typography>검진대상자 전용 검진안내 문자 발송 및 카카오 알림톡 발송 서비스</Typography>
                         <Stack px={3} spacing={1}>
                             <Typography>요금제</Typography>
-                            <Stack p={3} border="1px solid #f2f3f7" borderRadius={1} spacing={3}>
+                            <Stack p={3} bgcolor="#f2f3f7" borderRadius={1} spacing={3}>
                                 <Stack>
                                     <FormControlLabel value="female" control={<Radio />} label="U2Check x 정기결제" />
                                     <Typography variant="body2">U2Check 이용 고객 전용 요금제</Typography>
@@ -41,7 +41,7 @@ export const SubscribeCreate = () => {
                         </Stack>
                         <Stack px={3} spacing={1}>
                             <Typography>옵션</Typography>
-                            <Stack p={3} border="1px solid #f2f3f7" borderRadius={1} spacing={3}>
+                            <Stack p={3} bgcolor="#f2f3f7" borderRadius={1} spacing={3}>
                                 <Stack>
                                     <FormControlLabel value="female" control={<Radio />} label="발송 과금 월 정기결제" />
                                     <Typography variant="body2">U2Check 이용 고객 전용 요금제</Typography>

@@ -7,7 +7,7 @@ export const UserUpdate = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="h6">내 정보</Typography>
+                <Typography variant="subtitle1">내 정보</Typography>
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
                 <Stack maxWidth="sm" spacing={3}>
