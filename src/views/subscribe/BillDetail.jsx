@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Divider, TableContainer, Table, TableHead, TableCell, TableRow, TableBody } from "@mui/material";
+import { Stack, Typography, Button, Divider } from "@mui/material";
 
 export const BillDetail = () => {
     const navigate = useNavigate();
@@ -7,7 +7,7 @@ export const BillDetail = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="subtitle1">청구서</Typography>
+                <Typography variant="_title">청구서</Typography>
             </Stack>
             <Stack spacing={5}>
                 <Stack spacing={3}>

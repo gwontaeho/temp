@@ -4,12 +4,10 @@ import { Stack, Typography, Button, Dialog } from "@mui/material";
 export const Team = () => {
     const navigate = useNavigate();
 
-    const exist = false;
-
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="subtitle1">기관 관리</Typography>
+                <Typography variant="_title">기관 관리</Typography>
                 <Button variant="contained" onClick={() => navigate("/management/team/update")} size="small">
                     수정
                 </Button>

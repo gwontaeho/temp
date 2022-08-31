@@ -1,19 +1,30 @@
 import { useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Divider, Drawer, Avatar } from "@mui/material";
+import { Stack, Typography, Button, Divider, Drawer, Avatar, useMediaQuery, useTheme, IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { Notification } from "./Notification";
 
-const Header = () => {
+const Header = ({ setMenuOpen }) => {
     const navigate = useNavigate();
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.up("md"));
 
     const [open, setOpen] = useState(false);
 
     return (
         <>
             <Stack direction="row" justifyContent="space-between" alignItems="center" height={100} px={5}>
-                <Typography variant="h5" onClick={() => navigate("/home")}>
-                    U2Cloud Portal
-                </Typography>
+                <Stack direction="row" alignItems="center">
+                    {!matches && (
+                        <IconButton onClick={() => setMenuOpen(true)}>
+                            <MenuIcon />
+                        </IconButton>
+                    )}
+                    <Typography variant="h5" onClick={() => navigate("/home")}>
+                        U2Cloud Portal
+                    </Typography>
+                </Stack>
+
                 <Stack spacing={3} direction="row" alignItems="center">
                     <Button variant="contained" onClick={() => setOpen(true)}>
                         알림
@@ -26,10 +37,10 @@ const Header = () => {
     );
 };
 
-const Nav = () => {
+const Nav = ({ menuOpen, setMenuOpen }) => {
     const { pathname } = useLocation();
-
-    console.log(pathname);
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.up("md"));
 
     const management = [
         {
@@ -79,48 +90,55 @@ const Nav = () => {
     ];
 
     return (
-        <Stack width={300} height="100%" p={5} spacing={3} overflow="auto">
-            <Link to="/user">
-                <Typography
-                    p={1}
-                    borderRadius={2}
-                    {...(pathname.startsWith("/user") && { color: "primary", fontWeight: "bold" })}
-                    sx={{ "&:hover": { bgcolor: "#f2f3f7" } }}
-                >
-                    내 정보
-                </Typography>
-            </Link>
-            {navOptions.map(({ title, option }, i) => {
-                return (
-                    <>
-                        <Stack spacing={1}>
-                            <Typography variant="body2" fontWeight="bold" mb={1}>
-                                {title}
-                            </Typography>
-                            {option.map((v) => (
-                                <Link key={v.title} to={v.path}>
-                                    <Typography
-                                        p={1}
-                                        borderRadius={2}
-                                        {...(pathname.startsWith(v.path) && { color: "primary", fontWeight: "bold" })}
-                                        sx={{ "&:hover": { bgcolor: "#f2f3f7" } }}
-                                    >
-                                        {v.title}
-                                    </Typography>
-                                </Link>
-                            ))}
+        <Drawer
+            onClose={() => setMenuOpen(false)}
+            open={matches ? true : menuOpen}
+            variant={matches ? "permanent" : "temporary"}
+            PaperProps={{ sx: { width: 300, ...(matches && { height: "calc(100% - 100px)", mt: "100px" }) } }}
+        >
+            <Stack p={5} spacing={3} overflow="auto">
+                <Link to="/user">
+                    <Typography
+                        p={1}
+                        borderRadius={2}
+                        {...(pathname.startsWith("/user") && { color: "primary", fontWeight: "bold" })}
+                        sx={{ "&:hover": { bgcolor: "#f2f3f7" } }}
+                    >
+                        내 정보
+                    </Typography>
+                </Link>
+                {navOptions.map(({ title, option }, i) => {
+                    return (
+                        <Stack key={title} spacing={3}>
+                            <Stack spacing={1}>
+                                <Typography variant="body2" fontWeight="bold" mb={1}>
+                                    {title}
+                                </Typography>
+                                {option.map((v) => (
+                                    <Link key={v.title} to={v.path}>
+                                        <Typography
+                                            p={1}
+                                            borderRadius={2}
+                                            {...(pathname.startsWith(v.path) && { color: "primary", fontWeight: "bold" })}
+                                            sx={{ "&:hover": { bgcolor: "#f2f3f7" } }}
+                                        >
+                                            {v.title}
+                                        </Typography>
+                                    </Link>
+                                ))}
+                            </Stack>
+                            {navOptions.length - 1 !== i && <Divider />}
                         </Stack>
-                        {navOptions.length - 1 !== i && <Divider />}
-                    </>
-                );
-            })}
-        </Stack>
+                    );
+                })}
+            </Stack>
+        </Drawer>
     );
 };
 
 export const View = () => {
     return (
-        <Stack flex={1} height="100%" p={3} overflow="auto" bgcolor="#f2f3f7">
+        <Stack flex={1} height="100%" p={3} overflow="auto" bgcolor="#f2f3f7" ml={[, , "300px"]}>
             <Stack maxWidth="lg">
                 <Outlet />
             </Stack>
@@ -129,11 +147,13 @@ export const View = () => {
 };
 
 export const MainLayout = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+
     return (
         <Stack width="100%" height="100%">
-            <Header />
+            <Header setMenuOpen={setMenuOpen} />
             <Stack direction="row" height="calc(100% - 100px)">
-                <Nav />
+                <Nav menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
                 <View />
             </Stack>
         </Stack>

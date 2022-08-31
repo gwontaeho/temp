@@ -6,16 +6,14 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 export const NoticeDetail = () => {
     const navigate = useNavigate();
 
-    console.log("a");
-
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="subtitle1">공지사항</Typography>
+                <Typography variant="_title">공지사항</Typography>
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>
                 <Stack direction="row" spacing={3} alignItems="center">
-                    <IconButton>
+                    <IconButton onClick={() => navigate(-1)}>
                         <ChevronLeftIcon />
                     </IconButton>
                     <Typography variant="body2">업데이트</Typography>

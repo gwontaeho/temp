@@ -2,11 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Typography, Stack } from "@mui/material";
 
-import { U2 } from "./U2";
-import { Fee } from "./Fee";
-import { Notice } from "./Notice";
-import { Qna } from "./Qna";
-import { Notification } from "./Notification";
+import { U2, Fee, Notice, Qna, Notification } from "./home/";
 
 export const Home = () => {
     const navigate = useNavigate();
@@ -14,7 +10,7 @@ export const Home = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" height={60} spacing={1}>
-                <Typography variant="subtitle1">홍길동</Typography>
+                <Typography variant="_title">홍길동</Typography>
                 <Typography>님 반갑습니다</Typography>
             </Stack>
             <Stack spacing={3}>

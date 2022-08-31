@@ -9,7 +9,7 @@ const Update = ({ open, setOpen }) => {
                 <Typography>멤버 이용권한 수정</Typography>
                 <TableContainer>
                     <Table sx={{ minWidth: 500 }}>
-                        <TableHead bgColor="#f2f3f7">
+                        <TableHead bgcolor="#f2f3f7">
                             <TableRow>
                                 <TableCell align="center">No</TableCell>
                                 <TableCell align="center">이름</TableCell>
@@ -54,7 +54,7 @@ export const Subscribe = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="subtitle1">멤버 구독</Typography>
+                    <Typography variant="_title">멤버 구독</Typography>
                 </Stack>
                 <Stack spacing={5}>
                     <Stack spacing={3}>
@@ -67,7 +67,7 @@ export const Subscribe = () => {
                         <Stack bgcolor="#fff" borderRadius={3} p={3}>
                             <TableContainer>
                                 <Table sx={{ minWidth: 600 }}>
-                                    <TableHead bgColor="#f2f3f7">
+                                    <TableHead bgcolor="#f2f3f7">
                                         <TableRow>
                                             <TableCell>서비스명</TableCell>
                                             <TableCell>요금제명</TableCell>
@@ -100,7 +100,7 @@ export const Subscribe = () => {
                             <Typography variant="body2">전체 10건</Typography>
                             <TableContainer>
                                 <Table sx={{ minWidth: 600 }}>
-                                    <TableHead bgColor="#f2f3f7">
+                                    <TableHead bgcolor="#f2f3f7">
                                         <TableRow>
                                             <TableCell align="center" colSpan={3}>
                                                 멤버

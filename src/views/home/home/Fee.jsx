@@ -1,12 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Divider, IconButton } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 export const Fee = () => {
+    const navigate = useNavigate();
     return (
         <Stack bgcolor="#fff" borderRadius={3} p={3} spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Typography fontWeight="bold">실시간 이용요금</Typography>
-                <IconButton>
+                <IconButton onClick={() => navigate("/subscribe/fee")}>
                     <ChevronRightIcon />
                 </IconButton>
             </Stack>

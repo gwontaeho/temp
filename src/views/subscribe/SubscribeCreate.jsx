@@ -7,7 +7,7 @@ export const SubscribeCreate = () => {
     return (
         <Stack spacing={3} mb="120px">
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="subtitle1">구독신청</Typography>
+                <Typography variant="_title">구독신청</Typography>
             </Stack>
 
             <Stack spacing={1}>

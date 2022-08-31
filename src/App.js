@@ -21,11 +21,11 @@ const theme = createTheme({
     },
     typography: {
         fontFamily: ["NanumSquareRound"].join(","),
-        body1: { fontSize: "0.95rem" },
-        subtitle1: { fontSize: "1.1rem" },
+        _title: { fontFamily: "NanumSquareRound", fontSize: "1.2rem", fontWeight: 800 },
     },
     components: {
-        MuiFormHelperText: { styleOverrides: { root: { position: "absolute", top: "100%", fontSize: "11px" } } },
+        MuiFormHelperText: { styleOverrides: { root: { position: "absolute", top: "100%" } } },
+        MuiButton: { styleOverrides: { root: { borderRadius: "10px" } } },
     },
 });
 
