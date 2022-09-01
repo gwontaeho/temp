@@ -2,6 +2,7 @@ import { useState, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Select, MenuItem, Dialog } from "@mui/material";
 import DaumPostcodeEmbed from "react-daum-postcode";
+import { ViewTitle } from "../../components";
 
 const Address = ({ open, setOpen, dispatch }) => {
     const handleComplete = (data) => {
@@ -114,7 +115,7 @@ export const TeamUpdate = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="_title">기관 관리</Typography>
+                    <ViewTitle icon="team" title="기관 관리" />
                 </Stack>
                 <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
                     <Stack maxWidth="sm" spacing={3}>
@@ -184,7 +185,7 @@ export const TeamUpdate = () => {
                             </Stack>
                         </Stack>
                         <Stack direction="row" spacing={3} justifyContent="flex-end">
-                            <Button variant="contained" size="small" onClick={() => navigate(-1)}>
+                            <Button color="_gray" variant="contained" size="small" onClick={() => navigate(-1)}>
                                 취소
                             </Button>
                             <Button variant="contained" size="small" onClick={handleClickSubmit}>

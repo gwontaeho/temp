@@ -49,7 +49,7 @@ export const Notification = ({ open, setOpen }) => {
             onClose={() => setOpen(false)}
             elevation={0}
             BackdropProps={{ style: { backgroundColor: "transparent" } }}
-            PaperProps={{ style: { height: "calc(100vh - 100px)", marginTop: "100px", overflowY: "overlay", width: 400 } }}
+            PaperProps={{ style: { height: "calc(100vh - 80px)", marginTop: "80px", overflowY: "overlay", width: 400 } }}
         >
             <Stack>
                 <Stack direction="row" p={3} justifyContent="space-between">

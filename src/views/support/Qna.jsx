@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Typography, Stack, Divider, Button, IconButton } from "@mui/material";
+import { ViewTitle } from "../../components";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 export const Qna = () => {
@@ -9,7 +10,7 @@ export const Qna = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">문의</Typography>
+                <ViewTitle icon="qna" title="문의" />
                 <Button variant="contained" size="small" onClick={() => navigate("/support/qna/create")}>
                     문의하기
                 </Button>

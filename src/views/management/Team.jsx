@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Dialog } from "@mui/material";
+import { ViewTitle } from "../../components/";
 
 export const Team = () => {
     const navigate = useNavigate();
@@ -7,7 +8,7 @@ export const Team = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">기관 관리</Typography>
+                <ViewTitle icon="team" title="기관 관리" />
                 <Button variant="contained" onClick={() => navigate("/management/team/update")} size="small">
                     수정
                 </Button>

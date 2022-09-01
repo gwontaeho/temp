@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Dialog, FormControlLabel, Radio } from "@mui/material";
-
+import { ViewTitle } from "../../components";
 export const SubscribeCreate = () => {
     const navigate = useNavigate();
 
     return (
         <Stack spacing={3} mb="120px">
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">구독신청</Typography>
+                <ViewTitle icon="subscribe" title="구독 신청" />
             </Stack>
 
             <Stack spacing={1}>

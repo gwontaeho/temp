@@ -65,13 +65,7 @@ export const PasswordChange = ({ open, setOpen }) => {
                         />
                     </Stack>
                 </Stack>
-                <Button
-                    disabled={!pwValidation || !pwCheckValidation}
-                    variant="contained"
-                    sx={{ alignSelf: "center" }}
-                    size="small"
-                    onClick={handleClickChange}
-                >
+                <Button variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={handleClickChange}>
                     변경
                 </Button>
             </Stack>

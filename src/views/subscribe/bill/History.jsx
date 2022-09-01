@@ -21,7 +21,11 @@ export const History = () => {
                         <TableBody>
                             {[0, 1, 2].map((v) => {
                                 return (
-                                    <TableRow key={v} onClick={() => navigate("/subscribe/bill/1")}>
+                                    <TableRow
+                                        key={v}
+                                        onClick={() => navigate("/subscribe/bill/1")}
+                                        sx={{ cursor: "pointer", ":hover": { bgcolor: "_bg.main" } }}
+                                    >
                                         <TableCell>납부일자</TableCell>
                                         <TableCell>서비스명</TableCell>
                                         <TableCell>결제금액</TableCell>

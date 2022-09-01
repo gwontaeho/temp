@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Divider, IconButton } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { ViewTitle } from "../../components";
 
 export const Notice = () => {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ export const Notice = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">공지사항</Typography>
+                <ViewTitle icon="notice" title="공지사항" />
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>
                 {[0, 1, 2].map((v, i) => {

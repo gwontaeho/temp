@@ -2,6 +2,7 @@ import { useState, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Select, MenuItem, Dialog } from "@mui/material";
 import DaumPostcodeEmbed from "react-daum-postcode";
+import { ViewTitle } from "../../components";
 
 const Address = ({ open, setOpen, dispatch }) => {
     const handleComplete = (data) => {
@@ -121,7 +122,7 @@ export const TeamCreate = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="_title">기관 관리</Typography>
+                    <ViewTitle icon="team" title="기관 관리" />
                 </Stack>
 
                 <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
@@ -206,9 +207,14 @@ export const TeamCreate = () => {
                                 <TextField size="small" fullWidth value={care} onChange={(e) => dispatch({ type: "setCare", payload: e.target.value })} />
                             </Stack>
                         </Stack>
-                        <Button variant="contained" sx={{ alignSelf: "flex-end" }} size="small" onClick={handleClickSubmit}>
-                            등록
-                        </Button>
+                        <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={3}>
+                            <Button color="_gray" variant="contained" size="small" onClick={() => navigate(-1)}>
+                                취소
+                            </Button>
+                            <Button variant="contained" size="small" onClick={handleClickSubmit}>
+                                등록
+                            </Button>
+                        </Stack>
                     </Stack>
                 </Stack>
             </Stack>

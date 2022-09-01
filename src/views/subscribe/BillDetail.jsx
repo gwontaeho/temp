@@ -1,22 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Divider } from "@mui/material";
-
+import { Stack, Typography, Button, Divider, Chip } from "@mui/material";
+import { ViewTitle } from "../../components";
 export const BillDetail = () => {
     const navigate = useNavigate();
 
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">청구서</Typography>
+                <ViewTitle icon="bill" title="청구서" />
             </Stack>
             <Stack spacing={5}>
                 <Stack spacing={3}>
-                    <Stack direction="row" alignItems="flex-end" spacing={3}>
+                    <Stack direction="row" alignItems="center" spacing={3}>
                         <Typography fontWeight="bold">22년 5월 결제금액</Typography>
                         <Typography variant="h5" fontWeight="bold">
                             48,400 원
                         </Typography>
-                        <Typography>결제 대기</Typography>
+                        <Chip label="결제대기" size="small" variant="outlined" />
                     </Stack>
                     <Stack bgcolor="#fff" borderRadius={3} p={3} overflow="auto" spacing={3}>
                         <Stack spacing={5} minWidth={900}>
@@ -95,9 +95,12 @@ export const BillDetail = () => {
                                 </Stack>
                             </Stack>
                         </Stack>
-                        <Button variant="contained" sx={{ alignSelf: "center" }}>
-                            매출전표 출력
-                        </Button>
+                        <Stack direction="row" justifyContent="center" spacing={3}>
+                            <Button variant="contained" color="_gray" onClick={() => navigate(-1)}>
+                                뒤로가기
+                            </Button>
+                            <Button variant="contained">매출전표 출력</Button>
+                        </Stack>
                     </Stack>
                 </Stack>
             </Stack>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Button, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Dialog } from "@mui/material";
 
+import { ViewTitle } from "../../components/";
+
 const Update = ({ open, setOpen }) => {
     return (
         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
@@ -54,7 +56,7 @@ export const Subscribe = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="_title">멤버 구독</Typography>
+                    <ViewTitle icon="subscribe" title="멤버 구독" />
                 </Stack>
                 <Stack spacing={5}>
                     <Stack spacing={3}>
@@ -66,7 +68,7 @@ export const Subscribe = () => {
                         </Stack>
                         <Stack bgcolor="#fff" borderRadius={3} p={3}>
                             <TableContainer>
-                                <Table sx={{ minWidth: 600 }}>
+                                <Table sx={{ minWidth: 600, overflow: "auto" }}>
                                     <TableHead bgcolor="#f2f3f7">
                                         <TableRow>
                                             <TableCell>서비스명</TableCell>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button } from "@mui/material";
 
+import { ViewTitle } from "../../components";
 import { PasswordChange } from "./user/PasswordChange";
 import { Withdrawal } from "./user/Withdrawal";
 
@@ -15,7 +16,7 @@ export const User = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="_title">내 정보</Typography>
+                    <ViewTitle icon="user" title="내 정보" />
                     <Stack direction="row" spacing={3}>
                         <Button variant="contained" onClick={() => setOpeWithdrawal(true)} size="small">
                             탈퇴신청

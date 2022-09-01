@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useReducer, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Typography,
@@ -17,17 +17,41 @@ import {
     Chip,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
 import { Invite, Withdrawal } from "./member/";
+import { ViewTitle } from "../../components";
+
+const initialState = { checked: [false, false, false] };
+
+const reducer = (state, { type, payload }) => {
+    switch (type) {
+        case "setChecked": {
+            const { checked, i } = payload;
+            let newChecked = [...state.checked];
+            newChecked[i] = checked;
+            return { ...state, checked: newChecked };
+        }
+        case "setAllChecked": {
+            const newChecked = [...state.checked].map((v) => (v = payload));
+            return { ...state, checked: newChecked };
+        }
+    }
+};
 
 export const Member = () => {
     const navigate = useNavigate();
 
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { checked } = state;
+
     const [openInvite, setOpenInvite] = useState(false);
     const [openWithdrawal, setOpenWithdrawal] = useState(false);
-
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+    useEffect(() => {
+        console.log(state);
+    }, [state]);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -39,7 +63,7 @@ export const Member = () => {
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <Typography variant="_title">멤버 관리</Typography>
+                    <ViewTitle icon="member" title="멤버 관리" />
                 </Stack>
                 <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -53,41 +77,50 @@ export const Member = () => {
                             </Button>
                         </Stack>
                     </Stack>
+
                     <TableContainer>
-                        <Table sx={{ minWidth: 900 }}>
+                        <Table sx={{ minWidth: 600 }}>
                             <TableHead bgcolor="#f2f3f7">
                                 <TableRow>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox size="small" />
+                                    <TableCell padding="checkbox" align="center">
+                                        <Checkbox
+                                            size="small"
+                                            checked={checked.every((v) => v === true)}
+                                            onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                        />
                                     </TableCell>
-                                    <TableCell>이름</TableCell>
-                                    <TableCell>이메일</TableCell>
-                                    <TableCell>휴대전화</TableCell>
-                                    <TableCell>가입일</TableCell>
-                                    <TableCell>구독</TableCell>
-                                    <TableCell>상태</TableCell>
+                                    <TableCell align="center">이름</TableCell>
+                                    <TableCell align="center">이메일</TableCell>
+                                    <TableCell align="center">휴대전화</TableCell>
+                                    <TableCell align="center">가입일</TableCell>
+                                    <TableCell align="center">구독</TableCell>
+                                    <TableCell align="center">상태</TableCell>
                                     <TableCell />
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {[0, 1, 2].map((v) => {
+                                {[0, 1, 2].map((v, i) => {
                                     return (
                                         <TableRow key={v}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox size="small" />
+                                            <TableCell padding="checkbox" align="center">
+                                                <Checkbox
+                                                    size="small"
+                                                    checked={checked[i] || false}
+                                                    onChange={(e) => dispatch({ type: "setChecked", payload: { checked: e.target.checked, i } })}
+                                                />
                                             </TableCell>
-                                            <TableCell>이름</TableCell>
-                                            <TableCell>이메일</TableCell>
-                                            <TableCell>휴대전화</TableCell>
-                                            <TableCell>가입일</TableCell>
-                                            <TableCell>구독</TableCell>
-                                            <TableCell>
-                                                <Stack alignItems="center" spacing={0.5}>
+                                            <TableCell align="center">이름</TableCell>
+                                            <TableCell align="center">이메일</TableCell>
+                                            <TableCell align="center">휴대전화</TableCell>
+                                            <TableCell align="center">가입일</TableCell>
+                                            <TableCell align="center">구독</TableCell>
+                                            <TableCell align="center">
+                                                <Stack spacing={0.5} alignItems="center">
                                                     <Typography variant="body2">상태</Typography>
                                                     <Chip size="small" label="초대 재발송" variant="outlined" onClick={() => console.log("a")} />
                                                 </Stack>
                                             </TableCell>
-                                            <TableCell padding="none">
+                                            <TableCell padding="none" align="center">
                                                 <IconButton onClick={handleClick}>
                                                     <MoreVertIcon />
                                                 </IconButton>

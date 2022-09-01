@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Divider, TableContainer, Table, TableHead, TableCell, TableRow, TableBody } from "@mui/material";
+import { Stack, Typography, Button, Divider, Chip } from "@mui/material";
 
 export const Payment = () => {
     return (
         <Stack spacing={3}>
-            <Stack direction="row" alignItems="flex-end" spacing={3}>
+            <Stack direction="row" alignItems="center" spacing={3}>
                 <Typography fontWeight="bold">22년 5월 결제금액</Typography>
                 <Typography variant="h5" fontWeight="bold">
                     48,400 원
                 </Typography>
-                <Typography>결제 대기</Typography>
+                <Chip label="결제대기" variant="outlined" size="small" />
             </Stack>
             <Stack bgcolor="#fff" borderRadius={3} p={3} overflow="auto">
                 <Stack spacing={5} minWidth={900}>

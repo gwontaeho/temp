@@ -61,7 +61,7 @@ export const Withdrawal = ({ open, setOpen }) => {
                 </Stack>
 
                 <Stack direction="row" spacing={3} justifyContent="center">
-                    <Button variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={() => setOpen(false)}>
+                    <Button color="_gray" variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={() => setOpen(false)}>
                         취소
                     </Button>
                     <Button variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={() => setOpen(false)}>

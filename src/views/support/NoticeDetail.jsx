@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
 import { Typography, Stack, Divider, IconButton } from "@mui/material";
+
+import { ViewTitle } from "../../components";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 export const NoticeDetail = () => {
@@ -9,7 +11,7 @@ export const NoticeDetail = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">공지사항</Typography>
+                <ViewTitle icon="notice" title="공지사항" />
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>
                 <Stack direction="row" spacing={3} alignItems="center">

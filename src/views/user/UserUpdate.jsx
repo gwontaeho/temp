@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Select, MenuItem } from "@mui/material";
-
+import { ViewTitle } from "../../components";
 const prePhoneOptions = ["010", "011", "016", "017", "018", "019"];
 
 const initialState = { name: "", phone: "", prePhone: "010" };
@@ -37,7 +37,7 @@ export const UserUpdate = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">내 정보</Typography>
+                <ViewTitle icon="user" title="정보 수정" />
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
                 <Stack maxWidth="sm" spacing={3}>
@@ -78,7 +78,7 @@ export const UserUpdate = () => {
                         </Stack>
                     </Stack>
                     <Stack direction="row" justifyContent="flex-end" spacing={3}>
-                        <Button variant="contained" onClick={() => navigate("/user")} size="small">
+                        <Button color="_gray" variant="contained" onClick={() => navigate("/user")} size="small">
                             취소
                         </Button>
                         <Button variant="contained" size="small" onClick={handleClickSubmit}>

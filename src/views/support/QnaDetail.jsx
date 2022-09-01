@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Divider, Button, IconButton } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
+import { ViewTitle } from "../../components";
 export const QnaDetail = () => {
     const navigate = useNavigate();
 
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <Typography variant="_title">문의</Typography>
+                <ViewTitle icon="qna" title="문의내용" />
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>
                 <Stack spacing={3}>

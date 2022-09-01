@@ -71,7 +71,7 @@ const Regist = ({ open, setOpen }) => {
                     <Typography color="primary">(필수)</Typography>
                 </Stack>
                 <Stack direction="row" spacing={3} justifyContent="center">
-                    <Button variant="contained" size="small">
+                    <Button color="_gray" variant="contained" size="small" onClick={() => setOpen(false)}>
                         취소
                     </Button>
                     <Button variant="contained" size="small">
