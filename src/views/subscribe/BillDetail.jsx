@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Divider, Chip } from "@mui/material";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 export const BillDetail = () => {
     const navigate = useNavigate();
 

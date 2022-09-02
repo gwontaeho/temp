@@ -2,7 +2,7 @@ import { useState, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Select, MenuItem, Dialog } from "@mui/material";
 import DaumPostcodeEmbed from "react-daum-postcode";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 
 const Address = ({ open, setOpen, dispatch }) => {
     const handleComplete = (data) => {

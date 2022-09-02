@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Dialog, FormControlLabel, Radio } from "@mui/material";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 export const SubscribeCreate = () => {
     const navigate = useNavigate();
 

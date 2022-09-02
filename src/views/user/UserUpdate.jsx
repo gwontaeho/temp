@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Select, MenuItem } from "@mui/material";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 const prePhoneOptions = ["010", "011", "016", "017", "018", "019"];
 
 const initialState = { name: "", phone: "", prePhone: "010" };

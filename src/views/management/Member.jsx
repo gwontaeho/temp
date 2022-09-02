@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Invite, Withdrawal } from "./member/";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 
 const initialState = { checked: [false, false, false] };
 

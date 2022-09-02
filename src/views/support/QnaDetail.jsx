@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Divider, Button, IconButton } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 export const QnaDetail = () => {
     const navigate = useNavigate();
 

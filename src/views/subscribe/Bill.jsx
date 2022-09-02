@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Divider } from "@mui/material";
 
 import { Payment, History } from "./bill/";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 
 export const Bill = () => {
     const navigate = useNavigate();

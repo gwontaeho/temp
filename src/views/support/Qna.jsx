@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Typography, Stack, Divider, Button, IconButton } from "@mui/material";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 export const Qna = () => {

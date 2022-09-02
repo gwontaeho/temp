@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Divider, IconButton } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { ViewTitle } from "../../components";
+import { ViewTitle } from "../../components/";
 
 export const Notice = () => {
     const navigate = useNavigate();

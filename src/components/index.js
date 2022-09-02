@@ -1,1 +1,1 @@
-export * from "./ViewTitle";
+export * from "./ViewTitle";
