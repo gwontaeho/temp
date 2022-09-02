@@ -1,7 +1,25 @@
 import { useRoutes } from "react-router-dom";
 import { MainLayout } from "../layouts";
 
-import { Home, Member, Team, Experience, Withdrawal, Caller, Billing, Settlement, Subscribe, Plan, Notice, Notification, Qna, Admin } from "../views";
+import {
+    Home,
+    User,
+    Team,
+    Experience,
+    Withdrawal,
+    Dormancy,
+    Caller,
+    Payment,
+    Settlement,
+    Subscribe,
+    Plan,
+    Notice,
+    Notification,
+    Qna,
+    Admin,
+    Connect,
+    Destruction,
+} from "../views";
 
 const routes = {
     path: "/",
@@ -12,8 +30,8 @@ const routes = {
             element: <Home />,
         },
         {
-            path: "/member",
-            element: <Member />,
+            path: "/member/user",
+            element: <User />,
         },
         {
             path: "/member/team",
@@ -28,15 +46,19 @@ const routes = {
             element: <Withdrawal />,
         },
         {
+            path: "/member/dormancy",
+            element: <Dormancy />,
+        },
+        {
             path: "/member/caller",
             element: <Caller />,
         },
         {
-            path: "/billing",
-            element: <Billing />,
+            path: "/payment",
+            element: <Payment />,
         },
         {
-            path: "/billing/settlement",
+            path: "/payment/settlement",
             element: <Settlement />,
         },
         {
@@ -62,6 +84,14 @@ const routes = {
         {
             path: "/admin",
             element: <Admin />,
+        },
+        {
+            path: "/history/connect",
+            element: <Connect />,
+        },
+        {
+            path: "/history/destruction",
+            element: <Destruction />,
         },
     ],
 };

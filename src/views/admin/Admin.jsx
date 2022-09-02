@@ -9,7 +9,7 @@ export const Admin = () => {
                 운영자 초대
             </Button>
             <TableContainer>
-                <Table sx={{ minWidth: 650 }}>
+                <Table sx={{ minWidth: 800 }}>
                     <TableHead bgColor="#eee">
                         <TableRow>
                             <TableCell>ID</TableCell>

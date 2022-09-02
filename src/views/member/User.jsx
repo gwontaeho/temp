@@ -1,6 +1,6 @@
 import { Typography, Stack, Button, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 
-export const Member = () => {
+export const User = () => {
     return (
         <Stack spacing={5}>
             <Typography variant="h6">회원 관리</Typography>
@@ -16,7 +16,7 @@ export const Member = () => {
             </Stack>
 
             <TableContainer>
-                <Table sx={{ minWidth: 650 }}>
+                <Table sx={{ minWidth: 800 }}>
                     <TableHead bgColor="#eee">
                         <TableRow>
                             <TableCell>이메일</TableCell>

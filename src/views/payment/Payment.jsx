@@ -1,6 +1,6 @@
 import { Typography, Stack, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 
-export const Billing = () => {
+export const Payment = () => {
     return (
         <Stack spacing={5}>
             <Typography variant="h6">청구 관리</Typography>
@@ -35,7 +35,7 @@ export const Billing = () => {
             </Stack>
 
             <TableContainer>
-                <Table sx={{ minWidth: 650 }}>
+                <Table sx={{ minWidth: 800 }}>
                     <TableHead bgColor="#eee">
                         <TableRow>
                             <TableCell>ID</TableCell>

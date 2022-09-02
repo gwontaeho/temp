@@ -6,7 +6,7 @@ export const Settlement = () => {
             <Typography variant="h6">정산 관리</Typography>
 
             <TableContainer>
-                <Table sx={{ minWidth: 650 }}>
+                <Table sx={{ minWidth: 800 }}>
                     <TableHead bgColor="#eee">
                         <TableRow>
                             <TableCell>ID</TableCell>

@@ -1,6 +1,6 @@
 import { Typography, Stack, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
-export const Caller = () => {
+export const Dormancy = () => {
     return (
         <Stack spacing={5}>
             <Typography variant="h6">발신번호 관리</Typography>
