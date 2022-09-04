@@ -1,6 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Grid } from "@mui/material";
+import { Stack, Typography, Button, Grid, Dialog, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+
+const UnsubscribeButton = () => {
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Button color="_gray" onClick={() => setOpen(true)}>
+                구독 해지
+            </Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <Stack p={3} spacing={3}>
+                    <Typography fontWeight="bold">구독 취소</Typography>
+                    <Stack alignItems="center" spacing={3}>
+                        <Typography>U2알리미 구독을 취소하시겠습니까?</Typography>
+                        <RadioGroup defaultValue="0">
+                            <FormControlLabel value="0" control={<Radio />} label="즉시 구독 취소" />
+                            <FormControlLabel value="1" control={<Radio />} label="남은기간 종료 후 구독 취소" />
+                        </RadioGroup>
+                        <Typography variant="body2">구독 종료일 : 2022.04.22</Typography>
+                        <Button>확인</Button>
+                    </Stack>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
 
 export const Plan = () => {
     const navigate = useNavigate();
@@ -43,9 +68,7 @@ export const Plan = () => {
                                         </Stack>
                                     </Stack>
                                     <Stack direction="row" spacing={3} justifyContent="center">
-                                        <Button variant="contained" color="_gray" size="small">
-                                            구독 해지
-                                        </Button>
+                                        <UnsubscribeButton />
                                         <Button variant="contained" size="small">
                                             구독 변경
                                         </Button>

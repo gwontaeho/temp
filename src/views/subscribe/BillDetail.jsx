@@ -16,7 +16,7 @@ export const BillDetail = () => {
                         <Typography variant="h5" fontWeight="bold">
                             48,400 원
                         </Typography>
-                        <Chip label="결제대기" size="small" variant="outlined" />
+                        <Chip label="결제대기" />
                     </Stack>
                     <Stack bgcolor="#fff" borderRadius={3} p={3} overflow="auto" spacing={3}>
                         <Stack spacing={5} minWidth={900}>
@@ -24,9 +24,6 @@ export const BillDetail = () => {
                                 <Stack direction="row" flex={2} alignItems="center" justifyContent="center" spacing={2}>
                                     <Typography variant="body2">결제수단</Typography>
                                     <Typography fontWeight="bold">신한 카드(1234-****-****-5678)</Typography>
-                                    <Button variant="outlined" size="small">
-                                        변경
-                                    </Button>
                                 </Stack>
                                 <Divider orientation="vertical" />
                                 <Stack direction="row" flex={1} justifyContent="center" alignItems="center" spacing={2}>
@@ -96,10 +93,10 @@ export const BillDetail = () => {
                             </Stack>
                         </Stack>
                         <Stack direction="row" justifyContent="center" spacing={3}>
-                            <Button variant="contained" color="_gray" onClick={() => navigate(-1)}>
+                            <Button color="_gray" onClick={() => navigate(-1)}>
                                 뒤로가기
                             </Button>
-                            <Button variant="contained">매출전표 출력</Button>
+                            <Button>매출전표 출력</Button>
                         </Stack>
                     </Stack>
                 </Stack>
