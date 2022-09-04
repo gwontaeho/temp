@@ -63,21 +63,21 @@ export const Sent = () => {
                         </Stack>
                     </NoMaxWidthTooltip>
                 </Stack>
-                <Stack>
+                <Stack spacing={1}>
                     <Stack direction="row" spacing={5}>
-                        <Typography>발송완료</Typography>
+                        <Typography fontWeight="bold">발송완료</Typography>
                         <Typography flex={1}>70% | 100,500 건</Typography>
-                        <Typography>이용금액</Typography>
+                        <Typography fontWeight="bold">이용금액</Typography>
                         <Typography>130,000 원</Typography>
                     </Stack>
                     <Stack direction="row" spacing={5}>
-                        <Typography>발송대기</Typography>
+                        <Typography fontWeight="bold">발송대기</Typography>
                         <Typography flex={1}>20% | 100,500 건</Typography>
-                        <Typography>이용예정금액</Typography>
+                        <Typography fontWeight="bold">이용예정금액</Typography>
                         <Typography>약 130,000 원</Typography>
                     </Stack>
                     <Stack direction="row" spacing={5}>
-                        <Typography>발송실패</Typography>
+                        <Typography fontWeight="bold">발송실패</Typography>
                         <Typography>10% | 100,500 건</Typography>
                     </Stack>
                 </Stack>

@@ -31,10 +31,10 @@ export const PasswordChange = ({ open, setOpen }) => {
     return (
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
             <Stack p={3} spacing={3}>
-                <Typography>비밀번호 변경</Typography>
+                <Typography fontWeight="bold">비밀번호 변경</Typography>
                 <Stack>
                     <Stack direction="row" alignItems="center" spacing={3}>
-                        <Typography minWidth={150} px={2} py={4} bgcolor="#f2f3f7" sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
+                        <Typography fontWeight="bold" minWidth={150} px={2} py={4} bgcolor="#f2f3f7" sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
                             비밀번호
                         </Typography>
                         <TextField
@@ -49,7 +49,14 @@ export const PasswordChange = ({ open, setOpen }) => {
                         />
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing={3}>
-                        <Typography minWidth={150} px={2} py={4} bgcolor="#f2f3f7" sx={{ borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}>
+                        <Typography
+                            fontWeight="bold"
+                            minWidth={150}
+                            px={2}
+                            py={4}
+                            bgcolor="#f2f3f7"
+                            sx={{ borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}
+                        >
                             비밀번호 확인
                         </Typography>
 
@@ -59,13 +66,12 @@ export const PasswordChange = ({ open, setOpen }) => {
                             inputProps={{ maxLength: 16 }}
                             type="password"
                             fullWidth
-                            size="small"
                             error={pwCheckValidation}
                             helperText={pwCheckValidation && "작성된 비밀번호와 일치하지 않습니다."}
                         />
                     </Stack>
                 </Stack>
-                <Button variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={handleClickChange}>
+                <Button sx={{ alignSelf: "center" }} onClick={handleClickChange}>
                     변경
                 </Button>
             </Stack>

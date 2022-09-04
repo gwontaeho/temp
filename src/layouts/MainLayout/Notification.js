@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Stack, Typography, Divider, Drawer, Avatar } from "@mui/material";
 import { useEffect } from "react";
 
+import AlramDone from "../../assets/icons/img_alarm_done.png";
+import AlramNew from "../../assets/icons/img_alarm_new.png";
+
 const Detail = ({ setDetail }) => {
     return (
         <Stack p={3} spacing={3}>
@@ -21,7 +24,7 @@ const List = ({ setDetail }) => {
                 return (
                     <Stack key={v} onClick={() => setDetail(true)}>
                         <Stack direction="row" p={3} spacing={3} sx={{ cursor: "pointer", ":hover": { bgcolor: "#f2f3f7" } }}>
-                            <Avatar />
+                            <Avatar src={AlramDone} />
                             <Stack spacing={1}>
                                 <Typography variant="body2">발신번호가 등록되었습니다</Typography>
                                 <Typography variant="body2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</Typography>

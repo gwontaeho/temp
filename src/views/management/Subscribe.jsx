@@ -8,7 +8,7 @@ const Update = ({ open, setOpen }) => {
     return (
         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
             <Stack p={3} spacing={3}>
-                <Typography>멤버 이용권한 수정</Typography>
+                <Typography fontWeight="bold">멤버 이용권한 수정</Typography>
                 <TableContainer>
                     <Table sx={{ minWidth: 500 }}>
                         <TableHead bgcolor="#f2f3f7">
@@ -18,7 +18,7 @@ const Update = ({ open, setOpen }) => {
                                 <TableCell align="center">이메일</TableCell>
                                 <TableCell align="center">역할</TableCell>
                                 <TableCell padding="checkbox" align="center">
-                                    <Checkbox size="small" />
+                                    <Checkbox />
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -31,7 +31,7 @@ const Update = ({ open, setOpen }) => {
                                         <TableCell align="center">이메일</TableCell>
                                         <TableCell align="center">휴대전화</TableCell>
                                         <TableCell padding="checkbox" align="center">
-                                            <Checkbox size="small" />
+                                            <Checkbox />
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -39,7 +39,7 @@ const Update = ({ open, setOpen }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Button variant="contained" size="small" sx={{ alignSelf: "flex-end" }}>
+                <Button variant="contained" sx={{ alignSelf: "flex-end" }}>
                     수정
                 </Button>
             </Stack>
@@ -62,7 +62,7 @@ export const Subscribe = () => {
                     <Stack spacing={3}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
                             <Typography fontWeight="bold">구독 현황</Typography>
-                            <Button variant="contained" size="small" onClick={() => navigate("/subscribe/list/create")}>
+                            <Button variant="contained" onClick={() => navigate("/subscribe/list/create")}>
                                 구독 수정
                             </Button>
                         </Stack>
@@ -94,7 +94,7 @@ export const Subscribe = () => {
                     <Stack spacing={3}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
                             <Typography fontWeight="bold">멤버별 이용현황</Typography>
-                            <Button variant="contained" size="small" onClick={() => setOpen(true)}>
+                            <Button variant="contained" onClick={() => setOpen(true)}>
                                 이용권한 수정
                             </Button>
                         </Stack>
@@ -113,7 +113,7 @@ export const Subscribe = () => {
                                         </TableRow>
                                         <TableRow>
                                             <TableCell padding="checkbox">
-                                                <Checkbox size="small" />
+                                                <Checkbox />
                                             </TableCell>
                                             <TableCell align="center">이름</TableCell>
                                             <TableCell align="center">이메일</TableCell>
@@ -125,7 +125,7 @@ export const Subscribe = () => {
                                             return (
                                                 <TableRow key={v}>
                                                     <TableCell padding="checkbox">
-                                                        <Checkbox size="small" />
+                                                        <Checkbox />
                                                     </TableCell>
                                                     <TableCell align="center">이름</TableCell>
                                                     <TableCell align="center">이메일</TableCell>

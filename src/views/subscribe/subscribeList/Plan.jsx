@@ -9,7 +9,7 @@ export const Plan = () => {
         <Stack spacing={3}>
             <Typography fontWeight="bold">구독중인 요금제</Typography>
             <Stack bgcolor="#fff" borderRadius={3} p={3} direction="row" alignItems="center" justifyContent="space-between">
-                <Typography>서비스를 구독해주세요.</Typography>
+                <Typography fontWeight="bold">서비스를 구독해주세요.</Typography>
                 <Button variant="contained" size="small" onClick={() => navigate("/subscribe/list/create")}>
                     구독신청
                 </Button>
@@ -20,7 +20,7 @@ export const Plan = () => {
                         return (
                             <Grid item xs={6} key={v}>
                                 <Stack bgcolor="#fff" borderRadius={3} p={3} spacing={3}>
-                                    <Typography>U2알리미</Typography>
+                                    <Typography fontWeight="bold">U2알리미</Typography>
                                     <Typography>매월 정기 결제 중</Typography>
                                     <Stack spacing={1}>
                                         <Stack direction="row">

@@ -9,7 +9,7 @@ export const Payment = () => {
                 <Typography variant="h5" fontWeight="bold">
                     48,400 원
                 </Typography>
-                <Chip label="결제대기" variant="outlined" size="small" />
+                <Chip label="결제대기" />
             </Stack>
             <Stack bgcolor="#fff" borderRadius={3} p={3} overflow="auto">
                 <Stack spacing={5} minWidth={900}>
@@ -17,9 +17,7 @@ export const Payment = () => {
                         <Stack direction="row" flex={2} alignItems="center" justifyContent="center" spacing={2}>
                             <Typography variant="body2">결제수단</Typography>
                             <Typography fontWeight="bold">신한 카드(1234-****-****-5678)</Typography>
-                            <Button variant="outlined" size="small">
-                                변경
-                            </Button>
+                            <Button variant="outlined">변경</Button>
                         </Stack>
                         <Divider orientation="vertical" />
                         <Stack direction="row" flex={1} justifyContent="center" alignItems="center" spacing={2}>
@@ -34,20 +32,20 @@ export const Payment = () => {
                     </Stack>
                     <Stack direction="row">
                         <Stack flex={2}>
-                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7">
+                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7" fontWeight="bold">
                                 서비스명
                             </Typography>
                             <Stack p={2} alignItems="center" spacing={2}>
                                 <Typography>U2알리미</Typography>
                                 <Stack p={1} bgcolor="#f2f3f7" borderRadius={1}>
-                                    <Typography>이용기간</Typography>
+                                    <Typography variant="body2">이용기간</Typography>
                                     <Typography variant="caption">2022.12.12 ~ 2022.12.12</Typography>
                                 </Stack>
                             </Stack>
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack flex={2}>
-                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7">
+                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7" fontWeight="bold">
                                 월정액
                             </Typography>
                             <Stack p={2} alignItems="center">
@@ -56,7 +54,7 @@ export const Payment = () => {
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack flex={2}>
-                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7">
+                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7" fontWeight="bold">
                                 옵션 사용료
                             </Typography>
                             <Stack alignItems="center" p={2} spacing={2}>
@@ -79,7 +77,7 @@ export const Payment = () => {
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack flex={1}>
-                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7">
+                            <Typography p={1} textAlign="center" bgcolor="#f2f3f7" fontWeight="bold">
                                 부가세 (10%)
                             </Typography>
                             <Stack p={2} alignItems="center">

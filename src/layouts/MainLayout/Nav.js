@@ -80,6 +80,7 @@ export const Nav = ({ menuOpen, setMenuOpen }) => {
                     <Stack p={1} direction="row" spacing={2} borderRadius={2} alignItems="center" sx={{ "&:hover": { bgcolor: "#f2f3f7" } }}>
                         <Icon name={"user"} size={24} $p={pathname.startsWith("/user")} />
                         <Typography
+                            variant="subtitle1"
                             borderRadius={2}
                             {...(pathname.startsWith("/user") && { color: "primary", fontWeight: "bold" })}
                             sx={{ "&:hover": { bgcolor: "#f2f3f7" } }}
@@ -107,7 +108,9 @@ export const Nav = ({ menuOpen, setMenuOpen }) => {
                                             p={1}
                                         >
                                             <Icon name={v.name} size={24} $p={pathname.startsWith(v.path)} />
-                                            <Typography {...(pathname.startsWith(v.path) && { color: "primary", fontWeight: "bold" })}>{v.title}</Typography>
+                                            <Typography variant="subtitle1" {...(pathname.startsWith(v.path) && { color: "primary", fontWeight: "bold" })}>
+                                                {v.title}
+                                            </Typography>
                                         </Stack>
                                     </Link>
                                 ))}

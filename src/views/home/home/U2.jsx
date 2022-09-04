@@ -1,6 +1,8 @@
-import { Typography, Stack, Divider, Button } from "@mui/material";
+import { Typography, Stack, Divider, Button, IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const NoMaxWidthTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)({
     [`& .${tooltipClasses.tooltip}`]: {
@@ -9,19 +11,27 @@ const NoMaxWidthTooltip = styled(({ className, ...props }) => <Tooltip {...props
 });
 
 export const U2 = () => {
+    const navigate = useNavigate();
     return (
         <Stack bgcolor="#fff" borderRadius={3} p={3} spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Typography fontWeight="bold">U2알리미</Typography>
-                <Button variant="contained" size="small">
-                    U2알리미 실행
-                </Button>
+                <Stack direction="row" alignItems="center">
+                    <Typography variant="body2" fontWeight="bold">
+                        U2알리미 실행
+                    </Typography>
+                    <IconButton onClick={() => navigate("/subscribe/fee")}>
+                        <ChevronRightIcon />
+                    </IconButton>
+                </Stack>
             </Stack>
             <Divider />
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Stack direction="row" alignItems="center" spacing={3}>
-                        <Typography variant="body2">6월 발송현황</Typography>
+                        <Typography variant="body2" fontWeight="bold">
+                            6월 발송현황
+                        </Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
                             <Stack width={10} height={10} bgcolor="#35c3dd" borderRadius="50%" />
                             <Typography variant="caption">대기</Typography>
@@ -34,7 +44,9 @@ export const U2 = () => {
                     <Typography variant="caption">2022.12.12 ~ 2022.12.12</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={3}>
-                    <Typography variant="body2">당월</Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                        &#183; 당월
+                    </Typography>
                     <NoMaxWidthTooltip
                         followCursor
                         arrow
@@ -87,7 +99,9 @@ export const U2 = () => {
                     </Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={3}>
-                    <Typography variant="body2">오늘</Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                        &#183; 오늘
+                    </Typography>
                     <NoMaxWidthTooltip
                         followCursor
                         arrow

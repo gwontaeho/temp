@@ -43,13 +43,20 @@ export const UserUpdate = () => {
                 <Stack maxWidth="sm" spacing={3}>
                     <Stack>
                         <Stack direction="row" alignItems="center" spacing={3}>
-                            <Typography minWidth={150} px={2} py={3} bgcolor="_bg.main" sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
+                            <Typography
+                                fontWeight="bold"
+                                minWidth={150}
+                                px={2}
+                                py={3}
+                                bgcolor="_bg.main"
+                                sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+                            >
                                 이메일
                             </Typography>
                             <Typography>U2cloud@U2check.com</Typography>
                         </Stack>
                         <Stack direction="row" alignItems="center" spacing={3}>
-                            <Typography minWidth={150} px={2} py={3} bgcolor="_bg.main">
+                            <Typography fontWeight="bold" minWidth={150} px={2} py={3} bgcolor="_bg.main">
                                 이름
                             </Typography>
                             <TextField
@@ -61,7 +68,14 @@ export const UserUpdate = () => {
                             />
                         </Stack>
                         <Stack direction="row" alignItems="center" spacing={3}>
-                            <Typography minWidth={150} px={2} py={3} bgcolor="_bg.main" sx={{ borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}>
+                            <Typography
+                                fontWeight="bold"
+                                minWidth={150}
+                                px={2}
+                                py={3}
+                                bgcolor="_bg.main"
+                                sx={{ borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}
+                            >
                                 휴대전화
                             </Typography>
                             <Stack direction="row" alignItems="center" spacing={1} flex={1}>

@@ -17,7 +17,7 @@ import {
     Dialog,
 } from "@mui/material";
 
-const initialState = {};
+const initialState = { members: [] };
 
 const reducer = (state, { type, payload }) => {};
 
@@ -29,7 +29,7 @@ const Complete = ({ open, setOpen }) => {
                 <Typography fontWeight="bold" alignSelf="center">
                     2명에게 초대메일을 발송했습니다
                 </Typography>
-                <Button size="small" variant="contained" sx={{ alignSelf: "center" }} onClick={() => setOpen(false)}>
+                <Button variant="contained" sx={{ alignSelf: "center" }} onClick={() => setOpen(false)}>
                     확인
                 </Button>
             </Stack>
@@ -51,7 +51,7 @@ export const Invite = ({ open, setOpen }) => {
         <>
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography>멤버 초대</Typography>
+                    <Typography fontWeight="bold">멤버 초대</Typography>
                     <TableContainer>
                         <Table sx={{ minWidth: 500 }}>
                             <TableHead bgcolor="#f2f3f7">
@@ -61,10 +61,10 @@ export const Invite = ({ open, setOpen }) => {
                                     <TableCell align="center">이메일</TableCell>
                                     <TableCell align="center">역할</TableCell>
                                     <TableCell align="center" padding="checkbox">
-                                        <Checkbox size="small" />
+                                        <Checkbox />
                                     </TableCell>
                                     <TableCell align="center" padding="checkbox">
-                                        <Checkbox size="small" />
+                                        <Checkbox />
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -74,22 +74,22 @@ export const Invite = ({ open, setOpen }) => {
                                         <TableRow key={v}>
                                             <TableCell align="center">{i + 1}</TableCell>
                                             <TableCell align="center">
-                                                <TextField size="small" />
+                                                <TextField />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <TextField size="small" />
+                                                <TextField />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <Select value={0} size="small">
+                                                <Select value={0}>
                                                     <MenuItem value={0}>관리자</MenuItem>
                                                     <MenuItem value={1}>멤버</MenuItem>
                                                 </Select>
                                             </TableCell>
                                             <TableCell align="center" padding="checkbox">
-                                                <Checkbox size="small" />
+                                                <Checkbox />
                                             </TableCell>
                                             <TableCell align="center" padding="checkbox">
-                                                <Checkbox size="small" />
+                                                <Checkbox />
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -97,12 +97,12 @@ export const Invite = ({ open, setOpen }) => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Typography>초대 멤버 수 : 1</Typography>
+                    <Typography>초대 멤버 수 : 6</Typography>
                     <Stack direction="row" spacing={3} justifyContent="center">
-                        <Button color="_gray" variant="contained" size="small" onClick={() => setOpen(false)}>
+                        <Button color="_gray" variant="contained" onClick={() => setOpen(false)}>
                             취소
                         </Button>
-                        <Button variant="contained" size="small" onClick={handleClickInvite}>
+                        <Button variant="contained" onClick={handleClickInvite}>
                             초대 메일 발송
                         </Button>
                     </Stack>

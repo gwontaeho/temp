@@ -22,7 +22,7 @@ export const Withdrawal = ({ open, setOpen }) => {
     return (
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
             <Stack p={3} spacing={3}>
-                <Typography>멤버 탈퇴</Typography>
+                <Typography fontWeight="bold">멤버 탈퇴</Typography>
                 <Stack>
                     <Stack direction="row" alignItems="center" spacing={3}>
                         <Typography minWidth={150} px={2} py={4} bgcolor="#f2f3f7" sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
@@ -30,10 +30,10 @@ export const Withdrawal = ({ open, setOpen }) => {
                         </Typography>
                         <FormControl>
                             <RadioGroup row value={reason} onChange={(e) => dispatch({ type: "setReason", payload: e.target.value })}>
-                                <FormControlLabel value="0" control={<Radio size="small" />} label="퇴사" />
-                                <FormControlLabel value="1" control={<Radio size="small" />} label="부서이동" />
-                                <FormControlLabel value="2" control={<Radio size="small" />} label="서비스 미사용" />
-                                <FormControlLabel value="3" control={<Radio size="small" />} label="기타" />
+                                <FormControlLabel value="0" control={<Radio />} label="퇴사" />
+                                <FormControlLabel value="1" control={<Radio />} label="부서이동" />
+                                <FormControlLabel value="2" control={<Radio />} label="서비스 미사용" />
+                                <FormControlLabel value="3" control={<Radio />} label="기타" />
                             </RadioGroup>
                         </FormControl>
                     </Stack>
@@ -46,7 +46,6 @@ export const Withdrawal = ({ open, setOpen }) => {
                             value={text}
                             onChange={(e) => dispatch({ type: "setText", payload: e.target.value })}
                             fullWidth
-                            size="small"
                             rows={2}
                             multiline
                         />
@@ -61,10 +60,10 @@ export const Withdrawal = ({ open, setOpen }) => {
                 </Stack>
 
                 <Stack direction="row" spacing={3} justifyContent="center">
-                    <Button color="_gray" variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={() => setOpen(false)}>
+                    <Button color="_gray" sx={{ alignSelf: "center" }} onClick={() => setOpen(false)}>
                         취소
                     </Button>
-                    <Button variant="contained" sx={{ alignSelf: "center" }} size="small" onClick={() => setOpen(false)}>
+                    <Button sx={{ alignSelf: "center" }} onClick={() => setOpen(false)}>
                         탈퇴 신청
                     </Button>
                 </Stack>

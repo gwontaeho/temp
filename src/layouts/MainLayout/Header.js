@@ -33,7 +33,7 @@ export const Header = ({ setMenuOpen }) => {
                     <IconButton onClick={() => navigate("/user")}>
                         <Icon name="user" size={24} />
                     </IconButton>
-                    <Typography>홍길동 님</Typography>
+                    <Typography fontWeight="bold">홍길동 님</Typography>
                 </Stack>
             </Stack>
             <Notification open={open} setOpen={setOpen} />
