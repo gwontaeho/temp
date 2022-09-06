@@ -4,15 +4,25 @@ import { MainLayout } from "../layouts";
 import {
     Home,
     User,
+    UserDetail,
     Team,
+    TeamDetail,
     Experience,
     Withdrawal,
     Dormancy,
     Caller,
+    CallerDetail,
     Payment,
+    PaymentDetail,
     Settlement,
+    SettlementDetail,
     Subscribe,
+    SubscribeMember,
+    App,
+    AppUpdate,
     Plan,
+    PlanCreate,
+    PlanUpdate,
     Notice,
     Notification,
     Qna,
@@ -34,8 +44,16 @@ const routes = {
             element: <User />,
         },
         {
+            path: "/member/user/detail",
+            element: <UserDetail />,
+        },
+        {
             path: "/member/team",
             element: <Team />,
+        },
+        {
+            path: "/member/team/detail",
+            element: <TeamDetail />,
         },
         {
             path: "/member/experience",
@@ -54,23 +72,55 @@ const routes = {
             element: <Caller />,
         },
         {
-            path: "/payment",
+            path: "/member/caller/detail",
+            element: <CallerDetail />,
+        },
+        {
+            path: "/payment/management",
             element: <Payment />,
+        },
+        {
+            path: "/payment/management/detail",
+            element: <PaymentDetail />,
         },
         {
             path: "/payment/settlement",
             element: <Settlement />,
         },
         {
-            path: "/subscribe",
+            path: "/payment/settlement/detail",
+            element: <SettlementDetail />,
+        },
+        {
+            path: "/subscribe/management",
             element: <Subscribe />,
         },
         {
-            path: "/subscribe/plan",
+            path: "/subscribe/management/member",
+            element: <SubscribeMember />,
+        },
+        {
+            path: "/subscribe/app",
+            element: <App />,
+        },
+        {
+            path: "/subscribe/app/update",
+            element: <AppUpdate />,
+        },
+        {
+            path: "/subscribe/app/plan",
             element: <Plan />,
         },
         {
-            path: "/support",
+            path: "/subscribe/app/plan/create",
+            element: <PlanCreate />,
+        },
+        {
+            path: "/subscribe/app/plan/update",
+            element: <PlanUpdate />,
+        },
+        {
+            path: "/support/notice",
             element: <Notice />,
         },
         {

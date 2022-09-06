@@ -18,26 +18,32 @@ const Nav = () => {
 
     const member = [
         {
+            name: "member",
             title: "회원 관리",
             path: "/member/user",
         },
         {
+            name: "member",
             title: "기관 관리",
             path: "/member/team",
         },
         {
+            name: "member",
             title: "체험 회원",
             path: "/member/experience",
         },
         {
+            name: "member",
             title: "탈퇴 관리",
             path: "/member/withdrawal",
         },
         {
+            name: "member",
             title: "휴먼 회원",
             path: "/member/dormancy",
         },
         {
+            name: "member",
             title: "발신번호 관리",
             path: "/member/caller",
         },
@@ -45,10 +51,12 @@ const Nav = () => {
 
     const payment = [
         {
+            name: "payment",
             title: "결제 관리",
-            path: "/payment",
+            path: "/payment/management",
         },
         {
+            name: "payment",
             title: "정산 관리",
             path: "/payment/settlement",
         },
@@ -56,25 +64,30 @@ const Nav = () => {
 
     const subscribe = [
         {
+            name: "subscribe",
             title: "앱 / 요금제 관리",
-            path: "/subscribe/plan",
+            path: "/subscribe/app",
         },
         {
+            name: "subscribe",
             title: "구독 관리",
-            path: "/subscribe",
+            path: "/subscribe/management",
         },
     ];
 
     const support = [
         {
+            name: "support",
             title: "공지 사항",
-            path: "/support",
+            path: "/support/notice",
         },
         {
+            name: "support",
             title: "알림 관리",
             path: "/support/notification",
         },
         {
+            name: "support",
             title: "문의 관리",
             path: "/support/qna",
         },
@@ -82,6 +95,7 @@ const Nav = () => {
 
     const admin = [
         {
+            name: "admin",
             title: "운영자 관리",
             path: "/admin",
         },
@@ -89,10 +103,12 @@ const Nav = () => {
 
     const history = [
         {
+            name: "history",
             title: "접속 기록",
             path: "/history/connect",
         },
         {
+            name: "history",
             title: "데이터 파기기록",
             path: "/history/destruction",
         },
@@ -106,7 +122,7 @@ const Nav = () => {
         { title: "Admin 운영자", option: admin },
         { title: "이용내역 조회", option: history },
     ];
-
+    console.log(pathname);
     return (
         <Stack width={300} height="100%" p={5} spacing={3} overflow="auto">
             {navOptions.map(({ title, option }, i) => {
@@ -121,7 +137,7 @@ const Nav = () => {
                                     <Typography
                                         p={1}
                                         borderRadius={2}
-                                        {...(pathname === v.path && { color: "primary", fontWeight: "bold" })}
+                                        {...(pathname.startsWith(v.path) && { color: "primary", fontWeight: "bold" })}
                                         sx={{ "&:hover": { bgcolor: "#eeeeee88" } }}
                                     >
                                         {v.title}
@@ -139,10 +155,8 @@ const Nav = () => {
 
 export const View = () => {
     return (
-        <Stack flex={1} height="100%" p={5} overflow="auto" bgcolor="#f2f3f7">
-            <Stack bgcolor="#fff" flex={1} borderRadius={3} p={5}>
-                <Outlet />
-            </Stack>
+        <Stack flex={1} height="100%" p={3} overflow="auto" bgcolor="#f2f3f7">
+            <Outlet />
         </Stack>
     );
 };
