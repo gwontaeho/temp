@@ -24,10 +24,18 @@ export * from "./subscribe/Subscribe";
 export * from "./subscribe/SubscribeMember";
 
 export * from "./support/Notice";
+export * from "./support/NoticeDetail";
+export * from "./support/NoticeCreate";
+export * from "./support/NoticeUpdate";
 export * from "./support/Notification";
+export * from "./support/NotificationCreate";
+export * from "./support/NotificationUpdate";
+export * from "./support/NotificationAuto";
 export * from "./support/Qna";
+export * from "./support/QnaDetail";
 
 export * from "./admin/Admin";
+export * from "./admin/AdminDetail";
 
 export * from "./history/Connect";
 export * from "./history/Destruction";

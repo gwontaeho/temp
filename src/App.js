@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Routes from "./routes";
+import "@toast-ui/editor/dist/toastui-editor.css";
 
 const theme = createTheme({
     palette: {

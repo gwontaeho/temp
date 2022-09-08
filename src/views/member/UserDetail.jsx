@@ -57,7 +57,7 @@ export const UserDetail = () => {
                     <Stack spacing={1}>
                         <Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Typography>회원 상세 정보</Typography>
-                            <Stack direction="row" spacing={3}>
+                            <Stack direction="row" spacing={1}>
                                 <Button color="_gray" onClick={() => handleClickButton(0)}>
                                     사용중지
                                 </Button>

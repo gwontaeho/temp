@@ -24,9 +24,17 @@ import {
     PlanCreate,
     PlanUpdate,
     Notice,
+    NoticeDetail,
+    NoticeCreate,
+    NoticeUpdate,
     Notification,
+    NotificationCreate,
+    NotificationUpdate,
+    NotificationAuto,
     Qna,
+    QnaDetail,
     Admin,
+    AdminDetail,
     Connect,
     Destruction,
 } from "../views";
@@ -124,8 +132,32 @@ const routes = {
             element: <Notice />,
         },
         {
+            path: "/support/notice/detail",
+            element: <NoticeDetail />,
+        },
+        {
+            path: "/support/notice/create",
+            element: <NoticeCreate />,
+        },
+        {
+            path: "/support/notice/update",
+            element: <NoticeUpdate />,
+        },
+        {
             path: "/support/notification",
             element: <Notification />,
+        },
+        {
+            path: "/support/notification/auto",
+            element: <NotificationAuto />,
+        },
+        {
+            path: "/support/notification/create",
+            element: <NotificationCreate />,
+        },
+        {
+            path: "/support/notification/update",
+            element: <NotificationUpdate />,
         },
         {
             path: "/support/qna",
@@ -134,6 +166,10 @@ const routes = {
         {
             path: "/admin",
             element: <Admin />,
+        },
+        {
+            path: "/admin/detail",
+            element: <AdminDetail />,
         },
         {
             path: "/history/connect",

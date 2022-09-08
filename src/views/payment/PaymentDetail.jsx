@@ -1,9 +1,38 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Chip, Grid, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import { Edit as EditIcon, Close as CloseIcon } from "@mui/icons-material";
+import { Typography, Stack, Chip, Grid, Dialog, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 
 import { PageCard, PageTitle, CountCard } from "../../components";
+
+const RequestButton = () => {
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Button onClick={() => setOpen(true)}>결제요청</Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
+                <Stack p={3} spacing={3} alignItems="center">
+                    <Typography>결제요청이 완료되었습니다</Typography>
+                    <Button>확인</Button>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
+
+const CancelButton = () => {
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Button onClick={() => setOpen(true)}>결제취소</Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
+                <Stack p={3} spacing={3} alignItems="center">
+                    <Typography>결제취소가 완료되었습니다</Typography>
+                    <Button>확인</Button>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
 
 export const PaymentDetail = () => {
     const navigate = useNavigate();
@@ -66,8 +95,8 @@ export const PaymentDetail = () => {
                         </Stack>
                         <Stack direction="row" spacing={1}>
                             <Button>거래확인서 발행</Button>
-                            <Button>결제 취소</Button>
-                            <Button>결제 요청</Button>
+                            <CancelButton />
+                            <RequestButton />
                         </Stack>
                     </Stack>
                     <Stack direction="row">
