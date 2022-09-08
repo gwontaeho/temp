@@ -19,9 +19,18 @@ import {
     FormControlLabel,
     Radio,
 } from "@mui/material";
-import { Edit as EditIcon, DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from "@mui/icons-material";
+import { MoreVert as MoreVertIcon, DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from "@mui/icons-material";
+import { PageCard, PageTitle } from "../../components";
 
-import { PageCard, PageTitle, CountCard } from "../../components";
+const MoreButton = () => {
+    return (
+        <>
+            <IconButton>
+                <MoreVertIcon />
+            </IconButton>
+        </>
+    );
+};
 
 const DeleteButton = forwardRef(({ icon }, ref) => {
     const [open, setOpen] = useState(false);
@@ -108,14 +117,16 @@ export const Notification = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/support/notice/detail")}>
+                                        <TableRow key={v} onClick={() => navigate("/support/notification/detail")}>
                                             <TableCell>ID</TableCell>
                                             <TableCell>대상자</TableCell>
                                             <TableCell>제목</TableCell>
                                             <TableCell>내용</TableCell>
                                             <TableCell>발송일시</TableCell>
                                             <TableCell>상태</TableCell>
-                                            <TableCell>아이콘</TableCell>
+                                            <TableCell onClick={(e) => e.stopPropagation()} padding="none">
+                                                <MoreButton />
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

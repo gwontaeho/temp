@@ -20,31 +20,46 @@ import {
     FormControlLabel,
     Radio,
 } from "@mui/material";
-import { Edit as EditIcon, DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from "@mui/icons-material";
+import { Edit as EditIcon } from "@mui/icons-material";
 
 import { PageCard, PageTitle, CountCard } from "../../components";
 
-const DeleteButton = forwardRef(({ icon }, ref) => {
+const UpdateButton = () => {
     const [open, setOpen] = useState(false);
-    const [check, setCheck] = useState(false);
+
     return (
         <>
-            {icon ? (
-                <IconButton onClick={(e) => setOpen(true)}>
-                    <DeleteOutlineOutlinedIcon />
-                </IconButton>
-            ) : (
-                <Button onClick={() => setOpen(true)}>선택 삭제</Button>
-            )}
-            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
-                <Stack p={3} spacing={3} alignItems="center">
-                    <Typography>선택하신 공지사항을 삭제하시겠습니까?</Typography>
-                    <Button onClick={() => setCheck(true)}>삭제</Button>
+            <IconButton onClick={() => setOpen(true)}>
+                <EditIcon />
+            </IconButton>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <Stack p={3} spacing={3}>
+                    <Typography>자동알림 메시지 수정</Typography>
+                    <Stack
+                        sx={{
+                            "&>div>:first-child": { p: 3, bgcolor: "_bg.main", minWidth: 160, mr: 3, height: "100%" },
+                            "&>div": { flexDirection: "row", alignItems: "center" },
+                        }}
+                    >
+                        <Stack>
+                            <Typography>알림명</Typography>
+                            <Typography>알림명</Typography>
+                        </Stack>
+                        <Stack>
+                            <Typography>제목</Typography>
+                            <TextField fullWidth />
+                        </Stack>
+                        <Stack height={120}>
+                            <Typography>내용</Typography>
+                            <TextField fullWidth multiline rows={3} />
+                        </Stack>
+                    </Stack>
+                    <Button sx={{ alignSelf: "center" }}>수정</Button>
                 </Stack>
             </Dialog>
         </>
     );
-});
+};
 
 export const NotificationAuto = () => {
     const navigate = useNavigate();
@@ -58,15 +73,11 @@ export const NotificationAuto = () => {
                     <Stack>
                         <Stack direction="row" alignItems="center">
                             <FormControlLabel control={<Switch defaultChecked />} label="회원가입 축하" />
-                            <IconButton>
-                                <EditIcon />
-                            </IconButton>
+                            <UpdateButton />
                         </Stack>
                         <Stack direction="row" alignItems="center">
                             <FormControlLabel control={<Switch defaultChecked />} label="청구일 도래 알림" />
-                            <IconButton>
-                                <EditIcon />
-                            </IconButton>
+                            <UpdateButton />
                         </Stack>
                     </Stack>
                 </Stack>
@@ -74,9 +85,7 @@ export const NotificationAuto = () => {
                     <Typography>U2알리미</Typography>
                     <Stack direction="row" alignItems="center">
                         <FormControlLabel control={<Switch defaultChecked />} label="발신번호 등록 알림" />
-                        <IconButton>
-                            <EditIcon />
-                        </IconButton>
+                        <UpdateButton />
                     </Stack>
                 </Stack>
             </PageCard>
