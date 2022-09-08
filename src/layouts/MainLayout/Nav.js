@@ -21,7 +21,7 @@ export const Nav = ({ menuOpen, setMenuOpen }) => {
         },
         {
             name: "subscribe",
-            title: "멤버 구독",
+            title: "멤버 이용현황",
             path: "/management/subscribe",
         },
     ];
@@ -34,12 +34,12 @@ export const Nav = ({ menuOpen, setMenuOpen }) => {
         },
         {
             name: "bill",
-            title: "청구서",
+            title: "결제 금액",
             path: "/subscribe/bill",
         },
         {
             name: "subscribe",
-            title: "구독 현황",
+            title: "구독 관리",
             path: "/subscribe/list",
         },
     ];

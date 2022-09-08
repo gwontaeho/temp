@@ -1,8 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Chip } from "@mui/material";
+import { Stack, Typography, Button, Chip, Dialog } from "@mui/material";
+
+const ExButton = () => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <Button onClick={() => setOpen(true)}>체험해지</Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
+                <Stack p={3} spacing={3}>
+                    <Stack alignItems="center" spacing={3}>
+                        <Typography>U2알리미 서비스 체험을 종료하시겠습니까 ?</Typography>
+                        <Button>확인</Button>
+                    </Stack>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
 
 export const Service = () => {
+    const navigate = useNavigate();
     return (
         <Stack spacing={3}>
             <Typography fontWeight="bold">U2Cloud 서비스</Typography>
@@ -14,9 +33,7 @@ export const Service = () => {
                         </Typography>
                         <Chip label="구독중" size="small" color="_gray" variant="outlined" />
                     </Stack>
-                    <Button variant="contained" size="small">
-                        서비스 상세보기
-                    </Button>
+                    <Button variant="text">서비스 상세보기</Button>
                 </Stack>
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
                     <Stack>
@@ -26,12 +43,9 @@ export const Service = () => {
                         <Typography>검진대상자 전용 검진안내 문자 발송 및 카카오 알림톡 발송 서비스</Typography>
                     </Stack>
                     <Stack direction="row" spacing={3}>
-                        <Button variant="contained" size="small">
-                            구독신청
-                        </Button>
-                        <Button variant="contained" size="small">
-                            무료체험
-                        </Button>
+                        <Button onClick={() => navigate("/subscribe/list/create")}>구독신청</Button>
+                        <Button onClick={() => navigate("/application")}>무료체험</Button>
+                        <ExButton />
                     </Stack>
                 </Stack>
             </Stack>

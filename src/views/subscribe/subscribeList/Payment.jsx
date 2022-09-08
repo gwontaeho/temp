@@ -12,14 +12,14 @@ const Regist = ({ open, setOpen }) => {
             <Stack p={3} spacing={5}>
                 <Typography fontWeight="bold">결제수단 등록</Typography>
                 <Stack direction="row" spacing={3}>
-                    <Stack bgcolor="#f2f3f7" py={2} px={3} borderRadius={1} onClick={() => setType(1)}>
+                    <Stack bgcolor="#f2f3f7" py={2} px={3} borderRadius={1} onClick={() => setType(0)}>
                         <Typography>신용카드</Typography>
                     </Stack>
-                    <Stack bgcolor="#f2f3f7" py={2} px={3} borderRadius={1} onClick={() => setType(0)}>
+                    <Stack bgcolor="#f2f3f7" py={2} px={3} borderRadius={1} onClick={() => setType(1)}>
                         <Typography>계좌이체</Typography>
                     </Stack>
                 </Stack>
-                {type ? (
+                {!type ? (
                     <Stack spacing={1}>
                         <FormControl>
                             <RadioGroup row defaultValue="female">

@@ -6,6 +6,7 @@ import {
     IconButton,
     FormControlLabel,
     Radio,
+    Checkbox,
     Chip,
     Divider,
     Table,
@@ -76,7 +77,7 @@ export const SubscribeCreate = () => {
                             <Stack px={3} spacing={1}>
                                 <Typography variant="body2">부가 서비스 이용 과금</Typography>
                                 <Stack p={3} bgcolor="#fff" borderRadius={3} spacing={3}>
-                                    <FormControlLabel value="female" control={<Radio />} label="발송 과금 월 정기결제(필수)" />
+                                    <FormControlLabel value="female" control={<Checkbox />} label="발송 과금 월 정기결제(필수)" />
                                     <Stack pl={3}>
                                         <TableContainer>
                                             <Table sx={{ minWidth: 600 }}>

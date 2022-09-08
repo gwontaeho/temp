@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Stack, Typography, Divider, Drawer, Avatar } from "@mui/material";
 import { useEffect } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import { toggle } from "../../redux/features/notification/notificationSlice";
 import AlramDone from "../../assets/icons/img_alarm_done.png";
-import AlramNew from "../../assets/icons/img_alarm_new.png";
 
 const Detail = ({ setDetail }) => {
     return (
@@ -38,7 +38,9 @@ const List = ({ setDetail }) => {
     );
 };
 
-export const Notification = ({ open, setOpen }) => {
+export const Notification = () => {
+    const open = useSelector((state) => state.notification);
+    const dispatch = useDispatch();
     const [detail, setDetail] = useState(false);
 
     useEffect(() => {
@@ -47,9 +49,9 @@ export const Notification = ({ open, setOpen }) => {
 
     return (
         <Drawer
-            open={open}
+            open={open.open}
             anchor="right"
-            onClose={() => setOpen(false)}
+            onClose={() => dispatch(toggle())}
             elevation={0}
             BackdropProps={{ style: { backgroundColor: "transparent" } }}
             PaperProps={{ style: { height: "calc(100vh - 80px)", marginTop: "80px", overflowY: "overlay", width: 400 } }}
@@ -57,7 +59,7 @@ export const Notification = ({ open, setOpen }) => {
             <Stack>
                 <Stack direction="row" p={3} justifyContent="space-between">
                     {detail ? <Typography onClick={() => setDetail(false)}>뒤로</Typography> : <Typography>알림</Typography>}
-                    <Typography onClick={() => setOpen(false)}>닫기</Typography>
+                    <Typography onClose={() => dispatch(toggle())}>닫기</Typography>
                 </Stack>
                 {detail ? <Detail setDetail={setDetail} /> : <List setDetail={setDetail} />}
             </Stack>

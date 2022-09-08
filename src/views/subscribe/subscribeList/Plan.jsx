@@ -1,9 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Grid, Dialog, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import { Stack, Typography, Button, Grid, Dialog, RadioGroup, FormControlLabel, Radio, Snackbar } from "@mui/material";
+
+const ChangeButton = () => {
+    const [open, setOpen] = useState(false);
+    const [toast, setToast] = useState(false);
+
+    return (
+        <>
+            <Button onClick={() => setOpen(true)}>구독 변경</Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <Stack p={3} spacing={3}>
+                    <Typography fontWeight="bold">구독 변경</Typography>
+                    <Stack alignItems="center" spacing={3}>
+                        <Typography>현재 구독하고 있는 요금제를 변경하시겠습니까 ?</Typography>
+                        <RadioGroup defaultValue="0">
+                            <FormControlLabel value="0" control={<Radio />} label="즉시 구독 변경" />
+                            <FormControlLabel value="1" control={<Radio />} label="남은기간 종료 후 구독 변경" />
+                        </RadioGroup>
+                        <Typography variant="body2">구독 종료일 : 2022.04.22</Typography>
+                        <Button>확인</Button>
+                    </Stack>
+                </Stack>
+            </Dialog>
+            <Snackbar
+                open={toast}
+                autoHideDuration={3000}
+                message="의 요금제가 {}로 변경되었습니다."
+                onClose={() => setToast(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            />
+        </>
+    );
+};
 
 const UnsubscribeButton = () => {
     const [open, setOpen] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const [toast, setToast] = useState(false);
+
     return (
         <>
             <Button color="_gray" onClick={() => setOpen(true)}>
@@ -19,10 +54,26 @@ const UnsubscribeButton = () => {
                             <FormControlLabel value="1" control={<Radio />} label="남은기간 종료 후 구독 취소" />
                         </RadioGroup>
                         <Typography variant="body2">구독 종료일 : 2022.04.22</Typography>
-                        <Button>확인</Button>
+                        <Button onClick={() => setAlert(true)}>확인</Button>
                     </Stack>
                 </Stack>
             </Dialog>
+            <Dialog open={alert} onClose={() => setAlert(false)} fullWidth>
+                <Stack p={3} spacing={3}>
+                    <Stack alignItems="center" spacing={3}>
+                        <Typography>발송예약 내역이 (발송예약 건수) 건 있습니다.</Typography>
+                        <Typography variant="body2">구독취소시 모두 발송 취소 됩니다.</Typography>
+                        <Button onClick={() => setToast(true)}>구독취소</Button>
+                    </Stack>
+                </Stack>
+            </Dialog>
+            <Snackbar
+                open={toast}
+                autoHideDuration={3000}
+                message="구독이 취소되었습니다."
+                onClose={() => setToast(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            />
         </>
     );
 };
@@ -69,9 +120,7 @@ export const Plan = () => {
                                     </Stack>
                                     <Stack direction="row" spacing={3} justifyContent="center">
                                         <UnsubscribeButton />
-                                        <Button variant="contained" size="small">
-                                            구독 변경
-                                        </Button>
+                                        <ChangeButton />
                                     </Stack>
                                 </Stack>
                             </Grid>

@@ -2,24 +2,15 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Routes from "./routes";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import { Provider } from "react-redux";
+import { store } from "./redux/app/store";
 
 const theme = createTheme({
     palette: {
-        primary: {
-            main: "#177fff",
-        },
-        _gray: {
-            main: "#656565",
-            contrastText: "#ffffff",
-        },
-        _red: {
-            main: "#ee0000",
-            contrastText: "#ffffff",
-        },
-        _bg: {
-            main: "#f2f3f7",
-            contrastText: "#000000",
-        },
+        primary: { main: "#177fff" },
+        _gray: { main: "#656565", contrastText: "#ffffff" },
+        _red: { main: "#ee0000", contrastText: "#ffffff" },
+        _bg: { main: "#f2f3f7", contrastText: "#000000" },
     },
     typography: {
         fontFamily: ["NanumSquareRound"].join(","),
@@ -49,9 +40,11 @@ const theme = createTheme({
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
-            <Routes />
-        </ThemeProvider>
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <Routes />
+            </ThemeProvider>
+        </Provider>
     );
 }
 

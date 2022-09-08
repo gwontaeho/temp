@@ -20,7 +20,7 @@ export const U2 = () => {
                     <Typography variant="body2" fontWeight="bold">
                         U2알리미 실행
                     </Typography>
-                    <IconButton onClick={() => navigate("/subscribe/fee")}>
+                    <IconButton>
                         <ChevronRightIcon />
                     </IconButton>
                 </Stack>

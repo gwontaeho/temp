@@ -20,6 +20,7 @@ import {
     Qna,
     QnaDetail,
     QnaCreate,
+    Service,
 } from "../views";
 
 const routes = {
@@ -29,6 +30,10 @@ const routes = {
         {
             path: "/",
             element: <Home />,
+        },
+        {
+            path: "/application",
+            element: <Service />,
         },
         {
             path: "/user",

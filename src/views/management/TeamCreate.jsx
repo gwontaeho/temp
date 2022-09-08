@@ -102,7 +102,12 @@ export const TeamCreate = () => {
                                 >
                                     기관명
                                 </Typography>
-                                <TextField fullWidth value={team} onChange={(e) => dispatch({ type: "setTeam", payload: e.target.value })} />
+                                <TextField
+                                    placeholder="병원명 또는 기관명을 입력해주세요"
+                                    fullWidth
+                                    value={team}
+                                    onChange={(e) => dispatch({ type: "setTeam", payload: e.target.value })}
+                                />
                             </Stack>
 
                             <Stack direction="row" alignItems="center" spacing={3}>
@@ -115,6 +120,7 @@ export const TeamCreate = () => {
                                             inputProps={{ maxLength: 10 }}
                                             fullWidth
                                             value={num}
+                                            placeholder="사업자등록번호 10자리를 -없이 입력해주세요"
                                             onChange={(e) => dispatch({ type: "setNum", payload: e.target.value })}
                                         />
                                     </Stack>
@@ -126,7 +132,12 @@ export const TeamCreate = () => {
                                 <Typography fontWeight="bold" minWidth={150} px={2} py={3} bgcolor="#f2f3f7">
                                     대표자명
                                 </Typography>
-                                <TextField fullWidth value={name} onChange={(e) => dispatch({ type: "setName", payload: e.target.value })} />
+                                <TextField
+                                    placeholder="대표자명을 입력해주세요"
+                                    fullWidth
+                                    value={name}
+                                    onChange={(e) => dispatch({ type: "setName", payload: e.target.value })}
+                                />
                             </Stack>
 
                             <Stack direction="row" alignItems="center" spacing={3}>
@@ -134,7 +145,12 @@ export const TeamCreate = () => {
                                     대표번호
                                 </Typography>
                                 <Stack direction="row" alignItems="center" spacing={1} flex={1}>
-                                    <TextField fullWidth value={phone} onChange={(e) => dispatch({ type: "setPhone", payload: e.target.value })} />
+                                    <TextField
+                                        placeholder="전화번호를 - 없이 입력해주세요"
+                                        fullWidth
+                                        value={phone}
+                                        onChange={(e) => dispatch({ type: "setPhone", payload: e.target.value })}
+                                    />
                                 </Stack>
                             </Stack>
 
@@ -144,13 +160,14 @@ export const TeamCreate = () => {
                                 </Typography>
                                 <Stack height="100%" justifyContent="space-around" flex={1}>
                                     <Stack direction="row" spacing={3} alignItems="center">
-                                        <TextField fullWidth value={code} inputProps={{ readOnly: true }} />
+                                        <TextField placeholder="우편번호" fullWidth value={code} inputProps={{ readOnly: true }} />
                                         <Button color="_gray" onClick={() => setOpen(true)}>
                                             검색
                                         </Button>
                                     </Stack>
-                                    <TextField fullWidth value={address} inputProps={{ readOnly: true }} />
+                                    <TextField placeholder="주소" fullWidth value={address} inputProps={{ readOnly: true }} />
                                     <TextField
+                                        placeholder="상세 주소"
                                         fullWidth
                                         value={detailAddress}
                                         onChange={(e) => dispatch({ type: "setDetailAddress", payload: e.target.value })}
@@ -162,7 +179,12 @@ export const TeamCreate = () => {
                                 <Typography fontWeight="bold" minWidth={150} px={2} py={3} bgcolor="#f2f3f7">
                                     요양기관번호
                                 </Typography>
-                                <TextField fullWidth value={care} onChange={(e) => dispatch({ type: "setCare", payload: e.target.value })} />
+                                <TextField
+                                    placeholder="요양기관번호 8자리를 -없이 입력해주세요"
+                                    fullWidth
+                                    value={care}
+                                    onChange={(e) => dispatch({ type: "setCare", payload: e.target.value })}
+                                />
                             </Stack>
                         </Stack>
                         <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={3}>
