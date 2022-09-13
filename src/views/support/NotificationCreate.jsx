@@ -1,9 +1,96 @@
 import { useCallback, useEffect, useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, TextField, Switch, Button, Select, Dialog, IconButton, Divider } from "@mui/material";
-import { Edit as EditIcon } from "@mui/icons-material";
+import {
+    Typography,
+    Stack,
+    TextField,
+    IconButton,
+    Button,
+    Checkbox,
+    Dialog,
+    Divider,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Pagination,
+    Select,
+} from "@mui/material";
 
 import { PageCard, PageTitle, CountCard } from "../../components";
+
+const TargetButton = () => {
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Button color="_gray" onClick={() => setOpen(true)}>
+                선택
+            </Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="lg">
+                <Stack p={3} spacing={3}>
+                    <Typography>알림 발송 대상자 선택</Typography>
+                    <TextField sx={{ alignSelf: "flex-start" }} />
+                    <Stack direction="row" justifyContent="space-between">
+                        <Typography>전체 10</Typography>
+                        <Typography>선택 1건</Typography>
+                    </Stack>
+                    <TableContainer>
+                        <Table sx={{ minWidth: 800 }}>
+                            <TableHead bgColor="#eee">
+                                <TableRow>
+                                    <TableCell padding="checkbox">
+                                        <Checkbox />
+                                    </TableCell>
+                                    <TableCell>이메일</TableCell>
+                                    <TableCell>회원명</TableCell>
+                                    <TableCell>휴대전화</TableCell>
+                                    <TableCell>기관명</TableCell>
+                                    <TableCell>역할</TableCell>
+                                    <TableCell>마케팅</TableCell>
+                                    <TableCell>가입일</TableCell>
+                                    <TableCell>최종 로그인</TableCell>
+                                    <TableCell>구독</TableCell>
+                                    <TableCell>상태</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {[0, 1, 2].map((v) => {
+                                    return (
+                                        <TableRow key={v}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox />
+                                            </TableCell>
+                                            <TableCell>이메일</TableCell>
+                                            <TableCell>회원명</TableCell>
+                                            <TableCell>휴대전화</TableCell>
+                                            <TableCell>기관명</TableCell>
+                                            <TableCell>역할</TableCell>
+                                            <TableCell>마케팅</TableCell>
+                                            <TableCell>가입일</TableCell>
+                                            <TableCell>최종 로그인</TableCell>
+                                            <TableCell>구독</TableCell>
+                                            <TableCell>상태</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Pagination />
+                        <Select></Select>
+                    </Stack>
+
+                    <Button sx={{ alignSelf: "center" }}>선택완료</Button>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
 
 const SendButton = () => {
     const [open, setOpen] = useState(false);
@@ -43,7 +130,7 @@ export const NotificationCreate = () => {
                     <Stack>
                         <Typography>대상자</Typography>
                         <Stack direction="row" alignItems="center" spacing={3}>
-                            <Button color="_gray">선택</Button>
+                            <TargetButton />
                             <Typography>email@email.com</Typography>
                             <Typography>총 51명</Typography>
                         </Stack>

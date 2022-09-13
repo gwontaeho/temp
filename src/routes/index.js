@@ -35,7 +35,7 @@ import {
     QnaDetail,
     Admin,
     AdminDetail,
-    Connect,
+    Connection,
     Destruction,
 } from "../views";
 
@@ -164,6 +164,10 @@ const routes = {
             element: <Qna />,
         },
         {
+            path: "/support/qna/detail",
+            element: <QnaDetail />,
+        },
+        {
             path: "/admin",
             element: <Admin />,
         },
@@ -173,7 +177,7 @@ const routes = {
         },
         {
             path: "/history/connect",
-            element: <Connect />,
+            element: <Connection />,
         },
         {
             path: "/history/destruction",

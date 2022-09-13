@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select, Dialog } from "@mui/material";
 import { PageCard, PageTitle, CountCard } from "../../components";
 
-export const Destruction = () => {
+export const Connection = () => {
     const navigate = useNavigate();
 
     return (
         <Stack spacing={3}>
-            <PageTitle>데이터 파기 기록</PageTitle>
+            <PageTitle>접속 기록</PageTitle>
             <PageCard spacing={5}>
                 <Stack
                     sx={{
@@ -25,7 +25,7 @@ export const Destruction = () => {
                     }}
                 >
                     <Stack>
-                        <Typography>파기일시</Typography>
+                        <Typography>접속일시</Typography>
                     </Stack>
                     <Stack>
                         <Typography>검색어</Typography>
@@ -42,9 +42,8 @@ export const Destruction = () => {
                                 <TableCell>번호</TableCell>
                                 <TableCell>이메일</TableCell>
                                 <TableCell>이름</TableCell>
-                                <TableCell>사유</TableCell>
-                                <TableCell>파기항목</TableCell>
-                                <TableCell>파기일시</TableCell>
+                                <TableCell>IP</TableCell>
+                                <TableCell>접속일시</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -54,9 +53,8 @@ export const Destruction = () => {
                                         <TableCell>번호</TableCell>
                                         <TableCell>이메일</TableCell>
                                         <TableCell>이름</TableCell>
-                                        <TableCell>사유</TableCell>
-                                        <TableCell>파기항목</TableCell>
-                                        <TableCell>파기일시</TableCell>
+                                        <TableCell>IP</TableCell>
+                                        <TableCell>접속일시</TableCell>
                                     </TableRow>
                                 );
                             })}

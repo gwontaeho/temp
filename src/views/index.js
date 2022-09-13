@@ -37,5 +37,5 @@ export * from "./support/QnaDetail";
 export * from "./admin/Admin";
 export * from "./admin/AdminDetail";
 
-export * from "./history/Connect";
+export * from "./history/Connection";
 export * from "./history/Destruction";
