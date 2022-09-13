@@ -7,6 +7,7 @@ export * from "./management/Team";
 export * from "./management/TeamCreate";
 export * from "./management/TeamUpdate";
 export * from "./management/Member";
+export * from "./management/MemberDetail";
 export * from "./management/Subscribe";
 
 export * from "./subscribe/Fee";

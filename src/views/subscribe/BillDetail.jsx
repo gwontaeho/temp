@@ -7,7 +7,7 @@ export const BillDetail = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <ViewTitle icon="bill" title="청구서" />
+                <ViewTitle icon="bill" title="결제 내역" />
             </Stack>
             <Stack spacing={5}>
                 <Stack spacing={3}>
@@ -61,7 +61,7 @@ export const BillDetail = () => {
                                 <Divider orientation="vertical" flexItem />
                                 <Stack flex={2}>
                                     <Typography p={1} textAlign="center" bgcolor="#f2f3f7">
-                                        옵션 사용료
+                                        부가서비스 사용료
                                     </Typography>
                                     <Stack alignItems="center" p={2} spacing={2}>
                                         <Stack direction="row" spacing={1}>
@@ -84,7 +84,7 @@ export const BillDetail = () => {
                                 <Divider orientation="vertical" flexItem />
                                 <Stack flex={1}>
                                     <Typography p={1} textAlign="center" bgcolor="#f2f3f7">
-                                        부가세 (10%)
+                                        할인
                                     </Typography>
                                     <Stack p={2} alignItems="center">
                                         <Typography>4,400원</Typography>

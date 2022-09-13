@@ -11,7 +11,7 @@ export const SubscribeList = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <ViewTitle icon="subscribe" title="구독 현황" />
+                <ViewTitle icon="subscribe" title="구독 관리" />
             </Stack>
             <Stack spacing={5}>
                 <Plan />

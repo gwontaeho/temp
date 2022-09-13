@@ -10,7 +10,7 @@ export const Bill = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <ViewTitle icon="bill" title="청구서" />
+                <ViewTitle icon="bill" title="결제 금액" />
             </Stack>
             <Stack spacing={5}>
                 <Payment />

@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, useMediaQuery, useTheme, IconButton, Menu, Avatar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Notification } from "./Notification";
-import { useSelector, useDispatch } from "react-redux";
-import { toggle } from "../../redux/features/notification/notificationSlice";
 
 import logo from "../../assets/icons/logo_portal.png";
 import { Icon } from "../../assets/icons/";
@@ -46,7 +44,6 @@ const MenuButton = () => {
 };
 
 export const Header = ({ setMenuOpen }) => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -64,14 +61,11 @@ export const Header = ({ setMenuOpen }) => {
                 </Stack>
 
                 <Stack spacing={1} direction="row" alignItems="center">
-                    <IconButton onClick={() => dispatch(toggle())}>
-                        <Icon name="alarm" size={24} />
-                    </IconButton>
+                    <Notification />
                     <MenuButton />
                     <Typography fontWeight="bold">홍길동 님</Typography>
                 </Stack>
             </Stack>
-            <Notification />
         </>
     );
 };

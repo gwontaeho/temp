@@ -1,8 +1,32 @@
-import { useState, useReducer, useCallback } from "react";
+import { useState, useReducer, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Dialog } from "@mui/material";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { ViewTitle } from "../../components/";
+
+const Check = ({ dispatch, num }) => {
+    const [open, setOpen] = useState(false);
+    const handleClickOpen = useCallback(() => {
+        // 중복시 dispatch
+        dispatch({ type: "setNumError", payload: { check: true } });
+        setOpen(true);
+    }, [num, dispatch]);
+
+    return (
+        <>
+            <Button color="_gray" onClick={handleClickOpen}>
+                중복확인
+            </Button>
+            <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth>
+                <Stack p={3} spacing={3} alignItems="center">
+                    {/* <Typography>사용가능합니다</Typography> */}
+                    <Typography>이미 등록된번호로 사용불가합니다</Typography>
+                    <Button onClick={() => setOpen(false)}>확인</Button>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
 
 const Address = ({ open, setOpen, dispatch }) => {
     const handleComplete = (data) => {
@@ -29,34 +53,71 @@ const Address = ({ open, setOpen, dispatch }) => {
     );
 };
 
-const initialState = { team: "", name: "", num: "", prePhone: "02", phone: "", address: "", detailAddress: "", code: "", care: "" };
+const initialState = {
+    team: "",
+    teamError: "",
+    name: "",
+    nameError: "",
+    num: "",
+    numError: "",
+    phone: "",
+    phoneError: "",
+    address: "",
+    addressError: "",
+    detailAddress: "",
+    code: "",
+    care: "",
+};
 
 const reducer = (state, { type, payload }) => {
     switch (type) {
         case "setTeam": {
-            return { ...state, team: payload };
+            return { ...state, team: payload, teamError: "" };
+        }
+        case "setTeamError": {
+            const team = state.team;
+            if (!team) return { ...state, teamError: "기관명을 입력해주세요" };
+            return { ...state, teamError: "" };
         }
         case "setName": {
             const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z]+$/;
-            if (regex.test(payload) || !payload) return { ...state, name: payload };
+            if (regex.test(payload) || !payload) return { ...state, name: payload, nameError: "" };
             return { ...state };
+        }
+        case "setNameError": {
+            const name = state.name;
+            if (!name) return { ...state, nameError: "대표자 이름을 입력해주세요" };
+            return { ...state, nameError: "" };
         }
         case "setNum": {
             const regex = /^[0-9]+$/;
             if (regex.test(payload) || !payload) return { ...state, num: payload };
             return { ...state };
         }
+        case "setNumError": {
+            const num = state.num;
+            if (!num) return { ...state, numError: "사업자 등록번호를 입력해주세요" };
+            if (payload?.check) return { ...state, numError: "이미 등록된 번호입니다. 입력하신 번호를 다시 확인해주세요" };
+            return { ...state, numError: "" };
+        }
         case "setPhone": {
             const regex = /^[0-9]+$/;
-            if (regex.test(payload) || !payload) return { ...state, phone: payload };
+            if (regex.test(payload) || !payload) return { ...state, phone: payload, phoneError: "" };
             return { ...state };
         }
-        case "setPrePhone": {
-            return { ...state, prePhone: payload };
+        case "setPhoneError": {
+            const phone = state.phone;
+            if (!phone) return { ...state, phoneError: "대표번호를 입력해주세요" };
+            return { ...state, phoneError: "" };
         }
         case "setAddress": {
             const { address, code } = payload;
-            return { ...state, address, code };
+            return { ...state, address, code, addressError: "" };
+        }
+        case "setAddressError": {
+            const code = state.code;
+            if (!code) return { ...state, addressError: "기관 주소를 입력해주세요" };
+            return { ...state, addressError: "" };
         }
         case "setDetailAddress": {
             return { ...state, detailAddress: payload };
@@ -66,26 +127,45 @@ const reducer = (state, { type, payload }) => {
             if (regex.test(payload) || !payload) return { ...state, care: payload };
             return { ...state };
         }
+        case "setAllErrors": {
+            const { phone, name, code, num, team } = state;
+            const errors = {
+                teamError: !team ? "대표자 이름을 입력해주세요" : "",
+                nameError: !name ? "대표자 이름을 입력해주세요" : "",
+                numError: !num ? "사업자 등록번호를 입력해주세요" : "",
+                phoneError: !phone ? "대표 번호를 입력해주세요" : "",
+                addressError: !code ? "기관 주소를 입력해주세요" : "",
+            };
+            return { ...state, ...errors };
+        }
     }
 };
 
 export const TeamCreate = () => {
     const navigate = useNavigate();
 
+    const refs = useRef([]);
+
     const [open, setOpen] = useState(false);
 
     const [state, dispatch] = useReducer(reducer, initialState);
-    const { team, name, num, prePhone, phone, address, detailAddress, code, care } = state;
+    const { team, teamError, name, nameError, num, numError, phone, phoneError, address, addressError, detailAddress, code, care } = state;
 
     const handleClickSubmit = useCallback(() => {
+        if (!phone) refs.current[3].focus();
+        if (!name) refs.current[2].focus();
+        if (!num) refs.current[1].focus();
+        if (!team) refs.current[0].focus();
+        if (!name || !phone || !code || !team || !num) return dispatch({ type: "setAllErrors" });
         console.log(state);
+        // navigate("/management/team");
     }, [state]);
 
     return (
         <>
             <Stack spacing={3}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <ViewTitle icon="team" title="기관 관리" />
+                    <ViewTitle icon="team" title="기관 등록" />
                 </Stack>
 
                 <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
@@ -103,6 +183,10 @@ export const TeamCreate = () => {
                                     기관명
                                 </Typography>
                                 <TextField
+                                    inputRef={(el) => (refs.current[0] = el)}
+                                    onBlur={() => dispatch({ type: "setTeamError" })}
+                                    error={!!teamError}
+                                    helperText={teamError}
                                     placeholder="병원명 또는 기관명을 입력해주세요"
                                     fullWidth
                                     value={team}
@@ -117,6 +201,10 @@ export const TeamCreate = () => {
                                 <Stack direction="row" spacing={3} alignItems="center" flex={1}>
                                     <Stack flex={1}>
                                         <TextField
+                                            inputRef={(el) => (refs.current[1] = el)}
+                                            onBlur={() => dispatch({ type: "setNumError" })}
+                                            error={!!numError}
+                                            helperText={numError}
                                             inputProps={{ maxLength: 10 }}
                                             fullWidth
                                             value={num}
@@ -124,7 +212,7 @@ export const TeamCreate = () => {
                                             onChange={(e) => dispatch({ type: "setNum", payload: e.target.value })}
                                         />
                                     </Stack>
-                                    <Button color="_gray">중복확인</Button>
+                                    <Check num={num} dispatch={dispatch} />
                                 </Stack>
                             </Stack>
 
@@ -133,6 +221,10 @@ export const TeamCreate = () => {
                                     대표자명
                                 </Typography>
                                 <TextField
+                                    inputRef={(el) => (refs.current[2] = el)}
+                                    onBlur={() => dispatch({ type: "setNameError" })}
+                                    error={!!nameError}
+                                    helperText={nameError}
                                     placeholder="대표자명을 입력해주세요"
                                     fullWidth
                                     value={name}
@@ -146,6 +238,10 @@ export const TeamCreate = () => {
                                 </Typography>
                                 <Stack direction="row" alignItems="center" spacing={1} flex={1}>
                                     <TextField
+                                        inputRef={(el) => (refs.current[3] = el)}
+                                        onBlur={() => dispatch({ type: "setPhoneError" })}
+                                        error={!!phoneError}
+                                        helperText={phoneError}
                                         placeholder="전화번호를 - 없이 입력해주세요"
                                         fullWidth
                                         value={phone}
@@ -160,13 +256,21 @@ export const TeamCreate = () => {
                                 </Typography>
                                 <Stack height="100%" justifyContent="space-around" flex={1}>
                                     <Stack direction="row" spacing={3} alignItems="center">
-                                        <TextField placeholder="우편번호" fullWidth value={code} inputProps={{ readOnly: true }} />
+                                        <TextField
+                                            error={!!addressError}
+                                            helperText={addressError}
+                                            placeholder="우편번호"
+                                            fullWidth
+                                            value={code}
+                                            inputProps={{ readOnly: true }}
+                                        />
                                         <Button color="_gray" onClick={() => setOpen(true)}>
                                             검색
                                         </Button>
                                     </Stack>
-                                    <TextField placeholder="주소" fullWidth value={address} inputProps={{ readOnly: true }} />
+                                    <TextField error={!!addressError} placeholder="주소" fullWidth value={address} inputProps={{ readOnly: true }} />
                                     <TextField
+                                        error={!!addressError}
                                         placeholder="상세 주소"
                                         fullWidth
                                         value={detailAddress}

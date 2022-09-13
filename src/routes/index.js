@@ -9,6 +9,7 @@ import {
     TeamCreate,
     TeamUpdate,
     Member,
+    MemberDetail,
     Subscribe,
     Fee,
     Bill,
@@ -58,6 +59,10 @@ const routes = {
         {
             path: "/management/member",
             element: <Member />,
+        },
+        {
+            path: "/management/member/detail",
+            element: <MemberDetail />,
         },
         {
             path: "/management/subscribe",

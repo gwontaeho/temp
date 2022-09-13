@@ -1,6 +1,7 @@
 import { useState, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Checkbox, FormControlLabel, Dialog } from "@mui/material";
+import DaumPostcodeEmbed from "react-daum-postcode";
 
 const initialState = { team: "", name: "", num: "", phone: "", address: "", detailAddress: "", code: "" };
 
@@ -62,7 +63,7 @@ const Ex = ({ setScreen }) => {
     const navigate = useNavigate();
     return (
         <Stack>
-            <Stack spacing={20} alignSelf="center" bgcolor="#fff" borderRadius={3} p={3} minWidth={600}>
+            <Stack spacing={20} alignSelf="center" bgcolor="#fff" borderRadius={3} p={3} minWidth={700}>
                 <Stack spacing={3}>
                     <Typography p={3} bgcolor="_bg.main" borderRadius={2} textAlign="center">
                         서비스를 한달간 무료로 이용해보세요.
@@ -90,33 +91,83 @@ const Ex = ({ setScreen }) => {
     );
 };
 
+const CheckButton = () => {
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Button color="_gray" onClick={() => setOpen(true)}>
+                중복확인
+            </Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
+                <Stack spacing={3} p={3}>
+                    <Typography textAlign="center">사용가능합니다</Typography>
+                    <Typography textAlign="center">이미 등록된 번호로 사용불가합니다</Typography>
+                    <Button sx={{ alignSelf: "center" }} onClick={() => setOpen(false)}>
+                        확인
+                    </Button>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
+
+const AddressButton = ({ dispatch }) => {
+    const [open, setOpen] = useState(false);
+    const handleComplete = (data) => {
+        let fullAddress = data.address;
+        let extraAddress = "";
+
+        if (data.addressType === "R") {
+            if (data.bname !== "") {
+                extraAddress += data.bname;
+            }
+            if (data.buildingName !== "") {
+                extraAddress += extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+            }
+            fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+        }
+
+        dispatch({ type: "setAddress", payload: { address: fullAddress, code: data.zonecode } });
+        setOpen(false);
+    };
+    return (
+        <>
+            <Button color="_gray" onClick={() => setOpen(true)}>
+                검색
+            </Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <DaumPostcodeEmbed onComplete={handleComplete} />
+            </Dialog>
+        </>
+    );
+};
+
 const Team = () => {
     const navigate = useNavigate();
 
-    const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([false, false]);
 
     const [state, dispatch] = useReducer(reducer, initialState);
-    const { team, name, num, prePhone, phone, address, detailAddress, code, care } = state;
+    const { team, name, num, phone, address, detailAddress, code, care } = state;
 
     const handleClickSubmit = useCallback(() => {
         console.log(state);
     }, [state]);
     return (
         <Stack>
-            <Stack spacing={20} alignSelf="center" bgcolor="#fff" borderRadius={3} p={3} minWidth={600}>
+            <Stack spacing={20} alignSelf="center" bgcolor="#fff" borderRadius={3} p={3} minWidth={700}>
                 <Stack spacing={3}>
                     <Typography fontWeight="bold" p={3} borderRadius={2} textAlign="center">
                         서비스 신청
                     </Typography>
                     <Stack spacing={1}>
                         <Typography>서비스 이용약관</Typography>
-                        <Stack spacing={1} borderRadius={3} p={5} boxShadow={2}>
+                        <Stack spacing={1} borderRadius={3} p={5} boxShadow={2} bgcolor="#f3f3f3">
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={checked[0] && checked[1]}
-                                        indeterminate={checked[0] !== checked[1]}
                                         onChange={(e) => {
                                             setChecked([e.target.checked, e.target.checked]);
                                         }}
@@ -209,7 +260,7 @@ const Team = () => {
                                             onChange={(e) => dispatch({ type: "setNum", payload: e.target.value })}
                                         />
                                     </Stack>
-                                    <Button color="_gray">중복확인</Button>
+                                    <CheckButton />
                                 </Stack>
                             </Stack>
 
@@ -244,9 +295,7 @@ const Team = () => {
                                 <Stack height="100%" justifyContent="space-around" flex={1}>
                                     <Stack direction="row" spacing={3} alignItems="center">
                                         <TextField placeholder="우편번호" fullWidth value={code} inputProps={{ readOnly: true }} />
-                                        <Button color="_gray" onClick={() => setOpen(true)}>
-                                            검색
-                                        </Button>
+                                        <AddressButton dispatch={dispatch} />
                                     </Stack>
                                     <TextField placeholder="주소" fullWidth value={address} inputProps={{ readOnly: true }} />
                                     <TextField

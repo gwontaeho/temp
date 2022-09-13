@@ -1,25 +1,27 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useReducer, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Select, MenuItem } from "@mui/material";
 import { ViewTitle } from "../../components/";
-const prePhoneOptions = ["010", "011", "016", "017", "018", "019"];
 
-const initialState = { name: "", phone: "", prePhone: "010" };
+const initialState = { name: "", phone: "", nameError: false, phoneError: false };
 
 const reducer = (state, { type, payload }) => {
     switch (type) {
         case "setName": {
             const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z]+$/;
-            if (regex.test(payload) || !payload) return { ...state, name: payload };
+            if (regex.test(payload) || !payload) return { ...state, name: payload, nameError: false };
             return { ...state };
         }
         case "setPhone": {
             const regex = /^[0-9]+$/;
-            if (regex.test(payload) || !payload) return { ...state, phone: payload };
+            if (regex.test(payload) || !payload) return { ...state, phone: payload, phoneError: false };
             return { ...state };
         }
-        case "setPrePhone": {
-            return { ...state, prePhone: payload };
+        case "setNameError": {
+            return { ...state, nameError: true };
+        }
+        case "setPhoneError": {
+            return { ...state, phoneError: true };
         }
     }
 };
@@ -27,17 +29,31 @@ const reducer = (state, { type, payload }) => {
 export const UserUpdate = () => {
     const navigate = useNavigate();
 
+    const nameRef = useRef();
+    const phoneRef = useRef();
+
     const [state, dispatch] = useReducer(reducer, initialState);
-    const { name, phone, prePhone } = state;
+    const { name, phone, nameError, phoneError } = state;
 
     const handleClickSubmit = useCallback(() => {
-        console.log(state);
+        validation();
     }, [state]);
+
+    const validation = useCallback(() => {
+        if (!name) {
+            dispatch({ type: "setNameError" });
+            nameRef.current.focus();
+        }
+        if (!phone) {
+            dispatch({ type: "setPhoneError" });
+            phoneRef.current.focus();
+        }
+    }, [nameRef, phoneRef, state]);
 
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <ViewTitle icon="user" title="정보 수정" />
+                <ViewTitle icon="user" title="내 정보" />
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>
                 <Stack maxWidth="sm" spacing={3}>
@@ -60,9 +76,12 @@ export const UserUpdate = () => {
                                 이름
                             </Typography>
                             <TextField
+                                inputRef={nameRef}
                                 size="small"
                                 fullWidth
                                 value={name}
+                                error={nameError}
+                                helperText={nameError && "이름을 입력해주세요"}
                                 inputProps={{ maxLength: 8 }}
                                 onChange={(e) => dispatch({ type: "setName", payload: e.target.value })}
                             />
@@ -79,15 +98,16 @@ export const UserUpdate = () => {
                                 휴대전화
                             </Typography>
                             <Stack direction="row" alignItems="center" spacing={1} flex={1}>
-                                <Select size="small" value={prePhone} onChange={(e) => dispatch({ type: "setPrePhone", payload: e.target.value })}>
-                                    {prePhoneOptions.map((v) => (
-                                        <MenuItem key={v} value={v}>
-                                            {v}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <Typography>-</Typography>
-                                <TextField size="small" fullWidth value={phone} onChange={(e) => dispatch({ type: "setPhone", payload: e.target.value })} />
+                                <TextField
+                                    inputRef={phoneRef}
+                                    size="small"
+                                    inputProps={{ maxLength: 11 }}
+                                    fullWidth
+                                    value={phone}
+                                    error={phoneError}
+                                    helperText={phoneError && "휴대전화번호를 입력해주세요"}
+                                    onChange={(e) => dispatch({ type: "setPhone", payload: e.target.value })}
+                                />
                             </Stack>
                         </Stack>
                     </Stack>

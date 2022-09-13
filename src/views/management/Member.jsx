@@ -1,24 +1,10 @@
 import { useState, useReducer, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    Typography,
-    Stack,
-    Button,
-    Checkbox,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    IconButton,
-    Menu,
-    MenuItem,
-    Chip,
-} from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { InputAdornment, Stack, Button, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+
 import { Invite, Withdrawal, Row } from "./member/";
 import { ViewTitle } from "../../components/";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 const initialState = { checked: [false, false, false] };
 
@@ -58,7 +44,16 @@ export const Member = () => {
                 </Stack>
                 <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Typography variant="body2">전체 3건</Typography>
+                        <TextField
+                            variant="standard"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <SearchOutlinedIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
                         <Stack direction="row" spacing={3}>
                             <Button color="_gray" onClick={() => setOpenWithdrawal(true)}>
                                 멤버 탈퇴
@@ -97,7 +92,7 @@ export const Member = () => {
             </Stack>
 
             <Invite open={openInvite} setOpen={setOpenInvite} />
-            <Withdrawal open={openWithdrawal} setOpen={setOpenWithdrawal} />
+            <Withdrawal open={openWithdrawal} setOpen={setOpenWithdrawal} checked={checked} />
         </>
     );
 };

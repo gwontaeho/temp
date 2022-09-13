@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Divider } from "@mui/material";
 
 import { ViewTitle } from "../../components/";
-import { Sent, Usage } from "./fee/";
+import { Sent, Usage, Usage2 } from "./fee/";
 
 export const Fee = () => {
     const navigate = useNavigate();
@@ -14,6 +14,7 @@ export const Fee = () => {
             </Stack>
             <Stack spacing={5}>
                 <Usage />
+                <Usage2 />
                 <Sent />
             </Stack>
         </Stack>

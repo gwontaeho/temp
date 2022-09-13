@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Grid, Dialog, RadioGroup, FormControlLabel, Radio, Snackbar } from "@mui/material";
 
 const ChangeButton = () => {
     const [open, setOpen] = useState(false);
     const [toast, setToast] = useState(false);
+
+    const handleClick = useCallback(() => {
+        setOpen(false);
+        setToast(true);
+    }, []);
 
     return (
         <>
@@ -19,7 +24,7 @@ const ChangeButton = () => {
                             <FormControlLabel value="1" control={<Radio />} label="남은기간 종료 후 구독 변경" />
                         </RadioGroup>
                         <Typography variant="body2">구독 종료일 : 2022.04.22</Typography>
-                        <Button>확인</Button>
+                        <Button onClick={handleClick}>확인</Button>
                     </Stack>
                 </Stack>
             </Dialog>
@@ -39,19 +44,21 @@ const UnsubscribeButton = () => {
     const [alert, setAlert] = useState(false);
     const [toast, setToast] = useState(false);
 
+    const [type, setType] = useState(0);
+
     return (
         <>
             <Button color="_gray" onClick={() => setOpen(true)}>
-                구독 해지
+                구독 취소
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
                     <Typography fontWeight="bold">구독 취소</Typography>
                     <Stack alignItems="center" spacing={3}>
                         <Typography>U2알리미 구독을 취소하시겠습니까?</Typography>
-                        <RadioGroup defaultValue="0">
-                            <FormControlLabel value="0" control={<Radio />} label="즉시 구독 취소" />
-                            <FormControlLabel value="1" control={<Radio />} label="남은기간 종료 후 구독 취소" />
+                        <RadioGroup value={type} onChange={(e) => setType(e.target.value)}>
+                            <FormControlLabel value={0} control={<Radio />} label="즉시 구독 취소" />
+                            <FormControlLabel value={1} control={<Radio />} label="남은기간 종료 후 구독 취소" />
                         </RadioGroup>
                         <Typography variant="body2">구독 종료일 : 2022.04.22</Typography>
                         <Button onClick={() => setAlert(true)}>확인</Button>
@@ -61,8 +68,10 @@ const UnsubscribeButton = () => {
             <Dialog open={alert} onClose={() => setAlert(false)} fullWidth>
                 <Stack p={3} spacing={3}>
                     <Stack alignItems="center" spacing={3}>
-                        <Typography>발송예약 내역이 (발송예약 건수) 건 있습니다.</Typography>
-                        <Typography variant="body2">구독취소시 모두 발송 취소 됩니다.</Typography>
+                        <Typography>{type === "0" ? "발송예약 내역이 0건 있습니다" : "구독 종료일 이후 발송 예약 0건이 있습니다."}</Typography>
+                        <Typography variant="body2">
+                            {type === "0" ? "구독취소시 모두 발송 취소 됩니다." : "구독 취소시 해당 건은 모두 발송 취소됩니다."}
+                        </Typography>
                         <Button onClick={() => setToast(true)}>구독취소</Button>
                     </Stack>
                 </Stack>

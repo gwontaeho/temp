@@ -8,7 +8,7 @@ export const Team = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <ViewTitle icon="team" title="기관 관리" />
+                <ViewTitle icon="team" title="기관 정보" />
                 <Button onClick={() => navigate("/management/team/update")}>수정</Button>
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3}>

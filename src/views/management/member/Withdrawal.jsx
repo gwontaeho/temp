@@ -13,7 +13,7 @@ const reducer = (state, { type, payload }) => {
     }
 };
 
-export const Withdrawal = ({ open, setOpen }) => {
+export const Withdrawal = ({ open, setOpen, checked }) => {
     const navigate = useNavigate();
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -53,7 +53,7 @@ export const Withdrawal = ({ open, setOpen }) => {
                 </Stack>
 
                 <Stack alignItems="center">
-                    <Typography>선택된 멤버 2 명을 탈퇴하시겠습니까?</Typography>
+                    <Typography>선택된 멤버 {checked.filter((v) => v === true).length} 명을 탈퇴하시겠습니까?</Typography>
                     <Typography color="red" fontWeight="bold">
                         탈퇴시 회원정보 및 이용기록은 복구되지 않습니다.
                     </Typography>
@@ -64,7 +64,7 @@ export const Withdrawal = ({ open, setOpen }) => {
                         취소
                     </Button>
                     <Button sx={{ alignSelf: "center" }} onClick={() => setOpen(false)}>
-                        탈퇴 신청
+                        탈퇴
                     </Button>
                 </Stack>
             </Stack>

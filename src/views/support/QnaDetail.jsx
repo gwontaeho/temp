@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
-import { Typography, Stack, Divider, Button, IconButton } from "@mui/material";
+import { Typography, Stack, Divider, Button, IconButton, Chip } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { ViewTitle } from "../../components/";
 export const QnaDetail = () => {
     const navigate = useNavigate();
@@ -19,13 +19,18 @@ export const QnaDetail = () => {
                         <IconButton onClick={() => navigate(-1)}>
                             <ChevronLeftIcon />
                         </IconButton>
-                        <Typography variant="body2">업데이트</Typography>
                         <Typography flex={1} fontWeight="bold">
                             제목
                         </Typography>
                         <Typography variant="body2">2022.22.22</Typography>
                     </Stack>
                     <Divider />
+                </Stack>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Chip label="사용문의" />
+                    <IconButton onClick={() => navigate("/support/qna/create")}>
+                        <EditOutlinedIcon />
+                    </IconButton>
                 </Stack>
                 <Typography>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur, sed beatae. Numquam perferendis ab necessitatibus nostrum aut quae

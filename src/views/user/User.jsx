@@ -9,10 +9,12 @@ import { Withdrawal } from "./user/Withdrawal";
 const CancleButton = () => {
     const [open, setOpen] = useState(false);
     const [toast, setToast] = useState(false);
+
     const handleClick = useCallback(() => {
         setOpen(false);
         setToast(true);
     }, []);
+
     return (
         <>
             <Button color="_gray" onClick={() => setOpen(true)}>

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Typography, Stack } from "@mui/material";
 
-import { U2, Fee, Notice, Qna, Notification } from "./home/";
+import { U2, Fee, Notice, Qna, Notification, NoService } from "./home/";
 
 export const Home = () => {
     const navigate = useNavigate();
@@ -14,6 +14,7 @@ export const Home = () => {
                 <Typography>님 반갑습니다</Typography>
             </Stack>
             <Stack spacing={3}>
+                <NoService />
                 <U2 />
                 <Fee />
                 <Notice />
