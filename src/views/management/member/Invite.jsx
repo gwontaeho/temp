@@ -184,7 +184,7 @@ export const Invite = ({ open, setOpen }) => {
                                     const error = nameError || emailError;
 
                                     return (
-                                        <TableRow key={i}>
+                                        <TableRow key={i} sx={{ bgcolor: error && "#fff0f0" }}>
                                             <TableCell align="center" padding="none">
                                                 {error && (
                                                     <Tooltip title={error}>

@@ -12,11 +12,11 @@ export const Notice = () => {
                 <ViewTitle icon="notice" title="공지사항" />
             </Stack>
             <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={5}>
-                <Stack spacing={3}>
+                <Stack>
                     {[0, 1, 2].map((v, i) => {
                         return (
-                            <Stack key={v} spacing={3} onClick={() => navigate("/support/notice/1")}>
-                                <Stack direction="row" spacing={3} alignItems="center">
+                            <Stack key={v} onClick={() => navigate("/support/notice/1")}>
+                                <Stack direction="row" p={3} spacing={3} alignItems="center" sx={{ cursor: "pointer", ":hover": { bgcolor: "#eee" } }}>
                                     <Typography variant="body2">업데이트</Typography>
                                     <Typography flex={1} fontWeight="bold">
                                         제목
