@@ -1,13 +1,14 @@
-import { useState } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { Stack, Typography, Button, Divider, Snackbar, Dialog } from "@mui/material";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Stack, Snackbar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { closeToast } from "../redux/features/toast/toastSlice";
+import logo from "../assets/images/logo_admin.png";
 
 const Header = () => {
+    const navigate = useNavigate();
     return (
         <Stack direction="row" justifyContent="space-between" alignItems="center" height={100} px={5}>
-            <Typography variant="h5">U2Cloud Portal Admin</Typography>
+            <img src={logo} width={160} style={{ cursor: "pointer" }} onClick={() => navigate("/")} />
         </Stack>
     );
 };

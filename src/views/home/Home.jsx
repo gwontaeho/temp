@@ -4,6 +4,8 @@ import { Stack, Grid, Typography, Divider, IconButton, Chip } from "@mui/materia
 import { PageCard, PageTitle } from "../../components";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { ResponsiveLine } from "@nivo/line";
+import { useDispatch } from "react-redux";
+import { toggle } from "../../redux/features/notification/notificationSlice";
 
 const data = [
     {
@@ -101,6 +103,7 @@ const MyResponsiveLine = ({ type }) => {
 
 export const Home = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     return (
         <Stack spacing={3}>
@@ -237,7 +240,7 @@ export const Home = () => {
                             <PageCard spacing={3}>
                                 <Stack direction="row" alignItems="center" position="relative">
                                     <Typography>최근알림</Typography>
-                                    <IconButton onClick={() => navigate("/member/withdrawal")} sx={{ position: "absolute", right: 0 }}>
+                                    <IconButton onClick={() => dispatch(toggle())} sx={{ position: "absolute", right: 0 }}>
                                         <ChevronRightIcon />
                                     </IconButton>
                                 </Stack>

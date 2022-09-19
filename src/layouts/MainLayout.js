@@ -3,6 +3,8 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, Divider, Snackbar, Dialog } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { closeToast } from "../redux/features/toast/toastSlice";
+import logo from "../assets/images/logo_admin.png";
+import { Notification } from "./Notification";
 
 const LogoutButton = () => {
     const navigate = useNavigate();
@@ -24,11 +26,12 @@ const LogoutButton = () => {
 };
 
 const Header = () => {
+    const navigate = useNavigate();
     return (
         <Stack direction="row" justifyContent="space-between" alignItems="center" height={100} px={5}>
-            <Typography variant="h5">U2Cloud Portal Admin</Typography>
+            <img src={logo} width={160} style={{ cursor: "pointer" }} onClick={() => navigate("/")} />
             <Stack spacing={3} direction="row" alignItems="center">
-                <Button variant="contained">알림</Button>
+                <Notification />
                 <LogoutButton />
             </Stack>
         </Stack>

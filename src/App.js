@@ -24,6 +24,7 @@ const theme = createTheme({
         MuiSelect: { defaultProps: { size: "small" } },
         MuiCheckbox: { defaultProps: { size: "small" } },
         MuiRadio: { defaultProps: { size: "small" } },
+        MuiFormHelperText: { styleOverrides: { root: { position: "absolute", top: "100%" } } },
     },
 });
 
