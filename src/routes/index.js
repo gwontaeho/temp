@@ -1,5 +1,5 @@
 import { useRoutes } from "react-router-dom";
-import { MainLayout } from "../layouts";
+import { MainLayout, MinimalLayout } from "../layouts";
 
 import {
     Home,
@@ -37,6 +37,7 @@ import {
     AdminDetail,
     Connection,
     Destruction,
+    Login,
 } from "../views";
 
 const routes = {
@@ -186,4 +187,15 @@ const routes = {
     ],
 };
 
-export default () => useRoutes([routes]);
+const minRoutes = {
+    path: "/",
+    element: <MinimalLayout />,
+    children: [
+        {
+            path: "/login",
+            element: <Login />,
+        },
+    ],
+};
+
+export default () => useRoutes([routes, minRoutes]);

@@ -1,5 +1,27 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { Stack, Typography, Button, Divider } from "@mui/material";
+import { useState } from "react";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { Stack, Typography, Button, Divider, Snackbar, Dialog } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { closeToast } from "../redux/features/toast/toastSlice";
+
+const LogoutButton = () => {
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <Button variant="contained" onClick={() => setOpen(true)}>
+                로그아웃
+            </Button>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <Stack p={3} spacing={3} alignItems="center">
+                    <Typography>U2Cloud 로그아웃이 완료되었습니다</Typography>
+                    <Button onClick={() => navigate("/login")}>확인</Button>
+                </Stack>
+            </Dialog>
+        </>
+    );
+};
 
 const Header = () => {
     return (
@@ -7,7 +29,7 @@ const Header = () => {
             <Typography variant="h5">U2Cloud Portal Admin</Typography>
             <Stack spacing={3} direction="row" alignItems="center">
                 <Button variant="contained">알림</Button>
-                <Button variant="contained">로그아웃</Button>
+                <LogoutButton />
             </Stack>
         </Stack>
     );
@@ -70,7 +92,7 @@ const Nav = () => {
         },
         {
             name: "subscribe",
-            title: "구독 관리",
+            title: "구독 회원 관리",
             path: "/subscribe/management",
         },
     ];
@@ -122,7 +144,7 @@ const Nav = () => {
         { title: "Admin 운영자", option: admin },
         { title: "이용내역 조회", option: history },
     ];
-    console.log(pathname);
+
     return (
         <Stack width={300} height="100%" p={5} spacing={3} overflow="auto">
             {navOptions.map(({ title, option }, i) => {
@@ -153,7 +175,7 @@ const Nav = () => {
     );
 };
 
-export const View = () => {
+const View = () => {
     return (
         <Stack flex={1} height="100%" p={3} overflow="auto" bgcolor="#f2f3f7">
             <Outlet />
@@ -162,13 +184,19 @@ export const View = () => {
 };
 
 export const MainLayout = () => {
+    const dispatch = useDispatch();
+    const toast = useSelector((state) => state.toast);
+
     return (
-        <Stack width="100%" height="100%">
-            <Header />
-            <Stack direction="row" height="calc(100% - 100px)">
-                <Nav />
-                <View />
+        <>
+            <Stack width="100%" height="100%">
+                <Header />
+                <Stack direction="row" height="calc(100% - 100px)">
+                    <Nav />
+                    <View />
+                </Stack>
             </Stack>
-        </Stack>
+            <Snackbar open={toast.open} onClose={() => dispatch(closeToast())} autoHideDuration={3000} message={toast.message} />
+        </>
     );
 };

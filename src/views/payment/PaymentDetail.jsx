@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Chip, Grid, Dialog, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { Typography, IconButton, Stack, Chip, Grid, Dialog, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { PageCard, PageTitle } from "../../components";
 
 const RequestButton = () => {
     const [open, setOpen] = useState(false);
@@ -38,7 +38,13 @@ export const PaymentDetail = () => {
     const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <PageTitle>결제 정보</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>결제 정보</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack spacing={3}>
                     <Stack direction="row" spacing={2} alignItems="center">

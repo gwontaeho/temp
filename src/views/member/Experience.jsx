@@ -17,8 +17,10 @@ import {
     Button,
     Select,
     Dialog,
+    MenuItem,
 } from "@mui/material";
 import { PageCard, PageTitle, CountCard } from "../../components";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 export const Experience = () => {
     const navigate = useNavigate();
@@ -48,10 +50,21 @@ export const Experience = () => {
                             <FormControlLabel value={0} control={<Radio />} label="체험신청일" />
                             <FormControlLabel value={1} control={<Radio />} label="체험만료일" />
                         </RadioGroup>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            <Typography>~</Typography>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        </Stack>
                     </Stack>
                     <Stack>
                         <Typography>검색어</Typography>
-                        <Select></Select>
+                        <Select sx={{ minWidth: 120 }} defaultValue={0}>
+                            <MenuItem value={0}>전체</MenuItem>
+                            <MenuItem value={1}>회원명</MenuItem>
+                            <MenuItem value={2}>이메일</MenuItem>
+                            <MenuItem value={3}>휴대전화</MenuItem>
+                            <MenuItem value={4}>기관명</MenuItem>
+                        </Select>
                         <TextField fullWidth />
                         <Button>검색</Button>
                     </Stack>
@@ -79,7 +92,7 @@ export const Experience = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/member/user/detail")}>
+                                        <TableRow key={v} onClick={() => navigate("/member/user/detail")} sx={{ ":hover": { bgcolor: "#eee" } }}>
                                             <TableCell>ID</TableCell>
                                             <TableCell>이메일</TableCell>
                                             <TableCell>담당자명</TableCell>

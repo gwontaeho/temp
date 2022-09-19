@@ -1,5 +1,7 @@
-import { Typography, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select } from "@mui/material";
+import { Typography, Stack, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
 import { PageCard, PageTitle, CountCard } from "../../components";
 
 export const Team = () => {
@@ -30,11 +32,20 @@ export const Team = () => {
                     >
                         <Stack>
                             <Typography>등록일시</Typography>
-                            <Typography>등록일시</Typography>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                                <Typography>~</Typography>
+                                <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            </Stack>
                         </Stack>
                         <Stack>
                             <Typography>검색어</Typography>
-                            <Select></Select>
+                            <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                                <MenuItem value={0}>전체</MenuItem>
+                                <MenuItem value={1}>기관명</MenuItem>
+                                <MenuItem value={2}>대표자이름</MenuItem>
+                                <MenuItem value={3}>사업자등록번호</MenuItem>
+                            </Select>
                             <TextField fullWidth />
                             <Button>검색</Button>
                         </Stack>
@@ -60,7 +71,7 @@ export const Team = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/member/team/detail")}>
+                                        <TableRow key={v} onClick={() => navigate("/member/team/detail")} sx={{ ":hover": { bgcolor: "#eee" } }}>
                                             <TableCell>ID</TableCell>
                                             <TableCell>기관명</TableCell>
                                             <TableCell>대표자 이름</TableCell>

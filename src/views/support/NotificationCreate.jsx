@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState, forwardRef } from "react";
+import { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import {
     Typography,
     Stack,
@@ -17,13 +18,38 @@ import {
     TableRow,
     Pagination,
     Select,
+    InputAdornment,
 } from "@mui/material";
+import { Close as CloseIcon, Search as SearchIcon } from "@mui/icons-material";
 
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { PageCard, PageTitle } from "../../components";
+
+const initialState = { checked: [false, false, false] };
+
+const reducer = (state, { type, payload }) => {
+    switch (type) {
+        case "setChecked": {
+            const { checked, index } = payload;
+            const newChecked = [...state.checked];
+            newChecked[index] = checked;
+            return { ...state, checked: newChecked };
+        }
+        case "setAllChecked": {
+            const newChecked = [...state.checked].map((v) => (v = payload));
+            return { ...state, checked: newChecked };
+        }
+        default:
+            return { ...state };
+    }
+};
 
 const TargetButton = () => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { checked } = state;
+
     return (
         <>
             <Button color="_gray" onClick={() => setOpen(true)}>
@@ -31,8 +57,24 @@ const TargetButton = () => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="lg">
                 <Stack p={3} spacing={3}>
-                    <Typography>알림 발송 대상자 선택</Typography>
-                    <TextField sx={{ alignSelf: "flex-start" }} />
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>알림 발송 대상자 선택</Typography>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
+                    <TextField
+                        sx={{ alignSelf: "flex-start" }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                     <Stack direction="row" justifyContent="space-between">
                         <Typography>전체 10</Typography>
                         <Typography>선택 1건</Typography>
@@ -42,7 +84,10 @@ const TargetButton = () => {
                             <TableHead bgColor="#eee">
                                 <TableRow>
                                     <TableCell padding="checkbox">
-                                        <Checkbox />
+                                        <Checkbox
+                                            checked={checked.every((v) => v === true)}
+                                            onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                        />
                                     </TableCell>
                                     <TableCell>이메일</TableCell>
                                     <TableCell>회원명</TableCell>
@@ -57,11 +102,22 @@ const TargetButton = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {[0, 1, 2].map((v) => {
+                                {[0, 1, 2].map((v, index) => {
                                     return (
-                                        <TableRow key={v}>
+                                        <TableRow
+                                            key={v}
+                                            sx={{
+                                                cursor: "pointer",
+                                                ":hover": {
+                                                    bgcolor: "#eee",
+                                                },
+                                            }}
+                                        >
                                             <TableCell padding="checkbox">
-                                                <Checkbox />
+                                                <Checkbox
+                                                    checked={checked[index]}
+                                                    onChange={(e) => dispatch({ type: "setChecked", payload: { checked: e.target.checked, index } })}
+                                                />
                                             </TableCell>
                                             <TableCell>이메일</TableCell>
                                             <TableCell>회원명</TableCell>
@@ -125,7 +181,11 @@ export const NotificationCreate = () => {
                 >
                     <Stack>
                         <Typography>발송일시</Typography>
-                        <Typography>알림명</Typography>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            <Typography>~</Typography>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        </Stack>
                     </Stack>
                     <Stack>
                         <Typography>대상자</Typography>
@@ -137,7 +197,7 @@ export const NotificationCreate = () => {
                     </Stack>
                     <Divider />
                     <Stack>
-                        <Typography>내용</Typography>
+                        <Typography>제목</Typography>
                         <TextField fullWidth />
                     </Stack>
                     <Stack>

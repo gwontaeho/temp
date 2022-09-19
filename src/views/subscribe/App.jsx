@@ -19,7 +19,10 @@ const Item = () => {
                 </IconButton>
             </Stack>
             <Typography variant="body2">검진대상자 전용 검진안내 문자 발송 및 카카오 알림톡 발송 서비스</Typography>
-
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Typography>지금 구독하면 첫달 무료 이용</Typography>
+                <Button onClick={() => navigate("/subscribe/app/plan/create")}>요금제 추가</Button>
+            </Stack>
             <TableContainer>
                 <Table sx={{ minWidth: 650 }}>
                     <TableHead bgColor="#eee">
@@ -28,9 +31,7 @@ const Item = () => {
                             <TableCell>금액</TableCell>
                             <TableCell>구독단위</TableCell>
                             <TableCell>기간</TableCell>
-                            <TableCell>
-                                <Button onClick={() => navigate("/subscribe/app/plan/create")}>요금제 추가</Button>
-                            </TableCell>
+                            <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -54,9 +55,16 @@ const Row = () => {
                 <IconButton onClick={() => setOpen(true)}>
                     <CloseIcon />
                 </IconButton>
-                <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                     <Stack p={3} spacing={3}>
-                        <Typography>요금제 삭제</Typography>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                            <Typography>요금제 삭제</Typography>
+                            <IconButton onClick={() => setOpen(false)}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Stack>
+                        <Typography textAlign="center">선택하신 요금제 ~를 삭제하시겠습니까?</Typography>
+                        <Button sx={{ alignSelf: "center" }}>확인</Button>
                     </Stack>
                 </Dialog>
             </>
@@ -64,12 +72,12 @@ const Row = () => {
     };
 
     return (
-        <TableRow>
-            <TableCell onClick={() => navigate("/subscribe/app/plan")}>요금제</TableCell>
+        <TableRow onClick={() => navigate("/subscribe/app/plan")}>
+            <TableCell>요금제</TableCell>
             <TableCell>금액</TableCell>
             <TableCell>구독단위</TableCell>
             <TableCell>기간</TableCell>
-            <TableCell>
+            <TableCell onClick={(e) => e.stopPropagation()}>
                 <IconButton onClick={() => navigate("/subscribe/app/plan/update")}>
                     <EditIcon />
                 </IconButton>

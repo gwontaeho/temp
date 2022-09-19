@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState, forwardRef } from "react";
+import { useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import {
     Typography,
     Stack,
@@ -23,6 +24,8 @@ import {
     Chip,
 } from "@mui/material";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
+import { Edit as EditIcon, Close as CloseIcon } from "@mui/icons-material";
+
 import { PageCard, PageTitle } from "../../components";
 
 const MoreButton = ({ setOpenDetail }) => {
@@ -106,11 +109,24 @@ export const Notification = () => {
                         </Stack>
                         <Stack>
                             <Typography>발송일시</Typography>
-                            <Select></Select>
+                            <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                                <MenuItem value={0}>전체</MenuItem>
+                                <MenuItem value={1}>발송예정</MenuItem>
+                                <MenuItem value={2}>발송완료</MenuItem>
+                            </Select>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                                <Typography>~</Typography>
+                                <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            </Stack>
                         </Stack>
                         <Stack>
                             <Typography>검색어</Typography>
-                            <Select></Select>
+                            <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                                <MenuItem value={0}>전체</MenuItem>
+                                <MenuItem value={1}>발송예정</MenuItem>
+                                <MenuItem value={2}>발송완료</MenuItem>
+                            </Select>
                             <TextField fullWidth />
                             <Button>검색</Button>
                         </Stack>
@@ -138,7 +154,7 @@ export const Notification = () => {
                                 <TableBody>
                                     {[0, 1, 2].map((v) => {
                                         return (
-                                            <TableRow key={v} onClick={(e) => e.detail === 2 && setOpen(true)}>
+                                            <TableRow key={v} onClick={() => setOpen(true)} sx={{ cursor: "pointer", ":hover": { bgcolor: "#eee" } }}>
                                                 <TableCell>ID</TableCell>
                                                 <TableCell>대상자</TableCell>
                                                 <TableCell>제목</TableCell>
@@ -146,7 +162,12 @@ export const Notification = () => {
                                                 <TableCell>발송일시</TableCell>
                                                 <TableCell>상태</TableCell>
                                                 <TableCell onClick={(e) => e.stopPropagation()} padding="none">
-                                                    <MoreButton setOpenDetail={setOpen} />
+                                                    <IconButton onClick={() => navigate("/support/notification/update")}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                    <IconButton>
+                                                        <CloseIcon />
+                                                    </IconButton>
                                                 </TableCell>
                                             </TableRow>
                                         );

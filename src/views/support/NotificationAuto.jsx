@@ -1,26 +1,7 @@
 import { useCallback, useEffect, useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    Typography,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    Switch,
-    Button,
-    Select,
-    Dialog,
-    Checkbox,
-    IconButton,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-} from "@mui/material";
-import { Edit as EditIcon } from "@mui/icons-material";
+import { Typography, Stack, TextField, Button, Switch, Dialog, IconButton, FormControlLabel } from "@mui/material";
+import { Edit as EditIcon, ChevronLeft as ChevronLeftIcon } from "@mui/icons-material";
 
 import { PageCard, PageTitle, CountCard } from "../../components";
 
@@ -66,7 +47,13 @@ export const NotificationAuto = () => {
 
     return (
         <Stack spacing={3}>
-            <PageTitle>자동알림 설정</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>자동알림 설정</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack spacing={1}>
                     <Typography>U2Cloud</Typography>

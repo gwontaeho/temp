@@ -1,12 +1,19 @@
-import { Typography, Stack, Button, Divider } from "@mui/material";
+import { Typography, Stack, Button, Divider, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { PageCard, PageTitle } from "../../components";
 
 export const Plan = () => {
     const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <PageTitle>요금제 정보</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>요금제 정보</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack direction="row" alignItems="flex-end" spacing={3}>
                     <Typography>U2알리미</Typography>
@@ -37,21 +44,23 @@ export const Plan = () => {
                     </Stack>
                     <Stack>
                         <Typography>할인</Typography>
-                        <Typography>첫달 프로모션 할인</Typography>
-                        <Typography>5,000원</Typography>
+                        <Stack justifyContent="space-between" direction="row" flex={1}>
+                            <Typography>첫달 프로모션 할인</Typography>
+                            <Typography>2022.04.04</Typography>
+                            <Typography>5,000원</Typography>
+                        </Stack>
                     </Stack>
                     <Divider />
                     <Stack>
-                        <Typography>옵션</Typography>
-                        <Typography>결과리포트 수신 발송료</Typography>
-                        <Typography>5,000원</Typography>
+                        <Typography>부가서비스</Typography>
+                        <Stack justifyContent="space-between" direction="row" flex={1}>
+                            <Typography>결과리포트 수신 발송료</Typography>
+                            <Typography>2022.04.04</Typography>
+                            <Typography>5,000원</Typography>
+                        </Stack>
                     </Stack>
                     <Stack>
-                        <Typography>
-                            기본사용료
-                            <br />
-                            (필수과금)
-                        </Typography>
+                        <Typography>사용요금</Typography>
                         <Typography>발송과금 월 정기 결제</Typography>
                     </Stack>
                     <Divider />

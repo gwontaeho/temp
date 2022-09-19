@@ -1,7 +1,11 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Dialog, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select, Chip } from "@mui/material";
+import { Typography, Dialog, IconButton, Stack, TextField, Button, Chip } from "@mui/material";
 import { PageCard, PageTitle } from "../../components";
+import { useDispatch } from "react-redux";
+import { openToast } from "../../redux/features/toast/toastSlice";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import CloseIcon from "@mui/icons-material/Close";
 
 const UpdateButton = () => {
     const [open, setOpen] = useState(false);
@@ -44,7 +48,14 @@ const UpdateButton = () => {
 };
 
 const ResetButton = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(false);
+        dispatch(openToast("{이메일} ({이름}) 님의 비밀번호가 초기화되었습니다"));
+    };
+
     return (
         <>
             <Button color="_gray" onClick={() => setOpen(true)}>
@@ -52,13 +63,20 @@ const ResetButton = () => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                 <Stack p={3} spacing={3}>
-                    <Typography>운영자 비밀번호 초기화</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>운영자 비밀번호 초기화</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
                     <Typography textAlign="center">
                         ~ 이메일 ~ 님의 비밀번호를
                         <br />
                         초기화하시겠습니까?
                     </Typography>
-                    <Button sx={{ alignSelf: "center" }}>확인</Button>
+                    <Button sx={{ alignSelf: "center" }} onClick={handleClick}>
+                        확인
+                    </Button>
                 </Stack>
             </Dialog>
         </>
@@ -66,7 +84,14 @@ const ResetButton = () => {
 };
 
 const WithdrawalButton = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(false);
+        dispatch(openToast("U2Cloud Admin 에서 {이메일} ({이름}) 님이 탈퇴되었습니다"));
+    };
+
     return (
         <>
             <Button color="_gray" onClick={() => setOpen(true)}>
@@ -74,13 +99,20 @@ const WithdrawalButton = () => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                 <Stack p={3} spacing={3}>
-                    <Typography>운영자 탈퇴</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>운영자 탈퇴</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
                     <Typography textAlign="center">
                         U2Cloud Admin 에서
                         <br />
                         ~이메일 ~이름 님을 탈퇴하시겠습니까?
                     </Typography>
-                    <Button sx={{ alignSelf: "center" }}>확인</Button>
+                    <Button sx={{ alignSelf: "center" }} onClick={handleClick}>
+                        확인
+                    </Button>
                 </Stack>
             </Dialog>
         </>
@@ -96,7 +128,12 @@ const DeleteButton = () => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                 <Stack p={3} spacing={3}>
-                    <Typography>운영자 탈퇴</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>데이터 파기</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
                     <Typography textAlign="center">
                         ~이메일 ~이름 님의 회원정보를 포함한 모든
                         <br />
@@ -146,7 +183,13 @@ export const AdminDetail = () => {
 
     return (
         <Stack spacing={3}>
-            <PageTitle>운영자 회원 정보</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>운영자 정보</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack direction="row" spacing={3} alignItems="center">
                     <Typography>홍길동</Typography>

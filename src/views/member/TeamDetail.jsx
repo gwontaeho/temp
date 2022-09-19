@@ -1,12 +1,19 @@
-import { Typography, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select, Chip } from "@mui/material";
+import { Typography, Stack, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { PageCard, PageTitle } from "../../components";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 export const TeamDetail = () => {
     const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <PageTitle>기관 정보</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>기관 정보</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack spacing={1}>
                     <Typography>기관정보</Typography>
@@ -102,7 +109,7 @@ export const TeamDetail = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/member/user/detail")}>
+                                        <TableRow key={v} onClick={() => navigate("/member/user/detail")} sx={{ ":hover": { bgcolor: "#eee" } }}>
                                             <TableCell>회원명</TableCell>
                                             <TableCell>이메일</TableCell>
                                             <TableCell>휴대전화</TableCell>

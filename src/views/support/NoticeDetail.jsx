@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Button, Dialog, Chip, Divider } from "@mui/material";
+import { Typography, IconButton, Stack, Button, Dialog, Chip, Divider } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 import { PageCard, PageTitle } from "../../components";
 
@@ -9,7 +10,7 @@ const DeleteButton = () => {
 
     return (
         <>
-            <Button onClick={() => setOpen(true)}>선택 삭제</Button>
+            <Button onClick={() => setOpen(true)}>삭제</Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                 <Stack p={3} spacing={3} alignItems="center">
                     <Typography>공지사항을 삭제하시겠습니까?</Typography>
@@ -25,7 +26,13 @@ export const NoticeDetail = () => {
 
     return (
         <Stack spacing={3}>
-            <PageTitle>공지사항</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>공지사항</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack spacing={3}>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">

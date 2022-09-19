@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
-import { Typography, Stack, TextField, Select, Button, MenuItem, Dialog } from "@mui/material";
+import { Typography, Stack, TextField, Select, Button, MenuItem, Dialog, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { PageCard, PageTitle } from "../../components";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import CloseIcon from "@mui/icons-material/Close";
 
 const CancelButton = () => {
     const navigate = useNavigate();
@@ -19,17 +21,15 @@ const CancelButton = () => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3} alignItems="center">
+                    <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                        <CloseIcon />
+                    </IconButton>
                     <Typography textAlign="center">
                         취소하시면 입력된 내용이 삭제됩니다.
                         <br />
                         그래도 취소하시겠습니까?
                     </Typography>
-                    <Stack direction="row" spacing={3}>
-                        <Button color="_gray" onClick={() => setOpen(false)}>
-                            닫기
-                        </Button>
-                        <Button onClick={() => navigate(-1)}>확인</Button>
-                    </Stack>
+                    <Button onClick={() => navigate(-1)}>확인</Button>
                 </Stack>
             </Dialog>
         </>
@@ -37,9 +37,15 @@ const CancelButton = () => {
 };
 
 export const AppUpdate = () => {
+    const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <PageTitle>앱 정보 수정</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>앱 정보 수정</PageTitle>
+            </Stack>
             <PageCard spacing={3}>
                 <Stack
                     sx={{
@@ -65,11 +71,11 @@ export const AppUpdate = () => {
                     </Stack>
                     <Stack>
                         <Typography>앱 설명</Typography>
-                        <Typography>검진 대상자 전용 검진안내 문자 발송 및 카카오 알림톡 발송 서비스</Typography>
+                        <TextField />
                     </Stack>
                     <Stack>
                         <Typography>소개 문구</Typography>
-                        <Typography>지금 구독하면 첫달 무료 이용</Typography>
+                        <TextField />
                     </Stack>
                 </Stack>
                 <Stack direction="row" justifyContent="flex-end" spacing={3}>

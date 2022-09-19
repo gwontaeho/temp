@@ -1,14 +1,20 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Chip, Grid, Button, Divider, Dialog, RadioGroup, Radio, FormControlLabel } from "@mui/material";
+import { Typography, Stack, Chip, Grid, IconButton } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { PageCard, PageTitle } from "../../components";
 
 export const SettlementDetail = () => {
     const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <PageTitle>정산 상세</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>정산 상세</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
                 <Stack spacing={3}>
                     <Stack direction="row" spacing={2} alignItems="center">
@@ -27,7 +33,7 @@ export const SettlementDetail = () => {
                             <Typography>홍길동</Typography>
                         </Stack>
                         <Stack>
-                            <Typography>이메일 아이디</Typography>
+                            <Typography>이메일</Typography>
                             <Typography>hong@u2bio.com</Typography>
                         </Stack>
                         <Stack>

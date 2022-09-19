@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import {
     Typography,
     Checkbox,
@@ -53,7 +54,11 @@ export const Qna = () => {
                     </Stack>
                     <Stack>
                         <Typography>검색기간</Typography>
-                        <Select></Select>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            <Typography>~</Typography>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        </Stack>
                     </Stack>
                     <Stack>
                         <Typography>검색어</Typography>
@@ -81,7 +86,16 @@ export const Qna = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/support/qna/detail")}>
+                                        <TableRow
+                                            key={v}
+                                            onClick={() => navigate("/support/qna/detail")}
+                                            sx={{
+                                                cursor: "pointer",
+                                                ":hover": {
+                                                    bgcolor: "#eee",
+                                                },
+                                            }}
+                                        >
                                             <TableCell>ID</TableCell>
                                             <TableCell>문의유형</TableCell>
                                             <TableCell>서비스 구분</TableCell>

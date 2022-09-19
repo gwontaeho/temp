@@ -1,7 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select, Dialog } from "@mui/material";
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import {
+    Typography,
+    Stack,
+    Table,
+    MenuItem,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Button,
+    Select,
+    Dialog,
+} from "@mui/material";
+import { PageCard, PageTitle } from "../../components";
 
 export const Connection = () => {
     const navigate = useNavigate();
@@ -26,10 +40,19 @@ export const Connection = () => {
                 >
                     <Stack>
                         <Typography>접속일시</Typography>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            <Typography>~</Typography>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        </Stack>
                     </Stack>
                     <Stack>
                         <Typography>검색어</Typography>
-                        <Select></Select>
+                        <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                            <MenuItem value={0}>전체</MenuItem>
+                            <MenuItem value={1}>이메일</MenuItem>
+                            <MenuItem value={2}>이름</MenuItem>
+                        </Select>
                         <TextField fullWidth />
                         <Button>검색</Button>
                     </Stack>
@@ -49,7 +72,7 @@ export const Connection = () => {
                         <TableBody>
                             {[0, 1, 2].map((v) => {
                                 return (
-                                    <TableRow key={v}>
+                                    <TableRow key={v} sx={{ ":hover": { bgcolor: "#eee" } }}>
                                         <TableCell>번호</TableCell>
                                         <TableCell>이메일</TableCell>
                                         <TableCell>이름</TableCell>

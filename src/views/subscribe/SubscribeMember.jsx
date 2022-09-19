@@ -1,33 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Chip, Grid, Button, Divider, Dialog, RadioGroup, Radio, FormControlLabel } from "@mui/material";
-import { Edit as EditIcon, Close as CloseIcon } from "@mui/icons-material";
-
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { Typography, IconButton, Stack, Chip, Grid, Button, Divider, Dialog, RadioGroup, Radio, FormControlLabel } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { openToast } from "../../redux/features/toast/toastSlice";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { PageCard, PageTitle } from "../../components";
 
 const UnsubscribeButton = () => {
-    const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
 
-    const CheckButton = () => {
-        const [open, setOpen] = useState(false);
-        return (
-            <>
-                <Button sx={{ alignSelf: "center" }} onClick={() => setOpen(true)}>
-                    확인
-                </Button>
-                <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-                    <Stack p={3} spacing={3}>
-                        <Typography>구독 취소</Typography>
-                        <Typography textAlign="center">
-                            구독중인 U2알리미 서비스에서 발송 예약 569 건이 있습니다.
-                            <br />
-                            구독취소 시 예약된 내역이 취소됩니다. 구독취소 하시겠습니까?
-                        </Typography>
-                        <Button sx={{ alignSelf: "center" }}>확인</Button>
-                    </Stack>
-                </Dialog>
-            </>
-        );
+    const [open, setOpen] = useState(false);
+    const [check, setCheck] = useState(false);
+    const [type, setType] = useState("0");
+
+    const handleClick = () => {
+        setOpen(false);
+        if (type === "0") return dispatch(openToast("구독이 해지되었습니다"));
+        return setCheck(true);
+    };
+
+    const handleClickCheck = () => {
+        setCheck(false);
+        dispatch(openToast("구독이 해지되었습니다"));
     };
 
     return (
@@ -42,15 +36,30 @@ const UnsubscribeButton = () => {
                         취소하시겠습니까?
                     </Typography>
                     <Stack>
-                        <RadioGroup defaultValue={0} sx={{ alignSelf: "center" }}>
-                            <FormControlLabel value={0} control={<Radio />} label="즉시 구독 취소" />
-                            <FormControlLabel value={1} control={<Radio />} label="남은 기간 종료 후 구독취소" />
+                        <RadioGroup value={type} onChange={(e) => setType(e.target.value)} sx={{ alignSelf: "center" }}>
+                            <FormControlLabel value="0" control={<Radio />} label="즉시 구독 취소" />
+                            <FormControlLabel value="1" control={<Radio />} label="남은 기간 종료 후 구독취소" />
                         </RadioGroup>
                         <Typography variant="body2" textAlign="center">
                             구독 종료일 : 2022.02.03
                         </Typography>
                     </Stack>
-                    <CheckButton />
+                    <Button sx={{ alignSelf: "center" }} onClick={handleClick}>
+                        확인
+                    </Button>
+                </Stack>
+            </Dialog>
+            <Dialog open={check} onClose={() => setCheck(false)} fullWidth>
+                <Stack p={3} spacing={3}>
+                    <Typography>구독 취소</Typography>
+                    <Typography textAlign="center">
+                        구독중인 U2알리미 서비스에서 발송 예약 569 건이 있습니다.
+                        <br />
+                        구독취소 시 예약된 내역이 취소됩니다. 구독취소 하시겠습니까?
+                    </Typography>
+                    <Button sx={{ alignSelf: "center" }} onClick={handleClickCheck}>
+                        확인
+                    </Button>
                 </Stack>
             </Dialog>
         </>
@@ -61,47 +70,75 @@ export const SubscribeMember = () => {
     const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <PageTitle>구독 회원 정보</PageTitle>
+            <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <PageTitle>구독 회원 정보</PageTitle>
+            </Stack>
+
             <PageCard spacing={5}>
-                <Stack spacing={3}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                        <Typography>홍길동</Typography>
-                        <Typography>hong@u2blo.com</Typography>
-                        <Chip label="구독중" />
-                    </Stack>
-                    <Grid container>
-                        <Grid item xs={2}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <Typography>홍길동</Typography>
+                    <Typography>hong@u2blo.com</Typography>
+                    <Chip label="구독중" />
+                </Stack>
+
+                <Stack direction="row">
+                    <Stack
+                        sx={{
+                            flex: 1,
+                            ">div": {
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 3,
+
+                                ">:first-child": {
+                                    minWidth: 160,
+                                    bgcolor: "_bg.main",
+                                    p: 3,
+                                },
+                            },
+                        }}
+                    >
+                        <Stack>
                             <Typography>휴대전화</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Typography>010-1234-5678</Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Typography>기관명</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Typography>유투검진센터</Typography>
-                        </Grid>
-                        <Grid item xs={2}>
+                            <Typography>010-1234-1234</Typography>
+                        </Stack>
+                        <Stack>
                             <Typography>역할</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
                             <Typography>관리자</Typography>
-                        </Grid>
-                        <Grid item xs={2}>
+                        </Stack>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            flex: 1,
+                            ">div": {
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 3,
+
+                                ">:first-child": {
+                                    minWidth: 160,
+                                    bgcolor: "_bg.main",
+                                    p: 3,
+                                },
+                            },
+                        }}
+                    >
+                        <Stack>
+                            <Typography>기관명</Typography>
+                            <Typography>유투검진센터</Typography>
+                        </Stack>
+                        <Stack>
                             <Typography>대표자명</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
                             <Typography>홍길동</Typography>
-                        </Grid>
-                        <Grid item xs={6} />
-                        <Grid item xs={2}>
-                            <Typography>대표번호</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Typography>010-1234-5678</Typography>
-                        </Grid>
-                    </Grid>
+                        </Stack>
+                        <Stack>
+                            <Typography>대표 전화번호</Typography>
+                            <Typography>010-1234-1234</Typography>
+                        </Stack>
+                    </Stack>
                 </Stack>
 
                 <Stack spacing={3}>
@@ -119,8 +156,20 @@ export const SubscribeMember = () => {
                             </Grid>
                             <Grid item xs={3}>
                                 <Stack border="1px solid #eee" p={1} spacing={1} alignItems="center" borderRadius={2}>
-                                    <Typography>이용멤버</Typography>
-                                    <Typography>8</Typography>
+                                    <Typography>구독시작일</Typography>
+                                    <Typography>2021-04-05</Typography>
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Stack border="1px solid #eee" p={1} spacing={1} alignItems="center" borderRadius={2}>
+                                    <Typography>이번달 결제금액</Typography>
+                                    <Typography>15,000원</Typography>
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Stack border="1px solid #eee" p={1} spacing={1} alignItems="center" borderRadius={2}>
+                                    <Typography>누적 결제금액</Typography>
+                                    <Typography>8,000원</Typography>
                                 </Stack>
                             </Grid>
                         </Grid>

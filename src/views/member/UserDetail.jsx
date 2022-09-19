@@ -1,10 +1,32 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Dialog, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select, Chip } from "@mui/material";
+import {
+    Typography,
+    IconButton,
+    Dialog,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Button,
+    Select,
+    Chip,
+    Divider,
+} from "@mui/material";
+import { useDispatch } from "react-redux";
+import { openToast } from "../../redux/features/toast/toastSlice";
 import { PageCard, PageTitle } from "../../components";
+import CheckIcon from "@mui/icons-material/Check";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 export const UserDetail = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [openPWCheck, setOpenPWCheck] = useState(false);
     const [openCallbackDialog, setOpenCallbackDialog] = useState(false);
@@ -24,29 +46,47 @@ export const UserDetail = () => {
         0: {
             title: "사용 중지",
             text: ["U2Cloud에서 이메일 / 이름 님을 사용중지", "상태로 변경하시겠습니까"],
-            callback: () => {},
+            callback: () => {
+                setOpenCallbackDialog(false);
+                dispatch(openToast("~님이 사용중지로 변경 되었습니다."));
+            },
         },
         1: {
             title: "회원 탈퇴",
             text: ["회원탈퇴시, 회원정보를 복구할 수 없습니다.", "U2Cloud에서 이메일 / 이름 님을 탈퇴하시겠습니까?"],
-            callback: () => {},
+            callback: () => {
+                setOpenCallbackDialog(false);
+                dispatch(openToast("U2CLoud에서 ~님이 탈퇴되었습니다."));
+            },
         },
         2: {
             title: "회원 비밀번호 초기화",
             text: ["이메일 / 이름 님의 비밀번호를", "초기화히시겠습니까?"],
-            callback: () => {},
+            callback: () => {
+                setOpenCallbackDialog(false);
+                dispatch(openToast("~님의 비밀번호 초기화 안내메일이 발송 되었습니다."));
+            },
         },
         3: {
             title: "데이터 파기",
             text: ["이메일 / 이름 님의 회원정보를 포함한 모든", "U2Cloud 이용기록을 파기하시겠습니까?"],
-            callback: () => {},
+            callback: () => {
+                setOpenCallbackDialog(false);
+                dispatch(openToast("~님의 회원정보를 포함한 모든 U2Cloud 이용기록이 파기되었습니다."));
+            },
         },
     };
 
     return (
         <>
             <Stack spacing={3}>
-                <PageTitle>회원 정보</PageTitle>
+                <Stack direction="row" alignItems="center">
+                    <IconButton onClick={() => navigate(-1)}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                    <PageTitle>회원 정보</PageTitle>
+                </Stack>
+
                 <PageCard spacing={5}>
                     <Stack direction="row" spacing={3} alignItems="center">
                         <Typography>홍길동</Typography>
@@ -112,7 +152,10 @@ export const UserDetail = () => {
                                 </Stack>
                                 <Stack>
                                     <Typography>동의</Typography>
-                                    <Typography>마케팅 동의</Typography>
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <CheckIcon fontSize="10" />
+                                        <Typography>마케팅 동의</Typography>
+                                    </Stack>
                                 </Stack>
                                 <Stack>
                                     <Typography>가입일</Typography>
@@ -259,13 +302,23 @@ export const UserDetail = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <Stack spacing={3}>
+                            <Divider />
+                            <Typography>구독중인 서비스가 없습니다</Typography>
+                            <Divider />
+                        </Stack>
                     </Stack>
                 </PageCard>
             </Stack>
 
             <Dialog open={openPWCheck} onClose={() => setOpenPWCheck(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography>비밀번호 확인</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>비밀번호 확인</Typography>
+                        <IconButton onClick={() => setOpenPWCheck(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
                     <Stack direction="row" alignItems="center">
                         <Typography sx={{ minWidth: 160, bgcolor: "_bg.main", p: 3, mr: 3 }}>비밀번호</Typography>
                         <TextField fullWidth type="password" />
@@ -277,7 +330,12 @@ export const UserDetail = () => {
             </Dialog>
             <Dialog open={openCallbackDialog} onClose={() => setOpenCallbackDialog(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography>{types[type]["title"]}</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>{types[type]["title"]}</Typography>
+                        <IconButton onClick={() => setOpenCallbackDialog(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
                     <Typography textAlign="center">
                         {types[type]["text"][0]}
                         <br />

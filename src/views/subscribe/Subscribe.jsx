@@ -1,7 +1,6 @@
 import {
     Typography,
     Stack,
-    IconButton,
     Button,
     FormControlLabel,
     Radio,
@@ -12,14 +11,13 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Chip,
     Grid,
     Select,
     TextField,
+    MenuItem,
 } from "@mui/material";
-import { Edit as EditIcon, Close as CloseIcon } from "@mui/icons-material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { useNavigate } from "react-router-dom";
-
 import { PageCard, PageTitle, CountCard } from "../../components";
 
 const Row = () => {
@@ -75,6 +73,11 @@ export const Subscribe = () => {
                             <Grid item xs={6}>
                                 <Stack>
                                     <Typography>구독기간</Typography>
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                                        <Typography>~</Typography>
+                                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                                    </Stack>
                                 </Stack>
                             </Grid>
                             <Grid item xs={6}>
@@ -101,7 +104,12 @@ export const Subscribe = () => {
                                 <Stack>
                                     <Typography>검색어</Typography>
                                     <Stack direction="row" spacing={1} alignItems="center" flex={1}>
-                                        <Select></Select>
+                                        <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                                            <MenuItem value={0}>전체</MenuItem>
+                                            <MenuItem value={1}>구독중</MenuItem>
+                                            <MenuItem value={2}>구독취소</MenuItem>
+                                            <MenuItem value={3}>구독해지</MenuItem>
+                                        </Select>
                                         <TextField fullWidth />
                                         <Button>검색</Button>
                                     </Stack>

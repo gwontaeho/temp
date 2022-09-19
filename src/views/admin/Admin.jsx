@@ -1,6 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Select, Dialog } from "@mui/material";
+import {
+    Typography,
+    Stack,
+    MenuItem,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Button,
+    Select,
+    Dialog,
+} from "@mui/material";
 import { PageCard, PageTitle, CountCard } from "../../components";
 
 const InviteButton = () => {
@@ -84,7 +98,11 @@ export const Admin = () => {
                 >
                     <Stack>
                         <Typography>검색어</Typography>
-                        <Select></Select>
+                        <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                            <MenuItem value={0}>사용중</MenuItem>
+                            <MenuItem value={1}>휴면</MenuItem>
+                            <MenuItem value={2}>탈퇴</MenuItem>
+                        </Select>
                         <TextField fullWidth />
                         <Button>검색</Button>
                     </Stack>
@@ -108,7 +126,7 @@ export const Admin = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/admin/detail")}>
+                                        <TableRow key={v} onClick={() => navigate("/admin/detail")} sx={{ ":hover": { bgcolor: "#eee" }, cursor: "pointer" }}>
                                             <TableCell>이메일</TableCell>
                                             <TableCell>이름</TableCell>
                                             <TableCell>소속</TableCell>

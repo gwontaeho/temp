@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Typography,
@@ -17,8 +17,29 @@ import {
     Button,
     Select,
     Dialog,
+    MenuItem,
 } from "@mui/material";
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { PageCard, PageTitle } from "../../components";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
+const initialState = { checked: [false, false, false] };
+
+const reducer = (state, { type, payload }) => {
+    switch (type) {
+        case "setChecked": {
+            const { checked, index } = payload;
+            const newChecked = [...state.checked];
+            newChecked[index] = checked;
+            return { ...state, checked: newChecked };
+        }
+        case "setAllChecked": {
+            const newChecked = [...state.checked].map((v) => (v = payload));
+            return { ...state, checked: newChecked };
+        }
+        default:
+            return { ...state };
+    }
+};
 
 const CancelButton = () => {
     const [open, setOpen] = useState(false);
@@ -89,6 +110,10 @@ const AllowButton = () => {
 
 const Management = () => {
     const navigate = useNavigate();
+
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { checked } = state;
+
     return (
         <PageCard spacing={5} sx={{ borderTopLeftRadius: 0 }}>
             <Stack
@@ -108,11 +133,21 @@ const Management = () => {
             >
                 <Stack>
                     <Typography>탈퇴요청일</Typography>
-                    <Typography>등록일시</Typography>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        <Typography>~</Typography>
+                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                    </Stack>
                 </Stack>
                 <Stack>
                     <Typography>검색어</Typography>
-                    <Select></Select>
+                    <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                        <MenuItem value={0}>전체</MenuItem>
+                        <MenuItem value={1}>회원명</MenuItem>
+                        <MenuItem value={2}>이메일</MenuItem>
+                        <MenuItem value={3}>휴대전화</MenuItem>
+                        <MenuItem value={4}>기관명</MenuItem>
+                    </Select>
                     <TextField fullWidth />
                     <Button>검색</Button>
                 </Stack>
@@ -132,7 +167,10 @@ const Management = () => {
                         <TableHead bgColor="#eee">
                             <TableRow>
                                 <TableCell padding="checkbox">
-                                    <Checkbox />
+                                    <Checkbox
+                                        checked={checked.every((v) => v === true)}
+                                        onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                    />
                                 </TableCell>
                                 <TableCell>ID</TableCell>
                                 <TableCell>이메일</TableCell>
@@ -146,11 +184,14 @@ const Management = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {[0, 1, 2].map((v) => {
+                            {[0, 1, 2].map((v, index) => {
                                 return (
-                                    <TableRow key={v} onClick={() => navigate("/member/user/detail")}>
+                                    <TableRow key={v} onClick={() => navigate("/member/user/detail")} sx={{ ":hover": { bgcolor: "#eee" } }}>
                                         <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
-                                            <Checkbox />
+                                            <Checkbox
+                                                checked={checked[index]}
+                                                onChange={(e) => dispatch({ type: "setChecked", payload: { checked: e.target.checked, index } })}
+                                            />
                                         </TableCell>
                                         <TableCell>ID</TableCell>
                                         <TableCell>이메일</TableCell>
@@ -175,6 +216,9 @@ const Management = () => {
 const Member = () => {
     const navigate = useNavigate();
 
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { checked } = state;
+
     return (
         <PageCard spacing={5} sx={{ borderTopLeftRadius: 0 }}>
             <Stack
@@ -198,10 +242,21 @@ const Member = () => {
                         <FormControlLabel value={0} control={<Radio />} label="탈퇴요청일" />
                         <FormControlLabel value={1} control={<Radio />} label="탈퇴완료일" />
                     </RadioGroup>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        <Typography>~</Typography>
+                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                    </Stack>
                 </Stack>
                 <Stack>
                     <Typography>검색어</Typography>
-                    <Select></Select>
+                    <Select defaultValue={0} sx={{ minWidth: 120 }}>
+                        <MenuItem value={0}>전체</MenuItem>
+                        <MenuItem value={1}>회원명</MenuItem>
+                        <MenuItem value={2}>이메일</MenuItem>
+                        <MenuItem value={3}>휴대전화</MenuItem>
+                        <MenuItem value={4}>기관명</MenuItem>
+                    </Select>
                     <TextField fullWidth />
                     <Button>검색</Button>
                 </Stack>
@@ -217,7 +272,10 @@ const Member = () => {
                         <TableHead bgColor="#eee">
                             <TableRow>
                                 <TableCell padding="checkbox">
-                                    <Checkbox />
+                                    <Checkbox
+                                        checked={checked.every((v) => v === true)}
+                                        onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                    />
                                 </TableCell>
                                 <TableCell>ID</TableCell>
                                 <TableCell>이메일</TableCell>
@@ -230,11 +288,14 @@ const Member = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {[0, 1, 2].map((v) => {
+                            {[0, 1, 2].map((v, index) => {
                                 return (
-                                    <TableRow key={v} onClick={() => navigate("/member/user/detail")}>
+                                    <TableRow key={v} onClick={() => navigate("/member/user/detail")} sx={{ ":hover": { bgcolor: "#eee" } }}>
                                         <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
-                                            <Checkbox />
+                                            <Checkbox
+                                                checked={checked[index]}
+                                                onChange={(e) => dispatch({ type: "setChecked", payload: { checked: e.target.checked, index } })}
+                                            />
                                         </TableCell>
                                         <TableCell>ID</TableCell>
                                         <TableCell>이메일</TableCell>
@@ -257,6 +318,7 @@ const Member = () => {
 
 export const Withdrawal = () => {
     const navigate = useNavigate();
+
     const [page, setPage] = useState(0);
     return (
         <Stack spacing={3}>

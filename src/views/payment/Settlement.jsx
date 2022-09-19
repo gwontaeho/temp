@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Typography,
-    Checkbox,
     Stack,
     RadioGroup,
     Radio,
@@ -16,9 +14,10 @@ import {
     TextField,
     Button,
     Select,
-    Dialog,
+    MenuItem,
 } from "@mui/material";
-import { PageCard, PageTitle, CountCard } from "../../components";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { PageCard, PageTitle } from "../../components";
 
 export const Settlement = () => {
     const navigate = useNavigate();
@@ -59,11 +58,21 @@ export const Settlement = () => {
                     </Stack>
                     <Stack>
                         <Typography>검색기간</Typography>
-                        <Select></Select>
+                        <Select defaultValue={0}>
+                            <MenuItem value={0}>전체</MenuItem>
+                            <MenuItem value={1}>결제일</MenuItem>
+                            <MenuItem value={2}>정산예정일</MenuItem>
+                            <MenuItem value={3}>정산일</MenuItem>
+                        </Select>
+                        <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
                     </Stack>
                     <Stack>
                         <Typography>검색어</Typography>
-                        <Select></Select>
+                        <Select defaultValue={0}>
+                            <MenuItem value={0}>전체</MenuItem>
+                            <MenuItem value={1}>이름</MenuItem>
+                            <MenuItem value={2}>기관명</MenuItem>
+                        </Select>
                         <TextField fullWidth />
                         <Button>검색</Button>
                     </Stack>
@@ -95,7 +104,16 @@ export const Settlement = () => {
                             <TableBody>
                                 {[0, 1, 2].map((v) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/payment/settlement/detail")}>
+                                        <TableRow
+                                            sx={{
+                                                cursor: "pointer",
+                                                ":hover": {
+                                                    bgcolor: "#eee",
+                                                },
+                                            }}
+                                            key={v}
+                                            onClick={() => navigate("/payment/settlement/detail")}
+                                        >
                                             <TableCell>정산ID</TableCell>
                                             <TableCell>주문번호</TableCell>
                                             <TableCell>결제수단</TableCell>

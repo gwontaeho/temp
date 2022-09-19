@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, forwardRef } from "react";
+import { useReducer, useState, forwardRef } from "react";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { useNavigate } from "react-router-dom";
 import {
     Typography,
@@ -17,8 +18,26 @@ import {
     IconButton,
 } from "@mui/material";
 import { Edit as EditIcon, DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from "@mui/icons-material";
-
 import { PageCard, PageTitle, CountCard } from "../../components";
+
+const initialState = { checked: [false, false, false] };
+
+const reducer = (state, { type, payload }) => {
+    switch (type) {
+        case "setChecked": {
+            const { checked, index } = payload;
+            const newChecked = [...state.checked];
+            newChecked[index] = checked;
+            return { ...state, checked: newChecked };
+        }
+        case "setAllChecked": {
+            const newChecked = [...state.checked].map((v) => (v = payload));
+            return { ...state, checked: newChecked };
+        }
+        default:
+            return { ...state };
+    }
+};
 
 const DeleteButton = forwardRef(({ icon }, ref) => {
     const [open, setOpen] = useState(false);
@@ -45,9 +64,12 @@ const DeleteButton = forwardRef(({ icon }, ref) => {
 export const Notice = () => {
     const navigate = useNavigate();
 
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { checked } = state;
+
     return (
         <Stack spacing={3}>
-            <PageTitle>공지사항 관리</PageTitle>
+            <PageTitle>공지사항</PageTitle>
             <PageCard spacing={5}>
                 <Stack
                     sx={{
@@ -66,6 +88,11 @@ export const Notice = () => {
                     <Stack>
                         <Typography>기간</Typography>
                         <Select></Select>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                            <Typography>~</Typography>
+                            <DesktopDatePicker inputFormat="YYYY-MM-DD" renderInput={(params) => <TextField {...params} />} />
+                        </Stack>
                     </Stack>
                     <Stack>
                         <Typography>검색어</Typography>
@@ -88,7 +115,10 @@ export const Notice = () => {
                             <TableHead bgColor="#eee">
                                 <TableRow>
                                     <TableCell padding="checkbox">
-                                        <Checkbox />
+                                        <Checkbox
+                                            checked={checked.every((v) => v === true)}
+                                            onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                        />
                                     </TableCell>
                                     <TableCell>ID</TableCell>
                                     <TableCell>팝업공지</TableCell>
@@ -100,11 +130,18 @@ export const Notice = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {[0, 1, 2].map((v) => {
+                                {[0, 1, 2].map((v, index) => {
                                     return (
-                                        <TableRow key={v} onClick={() => navigate("/support/notice/detail")}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox />
+                                        <TableRow
+                                            key={v}
+                                            onClick={() => navigate("/support/notice/detail")}
+                                            sx={{ ":hover": { bgcolor: "#eee" }, cursor: "pointer" }}
+                                        >
+                                            <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
+                                                <Checkbox
+                                                    checked={checked[index]}
+                                                    onChange={(e) => dispatch({ type: "setChecked", payload: { checked: e.target.checked, index } })}
+                                                />
                                             </TableCell>
                                             <TableCell>ID</TableCell>
                                             <TableCell>팝업공지</TableCell>
@@ -112,7 +149,7 @@ export const Notice = () => {
                                             <TableCell>제목</TableCell>
                                             <TableCell>등록일</TableCell>
                                             <TableCell>조회수</TableCell>
-                                            <TableCell onClick={(e) => e.stopPropagation()}>
+                                            <TableCell onClick={(e) => e.stopPropagation()} padding="none">
                                                 <IconButton onClick={(e) => navigate("/support/notice/update")}>
                                                     <EditIcon />
                                                 </IconButton>

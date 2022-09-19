@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Dialog, Stack, Button, Chip, TextField, Snackbar } from "@mui/material";
+import { Typography, Dialog, IconButton, Stack, Button, Chip, TextField, Snackbar } from "@mui/material";
 import { PageCard, PageTitle } from "../../components";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 const PendingButton = () => {
     const [open, setOpen] = useState(false);
@@ -16,7 +18,13 @@ const PendingButton = () => {
             <Button onClick={() => setOpen(true)}>등록보류</Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                 <Stack p={3} spacing={3}>
-                    <Typography>등록 보류</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>등록 보류</Typography>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
+
                     <TextField multiline rows={3} placeholder="등록보류 사유를 작성해주세요" />
                     <Button sx={{ alignSelf: "center" }} onClick={handleClick}>
                         확인
@@ -48,7 +56,13 @@ const CompleteButton = () => {
             <Button onClick={() => setOpen(true)}>등록완료</Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
                 <Stack p={3} spacing={3}>
-                    <Typography>등록 완료</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography>등록 완료</Typography>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Typography textAlign="center">1577-1444 를 발신번호로 등록하시겠습니까?</Typography>
                     <Button sx={{ alignSelf: "center" }} onClick={handleClick}>
                         확인
@@ -95,12 +109,16 @@ export const CallerDetail = () => {
     return (
         <>
             <Stack spacing={3}>
-                <PageTitle>회원 정보</PageTitle>
+                <Stack direction="row" alignItems="center">
+                    <IconButton onClick={() => navigate(-1)}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                    <PageTitle>발신번호 상세보기</PageTitle>
+                </Stack>
                 <PageCard spacing={5}>
                     <Stack direction="row" spacing={3} alignItems="center">
                         <Typography>홍길동</Typography>
                         <Typography>email@email.com</Typography>
-                        <Chip label="정상" />
                     </Stack>
 
                     <Stack spacing={1}>

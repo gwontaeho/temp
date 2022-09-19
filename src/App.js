@@ -1,5 +1,9 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Routes from "./routes";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Provider } from "react-redux";
+import { store } from "./redux/app/store";
 import "@toast-ui/editor/dist/toastui-editor.css";
 
 const theme = createTheme({
@@ -25,9 +29,13 @@ const theme = createTheme({
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
-            <Routes />
-        </ThemeProvider>
+        <Provider store={store}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <ThemeProvider theme={theme}>
+                    <Routes />
+                </ThemeProvider>
+            </LocalizationProvider>
+        </Provider>
     );
 }
 
