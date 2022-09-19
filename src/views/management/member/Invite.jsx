@@ -1,5 +1,6 @@
 import { useState, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import readXlsxFile from "read-excel-file";
 import {
     Typography,
     TextField,
@@ -15,14 +16,34 @@ import {
     TableHead,
     TableRow,
     Dialog,
+    Tooltip,
 } from "@mui/material";
-
+import WarningIcon from "@mui/icons-material/Warning";
 const initialState = { members: [] };
 
 const reducer = (state, { type, payload }) => {
     switch (type) {
+        case "setName": {
+            const { name, index } = payload;
+            const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z]+$/;
+
+            if (regex.test(name) || !name) {
+                const newMembers = [...state.members];
+                newMembers[index]["name"] = name;
+                newMembers[index]["nameError"] = "";
+                return { ...state, members: newMembers };
+            }
+            return { ...state };
+        }
+        case "setEmail": {
+            const { email, index } = payload;
+            const newMembers = [...state.members];
+            newMembers[index]["email"] = email;
+            newMembers[index]["emailError"] = "";
+            return { ...state, members: newMembers };
+        }
         case "addMember": {
-            const members = [...state.members, { alimi: false, survey: false }];
+            const members = [...state.members, { alimi: false, survey: false, name: "", email: "" }];
             return { ...state, members };
         }
         case "setAlimi": {
@@ -44,6 +65,22 @@ const reducer = (state, { type, payload }) => {
         case "setAllSurvey": {
             const members = [...state.members].map((member) => ({ ...member, survey: payload }));
             return { ...state, members };
+        }
+        case "upload": {
+            const uploaded = payload.map((v) => ({ ...v, alimi: true, survey: true }));
+            const members = [...state.members, ...uploaded];
+            return { ...state, members };
+        }
+        case "send": {
+            const newMembers = [...state.members].map((v) => {
+                var reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+                let error = {};
+                if (!v.name) error.nameError = "이름을 입력해주세요";
+                if (!reg.test(v.email)) error.emailError = "이메일 형식이 올바르지않습니다";
+                if (!v.email) error.emailError = "이메일을 입력해주세요";
+                return { ...v, ...error };
+            });
+            return { ...state, members: newMembers };
         }
     }
 };
@@ -75,12 +112,37 @@ export const Invite = ({ open, setOpen }) => {
         setOpen(false);
     }, []);
 
+    const handleChange = useCallback((e) => {
+        const map = {
+            이름: "name",
+            이메일: "email",
+        };
+        const file = e.target.files[0];
+        readXlsxFile(file, { map }).then((rows) => {
+            dispatch({ type: "upload", payload: rows.rows });
+        });
+    }, []);
+
+    const handleClickSend = useCallback(() => {
+        dispatch({ type: "send" });
+        console.log(state);
+    }, [state]);
+
     return (
         <>
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
                 <Stack p={3} spacing={3}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography fontWeight="bold">멤버 초대</Typography>
+                    </Stack>
+                    <Stack direction="row" justifyContent="space-between">
+                        <Stack direction="row" spacing={1}>
+                            <Button variant="outlined" component="label">
+                                엑셀 업로드
+                                <input type="file" hidden onChange={handleChange} />
+                            </Button>
+                            <Button variant="outlined">엑셀 양식 다운</Button>
+                        </Stack>
                         <Stack direction="row" spacing={1}>
                             <Button color="_gray">삭제</Button>
                             <Button onClick={() => dispatch({ type: "addMember" })}>추가</Button>
@@ -90,6 +152,7 @@ export const Invite = ({ open, setOpen }) => {
                         <Table sx={{ minWidth: 500 }}>
                             <TableHead bgcolor="#f2f3f7">
                                 <TableRow>
+                                    <TableCell align="center" />
                                     <TableCell align="center">No</TableCell>
                                     <TableCell align="center">이름</TableCell>
                                     <TableCell align="center">이메일</TableCell>
@@ -97,29 +160,51 @@ export const Invite = ({ open, setOpen }) => {
                                     <TableCell align="center">
                                         <Stack alignItems="center">
                                             <Typography variant="caption">U2알리미</Typography>
-                                            <Checkbox onChange={(e) => dispatch({ type: "setAllAlimi", payload: e.target.checked })} />
+                                            <Checkbox
+                                                checked={Boolean(members.length) && members.every((v) => v.alimi === true)}
+                                                onChange={(e) => dispatch({ type: "setAllAlimi", payload: e.target.checked })}
+                                            />
                                         </Stack>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Stack alignItems="center">
                                             <Typography variant="caption">U2Survey</Typography>
-                                            <Checkbox onChange={(e) => dispatch({ type: "setAllSurvey", payload: e.target.checked })} />
+                                            <Checkbox
+                                                checked={Boolean(members.length) && members.every((v) => v.survey === true)}
+                                                onChange={(e) => dispatch({ type: "setAllSurvey", payload: e.target.checked })}
+                                            />
                                         </Stack>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {members.map((v, i) => {
-                                    const { alimi, survey } = v;
+                                    const { name, email, alimi, survey, nameError, emailError } = v;
+
+                                    const error = nameError || emailError;
 
                                     return (
                                         <TableRow key={i}>
+                                            <TableCell align="center" padding="none">
+                                                {error && (
+                                                    <Tooltip title={error}>
+                                                        <WarningIcon />
+                                                    </Tooltip>
+                                                )}
+                                            </TableCell>
                                             <TableCell align="center">{i + 1}</TableCell>
                                             <TableCell align="center">
-                                                <TextField />
+                                                <TextField
+                                                    inputProps={{ maxLength: 8 }}
+                                                    value={name}
+                                                    onChange={(e) => dispatch({ type: "setName", payload: { name: e.target.value, index: i } })}
+                                                />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <TextField />
+                                                <TextField
+                                                    value={email}
+                                                    onChange={(e) => dispatch({ type: "setEmail", payload: { email: e.target.value, index: i } })}
+                                                />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <Select value={0}>
@@ -150,7 +235,7 @@ export const Invite = ({ open, setOpen }) => {
                         <Button color="_gray" variant="contained" onClick={() => setOpen(false)}>
                             취소
                         </Button>
-                        <Button variant="contained" onClick={handleClickInvite}>
+                        <Button variant="contained" onClick={handleClickSend}>
                             초대 메일 발송
                         </Button>
                     </Stack>

@@ -44,11 +44,11 @@ export const PasswordChange = ({ open, setOpen }) => {
                             onKeyDown={(e) => dispatch({ type: "setPwValidation", payload: { capslock: e.getModifierState("CapsLock") ? true : false } })}
                             onChange={(e) => dispatch({ type: "setPw", payload: e.target.value })}
                             inputProps={{ maxLength: 16 }}
+                            error={Boolean(pwValidation)}
+                            helperText={pwValidation}
                             type="password"
                             fullWidth
                             size="small"
-                            error={Boolean(pwValidation)}
-                            helperText={pwValidation}
                         />
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing={3}>
