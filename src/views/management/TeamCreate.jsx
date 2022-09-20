@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Button, TextField, Dialog } from "@mui/material";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { ViewTitle } from "../../components/";
+import { useDispatch } from "react-redux";
+import { openToast } from "../../redux/features/toast/toastSlice";
 
 const Check = ({ dispatch, num }) => {
     const [open, setOpen] = useState(false);
@@ -12,6 +14,10 @@ const Check = ({ dispatch, num }) => {
         setOpen(true);
     }, [num, dispatch]);
 
+    const handleClick = () => {
+        setOpen(false);
+    };
+
     return (
         <>
             <Button color="_gray" onClick={handleClickOpen}>
@@ -19,9 +25,9 @@ const Check = ({ dispatch, num }) => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth>
                 <Stack p={3} spacing={3} alignItems="center">
-                    {/* <Typography>사용가능합니다</Typography> */}
-                    <Typography>이미 등록된번호로 사용불가합니다</Typography>
-                    <Button onClick={() => setOpen(false)}>확인</Button>
+                    <Typography>사용가능합니다</Typography>
+                    {/* <Typography>이미 등록된번호로 사용불가합니다</Typography> */}
+                    <Button onClick={handleClick}>확인</Button>
                 </Stack>
             </Dialog>
         </>
@@ -130,10 +136,10 @@ const reducer = (state, { type, payload }) => {
         case "setAllErrors": {
             const { phone, name, code, num, team } = state;
             const errors = {
-                teamError: !team ? "대표자 이름을 입력해주세요" : "",
+                teamError: !team ? "기관명을을 입력해주세요" : "",
                 nameError: !name ? "대표자 이름을 입력해주세요" : "",
                 numError: !num ? "사업자 등록번호를 입력해주세요" : "",
-                phoneError: !phone ? "대표 번호를 입력해주세요" : "",
+                phoneError: !phone ? "대표번호를 입력해주세요" : "",
                 addressError: !code ? "기관 주소를 입력해주세요" : "",
             };
             return { ...state, ...errors };
@@ -142,6 +148,8 @@ const reducer = (state, { type, payload }) => {
 };
 
 export const TeamCreate = () => {
+    const rdxDispatch = useDispatch();
+
     const navigate = useNavigate();
 
     const refs = useRef([]);
@@ -158,6 +166,7 @@ export const TeamCreate = () => {
         if (!team) refs.current[0].focus();
         if (!name || !phone || !code || !team || !num) return dispatch({ type: "setAllErrors" });
         console.log(state);
+        rdxDispatch(openToast("기관정보가 수정되었습니다"));
         // navigate("/management/team");
     }, [state]);
 

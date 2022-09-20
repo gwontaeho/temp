@@ -1,9 +1,25 @@
-import { useCallback, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Stack, Button, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Dialog, IconButton } from "@mui/material";
 
 import { ViewTitle } from "../../components/";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+
+const initialState = { checked: [false, false, false] };
+const reducer = (state, { type, payload }) => {
+    switch (type) {
+        case "setChecked": {
+            const { index, checked } = payload;
+            const newChecked = [...state.checked];
+            newChecked[index] = checked;
+            return { ...state, checked: newChecked };
+        }
+        case "setAllChecked": {
+            const newChecked = [...state.checked].map((v) => (v = payload));
+            return { ...state, checked: newChecked };
+        }
+    }
+};
 
 const CloseButton = ({ setOpen }) => {
     const [alert, setAlert] = useState(false);
@@ -30,6 +46,9 @@ const CloseButton = ({ setOpen }) => {
 };
 
 const Update = ({ open, setOpen }) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { checked } = state;
+
     const [alert, setAlert] = useState(false);
 
     const handleClick = useCallback(() => {
@@ -52,21 +71,30 @@ const Update = ({ open, setOpen }) => {
                                     <TableCell align="center">이름</TableCell>
                                     <TableCell align="center">이메일</TableCell>
                                     <TableCell align="center">역할</TableCell>
-                                    <TableCell padding="checkbox" align="center">
-                                        <Checkbox />
+                                    <TableCell align="center">
+                                        <Stack>
+                                            <Typography variant="caption">U2알리미</Typography>
+                                            <Checkbox
+                                                checked={checked.every((v) => v === true)}
+                                                onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                            />
+                                        </Stack>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {[0, 1, 2, 3, 4, 5].map((v) => {
+                                {[0, 1, 2].map((v, index) => {
                                     return (
                                         <TableRow key={v}>
                                             <TableCell align="center">이름</TableCell>
                                             <TableCell align="center">이름</TableCell>
                                             <TableCell align="center">이메일</TableCell>
                                             <TableCell align="center">휴대전화</TableCell>
-                                            <TableCell padding="checkbox" align="center">
-                                                <Checkbox />
+                                            <TableCell align="center">
+                                                <Checkbox
+                                                    checked={checked[index]}
+                                                    onChange={(e) => dispatch({ type: "setChecked", payload: { index, checked: e.target.checked } })}
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -83,7 +111,8 @@ const Update = ({ open, setOpen }) => {
                 <Stack p={3} spacing={3}>
                     <Typography fontWeight="bold">멤버 이용권한 수정 확인</Typography>
                     <Stack alignItems="center">
-                        <Typography>멤버 2명의 U2알리미 서비스 이용권한을 해지합니다.</Typography>
+                        {!checked.every((v) => v === true) && <Typography>멤버 2명의 U2알리미 서비스 이용권한을 해지합니다.</Typography>}
+
                         <Typography>멤버 10명의 U2알리미 이용권한을 수정하시겠습니까?</Typography>
                     </Stack>
                     <Button sx={{ alignSelf: "center" }} onClick={handleClick}>
@@ -95,7 +124,25 @@ const Update = ({ open, setOpen }) => {
     );
 };
 
+const subState = { checked: [false, false, false] };
+const subReducer = (state, { type, payload }) => {
+    switch (type) {
+        case "setChecked": {
+            const { index, checked } = payload;
+            const newChecked = [...state.checked];
+            newChecked[index] = checked;
+            return { ...state, checked: newChecked };
+        }
+        case "setAllChecked": {
+            const newChecked = [...state.checked].map((v) => (v = payload));
+            return { ...state, checked: newChecked };
+        }
+    }
+};
+
 export const Subscribe = () => {
+    const [state, dispatch] = useReducer(subReducer, subState);
+    const { checked } = state;
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
@@ -161,7 +208,10 @@ export const Subscribe = () => {
                                         </TableRow>
                                         <TableRow>
                                             <TableCell padding="checkbox">
-                                                <Checkbox />
+                                                <Checkbox
+                                                    checked={checked.every((v) => v === true)}
+                                                    onChange={(e) => dispatch({ type: "setAllChecked", payload: e.target.checked })}
+                                                />
                                             </TableCell>
                                             <TableCell align="center">이름</TableCell>
                                             <TableCell align="center">이메일</TableCell>
@@ -169,11 +219,14 @@ export const Subscribe = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {[0, 1, 2].map((v) => {
+                                        {[0, 1, 2].map((v, index) => {
                                             return (
                                                 <TableRow key={v}>
                                                     <TableCell padding="checkbox">
-                                                        <Checkbox />
+                                                        <Checkbox
+                                                            checked={checked[index]}
+                                                            onChange={(e) => dispatch({ type: "setChecked", payload: { index, checked: e.target.checked } })}
+                                                        />
                                                     </TableCell>
                                                     <TableCell align="center">이름</TableCell>
                                                     <TableCell align="center">이메일</TableCell>

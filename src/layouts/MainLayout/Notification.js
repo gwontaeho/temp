@@ -6,6 +6,7 @@ import { toggle } from "../../redux/features/notification/notificationSlice";
 import AlramNew from "../../assets/icons/img_alarm_new.png";
 import AlramDone from "../../assets/icons/img_alarm_done.png";
 import { Icon } from "../../assets/icons/";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const Detail = ({ setDetail }) => {
     return (
@@ -83,9 +84,11 @@ export const Notification = () => {
                 PaperProps={{ style: { height: "calc(100vh - 80px)", marginTop: "80px", overflowY: "overlay", width: 400 } }}
             >
                 <Stack>
-                    <Stack direction="row" p={3} justifyContent="space-between">
+                    <Stack direction="row" p={3} justifyContent="space-between" alignItems="center">
                         {detail ? <Typography onClick={() => setDetail(false)}>뒤로</Typography> : <Typography>알림</Typography>}
-                        <Typography onClose={() => dispatch(toggle())}>닫기</Typography>
+                        <IconButton onClick={() => dispatch(toggle())}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
                     </Stack>
                     {detail ? <Detail setDetail={setDetail} /> : <List setDetail={setDetail} />}
                 </Stack>

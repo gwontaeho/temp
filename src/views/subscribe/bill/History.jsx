@@ -5,7 +5,7 @@ export const History = () => {
     const navigate = useNavigate();
     return (
         <Stack spacing={3}>
-            <Typography fontWeight="bold">납부 내역</Typography>
+            <Typography fontWeight="bold">결제 내역</Typography>
             <Stack bgcolor="#fff" borderRadius={3} p={3}>
                 <TableContainer>
                     <Table sx={{ minWidth: 600 }}>

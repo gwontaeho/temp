@@ -1,6 +1,19 @@
 import { useState, useReducer, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { InputAdornment, Stack, Button, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import {
+    InputAdornment,
+    Stack,
+    Button,
+    Checkbox,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    IconButton,
+} from "@mui/material";
 
 import { Invite, Withdrawal, Row } from "./member/";
 import { ViewTitle } from "../../components/";
@@ -46,10 +59,13 @@ export const Member = () => {
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <TextField
                             variant="standard"
+                            placeholder="멤버 검색"
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <SearchOutlinedIcon />
+                                        <IconButton>
+                                            <SearchOutlinedIcon />
+                                        </IconButton>
                                     </InputAdornment>
                                 ),
                             }}

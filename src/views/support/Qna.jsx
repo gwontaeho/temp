@@ -6,8 +6,8 @@ import { ViewTitle } from "../../components/";
 const Item = ({ i }) => {
     const navigate = useNavigate();
     return (
-        <Stack spacing={3} onClick={() => navigate("/support/qna/1")}>
-            <Stack direction="row" spacing={3} alignItems="center">
+        <Stack onClick={() => navigate("/support/qna/1")}>
+            <Stack direction="row" spacing={3} p={3} alignItems="center" sx={{ cursor: "pointer", ":hover": { bgcolor: "#eee" } }}>
                 <Typography variant="body2">업데이트</Typography>
                 <Stack direction="row" flex={1} alignItems="center" spacing={2}>
                     <Typography fontWeight="bold">제목</Typography>
@@ -35,7 +35,7 @@ export const Qna = () => {
                 </Button>
             </Stack>
             <Stack bgcolor="#fff" borderRadius={3} p={3} spacing={5}>
-                <Stack spacing={3}>
+                <Stack>
                     {[0, 1, 2].map((v, i) => {
                         return <Item key={i} i={i} />;
                     })}

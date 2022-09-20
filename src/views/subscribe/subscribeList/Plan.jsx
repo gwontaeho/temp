@@ -1,14 +1,17 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Grid, Dialog, RadioGroup, FormControlLabel, Radio, Snackbar } from "@mui/material";
+import { Stack, IconButton, Typography, Button, Grid, Dialog, RadioGroup, FormControlLabel, Radio, Snackbar } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { openToast } from "../../../redux/features/toast/toastSlice";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const ChangeButton = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [toast, setToast] = useState(false);
 
     const handleClick = useCallback(() => {
         setOpen(false);
-        setToast(true);
+        dispatch(openToast("의 요금제가 {}로 변경되었습니다."));
     }, []);
 
     return (
@@ -16,7 +19,13 @@ const ChangeButton = () => {
             <Button onClick={() => setOpen(true)}>구독 변경</Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">구독 변경</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">구독 변경</Typography>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack alignItems="center" spacing={3}>
                         <Typography>현재 구독하고 있는 요금제를 변경하시겠습니까 ?</Typography>
                         <RadioGroup defaultValue="0">
@@ -28,21 +37,14 @@ const ChangeButton = () => {
                     </Stack>
                 </Stack>
             </Dialog>
-            <Snackbar
-                open={toast}
-                autoHideDuration={3000}
-                message="의 요금제가 {}로 변경되었습니다."
-                onClose={() => setToast(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            />
         </>
     );
 };
 
 const UnsubscribeButton = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [alert, setAlert] = useState(false);
-    const [toast, setToast] = useState(false);
 
     const [type, setType] = useState(0);
 
@@ -53,7 +55,13 @@ const UnsubscribeButton = () => {
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">구독 취소</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">구독 취소</Typography>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack alignItems="center" spacing={3}>
                         <Typography>U2알리미 구독을 취소하시겠습니까?</Typography>
                         <RadioGroup value={type} onChange={(e) => setType(e.target.value)}>
@@ -72,17 +80,10 @@ const UnsubscribeButton = () => {
                         <Typography variant="body2">
                             {type === "0" ? "구독취소시 모두 발송 취소 됩니다." : "구독 취소시 해당 건은 모두 발송 취소됩니다."}
                         </Typography>
-                        <Button onClick={() => setToast(true)}>구독취소</Button>
+                        <Button onClick={() => dispatch(openToast("구독이 취소되었습니다."))}>구독취소</Button>
                     </Stack>
                 </Stack>
             </Dialog>
-            <Snackbar
-                open={toast}
-                autoHideDuration={3000}
-                message="구독이 취소되었습니다."
-                onClose={() => setToast(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            />
         </>
     );
 };

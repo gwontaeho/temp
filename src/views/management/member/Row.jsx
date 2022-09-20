@@ -19,6 +19,7 @@ import {
     TextField,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const Update = () => {
     const [open, setOpen] = useState(false);
@@ -27,7 +28,13 @@ const Update = () => {
             <MenuItem onClick={() => setOpen(true)}>구독 수정</MenuItem>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">구독수정</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">구독수정</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack>
                         <Stack direction="row" alignItems="center" spacing={3}>
                             <Typography
@@ -65,7 +72,7 @@ const Update = () => {
                                 </RadioGroup>
                             </FormControl>
                         </Stack>
-                        <Stack direction="row" alignItems="center" spacing={3}>
+                        <Stack direction="row" alignItems="center" spacing={1.5}>
                             <Typography
                                 fontWeight="bold"
                                 minWidth={150}
@@ -98,7 +105,13 @@ const Invite = () => {
             <Chip label="초대 재발송" variant="outlined" onClick={() => setOpen(true)} />
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">초대 재발송</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">초대 재발송</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack spacing={3} alignItems="center">
                         <Typography>선택된 멤버에게 초대 메일을 다시 발송하시겠습니까?</Typography>
                         <Button>확인</Button>
@@ -116,7 +129,13 @@ const Withdrawal = () => {
             <MenuItem onClick={() => setOpen(true)}>멤버 탈퇴</MenuItem>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">멤버탈퇴</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">멤버 탈퇴</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack>
                         <Stack direction="row" alignItems="center" spacing={3}>
                             <Typography
@@ -181,7 +200,13 @@ const Dormancy = () => {
             <MenuItem onClick={() => setOpen(true)}>휴면 해제</MenuItem>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">휴면 해제</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">휴면 해제</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack spacing={3} alignItems="center">
                         <Typography>000 님을 휴면해제 하시겠습니까?</Typography>
                         <Button onClick={handleClick}>확인</Button>
@@ -194,7 +219,7 @@ const Dormancy = () => {
                     <Stack spacing={3} alignItems="center">
                         <Typography>님의 휴면 상태가 해제되었습니다</Typography>
                         <Typography>해제일시 : 2022-07-22 15:00</Typography>
-                        <Typography>소중한 개인정보를 보호하기 위해 비밀번호를 변경해주세요</Typography>
+
                         <Button onClick={() => setCheck(false)}>확인</Button>
                     </Stack>
                 </Stack>
@@ -219,7 +244,13 @@ const MenuItemDialog = ({ handleClose, type }) => {
             <MenuItem onClick={() => setOpen(true)}>{option.title}</MenuItem>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">{option.title}</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">{option.title}</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
+
                     <Stack spacing={3} alignItems="center">
                         <Typography>{option.text}</Typography>
                         {option.subtext && <Typography variant="body2">{option.subtext}</Typography>}
@@ -246,7 +277,7 @@ export const Row = ({ v, i, dispatch, state }) => {
     };
 
     return (
-        <TableRow onClick={() => navigate("/management/member/detail")}>
+        <TableRow onClick={() => navigate("/management/member/detail")} sx={{ cursor: "pointer", ":hover": { bgcolor: "#eee" } }}>
             <TableCell padding="checkbox" align="center" onClick={(e) => e.stopPropagation()}>
                 <Checkbox checked={checked[i] || false} onChange={(e) => dispatch({ type: "setChecked", payload: { checked: e.target.checked, i } })} />
             </TableCell>

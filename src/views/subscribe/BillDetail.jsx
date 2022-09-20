@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Divider, Chip } from "@mui/material";
+import { IconButton, Stack, Typography, Button, Divider, Chip } from "@mui/material";
 import { ViewTitle } from "../../components/";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+
 export const BillDetail = () => {
     const navigate = useNavigate();
 
     return (
         <Stack spacing={3}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                <ViewTitle icon="bill" title="결제 내역" />
+            <Stack direction="row" alignItems="center" height={60}>
+                <IconButton onClick={() => navigate(-1)}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <ViewTitle title="결제 내역" />
             </Stack>
             <Stack spacing={5}>
                 <Stack spacing={3}>
@@ -43,9 +48,12 @@ export const BillDetail = () => {
                                     </Typography>
                                     <Stack p={2} alignItems="center" spacing={2}>
                                         <Typography>U2알리미</Typography>
-                                        <Stack p={1} bgcolor="#f2f3f7" borderRadius={1}>
-                                            <Typography>이용기간</Typography>
-                                            <Typography variant="caption">2022.12.12 ~ 2022.12.12</Typography>
+                                        <Stack p={1} bgcolor="#f2f3f7" borderRadius={1} direction="row" spacing={2}>
+                                            <Typography variant="body2">이용기간</Typography>
+                                            <Typography variant="caption">
+                                                2022.12.12
+                                                <br />~ 2022.12.12
+                                            </Typography>
                                         </Stack>
                                     </Stack>
                                 </Stack>

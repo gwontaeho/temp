@@ -95,7 +95,7 @@ export const SubscribeCreate = () => {
                                         <Typography fontWeight="bold">5,000원</Typography>
                                     </Stack>
                                     <Stack pl={3}>
-                                        <Typography>U2Cloud 이용 고객 전용 요금제</Typography>
+                                        <Typography variant="body2">U2Cloud 이용 고객 전용 요금제</Typography>
                                     </Stack>
                                 </Stack>
                             </Stack>

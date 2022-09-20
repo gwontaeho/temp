@@ -17,7 +17,9 @@ import {
     TableRow,
     Dialog,
     Tooltip,
+    IconButton,
 } from "@mui/material";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import WarningIcon from "@mui/icons-material/Warning";
 const initialState = { members: [] };
 
@@ -134,6 +136,9 @@ export const Invite = ({ open, setOpen }) => {
                 <Stack p={3} spacing={3}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography fontWeight="bold">멤버 초대</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
                     </Stack>
                     <Stack direction="row" justifyContent="space-between">
                         <Stack direction="row" spacing={1}>

@@ -22,15 +22,17 @@ export const QnaDetail = () => {
                         <Typography flex={1} fontWeight="bold">
                             제목
                         </Typography>
-                        <Typography variant="body2">2022.22.22</Typography>
+                        <Stack direction="row" alignItems="center">
+                            <IconButton onClick={() => navigate("/support/qna/create")}>
+                                <EditOutlinedIcon />
+                            </IconButton>
+                            <Typography variant="body2">2022.22.22</Typography>
+                        </Stack>
                     </Stack>
                     <Divider />
                 </Stack>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Chip label="사용문의" />
-                    <IconButton onClick={() => navigate("/support/qna/create")}>
-                        <EditOutlinedIcon />
-                    </IconButton>
                 </Stack>
                 <Typography>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur, sed beatae. Numquam perferendis ab necessitatibus nostrum aut quae

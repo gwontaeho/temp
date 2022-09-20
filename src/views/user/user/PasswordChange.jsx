@@ -1,7 +1,8 @@
-import { useState, useReducer, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Dialog, TextField } from "@mui/material";
-
+import { useReducer, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { Stack, Typography, Button, Dialog, TextField, IconButton } from "@mui/material";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { openToast } from "../../../redux/features/toast/toastSlice";
 const initialState = { pw: "", pwCheck: "", pwValidation: false, pwCheckValidation: false };
 
 const reducer = (state, { type, payload }) => {
@@ -24,15 +25,23 @@ const reducer = (state, { type, payload }) => {
 };
 
 export const PasswordChange = ({ open, setOpen }) => {
+    const reduxDispatch = useDispatch();
     const [state, dispatch] = useReducer(reducer, initialState);
     const { pw, pwCheck, pwValidation, pwCheckValidation } = state;
 
-    const handleClickChange = useCallback(() => {}, [state]);
+    const handleClickChange = useCallback(() => {
+        reduxDispatch(openToast("비밀번호가 변경되었습니다."));
+    }, [state]);
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
             <Stack p={3} spacing={3}>
-                <Typography fontWeight="bold">비밀번호 변경</Typography>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography fontWeight="bold">비밀번호 변경</Typography>
+                    <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                        <CloseOutlinedIcon />
+                    </IconButton>
+                </Stack>
                 <Stack>
                     <Stack direction="row" alignItems="center" spacing={3}>
                         <Typography fontWeight="bold" minWidth={150} px={2} py={4} bgcolor="#f2f3f7" sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>

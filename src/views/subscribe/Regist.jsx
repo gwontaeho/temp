@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Select, Dialog, Radio, RadioGroup, FormControlLabel, FormControl, TextField, Checkbox } from "@mui/material";
+import { IconButton, Stack, Typography, Button, Select, Dialog, Radio, RadioGroup, FormControlLabel, FormControl, TextField, Checkbox } from "@mui/material";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const initialState = { cardNum: ["", "", "", ""], expiration: "", birth: "", pw: "", birth2: "" };
 
@@ -98,7 +99,12 @@ export const Regist = ({ open, setOpen }) => {
     return (
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
             <Stack p={3} spacing={5}>
-                <Typography fontWeight="bold">결제수단 등록</Typography>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography fontWeight="bold">결제수단 등록</Typography>
+                    <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                        <CloseOutlinedIcon />
+                    </IconButton>
+                </Stack>
                 <Stack direction="row" spacing={3}>
                     <Stack bgcolor="#f2f3f7" sx={{ cursor: "pointer" }} py={2} px={3} borderRadius={1} onClick={() => setType(0)}>
                         <Typography>신용카드</Typography>

@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, Dialog, Snackbar } from "@mui/material";
+import { Stack, Typography, Button, IconButton, Dialog, Snackbar } from "@mui/material";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 import { ViewTitle } from "../../components/";
 import { PasswordChange } from "./user/PasswordChange";
@@ -20,9 +21,14 @@ const CancleButton = () => {
             <Button color="_gray" onClick={() => setOpen(true)}>
                 탈퇴철회
             </Button>
-            <Dialog open={open} onClose={() => setOpen(false)}>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <Stack p={3} spacing={3}>
-                    <Typography fontWeight="bold">탈퇴 철회</Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography fontWeight="bold">탈퇴 철회</Typography>
+                        <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Stack>
                     <Typography textAlign="center">
                         탈퇴 철회시, U2Cloud 를 계속 이용하실 수 있습니다.
                         <br />

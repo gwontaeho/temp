@@ -5,7 +5,10 @@ export const Usage = () => {
     return (
         <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between">
-                <Typography fontWeight="bold">이용현황</Typography>
+                <Stack direction="row" spacing={2}>
+                    <Typography fontWeight="bold">이용현황</Typography>
+                    <Typography>u2알리미</Typography>
+                </Stack>
                 <Stack direction="row" spacing={3}>
                     <Typography>2월</Typography>
                     <Typography>2022.12.12 ~ 2022.12.12</Typography>

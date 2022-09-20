@@ -1,7 +1,8 @@
 import { useState, useReducer, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, TextField, Checkbox, FormControlLabel, Dialog } from "@mui/material";
+import { Stack, Typography, IconButton, Button, TextField, Checkbox, FormControlLabel, Dialog } from "@mui/material";
 import DaumPostcodeEmbed from "react-daum-postcode";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const initialState = { team: "", name: "", num: "", phone: "", address: "", detailAddress: "", code: "" };
 
@@ -137,7 +138,12 @@ const AddressButton = ({ dispatch }) => {
                 검색
             </Button>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-                <DaumPostcodeEmbed onComplete={handleComplete} />
+                <Stack p={3} spacing={3}>
+                    <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                        <CloseOutlinedIcon />
+                    </IconButton>
+                    <DaumPostcodeEmbed onComplete={handleComplete} style={{ height: 450 }} />
+                </Stack>
             </Dialog>
         </>
     );

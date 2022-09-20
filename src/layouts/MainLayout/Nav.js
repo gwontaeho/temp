@@ -11,7 +11,7 @@ export const Nav = ({ menuOpen, setMenuOpen }) => {
     const management = [
         {
             name: "team",
-            title: "기관 관리",
+            title: "기관 정보",
             path: "/management/team",
         },
         {

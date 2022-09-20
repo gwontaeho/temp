@@ -1,6 +1,7 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, TextField, Stack, Button, Dialog, Radio, RadioGroup, FormControlLabel, FormControl } from "@mui/material";
+import { IconButton, Typography, TextField, Stack, Button, Dialog, Radio, RadioGroup, FormControlLabel, FormControl } from "@mui/material";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const initialState = { reason: "0", text: "" };
 
@@ -22,7 +23,13 @@ export const Withdrawal = ({ open, setOpen, checked }) => {
     return (
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
             <Stack p={3} spacing={3}>
-                <Typography fontWeight="bold">멤버 탈퇴</Typography>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography fontWeight="bold">멤버 탈퇴</Typography>
+                    <IconButton sx={{ alignSelf: "flex-end" }} onClick={() => setOpen(false)}>
+                        <CloseOutlinedIcon />
+                    </IconButton>
+                </Stack>
+
                 <Stack>
                     <Stack direction="row" alignItems="center" spacing={3}>
                         <Typography minWidth={150} px={2} py={4} bgcolor="#f2f3f7" sx={{ borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>

@@ -8,13 +8,14 @@ import {
     Chip,
     Avatar,
     Checkbox,
-    MenuItem,
+    IconButton,
     Button,
     RadioGroup,
     FormControlLabel,
     Radio,
     FormControl,
 } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 import { ViewTitle } from "../../components/";
 
@@ -221,8 +222,11 @@ export const MemberDetail = () => {
     return (
         <>
             <Stack spacing={3}>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" height={60}>
-                    <ViewTitle icon="user" title="멤버 정보" />
+                <Stack direction="row" alignItems="center" height={60}>
+                    <IconButton onClick={() => navigate(-1)}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                    <ViewTitle title="멤버 정보" />
                 </Stack>
 
                 <Stack bgcolor="#fff" flex={1} borderRadius={3} p={3} spacing={3}>

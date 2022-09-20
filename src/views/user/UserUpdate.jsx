@@ -1,6 +1,6 @@
 import { useCallback, useReducer, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Button, TextField, Select, MenuItem } from "@mui/material";
+import { Stack, Typography, Button, TextField } from "@mui/material";
 import { ViewTitle } from "../../components/";
 
 const initialState = { name: "", phone: "", nameError: false, phoneError: false };
@@ -37,6 +37,7 @@ export const UserUpdate = () => {
 
     const handleClickSubmit = useCallback(() => {
         validation();
+        navigate("/user");
     }, [state]);
 
     const validation = useCallback(() => {
