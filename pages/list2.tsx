@@ -4,7 +4,7 @@ import Layout from "components/Layout";
 import type { NextPageWithLayout } from "./_app";
 
 const Page: NextPageWithLayout = () => {
-    return <p>ㅅㄷㄴㅅ</p>;
+    return <p>리스트</p>;
 };
 
 Page.getLayout = function getLayout(page: ReactElement) {
