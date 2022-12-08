@@ -6,6 +6,10 @@ import Link from "next/link";
 const Nav = () => {
     const option = [
         {
+            primary: "메인",
+            href: "/",
+        },
+        {
             primary: "리스트",
             href: "list",
         },
@@ -16,12 +20,12 @@ const Nav = () => {
     ];
 
     return (
-        <Stack component="nav" width={200} height="100vh">
+        <Stack component="nav" width={250} height="100vh">
             <List>
                 {option.map(({ primary, href }) => {
                     return (
                         <Link key={href} href={href}>
-                            <ListItem disablePadding>
+                            <ListItem>
                                 <ListItemButton>
                                     <ListItemText primary={primary} />
                                 </ListItemButton>
@@ -29,6 +33,7 @@ const Nav = () => {
                         </Link>
                     );
                 })}
+                <Divider />
             </List>
         </Stack>
     );
@@ -36,11 +41,13 @@ const Nav = () => {
 
 const Layout = ({ children }: { children: ReactNode }) => {
     return (
-        <Stack direction="row">
-            <Nav />
-            <Divider orientation="vertical" flexItem />
-            <Stack component="main" p={3}>
-                {children}
+        <Stack width="100vw" height="100vh" alignItems="center">
+            <Stack direction="row" width="100%" maxWidth="lg">
+                <Nav />
+                <Divider orientation="vertical" flexItem />
+                <Stack component="main" p={3} flex={1}>
+                    {children}
+                </Stack>
             </Stack>
         </Stack>
     );
