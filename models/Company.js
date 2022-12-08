@@ -6,5 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         expiration: {
             type: DataTypes.DATE,
         },
+        latitude: {
+            type: DataTypes.DECIMAL(10, 6),
+        },
+        longitude: {
+            type: DataTypes.DECIMAL(10, 6),
+        },
     });
 };

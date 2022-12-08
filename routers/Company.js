@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express();
 const { Op } = require("sequelize");
-const { sequelize, Request } = require("../models");
+const { sequelize, Company } = require("../models");
 const { signToken } = require("../middlewares/jwt");
 
-// 요청 목록
+// 주위 업체
 router.get("/", async (req, res, next) => {
     const distance = sequelize.fn(
         "ST_Distance_Sphere",
@@ -13,10 +13,8 @@ router.get("/", async (req, res, next) => {
     );
 
     try {
-        const requests = await Request.findAll({
+        const requests = await Company.findAll({
             attributes: ["id", "address", [distance, "distance"]],
-            // where 문 상태 추가 (0)
-            // 블랙리스트 추가
             where: [sequelize.where(distance, "<=", 2000), { status: null }],
             order: [["distance", "ASC"]],
         });
@@ -27,11 +25,10 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-// 요청 생성
+// 업체 등록
 router.post("/", async (req, res, next) => {
     try {
-        const request = await Request.create(req.body);
-        console.log(request);
+        await Company.create(req.body);
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);

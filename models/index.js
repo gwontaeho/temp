@@ -35,16 +35,12 @@ db.Sequelize = Sequelize;
 
 module.exports = db;
 
-// db.User.belongsToMany(db.User, { through: db.Review, as: "writer", foreignKey: "writerId" });
-// db.User.belongsToMany(db.User, { through: db.Review, as: "target", foreignKey: "targetId" });
-// db.User.hasMany(db.Review);
-// db.Review.belongsTo(db.User);
-
-// db.User.belongsToMany(db.User, { through: db.Review, as: "writer", foreignKey: "writerId" });
-// db.User.belongsToMany(db.User, { through: db.Review, as: "target", foreignKey: "targetId" });
-
 db.User.hasMany(db.Review);
+db.User.hasMany(db.Review, { as: "Reviews_target", foreignKey: "TargetId" });
 db.Review.belongsTo(db.User);
+db.Review.belongsTo(db.User, { as: "Target" });
 
-db.User.hasMany(db.Review, { foreignKey: "targetId" });
-db.Review.belongsTo(db.User);
+db.User.hasMany(db.Blacklist);
+db.User.hasMany(db.Blacklist, { as: "Blacklist_target", foreignKey: "TargetId" });
+db.Blacklist.belongsTo(db.User);
+db.Blacklist.belongsTo(db.User, { as: "Target" });

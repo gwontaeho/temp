@@ -11,7 +11,7 @@ app.use(cors());
 
 sequelize
     .sync({
-        force: true,
+        force: false,
     })
     .then(() => {
         console.log("db 연결");

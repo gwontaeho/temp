@@ -25,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
         },
         latitude: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10, 6),
         },
         longitude: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10, 6),
         },
         share: {
             type: DataTypes.BOOLEAN,
