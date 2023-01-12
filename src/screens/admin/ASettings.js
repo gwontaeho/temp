@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useEffect, useContext} from 'react';
 import {SafeAreaView} from 'react-native';
 import {
   Button,
@@ -8,12 +8,12 @@ import {
   HStack,
   Divider,
   Input,
-  View,
   Heading,
+  View,
 } from 'native-base';
-import {AuthContext} from 'contexts';
+import {AuthContext} from '@contexts';
 
-export const CSettings = ({navigation}) => {
+export const ASettings = () => {
   const {auth, signOut} = useContext(AuthContext);
 
   return (
@@ -22,13 +22,7 @@ export const CSettings = ({navigation}) => {
         <Heading>설정</Heading>
       </View>
       <Divider />
-      <VStack flex={1} p={5} space={5}>
-        <Button
-          variant="outline"
-          onPress={() => navigation.navigate('CPrices')}>
-          단가 관리
-        </Button>
-        <Divider />
+      <VStack flex={1} p={5}>
         <Button onPress={signOut}>로그아웃</Button>
       </VStack>
     </SafeAreaView>

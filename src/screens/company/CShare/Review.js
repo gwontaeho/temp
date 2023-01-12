@@ -1,22 +1,14 @@
 import React, {useState, useContext} from 'react';
 import {SafeAreaView} from 'react-native';
-import {
-  VStack,
-  Button,
-  Heading,
-  Center,
-  Input,
-  View,
-  Divider,
-  FormControl,
-  ScrollView,
-} from 'native-base';
-import {useMutation} from '@tanstack/react-query';
+import {VStack, Button, Heading, Center, View, Divider} from 'native-base';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {completeRequestByUser} from '@apis';
 import {AuthContext} from '@contexts';
 import {ModalFormInput} from '@components';
 
 export const Review = ({data, refetch}) => {
+  const queryClient = useQueryClient();
+
   const {auth} = useContext(AuthContext);
 
   const {id, TargetId} = data;
@@ -25,7 +17,11 @@ export const Review = ({data, refetch}) => {
 
   const {mutate} = useMutation({
     mutationFn: variables => completeRequestByUser(variables),
-    onSettled: refetch,
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CShares']});
+
+      refetch();
+    },
   });
 
   const handlePressSubmit = block => {

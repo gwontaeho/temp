@@ -13,18 +13,12 @@ import {
 } from 'native-base';
 import {AuthContext} from '@contexts';
 
-export const USettings = () => {
+export const AUsers = ({navigation}) => {
   const {auth, signOut} = useContext(AuthContext);
 
   return (
     <SafeAreaView flex={1}>
-      <View h={120} px={10} justifyContent="center">
-        <Heading>설정</Heading>
-      </View>
-      <Divider />
-      <VStack flex={1} p={5}>
-        <Button onPress={signOut}>로그아웃</Button>
-      </VStack>
+      <VStack flex={1} py={5} px={10}></VStack>
     </SafeAreaView>
   );
 };

@@ -1,87 +1,115 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {
-  Button,
-  Text,
-  VStack,
-  Heading,
-  HStack,
-  FlatList,
-  View,
-  Modal,
-} from 'native-base';
+import {Button, Text, VStack, Badge, HStack} from 'native-base';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {completeRequestByCompany, cancelRequestByCompany} from '@apis';
 
-const ModalDetail = () => {
-  const [open, setOpen] = useState(false);
+export const CHistory = ({navigation, route}) => {
+  const queryClient = useQueryClient();
 
-  const close = () => {
-    setOpen(false);
-  };
+  const {params = {}} = route;
+  const {
+    id,
+    category,
+    price,
+    time,
+    personnel,
+    description,
+    description_company,
+    address,
+    address_detail,
+    status,
+    share,
+    User,
+  } = params;
+  const {phone} = User;
 
-  return (
-    <>
-      <Button size="sm" onPress={() => setOpen(true)}>
-        상세보기
-      </Button>
-      <Modal isOpen={open} onClose={close}>
-        <Modal.Content>
-          <Modal.Body alignItems="center">
-            <Text>수원시 장안구</Text>
-            <Text>아로마 · 90분 · 3인 · 7km</Text>
-            <Text>카드결제 할게요</Text>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              <Button variant="outline" onPress={close}>
-                취소
-              </Button>
-              <Button>수락</Button>
-            </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
-    </>
-  );
-};
+  const shareStr = share ? '업체' : '사용자';
+  const shareColorScheme = share ? 'secondary' : 'primary';
 
-const renderItem = () => {
-  return (
-    <HStack
-      p={3}
-      alignItems="center"
-      borderWidth={1}
-      justifyContent="space-between">
-      <Text>아로마 · 90분 · 3인 · 7km</Text>
-      <ModalDetail />
-    </HStack>
-  );
-};
+  const statusStr =
+    status === 2 ? '대기 중' : status === 3 ? '진행 중' : '완료';
+  const borderColor =
+    status === 2 ? 'info.600' : status === 3 ? 'success.600' : 'gray.600';
+  const colorScheme = status === 2 ? 'info' : status === 3 ? 'success' : 'gray';
 
-export const CHistory = () => {
-  const data = [
-    {id: 1},
-    {id: 2},
-    {id: 3},
-    {id: 4},
-    {id: 5},
-    {id: 6},
-    // {id: 7},
-    // {id: 8},
-    // {id: 9},
-    // {id: 10},
-    // {id: 11},
-  ];
+  const {mutate: completeMutate} = useMutation({
+    mutationFn: () => completeRequestByCompany(id),
+    onSuccess: () => {
+      navigation.setParams({...params, status: 4});
+      queryClient.invalidateQueries({queryKey: ['CHistories']});
+    },
+  });
+
+  const {mutate: cancelMutate} = useMutation({
+    mutationFn: () => cancelRequestByCompany(id),
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CHistories']});
+      queryClient.invalidateQueries({queryKey: ['CRequests']});
+      navigation.goBack();
+    },
+  });
 
   return (
     <SafeAreaView flex={1}>
-      <Heading p={10}>매칭 리스트</Heading>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={<View p={2.5} />}
-        _contentContainerStyle={{p: 5}}
-      />
+      <VStack
+        p={5}
+        space={10}
+        borderWidth={1}
+        borderColor={borderColor}
+        m={5}
+        rounded="sm">
+        <HStack space={1}>
+          <Badge
+            alignSelf="flex-start"
+            variant="outline"
+            colorScheme={shareColorScheme}>
+            {shareStr}
+          </Badge>
+          <Badge
+            alignSelf="flex-start"
+            variant="outline"
+            colorScheme={colorScheme}>
+            {statusStr}
+          </Badge>
+        </HStack>
+        <Text
+          textAlign="center"
+          fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${price}원`}</Text>
+        <VStack space={5} rounded="sm" borderColor="gray.300">
+          <VStack space={1}>
+            <Text color="gray.600">연락처</Text>
+            <Text fontSize="md">{phone}</Text>
+          </VStack>
+          <VStack space={1}>
+            <Text color="gray.600">주소</Text>
+            <VStack>
+              <Text fontSize="md">{`${address}`}</Text>
+              {!!address_detail && (
+                <Text fontSize="md">{`${address_detail}`}</Text>
+              )}
+            </VStack>
+          </VStack>
+          {!!description && (
+            <VStack space={1}>
+              <Text color="gray.600">요청 메세지</Text>
+              <Text fontSize="md">{description}</Text>
+            </VStack>
+          )}
+          {!!description_company && (
+            <VStack space={1}>
+              <Text color="gray.600">업체 메세지</Text>
+              <Text fontSize="md">{description_company}</Text>
+            </VStack>
+          )}
+        </VStack>
+        {status === 3 && (
+          <VStack space={3}>
+            <Button onPress={cancelMutate}>취소</Button>
+            <Button onPress={completeMutate}>완료</Button>
+          </VStack>
+        )}
+      </VStack>
     </SafeAreaView>
   );
 };

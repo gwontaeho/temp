@@ -10,20 +10,33 @@ import {
   Modal,
   Divider,
 } from 'native-base';
-import {useMutation} from '@tanstack/react-query';
-import {cancelRequestByUser, rejectRequest, acceptRequestByUser} from '@apis';
+import {useNavigation} from '@react-navigation/native';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {
+  cancelRequestByUser,
+  rejectRequestByUser,
+  acceptRequestByUser,
+} from '@apis';
 
 const ModalAccept = ({data, refetch}) => {
-  const {id, status, description_company} = data;
+  const queryClient = useQueryClient();
+
+  const {id, status, Target, TargetId, description_company} = data;
 
   const {mutate: rejectMutate} = useMutation({
-    mutationFn: () => rejectRequest(id),
-    onSettled: refetch,
+    mutationFn: () => rejectRequestByUser(id),
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CShares']});
+      refetch();
+    },
   });
 
   const {mutate: acceptMutate} = useMutation({
     mutationFn: () => acceptRequestByUser(id),
-    onSettled: refetch,
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CShares']});
+      refetch();
+    },
   });
 
   return (
@@ -63,9 +76,15 @@ export const After = ({data, refetch}) => {
     description_company,
   } = data;
 
+  const navigation = useNavigation();
+  const queryClient = useQueryClient();
+
   const {mutate} = useMutation({
     mutationFn: () => cancelRequestByUser(id),
-    onSettled: refetch,
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CShares']});
+      navigation.goBack();
+    },
   });
 
   const statusStr = status === 3 ? '업체 이동 중' : '인근 업체 매칭 중';
@@ -101,17 +120,18 @@ export const After = ({data, refetch}) => {
             mx={5}
             py={3}
             px={5}
-            space={1}
             borderWidth={1}
             rounded="sm"
             borderColor="gray.300">
-            <Text color="gray.600">업체 메세지</Text>
-            <Text fontSize="md">{description_company}</Text>
+            <Text color="gray.600" fontSize="xs">
+              업체 메세지
+            </Text>
+            <Text>{description_company}</Text>
           </VStack>
         )}
 
         {(status === 1 || status === 2) && (
-          <VStack p={5} space={1}>
+          <VStack m={5} space={1}>
             <Text alignSelf="center" color="warning.600">
               고의적으로 취소 반복 시 이용이 정지 될 수 있습니다
             </Text>
@@ -120,7 +140,7 @@ export const After = ({data, refetch}) => {
         )}
 
         {status === 3 && (
-          <HStack m={5}>
+          <HStack m={5} space={3}>
             <Button flex={1}>전화하기</Button>
           </HStack>
         )}

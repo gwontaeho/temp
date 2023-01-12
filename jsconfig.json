@@ -4,7 +4,8 @@
     "paths": {
       "@components": ["components"],
       "@screens/*": ["screens/*"],
-      "@context": ["context"]
+      "@contexts": ["contexts"],
+      "@apis": ["apis"]
     }
   }
 }

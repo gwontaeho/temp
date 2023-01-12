@@ -1,30 +1,22 @@
-import React, {useState, useEffect, useReducer, useContext} from 'react';
+import React, {useReducer, useContext} from 'react';
 import {SafeAreaView} from 'react-native';
-import {
-  VStack,
-  Button,
-  Heading,
-  ScrollView,
-  Text,
-  HStack,
-  Divider,
-} from 'native-base';
-import Geolocation from 'react-native-geolocation-service';
-import {useQuery, useMutation} from '@tanstack/react-query';
-import axios from 'axios';
+import {VStack, Button, ScrollView, Text, HStack} from 'native-base';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+
 import {createRequest, getAveragePrices} from '@apis';
 import {AuthContext} from '@contexts';
-import {ModalFormAddress, ModalFormURequest} from '@components';
+import {ModalFormAddress, ModalFormCShare} from '@components';
 
 const initialState = {
   longitude: 0,
   latitude: 0,
   category: '타이',
   time: 60,
-  price: 0,
+  price: '',
   description: '',
   personnel: 1,
   address: '',
+  phone: '',
   address_detail: '',
 };
 
@@ -40,13 +32,12 @@ const reducer = (state, {type, payload}) => {
       return {...state, ...payload};
     case 'setDetail':
       return {...state, ...payload};
-    case 'setPrice':
-      return {...state, price: payload};
   }
 };
 
-export const Before = ({refetch}) => {
+export const CShareCreate = ({navigation}) => {
   const {auth} = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   const personnels = [1, 2, 3, 4];
   const categories = ['타이', '아로마', '스웨디시', '스페셜'];
@@ -63,8 +54,8 @@ export const Before = ({refetch}) => {
     longitude,
     description,
     address_detail,
+    phone,
   } = state;
-  const [errorMessage, setErrorMessage] = useState('');
 
   const {data} = useQuery({
     queryKey: ['AveragePrices'],
@@ -73,37 +64,11 @@ export const Before = ({refetch}) => {
 
   const {mutate} = useMutation({
     mutationFn: variables => createRequest(variables),
-    onSettled: refetch,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['CShares']});
+      navigation.goBack();
+    },
   });
-
-  useEffect(() => {
-    getCurrentPosition();
-  }, []);
-
-  const getCurrentPosition = () => {
-    Geolocation.getCurrentPosition(
-      async position => {
-        const {latitude, longitude} = position.coords;
-        const key = 'AIzaSyCkSBVah-2JTELaurbDImw32xidwTLY6CE';
-        try {
-          const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${key}`,
-          );
-
-          const {formatted_address} = response.data.results[0];
-          dispatch({
-            type: 'setAddress',
-            payload: {address: formatted_address, longitude, latitude},
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      error => {
-        console.log(error.code, error.message);
-      },
-    );
-  };
 
   const average_price = Math.ceil(
     data?.find(v => v.category === category)?.[`avg_price_${time}`] || 0,
@@ -111,25 +76,30 @@ export const Before = ({refetch}) => {
 
   const handlePressSubmit = () => {
     if ((!price && !average_price) || !latitude || !longitude) return;
-    mutate({...state, UserId: auth.id, price: price || average_price});
+    mutate({
+      ...state,
+      UserId: auth.id,
+      share: true,
+      price: price || average_price,
+    });
   };
 
   return (
     <SafeAreaView flex={1}>
-      <HStack
-        alignItems="center"
-        justifyContent="space-between"
-        h={120}
-        px={10}>
-        <Heading>요청하기</Heading>
-        <ModalFormAddress label="위치 수동입력" onComplete={v => dispatch(v)} />
-      </HStack>
-      <Text color="gray.600" bold alignSelf="flex-end" px={10} pb={5}>
-        {address || '위치를 찾을 수 없습니다'}
-      </Text>
-      <Divider />
       <ScrollView>
         <VStack flex={1} p={5} space={10}>
+          <VStack space={3} alignItems="flex-end">
+            <HStack>
+              <ModalFormAddress
+                label="위치 입력"
+                onComplete={v => dispatch(v)}
+              />
+            </HStack>
+            <Text color="gray.600" bold>
+              {address || '위치를 입력해주세요'}
+            </Text>
+          </VStack>
+
           <VStack space={3}>
             <Button.Group isAttached w="full" size="sm">
               {personnels.map(v => {
@@ -173,23 +143,18 @@ export const Before = ({refetch}) => {
                 );
               })}
             </Button.Group>
-
-            <Text color="info.600">
-              * 아래 금액은 업체들이 설정한 평균 희망금액입니다
-            </Text>
           </VStack>
-          <ModalFormURequest
-            values={{
-              price,
-              description,
-              address_detail,
-              average_price,
-            }}
+
+          <ModalFormCShare
+            values={{price, phone, description, address_detail, average_price}}
             onComplete={v => dispatch({type: 'setDetail', payload: v})}
           />
+
           <Button
             onPress={handlePressSubmit}
-            isDisabled={(!price && !average_price) || !latitude || !longitude}>
+            isDisabled={
+              (!price && !average_price) || !latitude || !longitude || !phone
+            }>
             요청하기
           </Button>
         </VStack>
