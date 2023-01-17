@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         status: {
             type: DataTypes.INTEGER,
+            defaultValue: 1,
         },
     });
 };

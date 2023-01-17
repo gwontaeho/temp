@@ -4,13 +4,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(20),
         },
         expiration: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING(8),
         },
         latitude: {
             type: DataTypes.DECIMAL(10, 6),
         },
         longitude: {
             type: DataTypes.DECIMAL(10, 6),
+        },
+        distance: {
+            type: DataTypes.INTEGER,
+            defaultValue: 30000,
         },
     });
 };

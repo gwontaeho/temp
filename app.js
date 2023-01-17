@@ -12,6 +12,7 @@ app.use(cors());
 sequelize
     .sync({
         force: false,
+        alter: false,
     })
     .then(() => {
         console.log("db 연결");
@@ -22,4 +23,6 @@ sequelize
 
 app.use("/api", routers);
 
-app.listen(port, () => {});
+app.listen(port, () => {
+    console.log(process.env.NODE_ENV);
+});
