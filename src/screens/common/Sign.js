@@ -1,10 +1,73 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {SafeAreaView, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Modal,
+} from 'react-native';
 import {Button, Text, VStack, Input, FormControl, Heading} from 'native-base';
 import {useMutation} from '@tanstack/react-query';
 import DeviceInfo from 'react-native-device-info';
 import {AuthContext} from 'contexts';
 import {sms, sign, inquiry} from '@apis';
+
+export const ModalInquiry = ({phone, device}) => {
+  const {signIn} = useContext(AuthContext);
+
+  const [visible, setVisible] = useState(false);
+  const [company_name, setCompany_name] = useState('');
+
+  const {mutate: inquiryMutate} = useMutation({
+    mutationFn: () => inquiry({phone, device, company_name}),
+    onSuccess: data => {
+      // 로그인 성공
+      const {user, token} = data;
+      const {id, phone, role, status} = user;
+      signIn({id, phone, role, status, token});
+    },
+    onError: error => {
+      // 로그인 실패
+      setSignError(true);
+    },
+    onSettled: () => setVisible(false),
+  });
+
+  return (
+    <>
+      <Button variant="outline" onPress={() => setVisible(true)}>
+        업체 등록 문의
+      </Button>
+      <Modal
+        animationType="fade"
+        visible={visible}
+        onRequestClose={() => setVisible(false)}>
+        <SafeAreaView>
+          <Button
+            variant="ghost"
+            alignSelf="flex-end"
+            mr={5}
+            onPress={() => setVisible(false)}>
+            닫기
+          </Button>
+
+          <VStack p={5} space={10}>
+            <FormControl>
+              <FormControl.Label>업체명을 입력해주세요</FormControl.Label>
+              <Input
+                value={company_name}
+                onChangeText={v => setCompany_name(v)}
+                variant="underlined"
+              />
+            </FormControl>
+            <Button w="full" onPress={inquiryMutate}>
+              확인
+            </Button>
+          </VStack>
+        </SafeAreaView>
+      </Modal>
+    </>
+  );
+};
 
 export const Sign = () => {
   const {auth, signIn} = useContext(AuthContext);
@@ -32,20 +95,6 @@ export const Sign = () => {
       const {user, token} = data;
       const {id, phone, role, status, Company} = user;
       signIn({id, phone, role, status, token, Company});
-    },
-    onError: error => {
-      // 로그인 실패
-      setSignError(true);
-    },
-  });
-
-  const {mutate: inquiryMutate} = useMutation({
-    mutationFn: () => inquiry({phone, device}),
-    onSuccess: data => {
-      // 로그인 성공
-      const {user, token} = data;
-      const {id, phone, role, status} = user;
-      signIn({id, phone, role, status, token});
     },
     onError: error => {
       // 로그인 실패
@@ -112,9 +161,7 @@ export const Sign = () => {
             </FormControl>
           </VStack>
           <Button onPress={handlePressSign}>로그인</Button>
-          <Button onPress={inquiryMutate} variant="outline">
-            업체 등록 문의
-          </Button>
+          <ModalInquiry phone={phone} device={device} />
           <Text color="warning.600" textAlign="center">
             {signError ? '로그인에 실패하였습니다' : ' '}
           </Text>

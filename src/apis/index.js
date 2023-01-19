@@ -1,6 +1,9 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
-axios.defaults.baseURL = 'http://192.168.45.188:4000/api';
+// 배포
+// axios.defaults.baseURL = 'http://34.64.79.2:4000/api';
+// 투썸
+axios.defaults.baseURL = 'http://192.168.45.72:4000/api';
 
 /******************************************************************************/
 
@@ -130,6 +133,12 @@ const getNearbyRequests = async ({latitude, longitude, distance}) => {
   return data;
 };
 
+// 업체 : 요청 카운트
+const getCount = async TargetId => {
+  const {data} = await axios.get(`/requests/targets/${TargetId}/count`);
+  return data;
+};
+
 // 업체 : 매칭된 모든 요청 조회
 const getHistories = async TargetId => {
   const {data} = await axios.get(`/requests/targets/${TargetId}`);
@@ -238,6 +247,7 @@ export {
 export {
   getRequest,
   getNearbyRequests,
+  getCount,
   getHistories,
   getShares,
   acceptRequestByCompany,

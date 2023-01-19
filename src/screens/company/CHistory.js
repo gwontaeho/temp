@@ -39,11 +39,15 @@ export const CHistory = ({navigation, route}) => {
       navigation.setParams({...params, status: 4});
       queryClient.invalidateQueries({queryKey: ['CHistories']});
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CCount']});
+    },
   });
 
   const {mutate: cancelMutate} = useMutation({
     mutationFn: () => cancelRequestByCompany(id),
     onSettled: () => {
+      queryClient.invalidateQueries({queryKey: ['CCount']});
       queryClient.invalidateQueries({queryKey: ['CHistories']});
       queryClient.invalidateQueries({queryKey: ['CRequests']});
       navigation.goBack();

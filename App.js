@@ -9,7 +9,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {AuthContext} from '@contexts';
-import {Sign, Block, Inquiry} from '@screens/common';
+import {Sign, Block, Inquiry, ErrorScreen} from '@screens/common';
 import {
   ADashboard,
   ACompanies,
@@ -177,12 +177,22 @@ const App = () => {
   const isCompany = isSigned && auth.status === 1 && auth.role === 2;
   const isAdmin = isSigned && auth.status === 1 && auth.role === 9;
 
+  const isError =
+    isSigned && !isBlocked && !isInquiry && !isUser && !isCompany && !isAdmin;
+
   return (
     <NativeBaseProvider>
       <QueryClientProvider client={queryClient}>
         <AuthContext.Provider value={{auth, signIn, signOut}}>
           <NavigationContainer>
             <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
+              {isError && (
+                <Stack.Screen
+                  name="Error"
+                  component={ErrorScreen}
+                  options={{headerShown: false}}
+                />
+              )}
               {isBlocked && (
                 <Stack.Screen
                   name="Block"

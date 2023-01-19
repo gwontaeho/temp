@@ -34,10 +34,10 @@ export const AInquiries = ({navigation}) => {
   });
 
   const renderItem = ({item}) => {
-    const {id, phone} = item;
+    const {id, phone, company_name} = item;
 
     const handlePressAccept = () => {
-      acceptMutate({id});
+      acceptMutate({id, company_name});
     };
 
     const handlePressReject = () => {

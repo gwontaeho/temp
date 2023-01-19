@@ -34,10 +34,16 @@ export const CRequest = ({navigation, route}) => {
 
   const {mutate} = useMutation({
     mutationFn: () =>
-      acceptRequestByCompany({id, TargetId: auth.id, description_company}),
+      acceptRequestByCompany({
+        id,
+        TargetId: auth.id,
+        description_company,
+        distance: d,
+      }),
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['CHistories']}),
     onSettled: () => {
       queryClient.invalidateQueries({queryKey: ['CRequests']});
+      queryClient.invalidateQueries({queryKey: ['CCount']});
       navigation.goBack();
     },
   });

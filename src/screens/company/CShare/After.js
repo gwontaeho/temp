@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, Linking} from 'react-native';
 import {
   VStack,
   Button,
@@ -21,7 +21,8 @@ import {
 const ModalAccept = ({data, refetch}) => {
   const queryClient = useQueryClient();
 
-  const {id, status, Target, TargetId, description_company} = data;
+  const {id, status, Target, TargetId, description_company, count, distance} =
+    data;
 
   const {mutate: rejectMutate} = useMutation({
     mutationFn: () => rejectRequestByUser(id),
@@ -42,9 +43,24 @@ const ModalAccept = ({data, refetch}) => {
   return (
     <Modal isOpen={status === 2}>
       <Modal.Content>
-        <Modal.Body alignItems="center">
-          <VStack space={3} alignItems="center">
-            <Text fontSize="md">{description_company}</Text>
+        <Modal.Body>
+          <VStack space={5}>
+            <VStack>
+              <Text>업체명</Text>
+              <Text fontSize="md">{`테스트`}</Text>
+            </VStack>
+            <VStack>
+              <Text>업체메세지</Text>
+              <Text fontSize="md">{description_company}</Text>
+            </VStack>
+            <VStack>
+              <Text
+                fontSize="md"
+                color="gray.600">{`이 업체를 ${count}회 이용했습니다`}</Text>
+              <Text
+                fontSize="md"
+                color="gray.600">{`업체와의 거리 ${distance}km`}</Text>
+            </VStack>
           </VStack>
         </Modal.Body>
         <Modal.Footer>
@@ -74,6 +90,7 @@ export const After = ({data, refetch}) => {
     address_detail,
     description,
     description_company,
+    phone,
   } = data;
 
   const navigation = useNavigation();
@@ -88,6 +105,10 @@ export const After = ({data, refetch}) => {
   });
 
   const statusStr = status === 3 ? '업체 이동 중' : '인근 업체 매칭 중';
+
+  const handlePressTel = () => {
+    Linking.openURL(`tel:${phone}`);
+  };
 
   return (
     <>
@@ -141,7 +162,9 @@ export const After = ({data, refetch}) => {
 
         {status === 3 && (
           <HStack m={5} space={3}>
-            <Button flex={1}>전화하기</Button>
+            <Button flex={1} onPress={handlePressTel}>
+              전화하기
+            </Button>
           </HStack>
         )}
       </SafeAreaView>

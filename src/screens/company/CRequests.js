@@ -11,11 +11,12 @@ import {
   Spinner,
   Divider,
   Badge,
+  Center,
 } from 'native-base';
 import Geolocation from 'react-native-geolocation-service';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import {getNearbyRequests} from '@apis';
+import {getNearbyRequests, getCount} from '@apis';
 import {AuthContext} from '@contexts';
 import dayjs from 'dayjs';
 
@@ -23,7 +24,7 @@ export const CRequests = ({navigation}) => {
   const {auth} = useContext(AuthContext);
 
   const {Company} = auth;
-  const {expiration, distance} = Company || {};
+  const {expiration, distance, max_count} = Company || {};
 
   const today = dayjs(dayjs().format('YYYYMMDD'));
   const diff = expiration
@@ -43,6 +44,14 @@ export const CRequests = ({navigation}) => {
     longitude: 0,
   });
   const {latitude, longitude} = location;
+
+  const {data: countData, isSuccess} = useQuery({
+    queryKey: ['CCount'],
+    queryFn: () => getCount(auth.id),
+    enabled: !!auth.id,
+  });
+
+  const count = countData?.count || 0;
 
   const {data} = useQuery({
     queryKey: ['CRequests'],
@@ -84,6 +93,10 @@ export const CRequests = ({navigation}) => {
     const borderColor = share ? 'secondary.600' : 'primary.600';
     const colorScheme = share ? 'secondary' : 'primary';
 
+    const handlePressDetail = () => {
+      isSuccess && navigation.navigate('CRequest', item);
+    };
+
     return (
       <VStack
         p={3}
@@ -100,9 +113,7 @@ export const CRequests = ({navigation}) => {
         </Badge>
         <HStack alignItems="center" justifyContent="space-between">
           <Text>{`${category} · ${time}분 · ${personnel}인 · ${d}km`}</Text>
-          <Button
-            size="sm"
-            onPress={() => navigation.navigate('CRequest', item)}>
+          <Button size="sm" onPress={handlePressDetail} disabled={!isSuccess}>
             자세히
           </Button>
         </HStack>
@@ -139,15 +150,28 @@ export const CRequests = ({navigation}) => {
         </Text>
       </VStack>
       <Divider />
-      {!expired && (
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          ItemSeparatorComponent={<View p={2.5} />}
-          _contentContainerStyle={{p: 5}}
-        />
-      )}
+      <View flex={1}>
+        {!expired && (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            ItemSeparatorComponent={<View p={2.5} />}
+            _contentContainerStyle={{p: 5}}
+          />
+        )}
+        {count >= max_count && (
+          <Center
+            position="absolute"
+            w="full"
+            h="full"
+            bgColor="#0000001A"
+            zIndex={9999}>
+            <Text fontSize="3xl">{`${count} / ${max_count}`}</Text>
+            <Text fontSize="xl">진행중인 콜을 먼저 완료해주세요</Text>
+          </Center>
+        )}
+      </View>
     </SafeAreaView>
   );
 };
