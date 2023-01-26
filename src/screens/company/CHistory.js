@@ -1,5 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
+import dayjs from 'dayjs';
 import {Button, Text, VStack, Badge, HStack} from 'native-base';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {completeRequestByCompany, cancelRequestByCompany} from '@apis';
@@ -21,8 +22,20 @@ export const CHistory = ({navigation, route}) => {
     status,
     share,
     User,
+    updatedAt,
   } = params;
   const {phone} = User;
+
+  console.log('a');
+
+  const today = dayjs();
+  const updated = dayjs(updatedAt);
+  const diff = today.diff(updated, 'minute');
+
+  const dateStr =
+    status === 4 || status === 5
+      ? updated.format('YY. MM. DD')
+      : `${diff}분 전`;
 
   const shareStr = share ? '업체' : '사용자';
   const shareColorScheme = share ? 'secondary' : 'primary';
@@ -40,14 +53,13 @@ export const CHistory = ({navigation, route}) => {
       queryClient.invalidateQueries({queryKey: ['CHistories']});
     },
     onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CCount']});
+      queryClient.invalidateQueries({queryKey: ['CRequests']});
     },
   });
 
   const {mutate: cancelMutate} = useMutation({
     mutationFn: () => cancelRequestByCompany(id),
     onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CCount']});
       queryClient.invalidateQueries({queryKey: ['CHistories']});
       queryClient.invalidateQueries({queryKey: ['CRequests']});
       navigation.goBack();
@@ -63,19 +75,22 @@ export const CHistory = ({navigation, route}) => {
         borderColor={borderColor}
         m={5}
         rounded="sm">
-        <HStack space={1}>
-          <Badge
-            alignSelf="flex-start"
-            variant="outline"
-            colorScheme={shareColorScheme}>
-            {shareStr}
-          </Badge>
-          <Badge
-            alignSelf="flex-start"
-            variant="outline"
-            colorScheme={colorScheme}>
-            {statusStr}
-          </Badge>
+        <HStack justifyContent="space-between">
+          <HStack space={1}>
+            <Badge
+              alignSelf="flex-start"
+              variant="outline"
+              colorScheme={shareColorScheme}>
+              {shareStr}
+            </Badge>
+            <Badge
+              alignSelf="flex-start"
+              variant="outline"
+              colorScheme={colorScheme}>
+              {statusStr}
+            </Badge>
+          </HStack>
+          <Text fontSize="xs">{dateStr}</Text>
         </HStack>
         <Text
           textAlign="center"
@@ -112,6 +127,9 @@ export const CHistory = ({navigation, route}) => {
             <Button onPress={cancelMutate}>취소</Button>
             <Button onPress={completeMutate}>완료</Button>
           </VStack>
+        )}
+        {status === 2 && diff > 5 && (
+          <Button onPress={cancelMutate}>취소</Button>
         )}
       </VStack>
     </SafeAreaView>

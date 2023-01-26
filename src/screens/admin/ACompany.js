@@ -6,7 +6,6 @@ import {
   VStack,
   HStack,
   Divider,
-  Heading,
   Input,
   FormControl,
   ScrollView,
@@ -19,7 +18,8 @@ export const ACompany = ({navigation, route}) => {
   const queryClient = useQueryClient();
 
   const {params = {}} = route;
-  const {id, name, status, Company, phone} = params;
+  const {id, status, Company, phone} = params;
+  const {name} = Company;
 
   const today = dayjs(dayjs().format('YYYYMMDD'));
 

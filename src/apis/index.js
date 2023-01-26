@@ -2,8 +2,8 @@ import axios from 'axios';
 import CryptoJS from 'crypto-js';
 // 배포
 // axios.defaults.baseURL = 'http://34.64.79.2:4000/api';
-// 투썸
-axios.defaults.baseURL = 'http://192.168.45.72:4000/api';
+
+axios.defaults.baseURL = 'http://192.168.0.4:4000/api';
 
 /******************************************************************************/
 
@@ -58,6 +58,12 @@ const sms = async ({content, to}) => {
 
 /******************************************************************************/
 
+// 사용자 조회
+const getUser = async id => {
+  const {data} = await axios.get(`/users/${id}`);
+  return data;
+};
+
 // 로그인, 회원가입
 const sign = async values => {
   const {data} = await axios.post('/users/sign', values);
@@ -76,7 +82,11 @@ const getAveragePrices = async values => {
   return data;
 };
 
-/******************************************************************************/
+// 유저 : 약관 동의
+const updateUserTerms = async id => {
+  const {data} = await axios.put(`/users/${id}/terms`);
+  return data;
+};
 
 // 업체, 유저 : 요청 생성
 const createRequest = async values => {
@@ -126,16 +136,18 @@ const getRequest = async id => {
 };
 
 // 업체 : 인근 요청 조회
-const getNearbyRequests = async ({latitude, longitude, distance}) => {
+const getNearbyRequests = async ({
+  latitude,
+  longitude,
+  distance,
+  sort,
+  filter,
+  TargetId,
+}) => {
+  const {time} = filter;
   const {data} = await axios.get(
-    `/requests?latitude=${latitude}&longitude=${longitude}&distance=${distance}`,
+    `/requests?TargetId=${TargetId}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&sort=${sort}&time=${time}`,
   );
-  return data;
-};
-
-// 업체 : 요청 카운트
-const getCount = async TargetId => {
-  const {data} = await axios.get(`/requests/targets/${TargetId}/count`);
   return data;
 };
 
@@ -247,7 +259,6 @@ export {
 export {
   getRequest,
   getNearbyRequests,
-  getCount,
   getHistories,
   getShares,
   acceptRequestByCompany,
@@ -269,4 +280,12 @@ export {
   updateExpiration,
 };
 
-export {sms, sign, inquiry, createRequest, getAveragePrices};
+export {
+  sms,
+  sign,
+  inquiry,
+  createRequest,
+  getAveragePrices,
+  updateUserTerms,
+  getUser,
+};

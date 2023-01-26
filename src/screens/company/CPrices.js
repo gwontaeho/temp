@@ -30,7 +30,6 @@ export const CPrices = () => {
     queryKey: ['CAveragePrices'],
     queryFn: getAveragePrices,
   });
-  console.log(avgPrices);
 
   const {data = [], refetch} = useQuery({
     queryKey: ['CPrices'],
@@ -48,72 +47,70 @@ export const CPrices = () => {
   };
 
   return (
-    <>
-      <SafeAreaView flex={1}>
-        <ScrollView>
-          <VStack p={5} space={5}>
-            {categories.map(category => {
-              const categoryData = data.find(v => v.category === category);
-              const {
-                price_60 = '-',
-                price_90 = '-',
-                price_120 = '-',
-                price_150 = '-',
-              } = {...categoryData};
+    <SafeAreaView flex={1}>
+      <ScrollView>
+        <VStack p={5} space={5}>
+          {categories.map(category => {
+            const categoryData = data.find(v => v.category === category);
+            const {
+              price_60 = '-',
+              price_90 = '-',
+              price_120 = '-',
+              price_150 = '-',
+            } = {...categoryData};
 
-              const borderColor = !!categoryData ? 'info.600' : 'gray.600';
+            const borderColor = !!categoryData ? 'info.600' : 'gray.600';
 
-              return (
-                <Pressable
-                  key={category}
-                  borderWidth={1}
-                  borderColor={borderColor}
-                  p={3}
-                  rounded="sm"
-                  onPress={() => setCategory(category)}>
-                  <HStack>
-                    <VStack w={20}>
-                      <Text fontSize="md" bold>
-                        {category}
-                      </Text>
-                    </VStack>
-                    <VStack p={3} flex={1} space={3} rounded="sm">
-                      <HStack>
-                        <VStack flex={1} alignItems="center">
-                          <Text color="gray.600">60분</Text>
-                          <Text fontSize="md">{price_60}원</Text>
-                        </VStack>
-                        <VStack flex={1} alignItems="center">
-                          <Text color="gray.600">90분</Text>
-                          <Text fontSize="md">{price_90}원</Text>
-                        </VStack>
-                      </HStack>
-                      <HStack>
-                        <VStack flex={1} alignItems="center">
-                          <Text color="gray.600">120분</Text>
-                          <Text fontSize="md">{price_120}원</Text>
-                        </VStack>
-                        <VStack flex={1} alignItems="center">
-                          <Text color="gray.600">150분</Text>
-                          <Text fontSize="md">{price_150}원</Text>
-                        </VStack>
-                      </HStack>
-                    </VStack>
-                  </HStack>
-                  {!categoryData && (
-                    <Text color="warning.600">* 희망 단가를 설정해주세요</Text>
-                  )}
-                </Pressable>
-              );
-            })}
-          </VStack>
-        </ScrollView>
-      </SafeAreaView>
-      <ModalFormPrice
-        category={category}
-        setCategory={setCategory}
-        onComplete={handleComplete}
-      />
-    </>
+            return (
+              <Pressable
+                key={category}
+                borderWidth={1}
+                borderColor={borderColor}
+                p={3}
+                rounded="sm"
+                onPress={() => setCategory(category)}>
+                <HStack>
+                  <VStack w={20}>
+                    <Text fontSize="md" bold>
+                      {category}
+                    </Text>
+                  </VStack>
+                  <VStack p={3} flex={1} space={3} rounded="sm">
+                    <HStack>
+                      <VStack flex={1} alignItems="center">
+                        <Text color="gray.600">60분</Text>
+                        <Text fontSize="md">{price_60}원</Text>
+                      </VStack>
+                      <VStack flex={1} alignItems="center">
+                        <Text color="gray.600">90분</Text>
+                        <Text fontSize="md">{price_90}원</Text>
+                      </VStack>
+                    </HStack>
+                    <HStack>
+                      <VStack flex={1} alignItems="center">
+                        <Text color="gray.600">120분</Text>
+                        <Text fontSize="md">{price_120}원</Text>
+                      </VStack>
+                      <VStack flex={1} alignItems="center">
+                        <Text color="gray.600">150분</Text>
+                        <Text fontSize="md">{price_150}원</Text>
+                      </VStack>
+                    </HStack>
+                  </VStack>
+                </HStack>
+                {!categoryData && (
+                  <Text color="warning.600">* 희망 단가를 설정해주세요</Text>
+                )}
+              </Pressable>
+            );
+          })}
+        </VStack>
+        <ModalFormPrice
+          category={category}
+          setCategory={setCategory}
+          onComplete={handleComplete}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };

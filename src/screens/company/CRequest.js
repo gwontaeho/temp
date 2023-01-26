@@ -23,6 +23,7 @@ export const CRequest = ({navigation, route}) => {
     address_detail,
     distance,
     share,
+    createdAt,
   } = params;
   const d = (distance / 1000).toFixed(1);
 
@@ -43,7 +44,6 @@ export const CRequest = ({navigation, route}) => {
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['CHistories']}),
     onSettled: () => {
       queryClient.invalidateQueries({queryKey: ['CRequests']});
-      queryClient.invalidateQueries({queryKey: ['CCount']});
       navigation.goBack();
     },
   });

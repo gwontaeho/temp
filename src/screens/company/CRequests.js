@@ -16,9 +16,10 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import {getNearbyRequests, getCount} from '@apis';
+import {getNearbyRequests} from '@apis';
 import {AuthContext} from '@contexts';
 import dayjs from 'dayjs';
+import {ModalFormFilter} from '@components';
 
 export const CRequests = ({navigation}) => {
   const {auth} = useContext(AuthContext);
@@ -37,6 +38,8 @@ export const CRequests = ({navigation}) => {
     ? '만료일이 경과했습니다'
     : dayjs(expiration).format('YY. MM. DD 까지 사용 가능');
 
+  const [sort, setSort] = useState('distance');
+  const [filter, setFilter] = useState({time: 0});
   const [wait, setWait] = useState(false);
   const [location, setLocation] = useState({
     address: '',
@@ -45,20 +48,23 @@ export const CRequests = ({navigation}) => {
   });
   const {latitude, longitude} = location;
 
-  const {data: countData, isSuccess} = useQuery({
-    queryKey: ['CCount'],
-    queryFn: () => getCount(auth.id),
-    enabled: !!auth.id,
-  });
-
-  const count = countData?.count || 0;
-
   const {data} = useQuery({
     queryKey: ['CRequests'],
-    queryFn: () => getNearbyRequests({latitude, longitude, distance: 1000000}),
-    refetchInterval: wait && 3000,
+    queryFn: () =>
+      getNearbyRequests({
+        TargetId: auth.id,
+        latitude,
+        longitude,
+        distance: 1000000,
+        sort,
+        filter,
+      }),
+    refetchInterval: wait && 2000,
     enabled: !expired && !!latitude && !!longitude,
   });
+
+  const requests = data?.requests || [];
+  const count = data?.count || 0;
 
   useEffect(() => {
     getCurrentPosition();
@@ -85,8 +91,13 @@ export const CRequests = ({navigation}) => {
     );
   };
 
+  const handleComplete = v => {
+    setSort(v.sort);
+    setFilter(prev => ({...prev, ...v.filter}));
+  };
+
   const renderItem = ({item}) => {
-    const {category, time, personnel, distance, share} = item;
+    const {status, category, time, personnel, distance, share, price} = item;
     const d = (distance / 1000).toFixed(1);
 
     const shareStr = share ? '업체 공유' : '사용자 요청';
@@ -94,7 +105,7 @@ export const CRequests = ({navigation}) => {
     const colorScheme = share ? 'secondary' : 'primary';
 
     const handlePressDetail = () => {
-      isSuccess && navigation.navigate('CRequest', item);
+      navigation.navigate('CRequest', item);
     };
 
     return (
@@ -102,7 +113,7 @@ export const CRequests = ({navigation}) => {
         p={3}
         justifyContent="space-between"
         rounded="sm"
-        space={1}
+        space={3}
         borderColor={borderColor}
         borderWidth={1}>
         <Badge
@@ -111,12 +122,14 @@ export const CRequests = ({navigation}) => {
           colorScheme={colorScheme}>
           {shareStr}
         </Badge>
-        <HStack alignItems="center" justifyContent="space-between">
-          <Text>{`${category} · ${time}분 · ${personnel}인 · ${d}km`}</Text>
-          <Button size="sm" onPress={handlePressDetail} disabled={!isSuccess}>
-            자세히
-          </Button>
+
+        <Text>{`${category} · ${time}분 · ${personnel}인 · ${d}km`}</Text>
+        <HStack alignItems="center" justifyContent="flex-end">
+          <Text fontSize="lg">{price}원</Text>
         </HStack>
+        <Button variant="outline" size="sm" onPress={handlePressDetail}>
+          자세히
+        </Button>
       </VStack>
     );
   };
@@ -150,10 +163,14 @@ export const CRequests = ({navigation}) => {
         </Text>
       </VStack>
       <Divider />
+      <HStack mx={5} my={3} alignItems="center" justifyContent="flex-end">
+        <ModalFormFilter onComplete={handleComplete} values={{sort, filter}} />
+      </HStack>
+      <Divider />
       <View flex={1}>
         {!expired && (
           <FlatList
-            data={data}
+            data={requests}
             renderItem={renderItem}
             keyExtractor={item => item.id}
             ItemSeparatorComponent={<View p={2.5} />}

@@ -22,8 +22,8 @@ export const ModalInquiry = ({phone, device}) => {
     onSuccess: data => {
       // 로그인 성공
       const {user, token} = data;
-      const {id, phone, role, status} = user;
-      signIn({id, phone, role, status, token});
+      const {id, phone, role, status, terms} = user;
+      signIn({id, phone, role, status, token, terms});
     },
     onError: error => {
       // 로그인 실패
@@ -42,26 +42,28 @@ export const ModalInquiry = ({phone, device}) => {
         visible={visible}
         onRequestClose={() => setVisible(false)}>
         <SafeAreaView>
-          <Button
-            variant="ghost"
-            alignSelf="flex-end"
-            mr={5}
-            onPress={() => setVisible(false)}>
-            닫기
-          </Button>
-
-          <VStack p={5} space={10}>
-            <FormControl>
-              <FormControl.Label>업체명을 입력해주세요</FormControl.Label>
-              <Input
-                value={company_name}
-                onChangeText={v => setCompany_name(v)}
-                variant="underlined"
-              />
-            </FormControl>
-            <Button w="full" onPress={inquiryMutate}>
-              확인
+          <VStack p={5}>
+            <Button
+              variant="ghost"
+              alignSelf="flex-end"
+              mb={5}
+              onPress={() => setVisible(false)}>
+              닫기
             </Button>
+
+            <VStack space={10}>
+              <FormControl>
+                <FormControl.Label>업체명을 입력해주세요</FormControl.Label>
+                <Input
+                  value={company_name}
+                  onChangeText={v => setCompany_name(v)}
+                  variant="underlined"
+                />
+              </FormControl>
+              <Button w="full" onPress={inquiryMutate}>
+                확인
+              </Button>
+            </VStack>
           </VStack>
         </SafeAreaView>
       </Modal>
@@ -93,8 +95,8 @@ export const Sign = () => {
     onSuccess: data => {
       // 로그인 성공
       const {user, token} = data;
-      const {id, phone, role, status, Company} = user;
-      signIn({id, phone, role, status, token, Company});
+      const {id, phone, role, status, Company, terms} = user;
+      signIn({id, phone, role, status, token, Company, terms});
     },
     onError: error => {
       // 로그인 실패
@@ -128,7 +130,7 @@ export const Sign = () => {
     <SafeAreaView flex={1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <VStack flex={1} p={10} space={5} justifyContent="center">
-          <Heading>로고</Heading>
+          {/* <Heading fontSize="4xl">홈타이365</Heading> */}
           <VStack>
             <FormControl>
               <FormControl.Label>휴대폰 번호</FormControl.Label>

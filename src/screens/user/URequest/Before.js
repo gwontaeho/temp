@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useReducer, useContext} from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, Platform, PermissionsAndroid} from 'react-native';
 import {
   VStack,
   Button,
@@ -10,6 +10,7 @@ import {
   Divider,
 } from 'native-base';
 import Geolocation from 'react-native-geolocation-service';
+
 import {useQuery, useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import {createRequest, getAveragePrices} from '@apis';
@@ -175,7 +176,7 @@ export const Before = ({refetch}) => {
             </Button.Group>
 
             <Text color="info.600">
-              * 아래 금액은 업체들이 설정한 평균 희망금액입니다
+              {`* 아래 금액은 업체들이 설정한 평균 희망금액입니다.${'\n'}수정하여 제출할 수 있습니다.`}
             </Text>
           </VStack>
           <ModalFormURequest

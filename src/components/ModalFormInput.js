@@ -31,29 +31,30 @@ export const ModalFormInput = ({label, value, onComplete, InputProps}) => {
         visible={visible}
         onRequestClose={() => setVisible(false)}>
         <SafeAreaView>
-          <Button
-            variant="ghost"
-            alignSelf="flex-end"
-            mr={5}
-            onPress={() => setVisible(false)}>
-            닫기
-          </Button>
-
-          <VStack p={5} space={10}>
-            <FormControl>
-              {!!label && <FormControl.Label>{label}</FormControl.Label>}
-              <Pressable onPress={() => setVisible(true)}>
-                <Input
-                  value={text}
-                  variant="underlined"
-                  onChangeText={v => setText(v)}
-                  {...InputProps}
-                />
-              </Pressable>
-            </FormControl>
-            <Button w="full" onPress={handlePress}>
-              확인
+          <VStack p={5}>
+            <Button
+              variant="ghost"
+              alignSelf="flex-end"
+              mb={5}
+              onPress={() => setVisible(false)}>
+              닫기
             </Button>
+            <VStack space={10}>
+              <FormControl>
+                {!!label && <FormControl.Label>{label}</FormControl.Label>}
+                <Pressable onPress={() => setVisible(true)}>
+                  <Input
+                    value={text}
+                    variant="underlined"
+                    onChangeText={v => setText(v)}
+                    {...InputProps}
+                  />
+                </Pressable>
+              </FormControl>
+              <Button w="full" onPress={handlePress}>
+                확인
+              </Button>
+            </VStack>
           </VStack>
         </SafeAreaView>
       </Modal>

@@ -45,31 +45,33 @@ export const ModalFormAddress = ({label, onComplete}) => {
         visible={visible}
         onRequestClose={() => setVisible(false)}>
         <SafeAreaView>
-          <Button
-            variant="ghost"
-            alignSelf="flex-end"
-            mr={5}
-            onPress={() => setVisible(false)}>
-            닫기
-          </Button>
-          <VStack p={5} space={10}>
-            <FormControl>
-              <FormControl.Label>주소를 입력해주세요</FormControl.Label>
-              <Input
-                value={text}
-                onChangeText={v => setText(v)}
-                variant="underlined"
-              />
-            </FormControl>
-            <VStack space={3}>
-              <Button w="full" onPress={handlePress}>
-                확인
-              </Button>
-              {!!errorMessage && (
-                <Text textAlign="center" color="danger.600">
-                  {errorMessage}
-                </Text>
-              )}
+          <VStack p={5}>
+            <Button
+              variant="ghost"
+              alignSelf="flex-end"
+              mb={5}
+              onPress={() => setVisible(false)}>
+              닫기
+            </Button>
+            <VStack space={10}>
+              <FormControl>
+                <FormControl.Label>주소를 입력해주세요</FormControl.Label>
+                <Input
+                  value={text}
+                  onChangeText={v => setText(v)}
+                  variant="underlined"
+                />
+              </FormControl>
+              <VStack space={3}>
+                <Button w="full" onPress={handlePress}>
+                  확인
+                </Button>
+                {!!errorMessage && (
+                  <Text textAlign="center" color="danger.600">
+                    {errorMessage}
+                  </Text>
+                )}
+              </VStack>
             </VStack>
           </VStack>
         </SafeAreaView>

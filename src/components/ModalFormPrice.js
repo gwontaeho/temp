@@ -25,58 +25,60 @@ export const ModalFormPrice = ({category, setCategory, onComplete}) => {
       visible={!!category}
       onRequestClose={() => setCategory('')}>
       <SafeAreaView>
-        <Button
-          variant="ghost"
-          alignSelf="flex-end"
-          mr={5}
-          onPress={() => setCategory('')}>
-          닫기
-        </Button>
-
-        <VStack p={5} space={10}>
-          <Heading>{`${category}`}</Heading>
-          <VStack space={3}>
-            <FormControl>
-              <FormControl.Label>60분</FormControl.Label>
-              <Input
-                keyboardType="number-pad"
-                value={price_60}
-                onChangeText={v => setPrice_60(v)}
-                variant="underlined"
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>90분</FormControl.Label>
-              <Input
-                keyboardType="number-pad"
-                value={price_90}
-                onChangeText={v => setPrice_90(v)}
-                variant="underlined"
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>120분</FormControl.Label>
-              <Input
-                keyboardType="number-pad"
-                value={price_120}
-                onChangeText={v => setPrice_120(v)}
-                variant="underlined"
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>150분</FormControl.Label>
-              <Input
-                keyboardType="number-pad"
-                value={price_150}
-                onChangeText={v => setPrice_150(v)}
-                variant="underlined"
-              />
-            </FormControl>
-          </VStack>
-
-          <Button w="full" onPress={handlePress}>
-            저장
+        <VStack p={5}>
+          <Button
+            variant="ghost"
+            alignSelf="flex-end"
+            mb={5}
+            onPress={() => setCategory('')}>
+            닫기
           </Button>
+
+          <VStack space={10}>
+            <Heading>{`${category}`}</Heading>
+            <VStack space={3}>
+              <FormControl>
+                <FormControl.Label>60분</FormControl.Label>
+                <Input
+                  keyboardType="number-pad"
+                  value={price_60}
+                  onChangeText={v => setPrice_60(v)}
+                  variant="underlined"
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>90분</FormControl.Label>
+                <Input
+                  keyboardType="number-pad"
+                  value={price_90}
+                  onChangeText={v => setPrice_90(v)}
+                  variant="underlined"
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>120분</FormControl.Label>
+                <Input
+                  keyboardType="number-pad"
+                  value={price_120}
+                  onChangeText={v => setPrice_120(v)}
+                  variant="underlined"
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>150분</FormControl.Label>
+                <Input
+                  keyboardType="number-pad"
+                  value={price_150}
+                  onChangeText={v => setPrice_150(v)}
+                  variant="underlined"
+                />
+              </FormControl>
+            </VStack>
+
+            <Button w="full" onPress={handlePress}>
+              저장
+            </Button>
+          </VStack>
         </VStack>
       </SafeAreaView>
     </Modal>

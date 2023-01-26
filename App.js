@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {Platform, PermissionsAndroid} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -9,7 +9,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {AuthContext} from '@contexts';
-import {Sign, Block, Inquiry, ErrorScreen} from '@screens/common';
+import {Sign, Block, Inquiry, ErrorScreen, Terms} from '@screens/common';
 import {
   ADashboard,
   ACompanies,
@@ -141,7 +141,23 @@ const App = () => {
 
   useEffect(() => {
     if (Platform.OS === 'ios') requestAuthorization();
+    if (Platform.OS === 'android') requestPermissionsAndroid();
   }, []);
+
+  const requestPermissionsAndroid = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('granted');
+      } else {
+        console.log('denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   const requestAuthorization = async () => {
     await Geolocation.requestAuthorization('always');
@@ -160,7 +176,6 @@ const App = () => {
       const jsonValue = JSON.stringify(auth);
       await AsyncStorage.setItem('auth', jsonValue);
       setAuth(auth);
-      console.log(auth);
     } catch (error) {}
   };
 
@@ -171,12 +186,12 @@ const App = () => {
     } catch (error) {}
   };
 
+  const isTerms = isSigned && auth.terms === false;
   const isBlocked = isSigned && auth.status === 0;
   const isInquiry = isSigned && auth.status === 2;
   const isUser = isSigned && auth.status === 1 && auth.role === 1;
   const isCompany = isSigned && auth.status === 1 && auth.role === 2;
   const isAdmin = isSigned && auth.status === 1 && auth.role === 9;
-
   const isError =
     isSigned && !isBlocked && !isInquiry && !isUser && !isCompany && !isAdmin;
 
@@ -186,6 +201,13 @@ const App = () => {
         <AuthContext.Provider value={{auth, signIn, signOut}}>
           <NavigationContainer>
             <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
+              {isTerms && (
+                <Stack.Screen
+                  name="Terms"
+                  component={Terms}
+                  options={{title: '약관 동의'}}
+                />
+              )}
               {isError && (
                 <Stack.Screen
                   name="Error"

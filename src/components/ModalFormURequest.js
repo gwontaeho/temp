@@ -70,45 +70,46 @@ export const ModalFormURequest = ({values, onComplete}) => {
         visible={visible}
         onRequestClose={() => setVisible(false)}>
         <SafeAreaView>
-          <Button
-            variant="ghost"
-            alignSelf="flex-end"
-            mr={5}
-            onPress={handleClose}>
-            닫기
-          </Button>
-
-          <VStack p={5} space={10}>
-            <VStack space={3}>
-              <FormControl>
-                <FormControl.Label>금액</FormControl.Label>
-                <Input
-                  value={price}
-                  onChangeText={handleChangePrice}
-                  variant="underlined"
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>요청 사항</FormControl.Label>
-                <Input
-                  value={description}
-                  onChangeText={v => setDescription(v)}
-                  variant="underlined"
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>상세 주소</FormControl.Label>
-                <Input
-                  value={address_detail}
-                  onChangeText={v => setAddress_detail(v)}
-                  variant="underlined"
-                />
-              </FormControl>
-            </VStack>
-
-            <Button w="full" onPress={handlePress}>
-              확인
+          <VStack p={5}>
+            <Button
+              variant="ghost"
+              alignSelf="flex-end"
+              onPress={handleClose}
+              mb={5}>
+              닫기
             </Button>
+            <VStack space={10}>
+              <VStack space={3}>
+                <FormControl>
+                  <FormControl.Label>금액</FormControl.Label>
+                  <Input
+                    value={price}
+                    onChangeText={handleChangePrice}
+                    variant="underlined"
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>요청 사항</FormControl.Label>
+                  <Input
+                    value={description}
+                    onChangeText={v => setDescription(v)}
+                    variant="underlined"
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>상세 주소</FormControl.Label>
+                  <Input
+                    value={address_detail}
+                    onChangeText={v => setAddress_detail(v)}
+                    variant="underlined"
+                  />
+                </FormControl>
+              </VStack>
+
+              <Button w="full" onPress={handlePress}>
+                확인
+              </Button>
+            </VStack>
           </VStack>
         </SafeAreaView>
       </Modal>

@@ -19,8 +19,7 @@ import {
 
 const ModalAccept = ({data, refetch}) => {
   const {id, status, description_company, count, distance, Target} = data;
-  const {company_name} = Target;
-  console.log(Target);
+  const {company_name} = {...Target};
 
   const {mutate: rejectMutate} = useMutation({
     mutationFn: () => rejectRequestByUser(id),
