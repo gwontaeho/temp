@@ -37,6 +37,17 @@ router.get("/companies", async (req, res, next) => {
     }
 });
 
+// 관리자 : 전체 사용자 조회
+router.get("/users", async (req, res, next) => {
+    try {
+        const users = await User.findAll({ where: { role: 1 } });
+        return res.send(users);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
 // 업체문의 조회
 router.get("/inquiries", async (req, res, next) => {
     try {
@@ -52,10 +63,10 @@ router.get("/inquiries", async (req, res, next) => {
 
 // 업체등록 승인
 router.put("/inquiry-accept", async (req, res, next) => {
-    const { id } = req.body;
+    const { id, company_name } = req.body;
     try {
         await User.update({ status: 1, role: 2 }, { where: { id } });
-        await Company.create({ UserId: id });
+        await Company.create({ UserId: id, name: company_name });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);

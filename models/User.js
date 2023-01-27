@@ -13,5 +13,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 1,
         },
+        company_name: {
+            type: DataTypes.STRING(20),
+        },
+        terms: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     });
 };

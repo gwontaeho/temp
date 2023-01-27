@@ -6,7 +6,18 @@ const { verifyToken } = require("../middlewares/jwt");
 
 // 업체 : 모든 요청 조회
 router.get("/", async (req, res, next) => {
-    const { latitude, longitude } = req.query;
+    const { TargetId, latitude, longitude, sort, time } = req.query;
+
+    const timeOption = () => {
+        if (time === "0") return { [Op.gt]: time };
+        return time;
+    };
+
+    const sortOption = {
+        distance: ["distance", "ASC"],
+        price: ["price", "DESC"],
+        createdAt: ["createdAt", "DESC"],
+    };
 
     const distance = sequelize.fn(
         "ST_Distance_Sphere",
@@ -19,10 +30,12 @@ router.get("/", async (req, res, next) => {
             attributes: {
                 include: [[distance, "distance"]],
             },
-            where: [sequelize.where(distance, "<=", req.query.distance), { status: 1 }],
+            where: [sequelize.where(distance, "<=", req.query.distance), { status: 1, time: timeOption() }],
+            order: [sortOption[sort]],
         });
+        const count = await Request.count({ where: { TargetId, status: [2, 3] } });
 
-        return res.send(requests);
+        return res.send({ requests, count });
     } catch (error) {
         console.log(error);
     }
@@ -38,6 +51,7 @@ router.get("/users/:UserId/shares", async (req, res, next) => {
         return res.send(requests);
     } catch (error) {
         console.log(error);
+        return res.sendStatus(500);
     }
 });
 
@@ -48,6 +62,7 @@ router.get("/targets/:TargetId", async (req, res, next) => {
         const requests = await Request.findAll({
             where: { TargetId },
             include: [{ model: User }],
+            order: [["createdAt", "DESC"]],
         });
         return res.send(requests);
     } catch (error) {
@@ -65,6 +80,11 @@ router.get("/users/:UserId/last", async (req, res, next) => {
             where: { UserId },
             order: [["createdAt", "DESC"]],
         });
+        const TargetId = request?.TargetId;
+        if (!!TargetId) {
+            const count = await Request.count({ where: { UserId, TargetId, status: 5 } });
+            return res.send({ ...request.dataValues, count });
+        }
 
         return res.send(request);
     } catch (error) {
@@ -76,8 +96,14 @@ router.get("/users/:UserId/last", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
     const { id } = req.params;
     try {
-        const requests = await Request.findByPk(id);
-        return res.send(requests);
+        const request = await Request.findByPk(id, { include: [{ model: User, as: "Target" }] });
+        const UserId = request?.UserId;
+        const TargetId = request?.TargetId;
+        if (!!TargetId) {
+            const count = await Request.count({ where: { UserId, TargetId, status: 5 } });
+            return res.send({ ...request.dataValues, count });
+        }
+        return res.send(request);
     } catch (error) {
         console.log(error);
     }
@@ -108,14 +134,14 @@ router.put("/:id/users/cancel", async (req, res, next) => {
 router.put("/:id/users/reject", async (req, res, next) => {
     const { id } = req.params;
     try {
-        await Request.update({ status: 1, TargetId: null, description_company: null }, { where: { id } });
+        await Request.update({ status: 1, TargetId: null, description_company: null, distance: null }, { where: { id } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
     }
 });
 
-// 업체 : 요청 수락
+// 유저 : 요청 수락
 router.put("/:id/users/accept", async (req, res, next) => {
     const { id } = req.params;
     try {
@@ -145,9 +171,9 @@ router.put("/:id/users/complete", async (req, res, next) => {
 // 업체 : 요청 수락
 router.put("/:id/targets/accept", async (req, res, next) => {
     const { id } = req.params;
-    const { TargetId, description_company } = req.body;
+    const { TargetId, description_company, distance } = req.body;
     try {
-        await Request.update({ status: 2, TargetId, description_company }, { where: { id } });
+        await Request.update({ status: 2, TargetId, description_company, distance }, { where: { id, status: 1 } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);

@@ -16,5 +16,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 30000,
         },
+        max_count: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+        },
     });
 };

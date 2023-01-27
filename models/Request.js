@@ -43,6 +43,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL(10, 6),
             allowNull: false,
         },
+        distance: {
+            type: DataTypes.STRING(10),
+        },
         share: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
