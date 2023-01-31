@@ -47,7 +47,7 @@ router.get("/", verifyToken, async (req, res, next) => {
 
         const count = await Request.count({ where: { TargetId, status: [2, 3] } });
 
-        return res.send({ requests, count });
+        return res.send({ requests, count, date: new Date() });
     } catch (error) {
         console.log(error);
     }
