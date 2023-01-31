@@ -44,6 +44,9 @@ router.get("/", verifyToken, async (req, res, next) => {
             ],
             order: [sortOption[sort]],
         });
+
+        const count = await Request.count({ where: { TargetId, status: [2, 3] } });
+
         return res.send({ requests, count });
     } catch (error) {
         console.log(error);
