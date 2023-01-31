@@ -27,6 +27,9 @@ router.get("/", verifyToken, async (req, res, next) => {
     );
 
     try {
+        const blacklists = await Blacklist.findAll({ where: { TargetId: TargetId } });
+        const blacklistsIds = blacklists.map((v) => v.UserId);
+
         const requests = await Request.findAll({
             attributes: {
                 include: [[distance, "distance"]],
@@ -35,14 +38,12 @@ router.get("/", verifyToken, async (req, res, next) => {
                 sequelize.where(distance, "<=", req.query.distance),
                 {
                     status: 1,
-                    // UserId: { [Op.not]: UserId },
+                    UserId: { [Op.not]: UserId, [Op.notIn]: blacklistsIds },
                     time: timeOption(),
                 },
             ],
             order: [sortOption[sort]],
         });
-        const count = await Request.count({ where: { TargetId, status: [2, 3] } });
-
         return res.send({ requests, count });
     } catch (error) {
         console.log(error);
@@ -57,7 +58,10 @@ router.get("/users/:UserId/shares", async (req, res, next) => {
             where: { UserId, share: true, status: { [Op.not]: 0 } },
             order: [["createdAt", "DESC"]],
         });
-        return res.send(requests);
+
+        const count = await Request.count({ where: { UserId, share: true, status: [1, 2, 3] } });
+
+        return res.send({ requests, count });
     } catch (error) {
         console.log(error);
         return res.sendStatus(500);
@@ -154,7 +158,7 @@ router.put("/:id/users/reject", async (req, res, next) => {
 router.put("/:id/users/accept", async (req, res, next) => {
     const { id } = req.params;
     try {
-        await Request.update({ status: 3 }, { where: { id } });
+        await Request.update({ status: 3 }, { where: { id, status: 2 } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
@@ -182,8 +186,10 @@ router.put("/:id/targets/accept", async (req, res, next) => {
     const { id } = req.params;
     const { TargetId, description_company, distance } = req.body;
     try {
-        await Request.update({ status: 2, TargetId, description_company, distance }, { where: { id, status: 1 } });
-        return res.sendStatus(200);
+        const result = await Request.update({ status: 2, TargetId, description_company, distance }, { where: { id, status: 1 } });
+        // result[0] === 1 : 성공
+        // result[0] === 0 : 실패
+        return res.send({ code: result[0] });
     } catch (error) {
         console.log(error);
     }
@@ -204,7 +210,7 @@ router.put("/:id/targets/cancel", async (req, res, next) => {
 router.put("/:id/targets/complete", async (req, res, next) => {
     const { id } = req.params;
     try {
-        await Request.update({ status: 4 }, { where: { id } });
+        await Request.update({ status: 4 }, { where: { id, status: 3 } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
