@@ -41,17 +41,17 @@ export const ACompany = ({navigation, route}) => {
 
   const {mutate: updateMutation} = useMutation({
     mutationFn: () => updateExpiration({id: Company.id, expiration}),
-    onSuccess: () => {
+    onSuccess: async () => {
       navigation.setParams({...params, Company: {...Company, expiration}});
-      queryClient.invalidateQueries({queryKey: ['companies']});
+      await queryClient.invalidateQueries({queryKey: ['companies']});
     },
   });
 
   const {mutate: blockMutate} = useMutation({
     mutationFn: () => blockUser({id}),
-    onSuccess: () => {
+    onSuccess: async () => {
       navigation.setParams({...params, status: 0});
-      queryClient.invalidateQueries({queryKey: ['companies']});
+      await queryClient.invalidateQueries({queryKey: ['companies']});
     },
   });
 

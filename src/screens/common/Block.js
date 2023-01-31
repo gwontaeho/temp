@@ -11,7 +11,7 @@ export const Block = () => {
       <VStack
         flex={1}
         space={10}
-        p={5}
+        p={10}
         alignItems="center"
         justifyContent="center">
         <Heading>이용이 정지된 계정입니다</Heading>

@@ -1,4 +1,4 @@
-package com.kys.newarchitecture.components;
+package com.stewiewwww.homethai365.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

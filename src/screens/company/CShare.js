@@ -15,6 +15,8 @@ export const CShare = ({route}) => {
     queryKey: ['CShare'],
     queryFn: () => getRequest(params),
     enabled: !!params,
+    refetchInterval: data =>
+      (data?.status === 1 || data?.status === 2 || data?.status === 3) && 3000,
   });
 
   const status = data?.status;

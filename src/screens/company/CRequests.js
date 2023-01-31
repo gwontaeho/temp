@@ -22,12 +22,13 @@ import dayjs from 'dayjs';
 import {ModalFormFilter} from '@components';
 
 export const CRequests = ({navigation}) => {
-  const {auth} = useContext(AuthContext);
+  const {auth, lp} = useContext(AuthContext);
 
   const {Company} = auth;
   const {expiration, distance, max_count} = Company || {};
 
-  const today = dayjs(dayjs().format('YYYYMMDD'));
+  const today = dayjs(auth.date).format('YYYYMMDD');
+
   const diff = expiration
     ? dayjs(expiration).diff(today) / 1000 / 60 / 60 / 24
     : -1;
@@ -55,12 +56,12 @@ export const CRequests = ({navigation}) => {
         TargetId: auth.id,
         latitude,
         longitude,
-        distance: 1000000,
+        distance,
         sort,
         filter,
       }),
     refetchInterval: wait && 2000,
-    enabled: !expired && !!latitude && !!longitude,
+    enabled: wait && !expired && !!latitude && !!longitude,
   });
 
   const requests = data?.requests || [];
@@ -80,7 +81,11 @@ export const CRequests = ({navigation}) => {
             `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${key}`,
           );
           const {formatted_address: address} = response.data.results[0];
-          setLocation({address, latitude, longitude});
+          setLocation({
+            address: address.replace('대한민국 ', ''),
+            latitude,
+            longitude,
+          });
         } catch (error) {
           console.log(error);
         }
@@ -137,8 +142,8 @@ export const CRequests = ({navigation}) => {
   return (
     <SafeAreaView flex={1}>
       <HStack
-        height={120}
-        px={10}
+        height={100}
+        px={5}
         alignItems="center"
         justifyContent="space-between">
         <HStack space={1} alignItems="center">
@@ -148,18 +153,21 @@ export const CRequests = ({navigation}) => {
         {!expired && (
           <Button
             size="sm"
+            isDisabled={lp !== 1 || !location.address}
             variant={wait ? 'outline' : 'solid'}
             onPress={() => setWait(prev => !prev)}>
             요청대기
           </Button>
         )}
       </HStack>
-      <VStack px={10} pb={5} alignItems="flex-end">
+      <VStack px={5} pb={5} alignItems="flex-end">
         <Text color="gray.600" underline>
           {expirationStr}
         </Text>
         <Text color="gray.600" bold>
-          {location.address || '위치를 찾을 수 없습니다'}
+          {lp === 0
+            ? '위치 권한을 허용해주세요'
+            : location.address || '위치를 찾을 수 없습니다'}
         </Text>
       </VStack>
       <Divider />
@@ -168,7 +176,7 @@ export const CRequests = ({navigation}) => {
       </HStack>
       <Divider />
       <View flex={1}>
-        {!expired && (
+        {!expired && wait && (
           <FlatList
             data={requests}
             renderItem={renderItem}

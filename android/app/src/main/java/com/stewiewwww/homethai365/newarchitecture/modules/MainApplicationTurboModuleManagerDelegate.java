@@ -1,4 +1,4 @@
-package com.kys.newarchitecture.modules;
+package com.stewiewwww.homethai365.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

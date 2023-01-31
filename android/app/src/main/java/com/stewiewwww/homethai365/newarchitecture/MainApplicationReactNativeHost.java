@@ -1,4 +1,4 @@
-package com.kys.newarchitecture;
+package com.stewiewwww.homethai365.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.kys.BuildConfig;
-import com.kys.newarchitecture.components.MainComponentsRegistry;
-import com.kys.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.stewiewwww.homethai365.BuildConfig;
+import com.stewiewwww.homethai365.newarchitecture.components.MainComponentsRegistry;
+import com.stewiewwww.homethai365.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

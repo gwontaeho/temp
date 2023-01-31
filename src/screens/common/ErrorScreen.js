@@ -11,7 +11,7 @@ export const ErrorScreen = () => {
       <VStack
         flex={1}
         space={10}
-        p={5}
+        p={10}
         alignItems="center"
         justifyContent="center">
         <Heading>비 정상적인 접근입니다</Heading>

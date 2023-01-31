@@ -27,7 +27,11 @@ export const ModalFormAddress = ({label, onComplete}) => {
       const {lat: latitude, lng: longitude} = geometry.location;
       onComplete({
         type: 'setAddress',
-        payload: {address: formatted_address, latitude, longitude},
+        payload: {
+          address: formatted_address.replace('대한민국 ', ''),
+          latitude,
+          longitude,
+        },
       });
       setVisible(false);
     } catch (error) {

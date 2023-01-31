@@ -24,13 +24,15 @@ export const AInquiries = ({navigation}) => {
   const {mutate: acceptMutate} = useMutation({
     mutationFn: variables => acceptInquiry(variables),
     onSettled: refetch,
-    onSuccess: () => queryClient.invalidateQueries({queryKey: ['dashboard']}),
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({queryKey: ['dashboard']}),
   });
 
   const {mutate: rejectMutate} = useMutation({
     mutationFn: variables => rejectInquiry(variables),
     onSettled: refetch,
-    onSuccess: () => queryClient.invalidateQueries({queryKey: ['dashboard']}),
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({queryKey: ['dashboard']}),
   });
 
   const renderItem = ({item}) => {

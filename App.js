@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Platform, PermissionsAndroid} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {NativeBaseProvider} from 'native-base';
+import {NativeBaseProvider, extendTheme} from 'native-base';
 import Geolocation from 'react-native-geolocation-service';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 import {AuthContext} from '@contexts';
 import {Sign, Block, Inquiry, ErrorScreen, Terms} from '@screens/common';
@@ -30,10 +31,36 @@ import {
   CPrices,
 } from '@screens/company';
 import {URequest, USettings} from '@screens/user';
+import {getUser} from '@apis';
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#fff',
+  },
+};
+
+const theme = extendTheme({
+  colors: {
+    primary: {
+      50: '#E3F2F9',
+      100: '#C5E4F3',
+      200: '#A2D4EC',
+      300: '#7AC1E4',
+      400: '#47A9DA',
+      500: '#0088CC',
+      600: '#007AB8',
+      700: '#006BA1',
+      800: '#005885',
+      900: '#003F5E',
+    },
+  },
+});
 
 // 관리자
 const ATabs = () => {
@@ -133,6 +160,8 @@ const CTabs = () => {
 
 const App = () => {
   const [auth, setAuth] = useState(null);
+  const [lp, setLp] = useState(0);
+
   const isSigned = auth?.isSigned;
 
   useEffect(() => {
@@ -150,8 +179,10 @@ const App = () => {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setLp(1);
         console.log('granted');
       } else {
+        setLp(0);
         console.log('denied');
       }
     } catch (err) {
@@ -160,19 +191,38 @@ const App = () => {
   };
 
   const requestAuthorization = async () => {
-    await Geolocation.requestAuthorization('always');
+    try {
+      const res = await Geolocation.requestAuthorization('always');
+      if (res === 'granted') return setLp(1);
+      else return setLp(0);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('auth');
-      if (jsonValue !== null) setAuth(JSON.parse(jsonValue));
-    } catch (error) {}
+      if (jsonValue !== null) {
+        const parsed = JSON.parse(jsonValue);
+        const id = parsed?.id;
+        axios.defaults.headers.common['Authorization'] = parsed.token;
+        const {user, token, date} = await getUser(id);
+        const auth = {...user, token, date, isSigned: true};
+        const newJsonValue = JSON.stringify(auth);
+        await AsyncStorage.setItem('auth', newJsonValue);
+        setAuth(auth);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const signIn = async value => {
     try {
       const auth = {...value, isSigned: true};
+      const token = auth?.token;
+      axios.defaults.headers.common['Authorization'] = token;
       const jsonValue = JSON.stringify(auth);
       await AsyncStorage.setItem('auth', jsonValue);
       setAuth(auth);
@@ -196,10 +246,10 @@ const App = () => {
     isSigned && !isBlocked && !isInquiry && !isUser && !isCompany && !isAdmin;
 
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <AuthContext.Provider value={{auth, signIn, signOut}}>
-          <NavigationContainer>
+        <AuthContext.Provider value={{auth, signIn, signOut, lp, getData}}>
+          <NavigationContainer theme={navTheme}>
             <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
               {isTerms && (
                 <Stack.Screen
@@ -278,7 +328,7 @@ const App = () => {
                   <Stack.Screen
                     name="CShare"
                     component={CShare}
-                    options={{headerTitle: ''}}
+                    options={{headerTitle: '콜 공유'}}
                   />
                   <Stack.Screen
                     name="CHistory"

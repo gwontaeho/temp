@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
 import {
   Button,
@@ -19,12 +19,13 @@ import {AuthContext} from '@contexts';
 export const CHistories = ({navigation}) => {
   const {auth} = useContext(AuthContext);
 
-  const today = dayjs();
+  const [today, setToday] = useState(dayjs());
 
   const {data, refetch} = useQuery({
     queryKey: ['CHistories'],
     queryFn: () => getHistories(auth.id),
     enabled: !!auth.id,
+    onSettled: () => setToday(dayjs()),
   });
 
   useEffect(() => {}, []);
@@ -89,8 +90,8 @@ export const CHistories = ({navigation}) => {
   return (
     <SafeAreaView flex={1}>
       <HStack
-        px={10}
-        height={120}
+        px={5}
+        height={100}
         alignItems="center"
         justifyContent="space-between">
         <Heading>매칭 리스트</Heading>

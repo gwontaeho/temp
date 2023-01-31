@@ -18,7 +18,7 @@ export const USettings = () => {
 
   return (
     <SafeAreaView flex={1}>
-      <View h={120} px={10} justifyContent="center">
+      <View h={100} px={5} justifyContent="center">
         <Heading>설정</Heading>
       </View>
       <Divider />

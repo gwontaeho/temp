@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, Linking} from 'react-native';
 import {
   VStack,
@@ -10,6 +10,7 @@ import {
   Modal,
   Divider,
 } from 'native-base';
+import dayjs from 'dayjs';
 import {useNavigation} from '@react-navigation/native';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {
@@ -26,16 +27,16 @@ const ModalAccept = ({data, refetch}) => {
 
   const {mutate: rejectMutate} = useMutation({
     mutationFn: () => rejectRequestByUser(id),
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CShares']});
+    onSettled: async () => {
+      await queryClient.invalidateQueries({queryKey: ['CShares']});
       refetch();
     },
   });
 
   const {mutate: acceptMutate} = useMutation({
     mutationFn: () => acceptRequestByUser(id),
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CShares']});
+    onSettled: async () => {
+      await queryClient.invalidateQueries({queryKey: ['CShares']});
       refetch();
     },
   });
@@ -79,6 +80,9 @@ const ModalAccept = ({data, refetch}) => {
 };
 
 export const After = ({data, refetch}) => {
+  const navigation = useNavigation();
+  const queryClient = useQueryClient();
+
   const {
     id,
     status,
@@ -90,21 +94,46 @@ export const After = ({data, refetch}) => {
     address_detail,
     description,
     description_company,
-    phone,
+    TargetId,
+    Target,
+    count,
+    updatedAt,
+    distance,
   } = data;
 
-  const navigation = useNavigation();
-  const queryClient = useQueryClient();
+  const phone = Target?.phone;
+  const statusStr = status === 3 ? '업체 이동 중' : '인근 업체 매칭 중';
+
+  const {company_name} = {...Target};
+
+  const [departure, setDeparture] = useState(0);
 
   const {mutate} = useMutation({
     mutationFn: () => cancelRequestByUser(id),
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CShares']});
+    onSettled: async () => {
+      await queryClient.invalidateQueries({queryKey: ['CShares']});
       navigation.goBack();
     },
   });
 
-  const statusStr = status === 3 ? '업체 이동 중' : '인근 업체 매칭 중';
+  useEffect(() => {
+    const today = dayjs();
+    const updated = dayjs(updatedAt);
+    const diff = today.diff(updated, 'minutes');
+    setDeparture(diff);
+
+    if (status === 3) {
+      const callBack = () => {
+        const today = dayjs();
+        const updated = dayjs(updatedAt);
+        const diff = today.diff(updated, 'minutes');
+        setDeparture(diff);
+      };
+      const interval = setInterval(callBack, 10000);
+
+      return () => clearInterval(interval);
+    }
+  }, [status, updatedAt]);
 
   const handlePressTel = () => {
     Linking.openURL(`tel:${phone}`);
@@ -113,11 +142,11 @@ export const After = ({data, refetch}) => {
   return (
     <>
       <SafeAreaView flex={1}>
-        <HStack height={120} px={10} space={1} alignItems="center">
+        <HStack height={100} px={5} space={1} alignItems="center">
           <Heading>{statusStr}</Heading>
           <Spinner />
         </HStack>
-        <VStack alignItems="flex-end" px={10} pb={5}>
+        <VStack alignItems="flex-end" px={5} pb={5}>
           <Text bold color="gray.600">
             {address}
           </Text>
@@ -134,36 +163,61 @@ export const After = ({data, refetch}) => {
             <Text fontSize="xl">{`${price}원`}</Text>
           </VStack>
           {!!description && <Text>{description}</Text>}
+          {status === 1 && TargetId && (
+            <Text fontSize="md" bold alignSelf="center" color="info.600">
+              업체가 취소하여 인근업체를 재매칭합니다
+            </Text>
+          )}
         </VStack>
 
-        {status === 3 && !!description_company && (
+        {status === 3 && (
           <VStack
             mx={5}
             py={3}
             px={5}
+            space={3}
             borderWidth={1}
             rounded="sm"
             borderColor="gray.300">
-            <Text color="gray.600" fontSize="xs">
-              업체 메세지
-            </Text>
-            <Text>{description_company}</Text>
+            <HStack>
+              <VStack flex={1}>
+                <Text color="gray.600">업체명</Text>
+                <Text fontSize="md">{company_name}</Text>
+              </VStack>
+              <VStack flex={1}>
+                <Text color="gray.600">이용 횟수</Text>
+                <Text fontSize="md">{count}</Text>
+              </VStack>
+            </HStack>
+            <HStack>
+              <VStack flex={1}>
+                <Text color="gray.600">업체 출발시간</Text>
+                <Text fontSize="md">{departure}분 전</Text>
+              </VStack>
+              <VStack flex={1}>
+                <Text color="gray.600">거리</Text>
+                <Text fontSize="md">{distance}km</Text>
+              </VStack>
+            </HStack>
+            <VStack>
+              <Text color="gray.600">업체 메세지</Text>
+              <Text fontSize="md">{description_company || '-'}</Text>
+            </VStack>
           </VStack>
         )}
 
         {(status === 1 || status === 2) && (
-          <VStack m={5} space={1}>
+          <VStack m={5} space={3}>
+            <Button onPress={mutate}>취소하기</Button>
             <Text alignSelf="center" color="warning.600">
               고의적으로 취소 반복 시 이용이 정지 될 수 있습니다
             </Text>
-            <Button onPress={mutate}>취소하기</Button>
           </VStack>
         )}
-
         {status === 3 && (
           <HStack m={5} space={3}>
             <Button flex={1} onPress={handlePressTel}>
-              전화하기
+              업체에 전화하기
             </Button>
           </HStack>
         )}

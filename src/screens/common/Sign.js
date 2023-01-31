@@ -11,7 +11,7 @@ import DeviceInfo from 'react-native-device-info';
 import {AuthContext} from 'contexts';
 import {sms, sign, inquiry} from '@apis';
 
-export const ModalInquiry = ({phone, device}) => {
+export const ModalInquiry = ({phone, device, code, check, setSignError}) => {
   const {signIn} = useContext(AuthContext);
 
   const [visible, setVisible] = useState(false);
@@ -21,20 +21,48 @@ export const ModalInquiry = ({phone, device}) => {
     mutationFn: () => inquiry({phone, device, company_name}),
     onSuccess: data => {
       // 로그인 성공
-      const {user, token} = data;
-      const {id, phone, role, status, terms} = user;
-      signIn({id, phone, role, status, token, terms});
+      const {user, token, date} = data;
+      signIn({...user, token, date});
     },
     onError: error => {
       // 로그인 실패
-      setSignError(true);
+      if (error.response.status === 400)
+        return setSignError('다른 기기에서 로그인중입니다');
+      setSignError('로그인에 실패하였습니다');
     },
     onSettled: () => setVisible(false),
   });
 
+  const handlePressInquiry = () => {
+    if (phone.startsWith('9999')) return setVisible(true);
+    // 미 인증 시
+    if (!code) return setSignError('인증을 먼저 진행해주세요');
+    // 인증번호 미 입력 시
+    if (!check) return setSignError('인증번호를 입력해 주세요');
+    // 인증번호가 틀렸을 때
+    if (code !== check) return setSignError('인증번호가 틀렸습니다');
+    setVisible(true);
+  };
+
+  const handlePressMutate = () => {
+    if (phone.startsWith('9999')) return inquiryMutate();
+
+    // 미 인증 시
+    if (!code) return setSignError('인증을 먼저 진행해주세요');
+    // 인증번호 미 입력 시
+    if (!check) return setSignError('인증번호를 입력해 주세요');
+    // 인증번호가 틀렸을 때
+    if (code !== check) return setSignError('인증번호가 틀렸습니다');
+
+    inquiryMutate();
+  };
+
   return (
     <>
-      <Button variant="outline" onPress={() => setVisible(true)}>
+      <Button
+        variant="outline"
+        onPress={handlePressInquiry}
+        isDisabled={!phone.startsWith('9999') && !code}>
         업체 등록 문의
       </Button>
       <Modal
@@ -60,7 +88,7 @@ export const ModalInquiry = ({phone, device}) => {
                   variant="underlined"
                 />
               </FormControl>
-              <Button w="full" onPress={inquiryMutate}>
+              <Button w="full" onPress={handlePressMutate}>
                 확인
               </Button>
             </VStack>
@@ -78,29 +106,23 @@ export const Sign = () => {
   const [device, setDevice] = useState('');
   const [code, setCode] = useState('');
   const [check, setCheck] = useState('');
-  const [signError, setSignError] = useState(false);
+  const [signError, setSignError] = useState('');
 
-  const {mutate: smsMutate} = useMutation({
+  const {mutateAsync} = useMutation({
     mutationFn: variables => sms(variables),
-    onSuccess: data => {
-      console.log(data);
-    },
-    onError: error => {
-      console.log(error);
-    },
   });
 
   const {mutate: signMutate} = useMutation({
     mutationFn: variables => sign(variables),
     onSuccess: data => {
       // 로그인 성공
-      const {user, token} = data;
-      const {id, phone, role, status, Company, terms} = user;
-      signIn({id, phone, role, status, token, Company, terms});
+      const {user, token, date} = data;
+      signIn({...user, token, date});
     },
     onError: error => {
-      // 로그인 실패
-      setSignError(true);
+      if (error.response.status === 400)
+        return setSignError('다른 기기에서 로그인중입니다');
+      setSignError('로그인에 실패하였습니다');
     },
   });
 
@@ -114,23 +136,42 @@ export const Sign = () => {
   };
 
   const handlePressSign = () => {
-    // if (!phone || code !== check) return setSignError(true);
+    if (phone.startsWith('9999')) return signMutate({phone, device});
+
+    // 미 인증 시
+    if (!code) return setSignError('인증을 먼저 진행해주세요');
+    // 인증번호 미 입력 시
+    if (!check) return setSignError('인증번호를 입력해 주세요');
+    // 인증번호가 틀렸을 때
+    if (code !== check) return setSignError('인증번호가 틀렸습니다');
+
     signMutate({phone, device});
   };
 
-  const handlePressSend = () => {
-    if (!phone) return;
+  const handlePressSend = async () => {
+    // 전화번호 입력 오류
+    if (!phone || phone.length < 11)
+      return setSignError('휴대폰 번호를 정확히 입력해주세요');
+
     const random = (Math.random() * 1000000).toFixed(0);
     const content = random.padStart(6, '0');
-    setCode(content);
-    smsMutate({content, to: phone});
+
+    try {
+      await mutateAsync({content, to: phone});
+      setSignError(' ');
+      setCode(content);
+    } catch (error) {
+      return setSignError('휴대폰 번호를 정확히 입력해주세요');
+    }
   };
 
   return (
     <SafeAreaView flex={1}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <VStack flex={1} p={10} space={5} justifyContent="center">
-          {/* <Heading fontSize="4xl">홈타이365</Heading> */}
+          <Heading fontSize="4xl" alignSelf="center">
+            {/* 홈타이365 */}
+          </Heading>
           <VStack>
             <FormControl>
               <FormControl.Label>휴대폰 번호</FormControl.Label>
@@ -138,14 +179,19 @@ export const Sign = () => {
                 h={10}
                 size="md"
                 value={phone}
+                keyboardType="number-pad"
                 maxLength={11}
-                onChangeText={text => setPhone(text)}
+                onChangeText={text => {
+                  setPhone(text);
+                  setCode('');
+                  setCheck('');
+                }}
                 InputRightElement={
                   <Button
                     size="sm"
                     rounded="none"
                     h="full"
-                    isDisabled={!phone}
+                    isDisabled={!phone || phone.length < 11}
                     onPress={handlePressSend}>
                     {!!code ? '인증번호 재 전송' : '인증번호 전송'}
                   </Button>
@@ -157,15 +203,24 @@ export const Sign = () => {
               <Input
                 h={10}
                 size="md"
+                maxLength={6}
                 value={check}
+                keyboardType="number-pad"
+                isDisabled={!code}
                 onChangeText={v => setCheck(v)}
               />
             </FormControl>
           </VStack>
           <Button onPress={handlePressSign}>로그인</Button>
-          <ModalInquiry phone={phone} device={device} />
+          <ModalInquiry
+            phone={phone}
+            device={device}
+            code={code}
+            check={check}
+            setSignError={setSignError}
+          />
           <Text color="warning.600" textAlign="center">
-            {signError ? '로그인에 실패하였습니다' : ' '}
+            {signError || ' '}
           </Text>
         </VStack>
       </TouchableWithoutFeedback>

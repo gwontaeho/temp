@@ -1,9 +1,10 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, Alert, Linking} from 'react-native';
 import dayjs from 'dayjs';
-import {Button, Text, VStack, Badge, HStack} from 'native-base';
+import {Button, Text, VStack, Badge, HStack, ScrollView} from 'native-base';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {completeRequestByCompany, cancelRequestByCompany} from '@apis';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 export const CHistory = ({navigation, route}) => {
   const queryClient = useQueryClient();
@@ -26,8 +27,6 @@ export const CHistory = ({navigation, route}) => {
   } = params;
   const {phone} = User;
 
-  console.log('a');
-
   const today = dayjs();
   const updated = dayjs(updatedAt);
   const diff = today.diff(updated, 'minute');
@@ -48,90 +47,135 @@ export const CHistory = ({navigation, route}) => {
 
   const {mutate: completeMutate} = useMutation({
     mutationFn: () => completeRequestByCompany(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       navigation.setParams({...params, status: 4});
-      queryClient.invalidateQueries({queryKey: ['CHistories']});
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CRequests']});
+      await queryClient.invalidateQueries({queryKey: ['CHistories']});
+      await queryClient.invalidateQueries({queryKey: ['CRequests']});
     },
   });
 
   const {mutate: cancelMutate} = useMutation({
     mutationFn: () => cancelRequestByCompany(id),
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['CHistories']});
-      queryClient.invalidateQueries({queryKey: ['CRequests']});
+    onSettled: async () => {
+      await queryClient.invalidateQueries({queryKey: ['CHistories']});
+      await queryClient.invalidateQueries({queryKey: ['CRequests']});
       navigation.goBack();
     },
   });
 
+  const handlePressCopy = () => {
+    Clipboard.setString(address);
+    Alert.alert('', '주소가 복사되었습니다', [{text: '확인'}]);
+  };
+
+  const handlePressTel = () => {
+    Linking.openURL(`tel:${phone}`);
+  };
+
+  const handlePressCancel = () => {
+    Alert.alert(
+      '',
+      '고의적으로 취소 반복 시 이용이 정지될 수 있습니다. 취소하시겠습니까?',
+      [{text: '아니요'}, {text: '네', onPress: () => cancelMutate()}],
+    );
+  };
+
   return (
     <SafeAreaView flex={1}>
-      <VStack
-        p={5}
-        space={10}
-        borderWidth={1}
-        borderColor={borderColor}
-        m={5}
-        rounded="sm">
-        <HStack justifyContent="space-between">
-          <HStack space={1}>
-            <Badge
-              alignSelf="flex-start"
-              variant="outline"
-              colorScheme={shareColorScheme}>
-              {shareStr}
-            </Badge>
-            <Badge
-              alignSelf="flex-start"
-              variant="outline"
-              colorScheme={colorScheme}>
-              {statusStr}
-            </Badge>
+      <ScrollView>
+        <VStack
+          p={5}
+          space={10}
+          borderWidth={1}
+          borderColor={borderColor}
+          m={5}
+          rounded="sm">
+          <HStack justifyContent="space-between">
+            <HStack space={1}>
+              <Badge
+                alignSelf="flex-start"
+                variant="outline"
+                colorScheme={shareColorScheme}>
+                {shareStr}
+              </Badge>
+              <Badge
+                alignSelf="flex-start"
+                variant="outline"
+                colorScheme={colorScheme}>
+                {statusStr}
+              </Badge>
+            </HStack>
+            <Text fontSize="xs">{dateStr}</Text>
           </HStack>
-          <Text fontSize="xs">{dateStr}</Text>
-        </HStack>
-        <Text
-          textAlign="center"
-          fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${price}원`}</Text>
-        <VStack space={5} rounded="sm" borderColor="gray.300">
-          <VStack space={1}>
-            <Text color="gray.600">연락처</Text>
-            <Text fontSize="md">{phone}</Text>
-          </VStack>
-          <VStack space={1}>
-            <Text color="gray.600">주소</Text>
-            <VStack>
-              <Text fontSize="md">{`${address}`}</Text>
-              {!!address_detail && (
-                <Text fontSize="md">{`${address_detail}`}</Text>
-              )}
-            </VStack>
-          </VStack>
-          {!!description && (
+
+          <Text
+            textAlign="center"
+            fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${price}원`}</Text>
+
+          <VStack space={5} rounded="sm" borderColor="gray.300">
+            {status !== 2 && (
+              <HStack justifyContent="space-between" space={3}>
+                <VStack space={1}>
+                  <Text color="gray.600">연락처</Text>
+                  <Text fontSize="md">{phone}</Text>
+                </VStack>
+                <Button
+                  size="sm"
+                  alignSelf="flex-end"
+                  variant="outline"
+                  onPress={handlePressTel}>
+                  전화하기
+                </Button>
+              </HStack>
+            )}
+            {status !== 2 && (
+              <HStack justifyContent="space-between" space={3}>
+                <VStack space={1} flex={1}>
+                  <Text color="gray.600">주소</Text>
+                  <VStack>
+                    <Text fontSize="md">{`${address}`}</Text>
+                    {!!address_detail && (
+                      <Text fontSize="md">{`${address_detail}`}</Text>
+                    )}
+                  </VStack>
+                </VStack>
+                <Button
+                  size="sm"
+                  alignSelf="flex-end"
+                  variant="outline"
+                  onPress={handlePressCopy}>
+                  복사하기
+                </Button>
+              </HStack>
+            )}
+
             <VStack space={1}>
               <Text color="gray.600">요청 메세지</Text>
-              <Text fontSize="md">{description}</Text>
+              <Text fontSize="md">{description || '-'} </Text>
             </VStack>
-          )}
-          {!!description_company && (
+
             <VStack space={1}>
               <Text color="gray.600">업체 메세지</Text>
-              <Text fontSize="md">{description_company}</Text>
+              <Text fontSize="md">{description_company || '-'}</Text>
+            </VStack>
+          </VStack>
+
+          {status === 3 && (
+            <VStack space={3}>
+              <Button onPress={handlePressCancel}>취소</Button>
+              <Button
+                onPress={completeMutate}
+                // isDisabled={time > diff}
+              >
+                {`완료 (${diff}분 진행중)`}
+              </Button>
             </VStack>
           )}
+          {status === 2 && diff > 5 && (
+            <Button onPress={handlePressCancel}>취소</Button>
+          )}
         </VStack>
-        {status === 3 && (
-          <VStack space={3}>
-            <Button onPress={cancelMutate}>취소</Button>
-            <Button onPress={completeMutate}>완료</Button>
-          </VStack>
-        )}
-        {status === 2 && diff > 5 && (
-          <Button onPress={cancelMutate}>취소</Button>
-        )}
-      </VStack>
+      </ScrollView>
     </SafeAreaView>
   );
 };

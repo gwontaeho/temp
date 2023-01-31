@@ -11,7 +11,7 @@ export const Inquiry = () => {
       <VStack
         flex={1}
         space={10}
-        p={5}
+        p={10}
         alignItems="center"
         justifyContent="center">
         <Heading>업체등록 대기중입니다</Heading>

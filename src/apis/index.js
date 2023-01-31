@@ -1,9 +1,8 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
-// 배포
-// axios.defaults.baseURL = 'http://34.64.79.2:4000/api';
-
-axios.defaults.baseURL = 'http://192.168.0.4:4000/api';
+// op
+// axios.defaults.baseURL = 'https://homethai365.com/api';
+axios.defaults.baseURL = 'http://192.168.45.160:4000/api';
 
 /******************************************************************************/
 

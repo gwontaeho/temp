@@ -1,4 +1,4 @@
-package com.kys;
+package com.stewiewwww.homethai365;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -19,7 +19,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "kys";
+    return "homethai365";
   }
 
   /**

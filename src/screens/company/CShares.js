@@ -10,7 +10,9 @@ import {
   View,
   Divider,
   Badge,
+  Center,
 } from 'native-base';
+import dayjs from 'dayjs';
 import {useQuery} from '@tanstack/react-query';
 import {getShares} from '@apis';
 import {AuthContext} from '@contexts';
@@ -18,10 +20,28 @@ import {AuthContext} from '@contexts';
 export const CShares = ({navigation}) => {
   const {auth} = useContext(AuthContext);
 
+  const {Company} = auth;
+  const {expiration, distance, max_count} = Company || {};
+
+  const today = dayjs(auth.date).format('YYYYMMDD');
+  const diff = expiration
+    ? dayjs(expiration).diff(today) / 1000 / 60 / 60 / 24
+    : -1;
+
+  const expired = diff < 0;
+
+  const expirationStr = expired
+    ? '만료일이 경과했습니다'
+    : dayjs(expiration).format('YY. MM. DD 까지 사용 가능');
+
   const {data, refetch} = useQuery({
     queryKey: ['CShares'],
     queryFn: () => getShares(auth.id),
+    enabled: !expired,
   });
+
+  const requests = data?.requests || [];
+  const count = data?.count || 0;
 
   const renderItem = ({item}) => {
     const {id, category, price, personnel, time, status} = item;
@@ -82,27 +102,38 @@ export const CShares = ({navigation}) => {
   return (
     <SafeAreaView flex={1}>
       <HStack
-        height={120}
-        px={10}
+        height={100}
+        px={5}
         alignItems="center"
         justifyContent="space-between">
         <Heading>콜 공유</Heading>
 
         <Button.Group isAttached size="sm">
-          <Button onPress={refetch}>새로고침</Button>
-          <Button onPress={() => navigation.navigate('CShareCreate')}>
+          <Button onPress={refetch} isDisabled={expired}>
+            새로고침
+          </Button>
+          <Button
+            onPress={() => navigation.navigate('CShareCreate')}
+            isDisabled={expired || count >= max_count}>
             공유하기
           </Button>
         </Button.Group>
       </HStack>
+
+      <Text px={5} pb={5} alignSelf="flex-end" color="gray.600" underline>
+        {expirationStr}
+      </Text>
+
       <Divider />
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={<View p={2.5} />}
-        _contentContainerStyle={{p: 5}}
-      />
+      {!expired && (
+        <FlatList
+          data={requests}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ItemSeparatorComponent={<View p={2.5} />}
+          _contentContainerStyle={{p: 5}}
+        />
+      )}
     </SafeAreaView>
   );
 };
