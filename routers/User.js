@@ -7,9 +7,9 @@ const { signToken } = require("../middlewares/jwt");
 router.get("/:id", async (req, res, next) => {
     const { id } = req.params;
     try {
-        const user = await User.findByPk({ where: { id }, include: [{ model: Company }] });
-
-        return res.send({ user, token });
+        const user = await User.findByPk(id, { include: [{ model: Company }] });
+        const token = signToken(user.id);
+        return res.send({ user, token, date: new Date() });
     } catch (error) {
         console.log(error);
         return res.send(500);
@@ -22,9 +22,9 @@ router.post("/sign", async (req, res, next) => {
     try {
         const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, device, role: 1 }, include: [{ model: Company }] });
         // device가 다를 시 (다른 기기에서 로그인 시)
-        if (!phone.includes("test") && user.device !== device) return res.send(400);
+        if (!phone.startsWith("9999") && user.device !== device) return res.sendStatus(400);
         const token = signToken(user.id);
-        return res.send({ user, token });
+        return res.send({ user, token, date: new Date() });
     } catch (error) {
         console.log(error);
         return res.send(500);
@@ -43,10 +43,10 @@ router.post("/inquiry", async (req, res, next) => {
         });
         const token = signToken(user.id);
         // device가 다를 시 (다른 기기에서 로그인 시)
-        if (!phone.includes("test") && user.device !== device) return res.send(400);
-        if (user.role === 2) return res.send({ user, token });
+        if (!phone.startsWith("9999") && user.device !== device) return res.sendStatus(400);
+        if (user.role === 2) return res.send({ user, token, date: new Date() });
         if (!created) await User.update({ status: 2, company_name }, { where: { phone } });
-        return res.send({ user: { ...user.dataValues, status: 2 }, token });
+        return res.send({ user: { ...user.dataValues, status: 2 }, token, date: new Date() });
     } catch (error) {
         console.log(error);
         return res.send(500);

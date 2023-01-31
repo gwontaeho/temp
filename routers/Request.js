@@ -5,7 +5,8 @@ const { sequelize, Request, User, Review, Blacklist } = require("../models");
 const { verifyToken } = require("../middlewares/jwt");
 
 // 업체 : 모든 요청 조회
-router.get("/", async (req, res, next) => {
+router.get("/", verifyToken, async (req, res, next) => {
+    const UserId = req.decoded?.id;
     const { TargetId, latitude, longitude, sort, time } = req.query;
 
     const timeOption = () => {
@@ -30,7 +31,14 @@ router.get("/", async (req, res, next) => {
             attributes: {
                 include: [[distance, "distance"]],
             },
-            where: [sequelize.where(distance, "<=", req.query.distance), { status: 1, time: timeOption() }],
+            where: [
+                sequelize.where(distance, "<=", req.query.distance),
+                {
+                    status: 1,
+                    // UserId: { [Op.not]: UserId },
+                    time: timeOption(),
+                },
+            ],
             order: [sortOption[sort]],
         });
         const count = await Request.count({ where: { TargetId, status: [2, 3] } });
@@ -47,6 +55,7 @@ router.get("/users/:UserId/shares", async (req, res, next) => {
     try {
         const requests = await Request.findAll({
             where: { UserId, share: true, status: { [Op.not]: 0 } },
+            order: [["createdAt", "DESC"]],
         });
         return res.send(requests);
     } catch (error) {
@@ -60,7 +69,7 @@ router.get("/targets/:TargetId", async (req, res, next) => {
     const { TargetId } = req.params;
     try {
         const requests = await Request.findAll({
-            where: { TargetId },
+            where: { TargetId, status: { [Op.not]: [0, 1] } },
             include: [{ model: User }],
             order: [["createdAt", "DESC"]],
         });
@@ -184,7 +193,7 @@ router.put("/:id/targets/accept", async (req, res, next) => {
 router.put("/:id/targets/cancel", async (req, res, next) => {
     const { id } = req.params;
     try {
-        await Request.update({ status: 1, TargetId: null, description_company: null }, { where: { id } });
+        await Request.update({ status: 1, description_company: null }, { where: { id } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);

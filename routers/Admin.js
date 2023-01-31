@@ -77,7 +77,7 @@ router.put("/inquiry-accept", async (req, res, next) => {
 router.put("/inquiry-reject", async (req, res, next) => {
     const { id } = req.body;
     try {
-        await User.update({ status: 1 }, { where: { id } });
+        await User.update({ status: 1, company_name: null }, { where: { id } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
