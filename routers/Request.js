@@ -7,7 +7,13 @@ const { verifyToken } = require("../middlewares/jwt");
 // 업체 : 모든 요청 조회
 router.get("/", verifyToken, async (req, res, next) => {
     const UserId = req.decoded?.id;
-    const { TargetId, latitude, longitude, sort, time } = req.query;
+    const { TargetId, latitude, longitude, sort, time, type } = req.query;
+
+    const typeOption = () => {
+        if (type === "all") return [true, false];
+        if (type === "user") return false;
+        if (type === "share") return true;
+    };
 
     const timeOption = () => {
         if (time === "0") return { [Op.gt]: time };
@@ -40,6 +46,7 @@ router.get("/", verifyToken, async (req, res, next) => {
                     status: 1,
                     UserId: { [Op.not]: UserId, [Op.notIn]: blacklistsIds },
                     time: timeOption(),
+                    share: typeOption(),
                 },
             ],
             order: [sortOption[sort]],
