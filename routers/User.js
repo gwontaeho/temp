@@ -18,9 +18,9 @@ router.get("/:id", async (req, res, next) => {
 
 // 회원가입, 로그인
 router.post("/sign", async (req, res, next) => {
-    const { phone, device } = req.body;
+    const { phone, device, fcm_token } = req.body;
     try {
-        const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, device, role: 1 }, include: [{ model: Company }] });
+        const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, device, fcm_token, role: 1 }, include: [{ model: Company }] });
         // device가 다를 시 (다른 기기에서 로그인 시)
         if (!phone.startsWith("9999") && user.device !== device) return res.sendStatus(400);
         const token = signToken(user.id);
@@ -33,12 +33,12 @@ router.post("/sign", async (req, res, next) => {
 
 // 업체등록 문의
 router.post("/inquiry", async (req, res, next) => {
-    const { phone, device, company_name } = req.body;
+    const { phone, device, company_name, fcm_token } = req.body;
 
     try {
         const [user, created] = await User.findOrCreate({
             where: { phone },
-            defaults: { phone, device, role: 1, status: 2, company_name },
+            defaults: { phone, device, role: 1, status: 2, company_name, fcm_token },
             include: [{ model: Company }],
         });
         const token = signToken(user.id);

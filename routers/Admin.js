@@ -118,4 +118,28 @@ router.put("/company-expiration", async (req, res, next) => {
     }
 });
 
+// 만료일 설정
+router.put("/company-count", async (req, res, next) => {
+    const { id, max_count } = req.body;
+    try {
+        await Company.update({ max_count }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
+// 만료일 설정
+router.put("/company-distance", async (req, res, next) => {
+    const { id, distance } = req.body;
+    try {
+        await Company.update({ distance }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
 module.exports = router;

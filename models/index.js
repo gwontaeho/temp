@@ -58,3 +58,6 @@ db.Blacklist.belongsTo(db.User, { as: "Target" });
 
 db.Company.hasMany(db.Price);
 db.Price.belongsTo(db.Company);
+
+db.User.hasMany(db.Cancellation);
+db.Cancellation.belongsTo(db.User);

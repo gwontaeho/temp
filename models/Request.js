@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
             allowNull: false,
         },
+        address_short: {
+            type: DataTypes.STRING(10),
+        },
         latitude: {
             type: DataTypes.DECIMAL(10, 6),
             allowNull: false,
@@ -52,6 +55,17 @@ module.exports = (sequelize, DataTypes) => {
         },
         phone: {
             type: DataTypes.STRING(11),
+        },
+        deleted_1: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        deleted_2: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        completedAt: {
+            type: DataTypes.DATE,
         },
     });
 };
