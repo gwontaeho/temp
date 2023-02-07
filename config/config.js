@@ -15,10 +15,10 @@ const test = {
     dialect: "mysql",
 };
 const production = {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB,
-    host: process.env.DB_HOST,
+    username: "root",
+    password: "Changeme_123",
+    database: "kys_production",
+    host: "127.0.0.1",
     dialect: "mysql",
 };
 
