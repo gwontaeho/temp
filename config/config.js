@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const development = {
     username: "root",
-    password: null,
+    password: "Changeme_123",
     database: "kys_development",
     host: "127.0.0.1",
     dialect: "mysql",
