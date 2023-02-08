@@ -178,27 +178,36 @@ router.post("/", async (req, res, next) => {
 // 유저 : 요청 취소
 router.put("/:id/users/cancel", async (req, res, next) => {
     const { id } = req.params;
+
+    let request;
+
     try {
-        const request = await Request.findByPk(id);
-        const TargetId = request.TargetId;
-        const user = await User.findByPk(TargetId);
-        const token = user.fcm_token;
-
-        await Request.update({ status: 0 }, { where: { id } });
-
-        res.sendStatus(200);
-
-        if (token) {
-            const message = {
-                notification: { title: "사용자가 요청을 취소했습니다", body: "요청 확인하기" },
-                token,
-            };
-            await admin.messaging().send(message);
-        }
-
-        return;
+        request = await Request.findByPk(id);
     } catch (error) {
         console.log(error);
+    }
+
+    try {
+        await Request.update({ status: 0 }, { where: { id } });
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+    }
+
+    if (request?.TargetId) {
+        try {
+            const user = await User.findByPk(TargetId);
+            const token = user?.fcm_token;
+            if (token) {
+                const message = {
+                    notification: { title: "사용자가 요청을 취소했습니다", body: "요청 확인하기" },
+                    token,
+                };
+                await admin.messaging().send(message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 });
 
