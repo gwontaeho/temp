@@ -342,6 +342,11 @@ router.put("/:id/targets/cancel", verifyToken, async (req, res, next) => {
 router.put("/:id/targets/complete", async (req, res, next) => {
     const { id } = req.params;
     try {
+        const request = await Request.findByPk(id);
+        const { updatedAt, time } = request;
+        const completed = dayjs(updatedAt).add(time, "m");
+        if (completed < dayjs()) return res.sendStatus(400);
+
         await Request.update({ status: 4, completedAt: new Date() }, { where: { id, status: 3 } });
         return res.sendStatus(200);
     } catch (error) {
