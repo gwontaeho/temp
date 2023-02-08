@@ -18,7 +18,6 @@ router.get("/:id", async (req, res, next) => {
 
 // 회원가입, 로그인
 router.post("/sign", async (req, res, next) => {
-    console.log("login");
     const { phone, device, fcm_token } = req.body;
     try {
         const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, device, fcm_token, role: 1 }, include: [{ model: Company }] });
