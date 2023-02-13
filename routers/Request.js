@@ -188,7 +188,7 @@ router.post("/", async (req, res, next) => {
 router.put("/:id/users/cancel", verifyToken, async (req, res, next) => {
     const { id } = req.params;
     try {
-        await Request.update({ status: 0 }, { where: { id, status: 1 } });
+        await Request.update({ status: 0 }, { where: { id, status: [1, 2, 3] } });
         return res.sendStatus(200);
     } catch (error) {
         return res.sendStatus(500);
@@ -237,18 +237,20 @@ router.put("/:id/users/accept", verifyToken, async (req, res, next) => {
         return res.sendStatus(500);
     }
 
-    if (result[0] === 1) {
-        const request = await Request.findByPk(id, { attributes: ["TargetId"] });
-        const user = await User.findByPk(request.TargetId, { attributes: ["fcm_token"] });
-        const token = user.fcm_token;
-        if (token) {
-            const message = {
-                notification: { title: "사용자가 요청을 수락했습니다", body: "요청 확인하기" },
-                token,
-            };
-            await admin.messaging().send(message);
+    try {
+        if (result[0] === 1) {
+            const request = await Request.findByPk(id, { attributes: ["TargetId"] });
+            const user = await User.findByPk(request.TargetId, { attributes: ["fcm_token"] });
+            const token = user.fcm_token;
+            if (token) {
+                const message = {
+                    notification: { title: "사용자가 요청을 수락했습니다", body: "요청 확인하기" },
+                    token,
+                };
+                await admin.messaging().send(message);
+            }
         }
-    }
+    } catch (error) {}
 });
 
 // 유저 : 요청 완료

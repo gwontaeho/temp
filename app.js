@@ -34,12 +34,6 @@ app.use("/api", routers);
 
 app.listen(port, () => {});
 
-(async () => {
-    const phone = "stew";
-    const device = "Changeme_123";
-    await User.findOrCreate({ where: { phone: "stew" }, defaults: { phone, device, role: 9 } });
-})();
-
 setInterval(async () => {
     const updatedAtLt = dayjs().subtract(30, "m").toDate();
     try {
