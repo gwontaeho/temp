@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Stack, Typography, IconButton, Menu, MenuItem, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { DataGrid } from "@mui/x-data-grid";
+import { getCookie } from "cookies-next";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
+
 import { getCompanies, blockUser, restoreUser, updateExpiration, updateCount, updateDistance } from "@/apis";
 
 const CallDialog = ({ Company, updateCountMutate }) => {
@@ -237,3 +239,17 @@ export default function Companies() {
         </Stack>
     );
 }
+
+export const getServerSideProps = ({ req, res }) => {
+    const token = getCookie("token", { req, res });
+    if (!token) {
+        return {
+            redirect: {
+                destination: "/signin",
+                permanent: false,
+            },
+        };
+    }
+
+    return { props: {} };
+};

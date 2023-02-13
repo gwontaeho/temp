@@ -1,6 +1,7 @@
 import { Stack, ButtonGroup, Button } from "@mui/material";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import { getCookie } from "cookies-next";
 
 import { getInquiries, acceptInquiry, rejectInquiry } from "@/apis";
 
@@ -67,3 +68,17 @@ export default function inquiries() {
         </Stack>
     );
 }
+
+export const getServerSideProps = ({ req, res }) => {
+    const token = getCookie("token", { req, res });
+    if (!token) {
+        return {
+            redirect: {
+                destination: "/signin",
+                permanent: false,
+            },
+        };
+    }
+
+    return { props: {} };
+};

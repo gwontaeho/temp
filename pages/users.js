@@ -3,7 +3,7 @@ import { Stack, Typography, IconButton, Menu, MenuItem } from "@mui/material";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { DataGrid } from "@mui/x-data-grid";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
-
+import { getCookie } from "cookies-next";
 import { getUsers, blockUser, restoreUser } from "@/apis";
 
 export default function Users() {
@@ -34,8 +34,8 @@ export default function Users() {
             headerName: "상태",
             width: 90,
             renderCell: ({ value }) => {
-                const statusStr = value === 1 ? "정상" : "정지";
-                const color = value === 1 ? "green" : "red";
+                const statusStr = value === 1 ? "정상" : value === 0 ? "정지" : "대기";
+                const color = value === 1 ? "green" : value === 0 ? "red" : "gray";
                 return (
                     <Typography variant="body2" color={color}>
                         {statusStr}
@@ -74,9 +74,11 @@ export default function Users() {
                         <IconButton onClick={handleClick}>
                             <MoreVertIcon />
                         </IconButton>
-                        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                            <MenuItem onClick={handleClickStatus}>{statusStr}</MenuItem>
-                        </Menu>
+                        {status !== 2 && (
+                            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                                <MenuItem onClick={handleClickStatus}>{statusStr}</MenuItem>
+                            </Menu>
+                        )}
                     </>
                 );
             },
@@ -97,3 +99,18 @@ export default function Users() {
         </Stack>
     );
 }
+
+export const getServerSideProps = ({ req, res }) => {
+    const token = getCookie("token", { req, res });
+
+    if (!token) {
+        return {
+            redirect: {
+                destination: "/signin",
+                permanent: false,
+            },
+        };
+    }
+
+    return { props: {} };
+};

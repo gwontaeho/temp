@@ -1,11 +1,19 @@
 import axios from "axios";
+import { getCookie } from "cookies-next";
+
 // import CryptoJS from "crypto-js";
 // 배포
 
 // axios.defaults.baseURL = "http://localhost:4000/api";
-// axios.defaults.baseURL = "https://homethai365.com/api";
+axios.defaults.baseURL = "https://homethai365.com/api";
+// axios.defaults.baseURL = "http://localhost:3000/api";
 
-axios.defaults.baseURL = "http://localhost:3000/api";
+axios.interceptors.request.use((config) => {
+    const token = getCookie("token");
+
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+});
 
 /******************************************************************************/
 
@@ -257,6 +265,12 @@ const updateDistance = async (values) => {
     return data;
 };
 
+// 관리자 : 로그인
+const signAdmin = async (values) => {
+    const { data } = await axios.post("/admin/sign", values);
+    return data;
+};
+
 /******************************************************************************/
 
 // 유저
@@ -288,6 +302,7 @@ export {
     updateExpiration,
     updateCount,
     updateDistance,
+    signAdmin,
 };
 
 export {
