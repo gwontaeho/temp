@@ -54,8 +54,10 @@ router.get("/", verifyToken, async (req, res, next) => {
             return res.send({ code: 110, blocked_t, seq: cancellation.seq });
         }
 
-        const blacklists = await Blacklist.findAll({ where: { TargetId: UserId }, attributes: ["UserId"] });
-        const blacklistsIds = blacklists.map((v) => v.UserId);
+        const bl1 = await Blacklist.findAll({ where: { TargetId: UserId }, attributes: ["UserId"] });
+        const bl2 = await Blacklist.findAll({ where: { UserId }, attributes: ["TargetId"] });
+        const blIds1 = bl1.map((v) => v.UserId);
+        const blIds2 = bl2.map((v) => v.TargetId);
 
         const requests = await Request.findAll({
             attributes: { include: [[distance, "distance"]] },
@@ -63,7 +65,7 @@ router.get("/", verifyToken, async (req, res, next) => {
                 sequelize.where(distance, "<=", req.query.distance),
                 {
                     status: 1,
-                    // UserId: { [Op.not]: UserId, [Op.notIn]: blacklistsIds },
+                    UserId: { [Op.not]: UserId, [Op.notIn]: [...blIds1, ...blIds2] },
                     time: timeOption(),
                     share: typeOption(),
                 },
@@ -355,7 +357,7 @@ router.put("/:id/targets/complete", verifyToken, async (req, res, next) => {
         const request = await Request.findByPk(id);
         const { updatedAt, time } = request;
         const completed = dayjs(updatedAt).add(time, "m");
-        // if (completed > dayjs()) return res.sendStatus(400);
+        if (completed > dayjs()) return res.sendStatus(400);
         await Request.update({ status: 4, completedAt: new Date() }, { where: { id, status: 3 } });
         return res.sendStatus(200);
     } catch (error) {

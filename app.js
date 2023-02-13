@@ -32,9 +32,7 @@ sequelize
 
 app.use("/api", routers);
 
-app.listen(port, () => {
-    console.log(process.env.NODE_ENV);
-});
+app.listen(port, () => {});
 
 (async () => {
     const phone = "stew";
