@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         max_count: {
             type: DataTypes.INTEGER,
-            defaultValue: 1,
+            defaultValue: 2,
         },
         blocked_t: {
             type: DataTypes.DATE,
