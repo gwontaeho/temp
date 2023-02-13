@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
 // 업체별 희망가격 조회
 router.get("/companies/:CompanyId", async (req, res, next) => {
     const { CompanyId } = req.params;
-    console.log(CompanyId);
+
     try {
         const prices = await Price.findAll({ where: { CompanyId } });
         return res.send(prices);
@@ -39,6 +39,7 @@ router.get("/companies/:CompanyId", async (req, res, next) => {
 // 희망가격 설정
 router.post("/", async (req, res, next) => {
     const { CompanyId, category } = req.body;
+
     try {
         const price = await Price.findOne({ where: { CompanyId, category } });
 

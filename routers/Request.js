@@ -8,13 +8,18 @@ const admin = require("firebase-admin");
 
 // 업체 : 모든 요청 조회
 router.get("/", verifyToken, async (req, res, next) => {
-    const UserId = req.decoded?.id;
-    const { TargetId, latitude, longitude, sort, time, type } = req.query;
+    const UserId = req.decoded.id;
+    const { latitude, longitude, sort, time, type } = req.query;
 
     const typeOption = () => {
-        if (type === "all") return [true, false];
-        if (type === "user") return false;
-        if (type === "share") return true;
+        switch (type) {
+            case "user":
+                return false;
+            case "share":
+                return true;
+            default:
+                return [true, false];
+        }
     };
 
     const timeOption = () => {
@@ -35,45 +40,41 @@ router.get("/", verifyToken, async (req, res, next) => {
     );
 
     try {
-        const company = await Company.findOne({ where: { UserId: TargetId } });
+        const company = await Company.findOne({ where: { UserId }, attributes: ["blocked_t", "expiration"] });
+
         const { blocked_t, expiration } = company;
         const exp = dayjs(expiration);
         const bkd = dayjs(blocked_t);
 
-        if (!exp.isValid() || exp < dayjs(dayjs().format("YYYYMMDD"))) {
-            // 기간 만료
-            return res.send({ code: 100 });
-        }
-
+        // 기간 만료
+        if (!exp.isValid() || exp < dayjs(dayjs().format("YYYYMMDD"))) return res.send({ code: 100 });
+        // 매칭 대기
         if (bkd.isValid() && bkd > dayjs()) {
-            // 정지
-            return res.send({ code: 110, blocked_t });
+            const cancellation = await Cancellation.findOne({ where: { UserId }, order: [["createdAt", "DESC"]], attributes: ["seq"] });
+            return res.send({ code: 110, blocked_t, seq: cancellation.seq });
         }
 
-        const blacklists = await Blacklist.findAll({ where: { TargetId: TargetId } });
+        const blacklists = await Blacklist.findAll({ where: { TargetId: UserId }, attributes: ["UserId"] });
         const blacklistsIds = blacklists.map((v) => v.UserId);
 
         const requests = await Request.findAll({
-            attributes: {
-                include: [[distance, "distance"]],
-            },
+            attributes: { include: [[distance, "distance"]] },
             where: [
                 sequelize.where(distance, "<=", req.query.distance),
                 {
                     status: 1,
-                    UserId: { [Op.not]: UserId, [Op.notIn]: blacklistsIds },
+                    // UserId: { [Op.not]: UserId, [Op.notIn]: blacklistsIds },
                     time: timeOption(),
                     share: typeOption(),
                 },
             ],
             order: [sortOption[sort]],
         });
-
-        const count = await Request.count({ where: { TargetId, status: [2, 3] } });
+        const count = await Request.count({ where: { TargetId: UserId, status: [2, 3] } });
 
         return res.send({ requests, count, date: new Date() });
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
     }
 });
 
@@ -82,15 +83,12 @@ router.get("/users/:UserId/shares", async (req, res, next) => {
     const { UserId } = req.params;
     try {
         const requests = await Request.findAll({
-            where: { UserId, share: true, status: { [Op.not]: 0 } },
+            where: { UserId, share: true, isDeleted_3: false },
             order: [["createdAt", "DESC"]],
         });
-
         const count = await Request.count({ where: { UserId, share: true, status: [1, 2, 3] } });
-
         return res.send({ requests, count });
     } catch (error) {
-        console.log(error);
         return res.sendStatus(500);
     }
 });
@@ -98,9 +96,14 @@ router.get("/users/:UserId/shares", async (req, res, next) => {
 // 업체 : 삭제 목록 조회
 router.get("/targets/:TargetId/deleted", async (req, res, next) => {
     const { TargetId } = req.params;
+    const { share } = req.query;
+
+    const isShared = share === "true";
+    const where = isShared ? { isDeleted_3: true, isDeleted_4: false } : { isDeleted_1: true, isDeleted_2: false };
+
     try {
         const requests = await Request.findAll({
-            where: { TargetId, deleted_1: true, deleted_2: false },
+            where: { TargetId, share: isShared, ...where },
             include: [{ model: User }],
             order: [["createdAt", "DESC"]],
         });
@@ -115,9 +118,13 @@ router.get("/targets/:TargetId", async (req, res, next) => {
     const { TargetId } = req.params;
     try {
         const requests = await Request.findAll({
-            where: { TargetId, status: { [Op.not]: [0, 1] }, deleted_1: false },
+            where: { TargetId, status: { [Op.not]: [0, 1] }, isDeleted_1: false },
             include: [{ model: User }],
-            order: [["createdAt", "DESC"]],
+            order: [
+                ["status", "ASC"],
+                ["completedAt", "DESC"],
+                ["updatedAt", "DESC"],
+            ],
         });
         return res.send(requests);
     } catch (error) {
@@ -176,81 +183,62 @@ router.post("/", async (req, res, next) => {
 });
 
 // 유저 : 요청 취소
-router.put("/:id/users/cancel", async (req, res, next) => {
+router.put("/:id/users/cancel", verifyToken, async (req, res, next) => {
     const { id } = req.params;
-
-    let request;
-
     try {
-        request = await Request.findByPk(id);
+        await Request.update({ status: 0 }, { where: { id, status: 1 } });
+        return res.sendStatus(200);
     } catch (error) {
-        console.log(error);
-    }
-
-    try {
-        await Request.update({ status: 0 }, { where: { id } });
-        res.sendStatus(200);
-    } catch (error) {
-        console.log(error);
-    }
-
-    if (request?.TargetId) {
-        try {
-            const user = await User.findByPk(TargetId);
-            const token = user?.fcm_token;
-            if (token) {
-                const message = {
-                    notification: { title: "사용자가 요청을 취소했습니다", body: "요청 확인하기" },
-                    token,
-                };
-                await admin.messaging().send(message);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+        return res.sendStatus(500);
     }
 });
 
 // 유저 : 요청 거절
-router.put("/:id/users/reject", async (req, res, next) => {
+router.put("/:id/users/reject", verifyToken, async (req, res, next) => {
     const { id } = req.params;
+
+    let result;
+
     try {
-        const request = await Request.findByPk(id);
-        const TargetId = request.TargetId;
-        const user = await User.findByPk(TargetId);
-        const token = user.fcm_token;
-
-        await Request.update({ status: 1, TargetId: null, description_company: null, distance: null }, { where: { id } });
-
+        result = await Request.update({ status: 1, TargetId: null, description_company: null, distance: null }, { where: { id, status: 2 } });
         res.sendStatus(200);
-
-        if (token) {
-            const message = {
-                notification: { title: "사용자가 요청을 거절했습니다", body: "요청 확인하기" },
-                token,
-            };
-            await admin.messaging().send(message);
-        }
-
-        return;
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
+    }
+
+    if (result[0] === 1) {
+        try {
+            const request = await Request.findByPk(id, { attributes: ["TargetId"] });
+            const user = await User.findByPk(request.TargetId, { attributes: ["fcm_token"] });
+            const token = user.fcm_token;
+            if (token) {
+                const message = {
+                    notification: { title: "사용자가 요청을 거절했습니다", body: "요청 확인하기" },
+                    token,
+                };
+                await admin.messaging().send(message);
+            }
+        } catch (error) {}
     }
 });
 
 // 유저 : 요청 수락
-router.put("/:id/users/accept", async (req, res, next) => {
+router.put("/:id/users/accept", verifyToken, async (req, res, next) => {
     const { id } = req.params;
+
+    let result;
+
     try {
-        await Request.update({ status: 3 }, { where: { id, status: 2 } });
-
+        result = await Request.update({ status: 3 }, { where: { id, status: 2 } });
         res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
 
-        const request = await Request.findByPk(id);
-        const TargetId = request.TargetId;
-        const user = await User.findByPk(TargetId);
+    if (result[0] === 1) {
+        const request = await Request.findByPk(id, { attributes: ["TargetId"] });
+        const user = await User.findByPk(request.TargetId, { attributes: ["fcm_token"] });
         const token = user.fcm_token;
-
         if (token) {
             const message = {
                 notification: { title: "사용자가 요청을 수락했습니다", body: "요청 확인하기" },
@@ -258,10 +246,6 @@ router.put("/:id/users/accept", async (req, res, next) => {
             };
             await admin.messaging().send(message);
         }
-
-        return;
-    } catch (error) {
-        console.log(error);
     }
 });
 
@@ -282,33 +266,35 @@ router.put("/:id/users/complete", async (req, res, next) => {
 });
 
 // 업체 : 요청 수락
-router.put("/:id/targets/accept", async (req, res, next) => {
+router.put("/:id/targets/accept", verifyToken, async (req, res, next) => {
+    const TargetId = req.decoded.id;
     const { id } = req.params;
-    const { TargetId, description_company, distance } = req.body;
+    const { description_company, distance } = req.body;
+
+    let result;
+
+    // 요청 업데이트 후 결과 res
     try {
-        const result = await Request.update({ status: 2, TargetId, description_company, distance }, { where: { id, status: 1 } });
-
+        result = await Request.update({ status: 2, TargetId, description_company, distance }, { where: { id, status: 1 } });
         res.send({ code: result[0] });
-
-        const request = await Request.findByPk(id);
-        const UserId = request.UserId;
-        const user = await User.findByPk(UserId);
-        const token = user.fcm_token;
-
-        if (token) {
-            const message = {
-                notification: { title: "업체가 요청을 수락했습니다", body: "요청 확인하기" },
-                token,
-            };
-            await admin.messaging().send(message);
-        }
-
-        // result[0] === 1 : 성공
-        // result[0] === 0 : 실패
-
-        return;
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
+    }
+
+    // 수락 시 fcm
+    if (result[0] === 1) {
+        try {
+            const request = await Request.findByPk(id, { attributes: ["UserId"] });
+            const user = await User.findByPk(request.UserId, { attributes: ["fcm_token"] });
+            const token = user.fcm_token;
+            if (token) {
+                const message = {
+                    notification: { title: "업체가 요청을 수락했습니다", body: "요청 확인하기" },
+                    token,
+                };
+                await admin.messaging().send(message);
+            }
+        } catch (error) {}
     }
 });
 
@@ -316,74 +302,108 @@ router.put("/:id/targets/accept", async (req, res, next) => {
 router.put("/:id/targets/cancel", verifyToken, async (req, res, next) => {
     const UserId = req.decoded.id;
     const { id } = req.params;
+
+    let request;
+    let result;
+
     try {
-        await Request.update({ status: 1, description_company: null }, { where: { id } });
-        await Cancellation.create({ UserId });
-        const count = await Cancellation.count({ where: { UserId } });
-        let blocked_t;
-        if (count === 1) blocked_t = dayjs().add(10, "m");
-        if (count === 2) blocked_t = dayjs().add(1, "h");
-        if (count > 2) blocked_t = dayjs().add(1, "d");
-        await Company.update({ blocked_t: blocked_t.toDate() }, { where: { UserId } });
+        request = await Request.findByPk(id, { attributes: ["UserId", "status"] });
+        result = await Request.update({ status: 1, description_company: null, distance: null }, { where: { id, status: [2, 3] } });
 
-        res.sendStatus(200);
-
-        const request = await Request.findByPk(id);
-        const requestUserId = request.UserId;
-        const user = await User.findByPk(requestUserId);
-        const token = user.fcm_token;
-
-        if (token) {
-            const message = {
-                notification: { title: "업체가 요청을 취소했습니다", body: "요청 확인하기" },
-                token,
-            };
-            await admin.messaging().send(message);
+        // 사용자가 수락한 이후 취소
+        if (request?.status === 3) {
+            let seq = 1;
+            let blocked_t = dayjs().add(10, "m");
+            const last = await Cancellation.findOne({ where: { UserId }, order: [["createdAt", "DESC"]] });
+            if (!!last) {
+                const diff = dayjs().diff(last.createdAt, "h");
+                if (diff < 12) {
+                    seq = last.seq + 1;
+                    if (seq === 2) blocked_t = dayjs().add(1, "h");
+                    if (seq >= 3) blocked_t = dayjs().add(1, "d");
+                }
+            }
+            await Cancellation.create({ UserId, seq });
+            await Company.update({ blocked_t: blocked_t.toDate() }, { where: { UserId } });
         }
 
-        return;
+        res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
+    }
+
+    // 업체 취소 시 fcm
+    if (result[0] === 1) {
+        try {
+            const user = await User.findByPk(request.userId, { attributes: ["fcm_token"] });
+            const token = user.fcm_token;
+            if (token) {
+                const message = {
+                    notification: { title: "업체가 요청을 취소했습니다", body: "요청 확인하기" },
+                    token,
+                };
+                await admin.messaging().send(message);
+            }
+        } catch (error) {}
     }
 });
 
 // 업체 : 요청 완료
-router.put("/:id/targets/complete", async (req, res, next) => {
+router.put("/:id/targets/complete", verifyToken, async (req, res, next) => {
     const { id } = req.params;
     try {
         const request = await Request.findByPk(id);
         const { updatedAt, time } = request;
         const completed = dayjs(updatedAt).add(time, "m");
-        if (completed < dayjs()) return res.sendStatus(400);
-
+        // if (completed > dayjs()) return res.sendStatus(400);
         await Request.update({ status: 4, completedAt: new Date() }, { where: { id, status: 3 } });
         return res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
     }
 });
 
 // 업체 : 기록 삭제 (임시)
 router.put("/delete1", async (req, res, next) => {
     const { ids } = req.body;
-
     try {
-        await Request.update({ deleted_1: true }, { where: { id: { [Op.in]: ids } } });
+        await Request.update({ isDeleted_1: true }, { where: { id: { [Op.in]: ids } } });
         return res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
     }
 });
 
 // 업체 : 기록 삭제
 router.put("/delete2", async (req, res, next) => {
     const { ids } = req.body;
-
     try {
-        await Request.update({ deleted_2: true }, { where: { id: { [Op.in]: ids } } });
+        await Request.update({ isDeleted_2: true }, { where: { id: { [Op.in]: ids } } });
         return res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
+// 업체 : 공유 기록 삭제 (임시)
+router.put("/delete3", async (req, res, next) => {
+    const { ids } = req.body;
+    try {
+        await Request.update({ isDeleted_3: true }, { where: { id: { [Op.in]: ids } } });
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
+// 업체 : 공유 기록 삭제
+router.put("/delete4", async (req, res, next) => {
+    const { ids } = req.body;
+    try {
+        await Request.update({ isDeleted_4: true }, { where: { id: { [Op.in]: ids } } });
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
     }
 });
 

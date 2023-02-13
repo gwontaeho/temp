@@ -1,7 +1,23 @@
 const express = require("express");
 const router = express();
 const { User, Company } = require("../models");
-const { verifyToken } = require("../middlewares/jwt");
+const { verifyToken, signToken } = require("../middlewares/jwt");
+
+// 관리자 로그인
+router.post("/sign", async (req, res, next) => {
+    const { phone, device } = req.body;
+    console.log(phone, device);
+    try {
+        const user = await User.findOne({ where: { phone } });
+        console.log(user.device === device);
+        if (user === null || user.device !== device) return res.sendStatus(400);
+        const token = signToken(user.id);
+        return res.send({ token });
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
 
 // 대시보드
 router.get("/dashboard", async (req, res, next) => {
@@ -62,7 +78,7 @@ router.get("/inquiries", async (req, res, next) => {
 });
 
 // 업체등록 승인
-router.put("/inquiry-accept", async (req, res, next) => {
+router.put("/inquiry-accept", verifyToken, async (req, res, next) => {
     const { id, company_name } = req.body;
     try {
         await User.update({ status: 1, role: 2 }, { where: { id } });
@@ -74,7 +90,7 @@ router.put("/inquiry-accept", async (req, res, next) => {
 });
 
 // 업체등록 거절
-router.put("/inquiry-reject", async (req, res, next) => {
+router.put("/inquiry-reject", verifyToken, async (req, res, next) => {
     const { id } = req.body;
     try {
         await User.update({ status: 1, company_name: null }, { where: { id } });
@@ -85,7 +101,7 @@ router.put("/inquiry-reject", async (req, res, next) => {
 });
 
 // 계정 비활성화
-router.put("/user-block", async (req, res, next) => {
+router.put("/user-block", verifyToken, async (req, res, next) => {
     const { id } = req.body;
     try {
         await User.update({ status: 0 }, { where: { id } });
@@ -96,7 +112,7 @@ router.put("/user-block", async (req, res, next) => {
 });
 
 // 계정 활성화
-router.put("/user-restore", async (req, res, next) => {
+router.put("/user-restore", verifyToken, async (req, res, next) => {
     const { id } = req.body;
     try {
         await User.update({ status: 1 }, { where: { id } });
@@ -107,7 +123,7 @@ router.put("/user-restore", async (req, res, next) => {
 });
 
 // 만료일 설정
-router.put("/company-expiration", async (req, res, next) => {
+router.put("/company-expiration", verifyToken, async (req, res, next) => {
     const { id, expiration } = req.body;
     try {
         await Company.update({ expiration }, { where: { id } });
@@ -118,8 +134,8 @@ router.put("/company-expiration", async (req, res, next) => {
     }
 });
 
-// 만료일 설정
-router.put("/company-count", async (req, res, next) => {
+// 카운트 설정
+router.put("/company-count", verifyToken, async (req, res, next) => {
     const { id, max_count } = req.body;
     try {
         await Company.update({ max_count }, { where: { id } });
@@ -130,8 +146,8 @@ router.put("/company-count", async (req, res, next) => {
     }
 });
 
-// 만료일 설정
-router.put("/company-distance", async (req, res, next) => {
+// 거리 설정
+router.put("/company-distance", verifyToken, async (req, res, next) => {
     const { id, distance } = req.body;
     try {
         await Company.update({ distance }, { where: { id } });

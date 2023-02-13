@@ -8,6 +8,7 @@ exports.verifyToken = (req, res, next) => {
         req.decoded = jwt.verify(token, process.env.JWT_SECRET);
         return next();
     } else {
+        console.log(token);
         // token 없음
     }
 };

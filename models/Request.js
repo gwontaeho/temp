@@ -56,16 +56,28 @@ module.exports = (sequelize, DataTypes) => {
         phone: {
             type: DataTypes.STRING(11),
         },
-        deleted_1: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        deleted_2: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
         completedAt: {
             type: DataTypes.DATE,
+        },
+        hasReview: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        isDeleted_1: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        isDeleted_2: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        isDeleted_3: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        isDeleted_4: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
     });
 };
