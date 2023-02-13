@@ -82,6 +82,9 @@ const DistanceDialog = ({ Company, updateDistanceMutate }) => {
 };
 
 export default function Companies() {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openId, setOpenId] = useState(null);
+
     const { data, refetch } = useQuery({
         queryKey: ["companies"],
         queryFn: getCompanies,
@@ -199,14 +202,15 @@ export default function Companies() {
 
                 const statusStr = status === 1 ? "계정 정지" : "계정 복구";
 
-                const [anchorEl, setAnchorEl] = useState(null);
-                const open = Boolean(anchorEl);
+                const open = Boolean(anchorEl) && openId === id;
 
                 const handleClick = (e) => {
                     setAnchorEl(e.currentTarget);
+                    setOpenId(id);
                 };
                 const handleClose = () => {
                     setAnchorEl(null);
+                    setOpenId(null);
                 };
 
                 const handleClickStatus = () => {

@@ -5,7 +5,7 @@ import { getCookie } from "cookies-next";
 
 import { getInquiries, acceptInquiry, rejectInquiry } from "@/apis";
 
-export default function inquiries() {
+export default function Inquiries() {
     const { data, refetch } = useQuery({
         queryKey: ["inquiries"],
         queryFn: getInquiries,

@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getCookie, deleteCookie } from "cookies-next";
+import { deleteCookie } from "cookies-next";
 
 import { Stack, List, ListItem, ListItemButton, ListItemText, Divider } from "@mui/material";
 
 const Nav = () => {
     const router = useRouter();
-
-    const token = getCookie("token");
 
     const options = [
         { pathname: "/", primary: "대시보드" },
@@ -26,7 +24,7 @@ const Nav = () => {
             <List>
                 {options.map(({ pathname, primary }) => {
                     return (
-                        <Link href={pathname} key={pathname}>
+                        <Link key={pathname} href={pathname}>
                             <ListItem disablePadding>
                                 <ListItemButton selected={pathname === router.pathname}>
                                     <ListItemText primary={primary} />
@@ -35,17 +33,13 @@ const Nav = () => {
                         </Link>
                     );
                 })}
-
-                {!!token && (
-                    <>
-                        <Divider />
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={handleClickSignout}>
-                                <ListItemText primary="로그아웃" />
-                            </ListItemButton>
-                        </ListItem>
-                    </>
-                )}
+            </List>
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={handleClickSignout}>
+                        <ListItemText primary="로그아웃" />
+                    </ListItemButton>
+                </ListItem>
             </List>
         </Stack>
     );
