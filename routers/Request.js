@@ -102,10 +102,14 @@ router.get("/targets/:TargetId/deleted", async (req, res, next) => {
 
     const isShared = share === "true";
     const where = isShared ? { isDeleted_3: true, isDeleted_4: false } : { isDeleted_1: true, isDeleted_2: false };
+    const id = isShared ? { UserId: TargetId } : { TargetId };
 
     try {
         const requests = await Request.findAll({
-            where: { TargetId, share: isShared, ...where },
+            where: {
+                ...id,
+                ...where,
+            },
             include: [{ model: User }],
             order: [["createdAt", "DESC"]],
         });
