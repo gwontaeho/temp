@@ -19,6 +19,20 @@ router.post("/sign", async (req, res, next) => {
     }
 });
 
+// 업체 생성
+router.post("/company", verifyToken, async (req, res, next) => {
+    const { phone, name } = req.body;
+
+    try {
+        const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, company_name: name, role: 2 } });
+        if (!created) return res.send({ code: 1 });
+        if (created) await Company.create({ UserId: user.id, name });
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
 // 대시보드
 router.get("/dashboard", async (req, res, next) => {
     try {
@@ -89,6 +103,22 @@ router.put("/inquiry-accept", verifyToken, async (req, res, next) => {
     }
 });
 
+// 전체 업체등록 승인
+router.put("/inquiry-accept-all", verifyToken, async (req, res, next) => {
+    try {
+        const users = await User.findAll({ where: { status: 2, role: 1 } });
+        if (users.length > 0) {
+            const map = users.map((v) => ({ UserId: v.id, name: v.company_name }));
+            const ids = map.map((v) => v.UserId);
+            await User.update({ status: 1, role: 2 }, { where: { id: ids } });
+            await Company.bulkCreate(map);
+        }
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
 // 업체등록 거절
 router.put("/inquiry-reject", verifyToken, async (req, res, next) => {
     const { id } = req.body;
@@ -97,6 +127,20 @@ router.put("/inquiry-reject", verifyToken, async (req, res, next) => {
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
+    }
+});
+
+// 전체 업체등록 거절
+router.put("/inquiry-reject-all", verifyToken, async (req, res, next) => {
+    try {
+        const users = await User.findAll({ where: { status: 2, role: 1 } });
+        const ids = users.map((v) => v.id);
+        console.log(ids);
+        await User.update({ status: 1, company_name: null }, { where: { id: ids } });
+
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
     }
 });
 
@@ -151,6 +195,19 @@ router.put("/company-distance", verifyToken, async (req, res, next) => {
     const { id, distance } = req.body;
     try {
         await Company.update({ distance }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
+// 카운트 설정
+router.put("/company-name", verifyToken, async (req, res, next) => {
+    const { id, UserId, name } = req.body;
+    try {
+        await User.update({ company_name: name }, { where: { id: UserId } });
+        await Company.update({ name }, { where: { id } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);

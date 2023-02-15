@@ -23,5 +23,8 @@ module.exports = (sequelize, DataTypes) => {
         fcm_token: {
             type: DataTypes.STRING(300),
         },
+        last_login: {
+            type: DataTypes.DATE,
+        },
     });
 };
