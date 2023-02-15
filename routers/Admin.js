@@ -19,6 +19,21 @@ router.post("/sign", async (req, res, next) => {
     }
 });
 
+// 관리자 비밀번호 변경
+router.put("/password", verifyToken, async (req, res, next) => {
+    const id = req.decoded?.id;
+    const { device, password } = req.body;
+
+    try {
+        const users = await User.findOne({ where: { id } });
+        if (users.device !== device) return res.sendStatus(400);
+        await User.update({ device: password }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
 // 업체 생성
 router.post("/company", verifyToken, async (req, res, next) => {
     const { phone, name } = req.body;
@@ -162,7 +177,7 @@ router.put("/user-restore", verifyToken, async (req, res, next) => {
         await User.update({ status: 1 }, { where: { id } });
         return res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        return res.sendStatus(500);
     }
 });
 
@@ -211,6 +226,17 @@ router.put("/company-name", verifyToken, async (req, res, next) => {
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
+// device 삭제
+router.put("/company-device", verifyToken, async (req, res, next) => {
+    const { id } = req.body;
+    try {
+        await User.update({ device: null, fcm_token: null }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
         return res.sendStatus(500);
     }
 });
