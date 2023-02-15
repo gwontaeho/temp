@@ -4,7 +4,6 @@ import { getCookie } from "cookies-next";
 // import CryptoJS from "crypto-js";
 // 배포
 
-// axios.defaults.baseURL = "http://localhost:4000/api";
 axios.defaults.baseURL = "https://homethai365.com/api";
 // axios.defaults.baseURL = "http://localhost:3000/api";
 
@@ -229,9 +228,21 @@ const acceptInquiry = async (values) => {
     return data;
 };
 
+// 관리자 : 업체등록 전체 승인
+const acceptInquiryAll = async (values) => {
+    const { data } = await axios.put("/admin/inquiry-accept-all", values);
+    return data;
+};
+
 // 관리자 : 업체등록 거절
 const rejectInquiry = async (values) => {
     const { data } = await axios.put("/admin/inquiry-reject", values);
+    return data;
+};
+
+// 관리자 : 업체등록 전체 거절
+const rejectInquiryAll = async (values) => {
+    const { data } = await axios.put("/admin/inquiry-reject-all", values);
     return data;
 };
 
@@ -265,9 +276,33 @@ const updateDistance = async (values) => {
     return data;
 };
 
+// 관리자 : 이름 설정
+const updateName = async (values) => {
+    const { data } = await axios.put("/admin/company-name", values);
+    return data;
+};
+
+// 관리자 : 로그인
+const deleteDevice = async (values) => {
+    const { data } = await axios.put("/admin/company-device", values);
+    return data;
+};
+
 // 관리자 : 로그인
 const signAdmin = async (values) => {
     const { data } = await axios.post("/admin/sign", values);
+    return data;
+};
+
+// 관리자 : 업체생성
+const createCompany = async (values) => {
+    const { data } = await axios.post("/admin/company", values);
+    return data;
+};
+
+// 관리자 : 비밀번호 변경
+const updatePassword = async (values) => {
+    const { data } = await axios.put("/admin/password", values);
     return data;
 };
 
@@ -303,6 +338,12 @@ export {
     updateCount,
     updateDistance,
     signAdmin,
+    createCompany,
+    acceptInquiryAll,
+    rejectInquiryAll,
+    updateName,
+    updatePassword,
+    deleteDevice,
 };
 
 export {

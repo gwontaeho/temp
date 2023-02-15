@@ -4,9 +4,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { DataGrid } from "@mui/x-data-grid";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { getCookie } from "cookies-next";
-import { getUsers, blockUser, restoreUser } from "@/apis";
+import dayjs from "dayjs";
+import { getUsers, blockUser, restoreUser, deleteDevice } from "@/apis";
 
 export default function Users() {
+    const [pageSize, setPageSize] = useState(5);
+
     const [anchorEl, setAnchorEl] = useState(null);
     const [openId, setOpenId] = useState(null);
 
@@ -25,16 +28,25 @@ export default function Users() {
         onSuccess: refetch,
     });
 
+    const { mutate: deleteDeviceMutate } = useMutation({
+        mutationFn: (variables) => deleteDevice(variables),
+        onSuccess: refetch,
+    });
+
     const columns = [
         { field: "id", headerName: "ID", width: 90, hide: true },
         {
             field: "phone",
             headerName: "연락처",
-            width: 150,
+            width: 120,
         },
         {
             field: "status",
             headerName: "상태",
+            valueGetter: (params) => {
+                const status = params.row.status;
+                return status;
+            },
             width: 90,
             renderCell: ({ value }) => {
                 const statusStr = value === 1 ? "정상" : value === 0 ? "정지" : "대기";
@@ -46,11 +58,21 @@ export default function Users() {
                 );
             },
         },
-
+        {
+            field: "last_login",
+            headerName: "마지막 접속시간",
+            valueGetter: (params) => {
+                const last_login = params.row.last_login;
+                const str = dayjs(last_login).isValid() ? dayjs(last_login).format("YYYY.MM.DD HH:mm") : "-";
+                return str;
+            },
+            width: 120,
+        },
         {
             field: "more",
             headerName: "",
             width: 60,
+            sortable: false,
             renderCell: ({ row }) => {
                 const { id, status, Company } = row;
 
@@ -73,6 +95,12 @@ export default function Users() {
                     setAnchorEl(null);
                 };
 
+                const handleClickReset = () => {
+                    const result = confirm("사용자의 기기ID를 초기화합니다");
+                    if (result) deleteDeviceMutate({ id });
+                    setAnchorEl(null);
+                };
+
                 return (
                     <>
                         <IconButton onClick={handleClick}>
@@ -81,6 +109,7 @@ export default function Users() {
                         {status !== 2 && (
                             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                                 <MenuItem onClick={handleClickStatus}>{statusStr}</MenuItem>
+                                <MenuItem onClick={handleClickReset}>기기ID 초기화</MenuItem>
                             </Menu>
                         )}
                     </>
@@ -90,16 +119,23 @@ export default function Users() {
     ];
 
     const rows = data?.map((v) => {
-        const { id, phone, status } = v;
+        const { id, phone, status, last_login } = v;
 
-        return { id, phone, status };
+        return { id, phone, status, last_login };
     });
 
     if (!rows) return null;
 
     return (
         <Stack p={5} height={800} width={1000}>
-            <DataGrid rows={rows} columns={columns} pageSize={10} disableSelectionOnClick />
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={pageSize}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                disableSelectionOnClick
+            />
         </Stack>
     );
 }
