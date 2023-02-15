@@ -35,7 +35,6 @@ const CreateCompanyDialog = ({ refetch }) => {
 
     const handleChangePhone = (e) => {
         if (isNaN(e.target.value)) return;
-        if (!name) return;
         setPhone(e.target.value);
     };
 
