@@ -26,5 +26,9 @@ module.exports = (sequelize, DataTypes) => {
         last_login: {
             type: DataTypes.DATE,
         },
+        marketing: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     });
 };

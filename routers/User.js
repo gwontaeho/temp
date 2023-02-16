@@ -75,8 +75,21 @@ router.post("/inquiry", async (req, res, next) => {
 // 약관 동의
 router.put("/:id/terms", async (req, res, next) => {
     const { id } = req.params;
+    const { marketing } = req.body;
     try {
-        await User.update({ terms: true }, { where: { id } });
+        await User.update({ terms: true, marketing }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.send(500);
+    }
+});
+
+// 마케팅 동의
+router.put("/:id/marketing", async (req, res, next) => {
+    const { id } = req.params;
+    const { marketing } = req.body;
+    try {
+        await User.update({ marketing }, { where: { id } });
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
