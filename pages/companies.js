@@ -394,6 +394,8 @@ export default function Companies() {
         ? data.filter((v) => v[search].includes(keyword))
         : search === "expired"
         ? data.filter((v) => !v.Company?.expiration || dayjs(v.Company?.expiration) < dayjs(dayjs().format("YYYYMMDD")))
+        : search === "marketing"
+        ? data.filter((v) => v.marketing)
         : data;
 
     return (
@@ -411,8 +413,11 @@ export default function Companies() {
                         <MenuItem value="phone">연락처</MenuItem>
                         <MenuItem value="company_name">업체명</MenuItem>
                         <MenuItem value="expired">만료된 업체만</MenuItem>
+                        <MenuItem value="marketing">마케팅 동의</MenuItem>
                     </Select>
-                    {search !== "expired" && <TextField size="small" placeholder="검색" value={keyword} onChange={(e) => setKeyword(e.target.value)} />}
+                    {(search === "phone" || search === "company_name") && (
+                        <TextField size="small" placeholder="검색" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                    )}
                 </Stack>
                 <CreateCompanyDialog refetch={refetch} />
             </Stack>

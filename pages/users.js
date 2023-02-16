@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack, Typography, IconButton, Menu, MenuItem } from "@mui/material";
+import { Stack, Typography, IconButton, Menu, MenuItem, Button, Select } from "@mui/material";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { DataGrid } from "@mui/x-data-grid";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
@@ -9,7 +9,7 @@ import { getUsers, blockUser, restoreUser, deleteDevice } from "@/apis";
 
 export default function Users() {
     const [pageSize, setPageSize] = useState(5);
-
+    const [search, setSearch] = useState("all");
     const [anchorEl, setAnchorEl] = useState(null);
     const [openId, setOpenId] = useState(null);
 
@@ -69,6 +69,16 @@ export default function Users() {
             width: 120,
         },
         {
+            field: "marketing",
+            headerName: "마케팅",
+            valueGetter: (params) => {
+                const marketing = params.row.marketing;
+                const str = marketing ? "동의" : "거부";
+                return str;
+            },
+            width: 90,
+        },
+        {
             field: "more",
             headerName: "",
             width: 60,
@@ -119,17 +129,31 @@ export default function Users() {
     ];
 
     const rows = data?.map((v) => {
-        const { id, phone, status, last_login } = v;
+        const { id, phone, status, last_login, marketing } = v;
 
-        return { id, phone, status, last_login };
+        return { id, phone, status, last_login, marketing };
     });
 
     if (!rows) return null;
 
+    const filtered = search === "marketing" ? rows.filter((v) => v.marketing) : rows;
+
     return (
-        <Stack p={5} height={800} width={1000}>
+        <Stack p={5} height={800} width={1000} spacing={1}>
+            <Stack direcroin="row" alignItems="flex-start">
+                <Select
+                    size="small"
+                    value={search}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                    }}
+                >
+                    <MenuItem value="all">전체</MenuItem>
+                    <MenuItem value="marketing">마케팅 동의</MenuItem>
+                </Select>
+            </Stack>
             <DataGrid
-                rows={rows}
+                rows={filtered}
                 columns={columns}
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
