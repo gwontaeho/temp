@@ -24,7 +24,12 @@ router.post("/sign", async (req, res, next) => {
         const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, device, fcm_token, role: 1 }, include: [{ model: Company }] });
 
         // 테스트 계정이 아니고 device가 있지만 다를 시 (다른 기기에서 로그인 시)
-        if (!phone.startsWith("9999") && !!user.device && user.device !== device) return res.sendStatus(400);
+        // if (!phone.startsWith("9999") && !!user.device && user.device !== device) return res.sendStatus(400);
+
+        // 테스트 계정 비활성화
+        if (phone.startsWith("9999")) return res.sendStatus(401);
+        // 업체 회원이고, device가 있지만 다를 시 (다른 기기에서 로그인 시)
+        if (user.role === 2 && !!user.device && user.device !== device) return res.sendStatus(400);
 
         if (!created) {
             // device 없으면 업데이트
