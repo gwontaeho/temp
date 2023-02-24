@@ -77,6 +77,7 @@ router.get("/requests", async (req, res, next) => {
                 model: User,
                 attributes: ["phone"],
             },
+            createdAt: ["createdAt", "DESC"],
         });
         return res.send(requests);
     } catch (error) {
