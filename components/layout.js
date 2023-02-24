@@ -112,6 +112,7 @@ const Nav = () => {
         { pathname: "/companies", primary: "업체관리" },
         { pathname: "/users", primary: "회원관리" },
         { pathname: "/inquiries", primary: "업체문의" },
+        { pathname: "/settings", primary: "설정" },
     ];
 
     const handleClickSignout = () => {
@@ -150,14 +151,12 @@ const Nav = () => {
 
 export default function Layout({ children }) {
     return (
-        <>
-            <Stack direction="row" height="100vh">
-                <Nav />
-                <Divider orientation="vertical" />
-                <Stack component="main" overflow="auto" minWidth={1000}>
-                    {children}
-                </Stack>
+        <Stack direction="row" height="100vh" overflow="auto">
+            <Nav />
+            <Divider orientation="vertical" />
+            <Stack component="main" minWidth={1000}>
+                {children}
             </Stack>
-        </>
+        </Stack>
     );
 }

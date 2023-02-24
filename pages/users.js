@@ -139,7 +139,7 @@ export default function Users() {
     const filtered = search === "marketing" ? rows.filter((v) => v.marketing) : rows;
 
     return (
-        <Stack p={5} height={800} width={1000} spacing={1}>
+        <Stack p={5} height={800} spacing={1}>
             <Stack direcroin="row" alignItems="flex-start">
                 <Select
                     size="small"

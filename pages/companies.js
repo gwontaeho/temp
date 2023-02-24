@@ -399,7 +399,7 @@ export default function Companies() {
         : data;
 
     return (
-        <Stack p={5} height={800} width="100%" spacing={1}>
+        <Stack p={5} height={800} spacing={1}>
             <Stack direction="row" justifyContent="space-between" spacing={1} alignItems="flex-end">
                 <Stack direction="row" spacing={1}>
                     <Select

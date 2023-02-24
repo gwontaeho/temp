@@ -306,6 +306,18 @@ const updatePassword = async (values) => {
     return data;
 };
 
+// 관리자 : 비밀번호 변경
+const getSettings = async () => {
+    const { data } = await axios.get("/admin/settings");
+    return data;
+};
+
+// 관리자 : 비밀번호 변경
+const updateSettings = async (values) => {
+    const { data } = await axios.put("/admin/settings", values);
+    return data;
+};
+
 /******************************************************************************/
 
 // 유저
@@ -344,6 +356,8 @@ export {
     updateName,
     updatePassword,
     deleteDevice,
+    getSettings,
+    updateSettings,
 };
 
 export {
