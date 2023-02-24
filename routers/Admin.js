@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express();
-const { User, Company, Admin } = require("../models");
+const { User, Company, Admin, Request } = require("../models");
 const { verifyToken, signToken } = require("../middlewares/jwt");
 
 // 관리자 로그인
@@ -62,6 +62,23 @@ router.get("/dashboard", async (req, res, next) => {
         });
         const data = { inquiryCount, userCount, companyCount };
         return res.send(data);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
+// 대시보드
+router.get("/requests", async (req, res, next) => {
+    try {
+        const requests = await Request.findAll({
+            attributes: ["id", "phone", "createdAt", "share", "status", "address", "address_detail", "category", "price", "personnel"],
+            include: {
+                model: User,
+                attributes: ["phone"],
+            },
+        });
+        return res.send(requests);
     } catch (error) {
         console.log(error);
         return res.sendStatus(500);
