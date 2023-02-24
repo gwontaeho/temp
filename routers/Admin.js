@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express();
-const { User, Company } = require("../models");
+const { User, Company, Admin } = require("../models");
 const { verifyToken, signToken } = require("../middlewares/jwt");
 
 // 관리자 로그인
 router.post("/sign", async (req, res, next) => {
     const { phone, device } = req.body;
-    console.log(phone, device);
+
     try {
         const user = await User.findOne({ where: { phone } });
         console.log(user.device === device);
@@ -64,6 +64,16 @@ router.get("/dashboard", async (req, res, next) => {
         return res.send(data);
     } catch (error) {
         console.log(error);
+        return res.sendStatus(500);
+    }
+});
+
+// 대시보드
+router.get("/settings", async (req, res, next) => {
+    try {
+        const settings = await Admin.findAll();
+        return res.send(settings);
+    } catch (error) {
         return res.sendStatus(500);
     }
 });
@@ -235,6 +245,17 @@ router.put("/company-device", verifyToken, async (req, res, next) => {
     const { id } = req.body;
     try {
         await User.update({ device: null, fcm_token: null }, { where: { id } });
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
+// device 삭제
+router.put("/settings", verifyToken, async (req, res, next) => {
+    const { type, status } = req.body;
+    try {
+        await Admin.update({ status }, { where: { type } });
         return res.sendStatus(200);
     } catch (error) {
         return res.sendStatus(500);

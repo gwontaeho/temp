@@ -20,7 +20,6 @@ app.use(cors());
 
 sequelize
     .sync({
-        // force: true,
         // alter: true,
     })
     .then(() => {

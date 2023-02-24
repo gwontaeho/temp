@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express();
-const { User, Company } = require("../models");
+const { User, Company, Admin } = require("../models");
 const { signToken } = require("../middlewares/jwt");
 
 // 유저 조회
@@ -23,13 +23,15 @@ router.post("/sign", async (req, res, next) => {
     try {
         const [user, created] = await User.findOrCreate({ where: { phone }, defaults: { phone, device, fcm_token, role: 1 }, include: [{ model: Company }] });
 
-        // 테스트 계정이 아니고 device가 있지만 다를 시 (다른 기기에서 로그인 시)
-        // if (!phone.startsWith("9999") && !!user.device && user.device !== device) return res.sendStatus(400);
+        const mode = await Admin.findOne({ where: { type: "test" } });
 
-        // 테스트 계정 비활성화
-        if (phone.startsWith("9999")) return res.sendStatus(401);
-        // 업체 회원이고, device가 있지만 다를 시 (다른 기기에서 로그인 시)
-        if (user.role === 2 && !!user.device && user.device !== device) return res.sendStatus(400);
+        if (!mode.status && phone.startsWith("9999")) {
+            // 테스트모드가 아니고 테스트계정으로 로그인 시도 시
+            return res.sendStatus(401);
+        }
+
+        // 테스트 계정이 아니고, 업체 회원이고, device가 있지만 다를 시 (다른 기기에서 로그인 시)
+        if (!phone.startsWith("9999") && user.role === 2 && !!user.device && user.device !== device) return res.sendStatus(400);
 
         if (!created) {
             // device 없으면 업데이트
@@ -57,6 +59,13 @@ router.post("/inquiry", async (req, res, next) => {
             defaults: { phone, device, role: 1, status: 2, company_name, fcm_token },
             include: [{ model: Company }],
         });
+
+        const mode = await Admin.findOne({ where: { type: "test" } });
+
+        if (!mode.status && phone.startsWith("9999")) {
+            // 테스트모드가 아니고 테스트계정으로 로그인 시도 시
+            return res.sendStatus(401);
+        }
 
         // 테스트 계정이 아니고 device가 있지만 다를 시 (다른 기기에서 로그인 시)
         if (!phone.startsWith("9999") && !!user.device && user.device !== device) return res.sendStatus(400);
