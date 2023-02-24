@@ -41,7 +41,7 @@ export default function Requests() {
             headerName: "유형",
             width: 80,
             valueGetter: (params) => {
-                const share = params.row.status;
+                const share = params.row.share;
                 return share ? "공유" : "사용자";
             },
         },
