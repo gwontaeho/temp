@@ -74,7 +74,7 @@ router.get("/dashboard", async (req, res, next) => {
 router.get("/requests", async (req, res, next) => {
     try {
         const requests = await Request.findAll({
-            attributes: ["id", "phone", "createdAt", "share", "status", "address", "address_detail", "category", "price", "personnel"],
+            attributes: ["id", "phone", "createdAt", "share", "status", "address", "address_detail", "category", "price", "personnel", "time", "updatedAt"],
             include: {
                 model: User,
                 attributes: ["phone"],
