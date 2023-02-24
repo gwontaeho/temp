@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express();
+
 const { User, Company, Admin, Request } = require("../models");
 const { verifyToken, signToken } = require("../middlewares/jwt");
+const { Op } = require("sequelize");
 
 // 관리자 로그인
 router.post("/sign", async (req, res, next) => {
@@ -9,7 +11,7 @@ router.post("/sign", async (req, res, next) => {
 
     try {
         const user = await User.findOne({ where: { phone } });
-        console.log(user.device === device);
+
         if (user === null || user.device !== device) return res.sendStatus(400);
         const token = signToken(user.id);
         return res.send({ token });
@@ -77,7 +79,7 @@ router.get("/requests", async (req, res, next) => {
                 model: User,
                 attributes: ["phone"],
             },
-            createdAt: ["createdAt", "DESC"],
+            order: [["createdAt", "DESC"]],
         });
         return res.send(requests);
     } catch (error) {
