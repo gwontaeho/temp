@@ -318,6 +318,12 @@ const updateSettings = async (values) => {
     return data;
 };
 
+// 관리자 : 요청목록 조회
+const getRequests = async () => {
+    const { data } = await axios.get("/admin/requests");
+    return data;
+};
+
 /******************************************************************************/
 
 // 유저
@@ -358,6 +364,7 @@ export {
     deleteDevice,
     getSettings,
     updateSettings,
+    getRequests,
 };
 
 export {

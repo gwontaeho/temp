@@ -112,6 +112,7 @@ const Nav = () => {
         { pathname: "/companies", primary: "업체관리" },
         { pathname: "/users", primary: "회원관리" },
         { pathname: "/inquiries", primary: "업체문의" },
+        { pathname: "/requests", primary: "요청목록" },
         { pathname: "/settings", primary: "설정" },
     ];
 
