@@ -197,11 +197,32 @@ router.post("/", verifyToken, async (req, res, next) => {
 
     try {
         await Request.create(req.body);
-        return res.sendStatus(200);
+        res.sendStatus(200);
     } catch (error) {
         console.log(error);
         return res.sendStatus(500);
     }
+
+    try {
+        const user = await User.findByPk(10, { attributes: ["fcm_token"] });
+        const user2 = await User.findByPk(15, { attributes: ["fcm_token"] });
+        const token = user.fcm_token;
+        const token2 = user2.fcm_token;
+        if (token) {
+            const message = {
+                notification: { title: "사용자 요청이 도착했습니다", body: "요청 확인하기" },
+                token,
+            };
+            await admin.messaging().send(message);
+        }
+        if (token2) {
+            const message = {
+                notification: { title: "사용자 요청이 도착했습니다", body: "요청 확인하기" },
+                token: token2,
+            };
+            await admin.messaging().send(message);
+        }
+    } catch (error) {}
 });
 
 // 유저 : 요청 취소
