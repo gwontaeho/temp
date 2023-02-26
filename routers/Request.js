@@ -179,12 +179,28 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // 유저, 업체 : 요청 생성
-router.post("/", async (req, res, next) => {
+router.post("/", verifyToken, async (req, res, next) => {
+    const UserId = req.decoded.id;
+
+    try {
+        const request = await Request.findOne({
+            include: [{ model: User }],
+            where: { UserId },
+            order: [["createdAt", "DESC"]],
+        });
+        const role = request.User.role;
+        if (role === 1 && (request.status === 1 || request.status === 2 || request.status === 3 || request.status === 4)) return res.sendStatus(400);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+
     try {
         await Request.create(req.body);
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
+        return res.sendStatus(500);
     }
 });
 
