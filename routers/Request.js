@@ -188,7 +188,7 @@ router.post("/", verifyToken, async (req, res, next) => {
             where: { UserId },
             order: [["createdAt", "DESC"]],
         });
-        const role = request.User.role;
+        const role = request?.User?.role;
         if (role === 1 && (request.status === 1 || request.status === 2 || request.status === 3 || request.status === 4)) return res.sendStatus(400);
     } catch (error) {
         console.log(error);
