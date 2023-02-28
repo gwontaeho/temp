@@ -278,20 +278,20 @@ router.put("/:id/users/accept", verifyToken, async (req, res, next) => {
         return res.sendStatus(500);
     }
 
-    try {
-        if (result[0] === 1) {
+    if (result[0] === 1) {
+        try {
             const request = await Request.findByPk(id, { attributes: ["TargetId"] });
             const user = await User.findByPk(request.TargetId, { attributes: ["fcm_token"] });
             const token = user.fcm_token;
             if (token) {
                 const message = {
-                    notification: { title: "사용자가 요청을 수락했습니다", body: "요청 확인하기" },
+                    notification: { title: "사용자가 수락했습니다", body: "사용자 정보를 확인하세요" },
                     token,
                 };
                 await admin.messaging().send(message);
             }
-        }
-    } catch (error) {}
+        } catch (error) {}
+    }
 });
 
 // 유저 : 요청 완료
@@ -328,18 +328,29 @@ router.put("/:id/targets/accept", verifyToken, async (req, res, next) => {
 
     // 수락 시 fcm
     if (result[0] === 1) {
-        try {
-            const request = await Request.findByPk(id, { attributes: ["UserId"] });
-            const user = await User.findByPk(request.UserId, { attributes: ["fcm_token"] });
-            const token = user.fcm_token;
-            if (token) {
-                const message = {
-                    notification: { title: "업체가 요청을 수락했습니다", body: "요청 확인하기" },
-                    token,
-                };
-                await admin.messaging().send(message);
-            }
-        } catch (error) {}
+        const push = async () => {
+            try {
+                const request = await Request.findByPk(id, { attributes: ["UserId", "status"] });
+                if (request?.status !== 2) return 5;
+                const user = await User.findByPk(request.UserId, { attributes: ["fcm_token"] });
+                const token = user.fcm_token;
+                if (token) {
+                    const message = {
+                        notification: { title: "업체가 매칭 됐습니다", body: "매칭을 수락해주세요" },
+                        token,
+                    };
+                    await admin.messaging().send(message);
+                }
+                return 1;
+            } catch (error) {}
+        };
+        push();
+        let count = 1;
+        const interval = setInterval(async () => {
+            const c = await push();
+            count = count + c;
+            if (count >= 5) clearInterval(interval);
+        }, 120000);
     }
 });
 
