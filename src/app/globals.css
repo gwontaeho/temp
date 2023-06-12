@@ -2,26 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer base {
+    * {
+        @apply tracking-widest;
+    }
+    html {
+        @apply text-sm md:text-base;
+    }
+    pre {
+        font-family: var(--font-pretendard);
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+@layer components {
+    .tag {
+        @apply w-16 px-4 min-w-fit h-8 rounded border text-xs aria-selected:border-gray-900;
+    }
+    .button {
+        @apply w-full text-sm border p-4 rounded hover:bg-gray-50 transition aria-selected:border-gray-900;
+    }
+    .input {
+        @apply w-full border outline-none p-4 rounded text-sm aria-[invalid=true]:border-red-500;
+    }
+    .textarea {
+        @apply w-full border outline-0 rounded p-4 resize-none text-sm aria-[invalid=true]:border-red-500 block;
+    }
+    .err {
+        @apply text-xs text-red-500;
+    }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    overflow-y: overlay;
+    scroll-behavior: smooth;
 }
