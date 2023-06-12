@@ -53,7 +53,6 @@ router.post("/", authorization, async (req, res, next) => {
             raw: true,
             nest: true,
         });
-
         User.update({ hasNewNotification: true }, { where: { id: project.User.id } });
         Notification.create({
             title: "새 지원서가 도착했습니다",
@@ -61,7 +60,7 @@ router.post("/", authorization, async (req, res, next) => {
             href: `/projects/${ProjectId}`,
             UserId: project.User.id,
         });
-        toRequester(project.User.email, project.title);
+        toRequester(project.User.email, ProjectId, project.title);
     } catch (error) {
         console.log(error);
     }

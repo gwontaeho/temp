@@ -19,7 +19,6 @@ sequelize
         console.log(error);
     });
 
-// req.body parse
 app.use(express.json());
 
 app.use("/api", routers);
@@ -28,7 +27,7 @@ app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
 
-const job = schedule.scheduleJob("13 17 * * *", (a) => {
-    console.log(a);
-    console.log("The answer to life, the universe, and everything!");
-});
+// const job = schedule.scheduleJob("13 17 * * *", (a) => {
+//     console.log(a);
+//     console.log("The answer to life, the universe, and everything!");
+// });

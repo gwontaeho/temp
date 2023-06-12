@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express();
 const { Op } = require("sequelize");
-const { Project, Application, Tag, User, Expert } = require("../models");
+const { Project, Application, Tag, User, Expert, Notification } = require("../models");
 const { authorization, verifyToken } = require("../middlewares/jwt");
 const { toExperts } = require("../middlewares/mailer");
 
@@ -12,34 +12,45 @@ router.post("/", authorization, async (req, res, next) => {
     const UserId = req.verified.id;
     const { title, content, price, duration, tags } = req.body;
 
+    let project;
+
     try {
-        await Project.create({ title, content, price, duration, tags, UserId });
-        res.sendStatus(200);
+        project = await Project.create({ title, content, price, duration, tags, UserId });
+        res.send({ ProjectId: project.id });
     } catch (error) {
         return res.sendStatus(500);
     }
 
     try {
-        const t = tags.split(",").map((name) => ({ tags: { [Op.substring]: name } }));
-        const where = { [Op.or]: t };
+        const allTags = await Tag.findAll({ raw: true });
+        const allP = allTags.filter((v) => v.type === "P").map((v) => v.name);
+        const allT = allTags.filter((v) => v.type === "T").map((v) => v.name);
+
+        const ts = tags.split(",");
+        const p = ts.filter((v) => allP.includes(v)).map((name) => ({ tags: { [Op.substring]: name } }));
+        const t = ts.filter((v) => allT.includes(v)).map((name) => ({ tags: { [Op.substring]: name } }));
+        const where = { [Op.and]: [{ [Op.or]: t }, { [Op.or]: p }] };
+
         const experts = await Expert.findAll({
-            attributes: ["tags"],
+            attributes: [],
             where,
-            include: [{ model: User, attributes: ["email"], where: { isAllowedNotification: true } }],
+            include: [{ model: User, attributes: ["id", "email", "isAllowedNotification"] }],
             raw: true,
             nest: true,
         });
         if (!experts.length) return;
-        const mails = experts.map((v) => ({
-            ...v.User,
-            tags: v.tags
-                .split(",")
-                .filter((vv) => tags.includes(vv))
-                .toString(),
-            title,
-            price,
-            duration,
-        }));
+        Notification.bulkCreate(
+            experts.map(({ User }) => ({
+                UserId: User.id,
+                title: "새 프로젝트가 등록되었습니다",
+                content: `프로젝트 : ${title}`,
+                href: `/projects/${project.id}`,
+            }))
+        );
+        User.update({ hasNewNotification: true }, { where: { id: experts.map(({ User }) => User.id) } });
+        const emails = experts.filter(({ User }) => !!User.isAllowedNotification).map(({ User }) => User.email);
+        if (!emails.length) return;
+        toExperts(emails, project.id, title, price, duration);
     } catch (error) {
         console.log(error);
     }
@@ -157,7 +168,8 @@ router.get("/:id", async (req, res, next) => {
  * 프로젝트 목록
  */
 router.get("/", async (req, res, next) => {
-    const { perPage, page, tags } = req.query;
+    const { perPage = "10", page = "1", tags = "" } = req.query;
+
     const limit = Number(perPage);
     const offset = limit * (Number(page) - 1);
     const t = tags.split(",");
