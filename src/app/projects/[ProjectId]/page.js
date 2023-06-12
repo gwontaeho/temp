@@ -11,7 +11,7 @@ async function getData(ProjectId) {
     const cookieStore = cookies();
     const token = cookieStore.get("token");
     const init = !!token && { headers: { Authorization: `Bearer ${token.value}` } };
-    const res = await fetch(`http://localhost:4000/api/projects/${ProjectId}`, init);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/projects/${ProjectId}`, init);
     if (res.ok) return res.json();
 }
 
