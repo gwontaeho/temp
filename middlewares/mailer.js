@@ -43,7 +43,7 @@ exports.toRequester = (to, ProjectId, title) => {
         {
             from,
             to,
-            subject: `새 지원서 도착 ··· “${title}” ··· ${dayjs().valueOf()}`,
+            subject: `새 지원서 “${title}” ${dayjs().valueOf()}`,
             html: `
             <div>
                 <p>안녕하세요. 외주123입니다.<br/>등록한 프로젝트에 새 지원서가 도착했습니다</p>
@@ -66,7 +66,7 @@ exports.toExperts = (emails, ProjectId, title, price, duration) => {
             {
                 from,
                 to,
-                subject: `새 프로젝트 등록 ··· “${title}”`,
+                subject: `새 프로젝트 “${title}”`,
                 html: `
                 <div>
                     <p>안녕하세요. 외주123입니다.<br/>전문가님이 설정한 태그에 해당하는 새로운 프로젝트가 등록되어 알려드립니다</p>
