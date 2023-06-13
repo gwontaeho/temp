@@ -4,7 +4,7 @@
 
 @layer base {
     * {
-        @apply tracking-widest;
+        @apply tracking-widest font-light;
     }
     html {
         @apply text-sm md:text-base;
@@ -15,9 +15,6 @@
 }
 
 @layer components {
-    .tag {
-        @apply w-16 px-4 min-w-fit h-8 rounded border text-xs aria-selected:border-gray-900;
-    }
     .button {
         @apply w-full text-sm border p-4 rounded hover:bg-gray-50 transition aria-selected:border-gray-900;
     }

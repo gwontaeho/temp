@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { NumericFormat } from "react-number-format";
 import { useForm } from "react-hook-form";
+import { Tag } from "@/components/Tag";
 import { getTags, createProject } from "@/apis";
 
 export const RequestForm = () => {
@@ -133,29 +134,13 @@ export const RequestForm = () => {
                 <p className="text-sm mb-1">진행 방식을 선택해주세요</p>
                 <div className="mb-7 min-h-[36px]">
                     {p.map(({ name }) => (
-                        <button
-                            type="button"
-                            className="tag mr-1 mb-1"
-                            key={`tag-${name}`}
-                            aria-selected={String(tags.includes(name))}
-                            onClick={() => handleClickTag(name)}
-                        >
-                            {name}
-                        </button>
+                        <Tag key={`tag-${name}`} label={name} className="mr-1 mb-1" checked={tags.includes(name)} onChange={() => handleClickTag(name)} />
                     ))}
                 </div>
                 <p className="text-sm mb-1">해당하는 태그를 선택해주세요</p>
                 <div className="mb-7 sm:min-h-[36px] md:min-h-[72px]">
                     {t.map(({ name }) => (
-                        <button
-                            type="button"
-                            className="tag mr-1 mb-1"
-                            key={`tag-${name}`}
-                            aria-selected={String(tags.includes(name))}
-                            onClick={() => handleClickTag(name)}
-                        >
-                            {name}
-                        </button>
+                        <Tag key={`tag-${name}`} label={name} className="mr-1 mb-1" checked={tags.includes(name)} onChange={() => handleClickTag(name)} />
                     ))}
                 </div>
                 <button className="button">프로젝트 등록하기</button>

@@ -1,6 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Tag } from "@/components/Tag";
 import { getTags, getExpert, updateExpert } from "@/apis";
 
 export default function Expert() {
@@ -82,33 +83,13 @@ export default function Expert() {
                 <p className="text-sm mb-1">프로젝트 진행방식을 선택해주세요</p>
                 <div className="mb-8 min-h-[32px]">
                     {p.map(({ id, name }) => {
-                        return (
-                            <button
-                                type="button"
-                                className="tag mr-1"
-                                key={`tag-${id}`}
-                                aria-selected={String(tags.includes(name))}
-                                onClick={() => handleClickTag(name)}
-                            >
-                                {name}
-                            </button>
-                        );
+                        return <Tag className="mr-1" key={`tag-${id}`} label={name} checked={tags.includes(name)} onChange={() => handleClickTag(name)} />;
                     })}
                 </div>
                 <p className="text-sm mb-1">해당하는 태그를 선택해주세요</p>
                 <div className="mb-7 min-h-[36px]">
                     {t.map(({ id, name }) => {
-                        return (
-                            <button
-                                type="button"
-                                className="tag mr-1 mb-1"
-                                key={`tag-${id}`}
-                                aria-selected={String(tags.includes(name))}
-                                onClick={() => handleClickTag(name)}
-                            >
-                                {name}
-                            </button>
-                        );
+                        return <Tag className="mr-1 mb-1" key={`tag-${id}`} label={name} checked={tags.includes(name)} onChange={() => handleClickTag(name)} />;
                     })}
                 </div>
                 <button className="button">저장하기</button>

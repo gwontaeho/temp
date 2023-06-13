@@ -81,9 +81,9 @@ export const Header = ({ isSignedIn }) => {
 
     return (
         <header className="flex h-20 border-b items-center justify-center bg-slate-50">
-            <div className="flex px-8 w-full max-w-5xl justify-between">
+            <div className="flex px-8 w-full max-w-5xl justify-between items-center">
                 <Link href="/">
-                    <div className="md:mr-8">외주123</div>
+                    <div className="md:mr-8 text-[#004AAD] text-xl">외주123</div>
                 </Link>
                 <nav className="flex-1 hidden md:flex">
                     <div className="flex-1">

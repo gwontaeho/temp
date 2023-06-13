@@ -6,6 +6,7 @@ import { ProjectApplication } from "@/components/ProjectApplication";
 import { ProjectApplications } from "@/components/ProjectApplications";
 import { Price } from "@/components/Price";
 import { Time } from "@/components/Time";
+import { Tag } from "@/components/Tag";
 
 async function getData(ProjectId) {
     const cookieStore = cookies();
@@ -51,11 +52,7 @@ export default async function Project({ params }) {
                         <p className="text-sm mb-1 text-gray-500">태그</p>
                         <div className="flex flex-wrap mb-7">
                             {t.map((name) => {
-                                return (
-                                    <button className="tag mr-1 mb-1 bg-white" key={`tag-${name}`} disabled>
-                                        {name}
-                                    </button>
-                                );
+                                return <Tag key={`tag-${name}`} label={name} className="mr-1 mb-1" />;
                             })}
                         </div>
                         <p className="text-sm mb-1 text-gray-500">프로젝트 진행방식</p>

@@ -6,6 +6,7 @@ import { getTags, getProjects } from "@/apis";
 import { Price } from "@/components/Price";
 import { Pagination } from "@/components/Pagination";
 import { Time } from "@/components/Time";
+import { Tag } from "@/components/Tag";
 
 const Project = ({ data }) => {
     const { id, title, content, price, duration, isOpen, isApplied, isRequested, createdAt } = data;
@@ -93,14 +94,13 @@ export const ProjectList = () => {
             <div className="min-h-[36px] px-2 pt-2 pb-1 md:px-4 md:pt-4 md:pb-3 border-b">
                 {allTags.map(({ id, name, sequence }) => {
                     return (
-                        <button
-                            className="tag mr-1 mb-1"
+                        <Tag
                             key={`tag-${id}`}
-                            aria-selected={String(tags.split(",").includes(String(sequence)))}
-                            onClick={() => handleClickTag(sequence)}
-                        >
-                            {name}
-                        </button>
+                            className="mr-1 mb-1"
+                            label={name}
+                            checked={tags.split(",").includes(String(sequence))}
+                            onChange={() => handleClickTag(sequence)}
+                        />
                     );
                 })}
             </div>
