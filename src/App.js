@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import RecoilProvider from "@/recoil";
+import { MainRoutes } from "@/routes/MainRoutes";
+import { PopupRoutes } from "@/routes/PopupRoutes";
+
+import { CommonModal, CommonToast } from "@/components";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RecoilProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/popup/*" element={<PopupRoutes />} />
+          <Route path="*" element={<MainRoutes />} />
+        </Routes>
+        <CommonModal />
+        <CommonToast />
+      </BrowserRouter>
+    </RecoilProvider>
   );
 }
 
