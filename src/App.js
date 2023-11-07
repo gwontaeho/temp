@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RecoilProvider from "@/recoil";
 import { MainRoutes } from "@/routes/MainRoutes";
 import { PopupRoutes } from "@/routes/PopupRoutes";
-
 import { CommonModal, CommonToast } from "@/components";
 
 function App() {

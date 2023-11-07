@@ -1,5 +1,5 @@
 import { Group } from "@/components";
-import { useForm } from "@/hooks";
+import { useForm, useModal, useToast } from "@/hooks";
 
 const SCHEMA_SEARCH = {
   __form__: "search",
@@ -24,6 +24,8 @@ const OPTION = [
 ];
 
 export const FormEx = () => {
+  const { showModal } = useModal();
+  const { showToast } = useToast();
   const { schema, getValues, setFocus } = useForm({ defaultSchema: SCHEMA_SEARCH });
 
   return (
