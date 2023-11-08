@@ -1,5 +1,5 @@
 import { Group } from "@/components";
-import { useForm, useModal, useToast } from "@/hooks";
+import { useForm } from "@/hooks";
 
 const SCHEMA_SEARCH = {
   __form__: "search",
@@ -13,8 +13,9 @@ const SCHEMA_SEARCH = {
   date_1: { type: "date", label: "Date 필드" },
   time_1: { type: "time", label: "time 필드" },
   datetime_1: { type: "datetime", label: "datetime" },
-  start: { type: "date" },
-  end: { type: "date" },
+  between: { type: "between", label: "bw d", schema: { begin1: { type: "date" }, end1: { type: "date" } } },
+  between1: { type: "between", label: "bw t", schema: { begin2: { type: "date" }, end2: { type: "date" } } },
+  between2: { type: "between", label: "bw dt", schema: { begin3: { type: "date" }, end3: { type: "date" } } },
 };
 
 const OPTION = [
@@ -24,9 +25,7 @@ const OPTION = [
 ];
 
 export const FormEx = () => {
-  const { showModal } = useModal();
-  const { showToast } = useToast();
-  const { schema, getValues, setFocus } = useForm({ defaultSchema: SCHEMA_SEARCH });
+  const { schema, getValues } = useForm({ defaultSchema: SCHEMA_SEARCH });
 
   return (
     <div className="space-y-4">
@@ -56,6 +55,19 @@ export const FormEx = () => {
           <Group.Row>
             <Group.Control {...schema.time_1} />
             <Group.Control {...schema.datetime_1} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Col label="aa">asd</Group.Col>
+            <Group.Col label="bbbb">asdqwd</Group.Col>
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between} options="date1" />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between1} options="date2" />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between2} options="date3" />
           </Group.Row>
         </Group.Body>
         <Group.Footer>

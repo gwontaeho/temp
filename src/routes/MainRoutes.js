@@ -3,6 +3,7 @@ import { MainLayout } from "@/layouts/MainLayout";
 import { FormEx } from "@/ex/components/FormEx";
 import { GridEx } from "@/ex/components/GridEx";
 import { SearchEx } from "@/ex/pages/SearchEx";
+import { TabEx } from "@/ex/components/TabEx";
 
 export const MainRoutes = () => {
   return (
@@ -11,6 +12,7 @@ export const MainRoutes = () => {
         <Route path="/" element={<FormEx />} />
         <Route path="/grid" element={<GridEx />} />
         <Route path="/page/search" element={<SearchEx />} />
+        <Route path="/tab" element={<TabEx />} />
       </Routes>
     </MainLayout>
   );
@@ -27,6 +29,10 @@ export const MAIN_ROUTES = [
       {
         name: "grid",
         to: "/grid",
+      },
+      {
+        name: "tab",
+        to: "/tab",
       },
     ],
   },

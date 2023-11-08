@@ -1,25 +1,25 @@
 import { Grid, Group, Stack } from "@/components";
 import { useForm, useGrid, useFetch, useTheme } from "@/hooks";
 import { SCHEMA_FORM, SCHEMA_GRID, APIS } from "./SearchExService";
-import { useEffect } from "react";
 import { useModal, useToast } from "@/hooks";
 
 export const SearchEx = () => {
-  const {
-    theme: { lang },
-  } = useTheme();
-
+  const { theme } = useTheme();
   const { showModal } = useModal();
   const { showToast } = useToast();
 
-  const { schema, getValues } = useForm({ defaultSchema: SCHEMA_FORM });
-  const { grid, page, size } = useGrid({ defaultSchema: SCHEMA_GRID });
+  const option1 = useFetch({ api: APIS.getOption });
+  const option2 = useFetch({ api: APIS.getOption });
+  const option3 = useFetch({ api: APIS.getOption });
 
-  const { data, isLoading, isSuccess, isError, fetchData } = useFetch({ api: APIS.getCode });
+  const { schema, getValues } = useForm({ defaultSchema: SCHEMA_FORM });
+  const { grid, page, size } = useGrid({ defaultSchema: SCHEMA_GRID(option1.data.content) });
+
+  const code = useFetch({ api: APIS.getCode, enabled: false });
 
   const test = () => {
     console.log(getValues());
-    fetchData();
+    // code.fetchData();
   };
 
   return (
@@ -36,30 +36,12 @@ export const SearchEx = () => {
             <Group.Control {...schema.select_1} options={[{ label: "1", value: "1" }]} />
           </Group.Row>
           <Group.Row>
-            <Group.Control
-              {...schema.checkbox_1}
-              options={[
-                { label: "1", value: "1" },
-                { label: "2", value: "2" },
-              ]}
-            />
-            <Group.Control
-              {...schema.radio_1}
-              options={[
-                { label: "1", value: "1" },
-                { label: "2", value: "2" },
-              ]}
-            />
+            <Group.Control {...schema.checkbox_1} options={option1.data.content} />
+            <Group.Control {...schema.radio_1} options={option2.data.content} />
           </Group.Row>
           <Group.Row>
             <Group.Control {...schema.textarea_1} />
-            <Group.Control
-              {...schema.radio_1}
-              options={[
-                { label: "1", value: "1" },
-                { label: "2", value: "2" },
-              ]}
-            />
+            <Group.Control {...schema.radio_1} options={option3.data.content} />
           </Group.Row>
         </Group.Body>
         <Group.Footer>
@@ -75,7 +57,7 @@ export const SearchEx = () => {
 
       <Group>
         <Group.Body>
-          <Grid {...grid} data={data} />
+          <Grid {...grid} data={code.data} />
         </Group.Body>
       </Group>
     </Stack>

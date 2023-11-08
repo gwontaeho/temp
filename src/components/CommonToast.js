@@ -26,7 +26,6 @@ const Toast = (props) => {
 
   useEffect(() => {
     const sto = setTimeout(() => {
-      console.log("a");
       handleClose(id);
     }, 2000);
 

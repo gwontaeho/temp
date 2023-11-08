@@ -7,3 +7,4 @@ export * from "./Header";
 export * from "./Stack";
 export * from "./CommonModal";
 export * from "./CommonToast";
+export * from "./Tab";

@@ -1,8 +1,11 @@
+import "react-datepicker/dist/react-datepicker.css";
+
 import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import ReactDatePicker from "react-datepicker";
+import dayjs from "dayjs";
 import uuid from "react-uuid";
-import "react-datepicker/dist/react-datepicker.css";
+import { Button } from "./Button";
 
 export const FormControl = forwardRef((props, ref) => {
   const { type, ...rest } = props;
@@ -28,8 +31,8 @@ export const FormControl = forwardRef((props, ref) => {
       return <InputTime ref={ref} {...rest} />;
     case "datetime":
       return <InputDateTime ref={ref} {...rest} />;
-    case "datebetween":
-      return <InputDateBetween ref={ref} {...rest} />;
+    case "between":
+      return <InputBetween ref={ref} {...rest} />;
     default:
       return <InputText ref={ref} {...rest} />;
   }
@@ -80,6 +83,7 @@ const Textarea = forwardRef((props, ref) => {
 
 const Select = forwardRef((props, ref) => {
   const { options, className, ...rest } = props;
+  console.log(options);
 
   const cn = "input" + (className ? ` ${className}` : "");
   return (
@@ -131,7 +135,9 @@ const Radio = forwardRef((props, ref) => {
 });
 
 const InputDate = forwardRef((props, ref) => {
-  const { name, invalid, control, rules } = props;
+  const { name, invalid, control, rules, className } = props;
+
+  const cn = "input" + (className ? ` ${className}` : "");
 
   return (
     <div className="w-full space-y-1">
@@ -141,7 +147,7 @@ const InputDate = forwardRef((props, ref) => {
           control={control}
           rules={rules}
           render={({ field: { onChange, value } }) => (
-            <ReactDatePicker className="input" selected={value} onChange={onChange} />
+            <ReactDatePicker className={cn} selected={value} onChange={onChange} />
           )}
         />
       </div>
@@ -151,7 +157,9 @@ const InputDate = forwardRef((props, ref) => {
 });
 
 const InputTime = forwardRef((props, ref) => {
-  const { name, invalid, control, rules } = props;
+  const { name, invalid, control, rules, className } = props;
+
+  const cn = "input" + (className ? ` ${className}` : "");
 
   return (
     <div className="w-full space-y-1">
@@ -162,7 +170,7 @@ const InputTime = forwardRef((props, ref) => {
           rules={rules}
           render={({ field: { onChange, value } }) => (
             <ReactDatePicker
-              className="input"
+              className={cn}
               dateFormat="HH:mm"
               timeIntervals={5}
               showTimeSelect
@@ -179,7 +187,8 @@ const InputTime = forwardRef((props, ref) => {
 });
 
 const InputDateTime = forwardRef((props, ref) => {
-  const { name, invalid, control, rules } = props;
+  const { name, invalid, control, rules, className } = props;
+  const cn = "input" + (className ? ` ${className}` : "");
 
   return (
     <div className="w-full space-y-1">
@@ -189,7 +198,7 @@ const InputDateTime = forwardRef((props, ref) => {
           control={control}
           rules={rules}
           render={({ field: { onChange, value } }) => (
-            <ReactDatePicker className="input" timeIntervals={5} showTimeSelect selected={value} onChange={onChange} />
+            <ReactDatePicker className={cn} timeIntervals={5} showTimeSelect selected={value} onChange={onChange} />
           )}
         />
       </div>
@@ -198,30 +207,77 @@ const InputDateTime = forwardRef((props, ref) => {
   );
 });
 
-const InputDateBetween = forwardRef((props, ref) => {
-  const { name, invalid, control, rules } = props;
+const InputBetween = forwardRef((props, ref) => {
+  const { id, schema, options, setValue } = props;
+  const entries = Object.entries(schema);
+
+  const handleClickButton = (unit, value) => {
+    const isAdd = value > 0;
+    const today = new Date();
+    if (isAdd) {
+      setValue(entries[0][0], today);
+      setValue(entries[1][0], dayjs(today).add(value, unit).toDate());
+    } else {
+      setValue(entries[0][0], dayjs(today).add(value, unit).toDate());
+      setValue(entries[1][0], today);
+    }
+  };
 
   return (
-    <div className="w-full space-y-1">
-      <div className="[&>div]:w-full">
-        <Controller
-          name={name}
-          control={control}
-          rules={rules}
-          render={({ field: { onChange, value } }) => (
-            <ReactDatePicker className="input" timeIntervals={5} showTimeSelect selected={value} onChange={onChange} />
-          )}
-        />
-        <Controller
-          name={name}
-          control={control}
-          rules={rules}
-          render={({ field: { onChange, value } }) => (
-            <ReactDatePicker className="input" timeIntervals={5} showTimeSelect selected={value} onChange={onChange} />
-          )}
-        />
+    <div className="w-full flex">
+      <div className="flex-1">
+        <FormControl {...entries[0][1]} className="rounded-r-none" />
       </div>
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      <div className="flex items-center justify-center h-7 w-5 bg-header border-y">-</div>
+      <div className="flex-1">
+        <FormControl {...entries[1][1]} className={`rounded-l-none${options ? " rounded-r-none" : ""}`} />
+      </div>
+      {options && (
+        <div className="flex [&>button]:bg-header [&>button]:text-sm [&>button]:border-l-0 [&>button]:rounded-none last:[&>button]:rounded-r">
+          {InputBetweenOptions[options].map(({ label, unit, value }) => {
+            return (
+              <Button key={id + "." + label} onClick={() => handleClickButton(unit, value)}>
+                {label}
+              </Button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 });
+
+const InputBetweenOptions = {
+  date1: [
+    { label: "-3M", unit: "M", value: -3 },
+    { label: "-1M", unit: "M", value: -1 },
+    { label: "-1W", unit: "w", value: -1 },
+    { label: "0", unit: "d", value: 1 },
+    { label: "+1W", unit: "w", value: 1 },
+    { label: "+1M", unit: "M", value: 1 },
+    { label: "+3M", unit: "M", value: 3 },
+  ],
+  date2: [
+    { label: "+1D", unit: "d", value: 1 },
+    { label: "+1W", unit: "w", value: 1 },
+    { label: "+1M", unit: "M", value: 1 },
+    { label: "+2M", unit: "M", value: 2 },
+    { label: "+3M", unit: "M", value: 3 },
+    { label: "+6M", unit: "M", value: 6 },
+    { label: "+12M", unit: "M", value: 12 },
+  ],
+  date3: [
+    { label: "-1M", unit: "M", value: -1 },
+    { label: "-1W", unit: "w", value: -1 },
+    { label: "Today", unit: "d", value: 1 },
+    { label: "+1W", unit: "w", value: 1 },
+  ],
+  time1: [
+    { label: "-3H", unit: "h", value: -3 },
+    { label: "-2H", unit: "h", value: -2 },
+    { label: "-1H", unit: "h", value: -1 },
+    { label: "+1H", unit: "h", value: 1 },
+    { label: "+2H", unit: "h", value: 2 },
+    { label: "+3H", unit: "h", value: 3 },
+  ],
+};

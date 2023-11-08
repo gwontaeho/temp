@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 const initializerArg = {
   data: {},
@@ -19,9 +19,25 @@ function reducer(state, action) {
 }
 
 export const useFetch = (props) => {
-  const { api } = props;
+  const { api, params } = props;
 
+  const [_params, _setParams] = useState(params);
   const [{ data, isLoading, isSuccess, isError }, dispatch] = useReducer(reducer, initializerArg);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("a", Object.entries({ alang: "ko" }).toString());
+  //   console.log("b", Object.entries({ lang: "ko" }).toString());
+  //   console.log("b", params);
+  //   console.log({ lang: "ko" } == { lang: "ko" });
+  // }, [params]);
 
   const fetchData = async () => {
     dispatch({ type: "loading" });

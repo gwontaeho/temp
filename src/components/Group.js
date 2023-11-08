@@ -43,9 +43,7 @@ const GroupRow = ({ children }) => {
 
 const GroupLabel = (props) => {
   const { children, labelSize = 2, required } = props;
-
   const colSpan = spanVariants[labelSize];
-
   return (
     <div
       className={`${colSpan} relative flex items-center p-1 break-all bg-header sm:border-x first:border-l-0 last:border-r-0`}>
@@ -56,8 +54,8 @@ const GroupLabel = (props) => {
 };
 
 const GroupControl = forwardRef((props, ref) => {
-  const { label, labelSize, controlSize = 4, required, ...rest } = props;
-
+  const defaultControlSize = props.type === "between" && props.options ? 10 : 4;
+  const { label, labelSize, controlSize = defaultControlSize, required, ...rest } = props;
   const colSpan = spanVariants[controlSize];
 
   return (
@@ -74,9 +72,20 @@ const GroupControl = forwardRef((props, ref) => {
   );
 });
 
+const GroupCol = (props) => {
+  const { children, label, labelSize, colSize = 4 } = props;
+  const colSpan = spanVariants[colSize];
+
+  return (
+    <>
+      {label && <GroupLabel labelSize={labelSize}>{label}</GroupLabel>}
+      <div className={`${colSpan} p-1 flex items-center`}>{children}</div>
+    </>
+  );
+};
+
 const GroupButton = (props) => {
   const { children, size = 2, ...rest } = props;
-
   const colSpan = spanVariants[size];
 
   return (
@@ -84,10 +93,6 @@ const GroupButton = (props) => {
       <Button {...rest}>{children}</Button>
     </div>
   );
-};
-
-const GroupCol = ({ children }) => {
-  return <div>{children}</div>;
 };
 
 const GroupLeft = ({ children }) => {
@@ -102,9 +107,9 @@ Group.Header = GroupHeader;
 Group.Body = GroupBody;
 Group.Footer = GroupFooter;
 Group.Row = GroupRow;
-Group.Control = GroupControl;
-Group.Label = GroupLabel;
 Group.Col = GroupCol;
+Group.Label = GroupLabel;
+Group.Control = GroupControl;
 Group.Button = GroupButton;
 Group.Left = GroupLeft;
 Group.Right = GroupRight;
