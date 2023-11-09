@@ -1,10 +1,12 @@
 import { useEffect, useReducer, useState } from "react";
 
-const initializerArg = {
-  data: {},
-  isLoading: false,
-  isSuccess: false,
-  isError: false,
+const initializerArg = (initialData) => {
+  return {
+    data: initialData,
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+  };
 };
 
 function reducer(state, action) {
@@ -19,30 +21,29 @@ function reducer(state, action) {
 }
 
 export const useFetch = (props) => {
-  const { api, params } = props;
+  const { api, key, enabled } = props;
 
-  const [_params, _setParams] = useState(params);
-  const [{ data, isLoading, isSuccess, isError }, dispatch] = useReducer(reducer, initializerArg);
+  const isArray = Array.isArray(api);
+  const initialData = isArray ? Array(api.length).fill({}) : {};
+
+  const [_key, _setKey] = useState(key);
+  const [{ data, isLoading, isSuccess, isError }, dispatch] = useReducer(reducer, initializerArg(initialData));
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (enabled) fetchData();
+  }, [enabled, _key]);
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    if (String(key) === String(_key)) return;
+    _setKey(key);
+  }, [key, _key]);
 
-  // useEffect(() => {
-  //   console.log("a", Object.entries({ alang: "ko" }).toString());
-  //   console.log("b", Object.entries({ lang: "ko" }).toString());
-  //   console.log("b", params);
-  //   console.log({ lang: "ko" } == { lang: "ko" });
-  // }, [params]);
-
-  const fetchData = async () => {
-    dispatch({ type: "loading" });
+  const fetchData = async (variables) => {
     try {
-      const { data } = await api();
+      dispatch({ type: "loading" });
+      const fetchFn = () => (isArray ? Promise.all(api.map((_) => _(variables))) : api(variables));
+      const res = await fetchFn();
+      const data = isArray ? res.map(({ data }) => data) : res.data;
       dispatch({ type: "success", payload: data });
     } catch (error) {
       dispatch({ type: "error" });

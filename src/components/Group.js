@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
-import { FormControl } from "./FormControl";
-import { Button } from "./Button";
+import classNames from "classnames";
+import { FormControl } from "@/components/FormControl";
+import { Button } from "@/components/Button";
 
 const spanVariants = {
   1: "col-span-1",
@@ -17,8 +18,8 @@ const spanVariants = {
   12: "col-span-12",
 };
 
-export const Group = ({ children }) => {
-  return <div className="w-full shadow rounded bg-card p-4 space-y-4">{children}</div>;
+export const Group = ({ children, className }) => {
+  return <div className={"w-full shadow rounded bg-card p-4 space-y-4"}>{children}</div>;
 };
 
 const GroupHeader = ({ children }) => {
@@ -57,7 +58,6 @@ const GroupControl = forwardRef((props, ref) => {
   const defaultControlSize = props.type === "between" && props.options ? 10 : 4;
   const { label, labelSize, controlSize = defaultControlSize, required, ...rest } = props;
   const colSpan = spanVariants[controlSize];
-
   return (
     <>
       {label && (

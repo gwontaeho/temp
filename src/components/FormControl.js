@@ -2,6 +2,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
+import classNames from "classnames";
 import ReactDatePicker from "react-datepicker";
 import dayjs from "dayjs";
 import uuid from "react-uuid";
@@ -33,18 +34,30 @@ export const FormControl = forwardRef((props, ref) => {
       return <InputDateTime ref={ref} {...rest} />;
     case "between":
       return <InputBetween ref={ref} {...rest} />;
+    case "file":
+      return <InputFile ref={ref} {...rest} />;
     default:
       return <InputText ref={ref} {...rest} />;
   }
 });
 
+const InputFile = forwardRef((props, ref) => {
+  const { invalid, className, ...rest } = props;
+
+  return (
+    <div className="w-full space-y-1">
+      <input ref={ref} {...rest} type="file" className={classNames("input", { [className]: className })} />
+      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+    </div>
+  );
+});
+
 const InputText = forwardRef((props, ref) => {
   const { invalid, className, ...rest } = props;
 
-  const cn = "input" + (className ? ` ${className}` : "");
   return (
     <div className="w-full space-y-1">
-      <input ref={ref} {...rest} type="text" className={cn} />
+      <input ref={ref} {...rest} type="text" className={classNames("input", { [className]: className })} />
       {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
     </div>
   );
@@ -53,10 +66,9 @@ const InputText = forwardRef((props, ref) => {
 const InputNumber = forwardRef((props, ref) => {
   const { invalid, className, ...rest } = props;
 
-  const cn = "input" + (className ? ` ${className}` : "");
   return (
     <div className="w-full space-y-1">
-      <input ref={ref} {...rest} type="number" className={cn} />
+      <input ref={ref} {...rest} type="number" className={classNames("input", { [className]: className })} />
       {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
     </div>
   );
@@ -65,10 +77,9 @@ const InputNumber = forwardRef((props, ref) => {
 const InputPassword = forwardRef((props, ref) => {
   const { invalid, className, ...rest } = props;
 
-  const cn = "input" + (className ? ` ${className}` : "");
   return (
     <div className="w-full space-y-1">
-      <input ref={ref} {...rest} type="password" className={cn} />
+      <input ref={ref} {...rest} type="password" className={classNames("input", { [className]: className })} />
       {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
     </div>
   );
@@ -77,17 +88,16 @@ const InputPassword = forwardRef((props, ref) => {
 const Textarea = forwardRef((props, ref) => {
   const { invalid, className, ...rest } = props;
 
-  const cn = "input h-14 overflow-hidden" + (className ? ` ${className}` : "");
-  return <textarea ref={ref} {...rest} className={cn} />;
+  return (
+    <textarea ref={ref} {...rest} className={classNames("input h-14 overflow-hidden", { [className]: className })} />
+  );
 });
 
 const Select = forwardRef((props, ref) => {
   const { options, className, ...rest } = props;
-  console.log(options);
 
-  const cn = "input" + (className ? ` ${className}` : "");
   return (
-    <select ref={ref} {...rest} className={cn}>
+    <select ref={ref} {...rest} className={classNames("input", { [className]: className })}>
       {Array.isArray(options) &&
         options.map(({ label, value }) => {
           return (
@@ -137,8 +147,6 @@ const Radio = forwardRef((props, ref) => {
 const InputDate = forwardRef((props, ref) => {
   const { name, invalid, control, rules, className } = props;
 
-  const cn = "input" + (className ? ` ${className}` : "");
-
   return (
     <div className="w-full space-y-1">
       <div className="[&>div]:w-full">
@@ -147,7 +155,11 @@ const InputDate = forwardRef((props, ref) => {
           control={control}
           rules={rules}
           render={({ field: { onChange, value } }) => (
-            <ReactDatePicker className={cn} selected={value} onChange={onChange} />
+            <ReactDatePicker
+              className={classNames("input", { [className]: className })}
+              selected={value}
+              onChange={onChange}
+            />
           )}
         />
       </div>
@@ -159,8 +171,6 @@ const InputDate = forwardRef((props, ref) => {
 const InputTime = forwardRef((props, ref) => {
   const { name, invalid, control, rules, className } = props;
 
-  const cn = "input" + (className ? ` ${className}` : "");
-
   return (
     <div className="w-full space-y-1">
       <div className="[&>div]:w-full">
@@ -170,7 +180,7 @@ const InputTime = forwardRef((props, ref) => {
           rules={rules}
           render={({ field: { onChange, value } }) => (
             <ReactDatePicker
-              className={cn}
+              className={classNames("input", { [className]: className })}
               dateFormat="HH:mm"
               timeIntervals={5}
               showTimeSelect
@@ -188,7 +198,6 @@ const InputTime = forwardRef((props, ref) => {
 
 const InputDateTime = forwardRef((props, ref) => {
   const { name, invalid, control, rules, className } = props;
-  const cn = "input" + (className ? ` ${className}` : "");
 
   return (
     <div className="w-full space-y-1">
@@ -198,7 +207,13 @@ const InputDateTime = forwardRef((props, ref) => {
           control={control}
           rules={rules}
           render={({ field: { onChange, value } }) => (
-            <ReactDatePicker className={cn} timeIntervals={5} showTimeSelect selected={value} onChange={onChange} />
+            <ReactDatePicker
+              className={classNames("input", { [className]: className })}
+              timeIntervals={5}
+              showTimeSelect
+              selected={value}
+              onChange={onChange}
+            />
           )}
         />
       </div>

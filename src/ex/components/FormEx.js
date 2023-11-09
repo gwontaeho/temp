@@ -13,9 +13,27 @@ const SCHEMA_SEARCH = {
   date_1: { type: "date", label: "Date 필드" },
   time_1: { type: "time", label: "time 필드" },
   datetime_1: { type: "datetime", label: "datetime" },
-  between: { type: "between", label: "bw d", schema: { begin1: { type: "date" }, end1: { type: "date" } } },
-  between1: { type: "between", label: "bw t", schema: { begin2: { type: "date" }, end2: { type: "date" } } },
-  between2: { type: "between", label: "bw dt", schema: { begin3: { type: "date" }, end3: { type: "date" } } },
+  between: {
+    type: "between",
+    label: "bw d",
+    options: "date1",
+    schema: { begin1: { type: "date" }, end1: { type: "date" } },
+  },
+  between1: {
+    type: "between",
+    label: "bw t",
+    options: "date1",
+    schema: { begin2: { type: "date" }, end2: { type: "date" } },
+  },
+  between2: {
+    type: "between",
+    label: "bw dt",
+    options: "date1",
+    schema: { begin3: { type: "date" }, end3: { type: "date" } },
+  },
+  file: {
+    type: "file",
+  },
 };
 
 const OPTION = [
@@ -61,13 +79,19 @@ export const FormEx = () => {
             <Group.Col label="bbbb">asdqwd</Group.Col>
           </Group.Row>
           <Group.Row>
-            <Group.Control {...schema.between} options="date1" />
+            <Group.Control {...schema.between} />
           </Group.Row>
           <Group.Row>
-            <Group.Control {...schema.between1} options="date2" />
+            <Group.Control {...schema.between1} />
           </Group.Row>
           <Group.Row>
-            <Group.Control {...schema.between2} options="date3" />
+            <Group.Control {...schema.between2} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between2} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.file} />
           </Group.Row>
         </Group.Body>
         <Group.Footer>

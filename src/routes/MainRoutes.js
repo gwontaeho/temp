@@ -4,45 +4,18 @@ import { FormEx } from "@/ex/components/FormEx";
 import { GridEx } from "@/ex/components/GridEx";
 import { SearchEx } from "@/ex/pages/SearchEx";
 import { TabEx } from "@/ex/components/TabEx";
+import { TreeEx } from "@/ex/components/TreeEx";
 
 export const MainRoutes = () => {
   return (
     <MainLayout>
       <Routes>
-        <Route path="/" element={<FormEx />} />
+        <Route path="/form" element={<FormEx />} />
         <Route path="/grid" element={<GridEx />} />
         <Route path="/page/search" element={<SearchEx />} />
         <Route path="/tab" element={<TabEx />} />
+        <Route path="/tree" element={<TreeEx />} />
       </Routes>
     </MainLayout>
   );
 };
-
-export const MAIN_ROUTES = [
-  {
-    name: "component ex",
-    children: [
-      {
-        name: "form",
-        to: "/",
-      },
-      {
-        name: "grid",
-        to: "/grid",
-      },
-      {
-        name: "tab",
-        to: "/tab",
-      },
-    ],
-  },
-  {
-    name: "page ex",
-    children: [
-      {
-        name: "search page",
-        to: "/page/search",
-      },
-    ],
-  },
-];
