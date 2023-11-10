@@ -178,7 +178,7 @@ const treeviewItems = (search) => [
 export const TreeEx = () => {
   return (
     <Flex direction="row">
-      <Group>
+      <Group size="fit">
         <Tree data={treeviewItems()} />
       </Group>
       <Group>

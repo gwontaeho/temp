@@ -30,8 +30,8 @@ export const ROUTES = [
     name: "page ex",
     children: [
       {
-        name: "search page",
-        to: "/page/search",
+        name: "sample page",
+        to: "/page/sample",
       },
     ],
   },

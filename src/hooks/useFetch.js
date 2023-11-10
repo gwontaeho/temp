@@ -20,8 +20,16 @@ function reducer(state, action) {
   }
 }
 
+/**
+ * @param {Object} props
+ * @param {Function} props.api
+ * @param {Function} props.onSuccess
+ * @param {Array} props.key
+ * @param {Boolean} props.enabled
+ * @returns
+ */
 export const useFetch = (props) => {
-  const { api, key, enabled } = props;
+  const { api, key, enabled, onSuccess } = props;
 
   const isArray = Array.isArray(api);
   const initialData = isArray ? Array(api.length).fill({}) : {};
@@ -45,6 +53,7 @@ export const useFetch = (props) => {
       const res = await fetchFn();
       const data = isArray ? res.map(({ data }) => data) : res.data;
       dispatch({ type: "success", payload: data });
+      if (onSuccess instanceof Function) onSuccess();
     } catch (error) {
       dispatch({ type: "error" });
     }

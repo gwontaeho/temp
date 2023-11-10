@@ -18,8 +18,16 @@ const spanVariants = {
   12: "col-span-12",
 };
 
-export const Group = ({ children, className }) => {
-  return <div className={"w-full shadow rounded bg-card p-4 space-y-4"}>{children}</div>;
+export const Group = ({ children, size = "full" }) => {
+  return (
+    <div
+      className={classNames("shadow rounded bg-card p-4 space-y-4", {
+        "w-full": size === "full",
+        "w-fit": size === "fit",
+      })}>
+      {children}
+    </div>
+  );
 };
 
 const GroupHeader = ({ children }) => {
@@ -42,12 +50,14 @@ const GroupRow = ({ children }) => {
   );
 };
 
-const GroupLabel = (props) => {
-  const { children, labelSize = 2, required } = props;
+const GroupLabel = ({ children, labelSize = 2, required }) => {
   const colSpan = spanVariants[labelSize];
   return (
     <div
-      className={`${colSpan} relative flex items-center p-1 break-all bg-header sm:border-x first:border-l-0 last:border-r-0`}>
+      className={classNames(
+        "relative flex items-center p-1 break-all bg-header sm:border-x first:border-l-0 last:border-r-0",
+        colSpan
+      )}>
       {children}
       {required && <span className="text-invalid absolute top-1 right-1">*</span>}
     </div>
@@ -65,31 +75,29 @@ const GroupControl = forwardRef((props, ref) => {
           {label}
         </GroupLabel>
       )}
-      <div className={`${colSpan} p-1 flex items-center`}>
+      <div className={classNames("p-1 flex items-center", colSpan)}>
         <FormControl ref={ref} {...rest} />
       </div>
     </>
   );
 });
 
-const GroupCol = (props) => {
-  const { children, label, labelSize, colSize = 4 } = props;
+const GroupCol = ({ children, label, labelSize, colSize = 4 }) => {
   const colSpan = spanVariants[colSize];
 
   return (
     <>
       {label && <GroupLabel labelSize={labelSize}>{label}</GroupLabel>}
-      <div className={`${colSpan} p-1 flex items-center`}>{children}</div>
+      <div className={classNames("p-1 flex items-center", colSpan)}>{children}</div>
     </>
   );
 };
 
-const GroupButton = (props) => {
-  const { children, size = 2, ...rest } = props;
+const GroupButton = ({ children, size = 2, ...rest }) => {
   const colSpan = spanVariants[size];
 
   return (
-    <div className={`${colSpan} p-1 flex items-center [&>button]:w-full`}>
+    <div className={classNames("p-1 flex items-center [&>button]:w-full", colSpan)}>
       <Button {...rest}>{children}</Button>
     </div>
   );

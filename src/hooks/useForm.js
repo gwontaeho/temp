@@ -14,11 +14,24 @@ import { useForm as _useForm } from "react-hook-form";
  * @returns
  */
 export const useForm = (props) => {
-  const { register, getValues, control, setValue, setFocus } = _useForm();
+  const {
+    register,
+    getValues,
+    control,
+    setValue,
+    setFocus,
+    handleSubmit,
+    trigger,
+    formState: { errors },
+  } = _useForm();
 
   const { defaultSchema } = props || {};
   const { __form__, ..._defaultSchema } = defaultSchema || {};
   const schemaEntries = Object.entries(_defaultSchema);
+
+  const handleValidate = () => {
+    // handleSubmit()
+  };
 
   const getSchema = (entries) => {
     return entries.reduce((prev, curr) => {
@@ -27,7 +40,13 @@ export const useForm = (props) => {
       const getCommon = (name, origin) => {
         const { type, pattern, validate, minLength, maxLength, required, ...rest } = origin;
         const id = __form__ + "." + name;
-        return { id, type, ...rest };
+
+        const common = { id, type, ...rest };
+        const invalid = errors[name];
+
+        if (invalid) common.invalid = invalid;
+
+        return common;
       };
 
       const getInputProps = (origin) => {
@@ -76,5 +95,5 @@ export const useForm = (props) => {
 
   const schema = getSchema(schemaEntries);
 
-  return { schema, getValues, setValue, setFocus, control, register };
+  return { schema, getValues, setValue, setFocus, control, register, handleSubmit, trigger, errors };
 };

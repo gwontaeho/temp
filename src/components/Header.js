@@ -80,7 +80,7 @@ export const Header = () => {
             <FormControl
               type="select"
               value={theme.lang}
-              className="w-fit"
+              size="fit"
               onChange={(e) => setTheme("lang", e.target.value)}
               options={[
                 { label: "한국어", value: "ko" },

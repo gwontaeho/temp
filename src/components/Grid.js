@@ -321,7 +321,7 @@ const GridPagination = ({
           <p>Rows per page:</p>
           <FormControl
             type="select"
-            className="w-fit"
+            size="fit"
             value={String(size)}
             onChange={(e) => {
               setPage(0);

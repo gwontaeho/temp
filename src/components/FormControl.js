@@ -16,7 +16,7 @@ export const FormControl = forwardRef((props, ref) => {
       return <InputText ref={ref} {...rest} />;
     case "number":
       return <InputNumber ref={ref} {...rest} />;
-    case "passsword":
+    case "password":
       return <InputPassword ref={ref} {...rest} />;
     case "select":
       return <Select ref={ref} {...rest} />;
@@ -47,7 +47,7 @@ const InputFile = forwardRef((props, ref) => {
   return (
     <div className="w-full space-y-1">
       <input ref={ref} {...rest} type="file" className={classNames("input", { [className]: className })} />
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -58,7 +58,7 @@ const InputText = forwardRef((props, ref) => {
   return (
     <div className="w-full space-y-1">
       <input ref={ref} {...rest} type="text" className={classNames("input", { [className]: className })} />
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -69,7 +69,7 @@ const InputNumber = forwardRef((props, ref) => {
   return (
     <div className="w-full space-y-1">
       <input ref={ref} {...rest} type="number" className={classNames("input", { [className]: className })} />
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -80,7 +80,7 @@ const InputPassword = forwardRef((props, ref) => {
   return (
     <div className="w-full space-y-1">
       <input ref={ref} {...rest} type="password" className={classNames("input", { [className]: className })} />
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -89,57 +89,69 @@ const Textarea = forwardRef((props, ref) => {
   const { invalid, className, ...rest } = props;
 
   return (
-    <textarea ref={ref} {...rest} className={classNames("input h-14 overflow-hidden", { [className]: className })} />
+    <div className="w-full space-y-1">
+      <textarea ref={ref} {...rest} className={classNames("input h-14 overflow-hidden", { [className]: className })} />
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
+    </div>
   );
 });
 
 const Select = forwardRef((props, ref) => {
-  const { options, className, ...rest } = props;
+  const { invalid, size = "full", options, className, ...rest } = props;
 
   return (
-    <select ref={ref} {...rest} className={classNames("input", { [className]: className })}>
-      {Array.isArray(options) &&
-        options.map(({ label, value }) => {
-          return (
-            <option key={uuid()} value={value}>
-              {label}
-            </option>
-          );
-        })}
-    </select>
+    <div className={classNames("space-y-1", { "w-fit": size === "fit", "w-full": size === "full" })}>
+      <select ref={ref} {...rest} className={classNames("input", { [className]: className })}>
+        {Array.isArray(options) &&
+          options.map(({ label, value }) => {
+            return (
+              <option key={uuid()} value={value}>
+                {label}
+              </option>
+            );
+          })}
+      </select>
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
+    </div>
   );
 });
 
 const Checkbox = forwardRef((props, ref) => {
-  const { options, ...rest } = props;
+  const { invalid, options, ...rest } = props;
   return (
-    <div className="flex flex-wrap">
-      {Array.isArray(options) &&
-        options.map(({ label, value }) => {
-          return (
-            <div key={uuid()} className="flex items-center h-7 space-x-1 mr-3">
-              <input ref={ref} {...rest} type="checkbox" value={value} />
-              {label && <label>{label}</label>}
-            </div>
-          );
-        })}
+    <div className="w-full">
+      <div className="flex flex-wrap">
+        {Array.isArray(options) &&
+          options.map(({ label, value }) => {
+            return (
+              <div key={uuid()} className="flex items-center h-7 space-x-1 mr-3">
+                <input ref={ref} {...rest} type="checkbox" value={value} />
+                {label && <label>{label}</label>}
+              </div>
+            );
+          })}
+      </div>
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
 
 const Radio = forwardRef((props, ref) => {
-  const { options, ...rest } = props;
+  const { invalid, options, ...rest } = props;
   return (
-    <div className="flex flex-wrap">
-      {Array.isArray(options) &&
-        options.map(({ label, value }) => {
-          return (
-            <div key={uuid()} className="flex items-center h-7 space-x-1 mr-3">
-              <input ref={ref} {...rest} type="radio" value={value} />
-              {label && <label>{label}</label>}
-            </div>
-          );
-        })}
+    <div className="w-ful">
+      <div className="flex flex-wrap">
+        {Array.isArray(options) &&
+          options.map(({ label, value }) => {
+            return (
+              <div key={uuid()} className="flex items-center h-7 space-x-1 mr-3">
+                <input ref={ref} {...rest} type="radio" value={value} />
+                {label && <label>{label}</label>}
+              </div>
+            );
+          })}
+      </div>
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -163,7 +175,7 @@ const InputDate = forwardRef((props, ref) => {
           )}
         />
       </div>
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -191,7 +203,7 @@ const InputTime = forwardRef((props, ref) => {
           )}
         />
       </div>
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
@@ -217,7 +229,7 @@ const InputDateTime = forwardRef((props, ref) => {
           )}
         />
       </div>
-      {invalid && <div className="text-invalid text-sm">입력해주세요</div>}
+      {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
