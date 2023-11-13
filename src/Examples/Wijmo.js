@@ -1,123 +1,145 @@
 import "@grapecity/wijmo.styles/wijmo.css";
+import axios from "axios";
 
-import * as wjcGrid from "@grapecity/wijmo.react.grid";
-import * as wjGrid from "@grapecity/wijmo.grid";
+import * as wjGrid from "@grapecity/wijmo.react.grid.multirow";
+import * as wjGridA from "@grapecity/wijmo.grid";
+import { Selector } from "@grapecity/wijmo.grid.selector";
+import { InputDate } from "@grapecity/wijmo.input";
 
 import "./style.css";
+import { useEffect, useState, useRef } from "react";
 
 const schema = {
   __grid__: "grid",
-  options: {
-    checkbox: true,
-    edit: false,
-  },
   head: [
+    [{ header: "z" }],
     [
-      { id: "country", label: "country" },
-      { id: "sales", label: "sales" },
-      { id: "expenses", label: "expenses" },
-      { id: "active", label: "active" },
+      { header: "a", colspan: 4 },
+      { header: "b", colspan: 4 },
+      { header: "c" },
+      { header: "d" },
+      { header: "e" },
+      { header: "f" },
     ],
   ],
   body: [
-    [
-      { cel: [{ id: "id" }] },
-      { cel: [{ id: "textField" }] },
-      { cel: [{ id: "passwordField" }] },
-      { cel: [{ id: "integerField" }] },
-      { cel: [{ id: "selectField" }] },
-      { cel: [{ id: "radioField" }] },
-      { cel: [{ id: "dateField" }] },
-      { cel: [{ id: "textareaField" }] },
-    ],
+    {
+      colspan: 7,
+      cells: [
+        {
+          binding: "a",
+          dataMap: [
+            { label: "al", value: "av" },
+            { label: "bl", value: "bv" },
+            { label: "cl", value: "cv" },
+          ],
+        },
+        { binding: "b", format: "d" },
+        { binding: "c" },
+        { binding: "d" },
+        { binding: "e" },
+      ],
+    },
   ],
 };
 
-const getData = () => {
-  var countries = "US,Germany,UK,Japan".split(",");
-  var data = [];
-  for (var i = 0; i < 20; i++) {
-    data.push({
-      id: i,
-      country: countries[i % countries.length],
-      active: i % 5 != 0,
-      downloads: Math.round(Math.random() * 200000),
-      sales: Math.random() * 100000,
-      expenses: Math.random() * 50000,
-    });
-  }
-  return data;
-};
-
-const Grid = () => {
-  const cellEditEnded = (s, e) => {
-    let col = s.columns[e.col];
-    console.log(e);
-  };
-
-  const initialized = (flexGrid) => {
-    // create extra header row
-    var extraRow = new wjGrid.Row();
-    extraRow.allowMerging = true;
-
-    var extraRow2 = new wjGrid.Row();
-    extraRow2.allowMerging = true;
-
-    //
-    // add extra header row to the grid
-    var panel = flexGrid.columnHeaders;
-    panel.rows.splice(0, 0, extraRow);
-
-    // var panel = flexGrid.columnHeaders;
-    panel.rows.splice(0, 0, extraRow2);
-
-    //
-    // populate the extra header row
-    for (let colIndex = 0; colIndex <= 1; colIndex++) {
-      panel.setCellData(1, colIndex, "Amounts");
-    }
-
-    for (let colIndex = 2; colIndex <= 3; colIndex++) {
-      panel.setCellData(1, colIndex, "tt");
-    }
-
-    for (let colIndex = 0; colIndex <= 3; colIndex++) {
-      panel.setCellData(0, colIndex, "abc");
-    }
-
-    //
-    // merge "Country" and "Active" headers vertically
-    // ["country", "active"].forEach(function (binding) {
-    //   let col = flexGrid.getColumn(binding);
-    //   col.allowMerging = true;
-    //   panel.setCellData(0, col.index, col.header);
-    // });
-
-    // //
-    // // center-align merged header cells
-    // flexGrid.formatItem.addHandler(function (s, e) {
-    //   if (e.panel == s.columnHeaders && e.range.rowSpan > 1) {
-    //     var html = e.cell.innerHTML;
-    //     e.cell.innerHTML = '<div class="v-center">' + html + "</div>";
-    //   }
-    // });
-    // flexGrid.autoGenerateColumns = false;
-    // flexGrid.itemsSource = getData();
-  };
-
+const Grid = ({ gridRef, schema, data }) => {
   const head = schema.head;
   const body = schema.body;
 
+  useEffect(() => {
+    gridRef.current.data = data;
+  }, []);
+
+  const headerLayoutDefinition = () => {
+    return head.map((_) => ({ cells: _.map((__) => ({ ...__, align: "center" })) }));
+  };
+  const layoutDefinition = () => {
+    return body.map((_) => ({
+      ..._,
+      cells: _.cells.map((__) => ({
+        ...__,
+        ...(__.dataMap && { dataMap: new wjGridA.DataMap(__.dataMap, "label", "value") }),
+        editor: new InputDate(document.createElement("div")),
+      })),
+    }));
+  };
+
+  const initialized = (multiRow) => {
+    new Selector(multiRow);
+    multiRow.layoutDefinition = layoutDefinition();
+
+    // console.log(multiRow.columns);
+
+    // multiRow.columns.forEach((col) => {
+    //   console.log(col);
+    //   col.editor = new InputDate(document.createElement("div"));
+    // });
+
+    multiRow.collectionView.collectionChanged.addHandler(({ items }) => (gridRef.current.data = items));
+
+    gridRef.current.multiRow = multiRow;
+  };
+
   return (
-    <wjcGrid.FlexGrid allowMerging="ColumnHeaders" alternatingRowStep={0} initialized={initialized}>
-      <wjcGrid.FlexGridColumn binding="country" header="Country" allowMerging={true} />
-      <wjcGrid.FlexGridColumn binding="sales" header="Sales" format="n2" />
-      <wjcGrid.FlexGridColumn binding="expenses" header="Expenses" format="n2" />
-      <wjcGrid.FlexGridColumn binding="active" header="Active" allowMerging={true} />
-    </wjcGrid.FlexGrid>
+    <wjGrid.MultiRow
+      allowAddNew={true}
+      allowDelete={true}
+      itemsSource={data}
+      initialized={initialized}
+      headerLayoutDefinition={headerLayoutDefinition()}
+    />
   );
 };
 
+const useGrid = ({ defaultSchema }) => {
+  const gridRef = useRef({});
+
+  const schema = defaultSchema;
+
+  const getData = () => {
+    return gridRef.current.data;
+  };
+  const getCheckedIndex = () => {
+    return gridRef.current.multiRow.rows.filter((r) => r.isSelected).map((r) => r.dataIndex);
+  };
+  const getChecked = () => {
+    return gridRef.current.multiRow.rows.filter((r) => r.isSelected).map((r) => r.dataItem);
+  };
+  const addRow = () => {
+    gridRef.current.multiRow.collectionView.addNew();
+  };
+  const removeRow = (index) => {
+    if (index === undefined) return;
+    gridRef.current.multiRow.collectionView.removeAt(index);
+  };
+  const removeChecked = () => {
+    getCheckedIndex().forEach((index) => {
+      gridRef.current.multiRow.collectionView.removeAt(index);
+    });
+  };
+
+  const grid = { gridRef, schema };
+
+  return { grid, getData, getChecked, getCheckedIndex, addRow, removeRow, removeChecked };
+};
+
 export const WijmoGrid = () => {
-  return <Grid />;
+  const { grid, getData, getChecked, getCheckedIndex, addRow, removeRow, removeChecked } = useGrid({
+    defaultSchema: schema,
+  });
+
+  return (
+    <div className="[&>.wj-multirow]:max-h-max [&>.wj-multirow]:h-[400px]">
+      <Grid {...grid} data={[]} />
+      <div className="space-x-2">
+        <button onClick={() => console.log(getData())}>데이터 가져오기</button>
+        <button onClick={() => console.log(getChecked())}>check 가져오기</button>
+        <button onClick={() => console.log(getCheckedIndex())}>index 가져오기</button>
+        <button onClick={() => addRow()}>add</button>
+        <button onClick={() => removeRow(1)}>remove at</button>
+        <button onClick={() => removeChecked()}>checked 삭제</button>
+      </div>
+    </div>
+  );
 };
