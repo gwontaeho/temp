@@ -8,6 +8,7 @@ import { TreeEx } from "@/ex/components/TreeEx";
 import { Sample } from "@/ex/pages/Sample/Sample";
 import { SampleDetail } from "@/ex/pages/Sample/SampleDetail";
 import { SampleRegist } from "@/ex/pages/Sample/SampleRegist";
+import { WijmoEx } from "@/ex/components/WijmoEx";
 
 export const MainRoutes = () => {
   return (
@@ -17,6 +18,7 @@ export const MainRoutes = () => {
         <Route path="/grid" element={<GridEx />} />
         <Route path="/tab" element={<TabEx />} />
         <Route path="/tree" element={<TreeEx />} />
+        <Route path="/wijmo" element={<WijmoEx />} />
 
         <Route path="/page/sample" element={<Sample />} />
         <Route path="/page/sample/:id" element={<SampleDetail />} />

@@ -1,0 +1,81 @@
+.wj-multirow {
+  border: none;
+  background: none;
+}
+
+.wj-multirow * {
+  border-color: #344050 !important;
+  color: #b6c1d2 !important;
+}
+
+/* top left */
+.wj-topleft .wj-cell {
+  padding: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* top left checkbox */
+.wj-topleft .wj-cell input {
+  margin: 0 !important;
+  transform: scale(1) !important;
+}
+
+/* col headers */
+.wj-colheaders {
+}
+
+/* row headers */
+.wj-rowheaders {
+}
+
+/* row headers cell */
+.wj-rowheaders .wj-cell {
+  padding: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* row headers checkbox */
+.wj-rowheaders .wj-cell input {
+  margin: 0 !important;
+}
+
+/* cell */
+.wj-cell {
+  background-color: #0b1727 !important;
+  height: 2.5rem;
+}
+
+/* cell in the body */
+.wj-cells .wj-cell {
+  line-height: 2rem;
+}
+
+/* selected cell */
+.wj-cells .wj-cell.wj-state-selected {
+}
+
+/* header */
+.wj-header {
+  background-color: #232e3c !important;
+}
+
+/* control */
+.wj-cells .wj-cell .wj-control {
+  background-color: #0b1727 !important;
+}
+
+/* .wj-btn.wj-btn-glyph.wj-right.wj-elem-dropdown {
+  display: none !important;
+} */
+
+.wj-control .wj-input-group-btn > .wj-btn.wj-btn-default:hover {
+  background-color: #232e3c !important;
+}
+
+.wj-content.wj-dropdown-panel.wj-control.wj-listbox {
+  background-color: #232e3c !important;
+}

@@ -55,7 +55,7 @@ const GroupLabel = ({ children, labelSize = 2, required }) => {
   return (
     <div
       className={classNames(
-        "relative flex items-center p-1 break-all bg-header sm:border-x first:border-l-0 last:border-r-0",
+        "font-semibold relative flex items-center p-1 break-all bg-header sm:border-x first:border-l-0 last:border-r-0",
         colSpan
       )}>
       {children}

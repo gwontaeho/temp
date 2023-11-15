@@ -13,6 +13,7 @@ module.exports = {
       header: "#232e3c",
       invalid: "#e63757",
       disabled: "#4d5969",
+      transparent: "transparent",
     },
     fontSize: {
       sm: "0.7rem",

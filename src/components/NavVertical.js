@@ -24,6 +24,10 @@ export const ROUTES = [
         name: "tree",
         to: "/tree",
       },
+      {
+        name: "wijmo",
+        to: "/wijmo",
+      },
     ],
   },
   {

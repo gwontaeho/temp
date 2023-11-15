@@ -34,38 +34,22 @@ export const SCHEMA_FORM_REGIST = {
   textareaField: { type: "textarea", label: "TEXTAREA_FIELD" },
 };
 
-export const SCHEMA_GRID = ({ navigate }) => {
-  return {
-    __grid__: "grid",
-    options: {
-      checkbox: true,
-      edit: false,
+export const SCHEMA_GRID = {
+  __grid__: "grid",
+  options: { checkbox: true, pagination: "inner", add: true, remove: true },
+  head: [[{ header: "a" }], [{ header: "d" }], [{ header: "e" }], [{ header: "f" }], [{ header: "e" }]],
+  body: [
+    {
+      colspan: 5,
+      cells: [
+        { binding: "id" },
+        { binding: "doubleField", type: "number" },
+        { binding: "integerField", type: "number" },
+        { binding: "passwordField" },
+        { binding: "selectField", type: "select", options: [{ label: "a", value: "a" }] },
+      ],
     },
-    head: [
-      [
-        { label: "id" },
-        { label: "TEXT_FIELD" },
-        { label: "PASSWORD_FIELD" },
-        // { label: "INTEGER_FIELD" },
-        // { label: "SELECT_FIELD" },
-        // { label: "RADIO_FIELD" },
-        // { label: "DATE_FIELD" },
-        // { label: "TEXTAREA_FIELD" },
-      ],
-    ],
-    body: [
-      [
-        { cel: [{ id: "id", onClick: ({ id }) => navigate(`/page/sample/${id}`) }] },
-        { cel: [{ id: "textField" }] },
-        { cel: [{ id: "passwordField" }] },
-        // { cel: [{ id: "integerField" }] },
-        // { cel: [{ id: "selectField" }] },
-        // { cel: [{ id: "radioField" }] },
-        // { cel: [{ id: "dateField" }] },
-        // { cel: [{ id: "textareaField" }] },
-      ],
-    ],
-  };
+  ],
 };
 
 export const SCHEMA_GRID_COMPONENTS = () => {

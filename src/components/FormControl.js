@@ -1,6 +1,6 @@
 import "react-datepicker/dist/react-datepicker.css";
 
-import { forwardRef } from "react";
+import { forwardRef, memo, useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import classNames from "classnames";
 import ReactDatePicker from "react-datepicker";
@@ -42,7 +42,7 @@ export const FormControl = forwardRef((props, ref) => {
 });
 
 const InputFile = forwardRef((props, ref) => {
-  const { invalid, className, ...rest } = props;
+  const { getValues, edit, invalid, className, ...rest } = props;
 
   return (
     <div className="w-full space-y-1">
@@ -53,83 +53,136 @@ const InputFile = forwardRef((props, ref) => {
 });
 
 const InputText = forwardRef((props, ref) => {
-  const { invalid, className, ...rest } = props;
+  const { getValues, edit, invalid, className, ...rest } = props;
 
   return (
     <div className="w-full space-y-1">
-      <input ref={ref} {...rest} type="text" className={classNames("input", { [className]: className })} />
+      <input
+        {...rest}
+        ref={ref}
+        type="text"
+        data-edit={edit}
+        {...(edit === false && { readOnly: true })}
+        className={classNames("input", { [className]: className })}
+      />
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
 
 const InputNumber = forwardRef((props, ref) => {
-  const { invalid, className, ...rest } = props;
+  const { getValues, edit, invalid, className, ...rest } = props;
 
   return (
     <div className="w-full space-y-1">
-      <input ref={ref} {...rest} type="number" className={classNames("input", { [className]: className })} />
+      <input
+        {...rest}
+        ref={ref}
+        type="number"
+        data-edit={edit}
+        {...(edit === false && { readOnly: true })}
+        className={classNames("input", { [className]: className })}
+      />
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
 
 const InputPassword = forwardRef((props, ref) => {
-  const { invalid, className, ...rest } = props;
+  const { getValues, edit, invalid, className, ...rest } = props;
 
   return (
     <div className="w-full space-y-1">
-      <input ref={ref} {...rest} type="password" className={classNames("input", { [className]: className })} />
+      <input
+        {...rest}
+        ref={ref}
+        type="password"
+        data-edit={edit}
+        {...(edit === false && { readOnly: true })}
+        className={classNames("input", { [className]: className })}
+      />
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
 
 const Textarea = forwardRef((props, ref) => {
-  const { invalid, className, ...rest } = props;
+  const { getValues, edit, invalid, className, ...rest } = props;
 
   return (
     <div className="w-full space-y-1">
-      <textarea ref={ref} {...rest} className={classNames("input h-14 overflow-hidden", { [className]: className })} />
+      <textarea
+        {...rest}
+        ref={ref}
+        data-edit={edit}
+        {...(edit === false && { readOnly: true })}
+        className={classNames("input h-14 overflow-hidden", { [className]: className })}
+      />
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
 
 const Select = forwardRef((props, ref) => {
-  const { invalid, size = "full", options, className, ...rest } = props;
+  const { getValues, edit, invalid, size = "full", options, className, ...rest } = props;
 
   return (
     <div className={classNames("space-y-1", { "w-fit": size === "fit", "w-full": size === "full" })}>
-      <select ref={ref} {...rest} className={classNames("input", { [className]: className })}>
-        {Array.isArray(options) &&
-          options.map(({ label, value }) => {
-            return (
-              <option key={uuid()} value={value}>
-                {label}
-              </option>
-            );
-          })}
+      <select
+        {...rest}
+        ref={ref}
+        data-edit={edit}
+        {...(edit === false && { readOnly: true })}
+        className={classNames("input appearance-none", {
+          "pointer-events-none": edit === false,
+          [className]: className,
+        })}>
+        <Select.Options options={options} />
       </select>
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });
 
+Select.Options = memo(({ options }) => {
+  return (
+    Array.isArray(options) &&
+    options.map(({ label, value }) => {
+      return (
+        <option key={uuid()} value={value}>
+          {label}
+        </option>
+      );
+    })
+  );
+});
+
 const Checkbox = forwardRef((props, ref) => {
-  const { invalid, options, ...rest } = props;
+  const { getValues, edit, id, invalid, options, ...rest } = props;
+
+  const [_value, _setValue] = useState([]);
+
+  useEffect(() => {
+    if (!edit === false) return;
+    const value = getValues(props.name);
+    if (value) _setValue(value);
+  }, [edit]);
+
   return (
     <div className="w-full">
       <div className="flex flex-wrap">
         {Array.isArray(options) &&
           options.map(({ label, value }) => {
             return (
-              <div key={uuid()} className="flex items-center h-7 space-x-1 mr-3">
+              <div
+                key={uuid()}
+                className={classNames("flex items-center h-7 space-x-1 mr-3", { hidden: edit === false })}>
                 <input ref={ref} {...rest} type="checkbox" value={value} />
                 {label && <label>{label}</label>}
               </div>
             );
           })}
+        {edit === false && <span>{_value.join(", ")}</span>}
       </div>
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
@@ -137,19 +190,31 @@ const Checkbox = forwardRef((props, ref) => {
 });
 
 const Radio = forwardRef((props, ref) => {
-  const { invalid, options, ...rest } = props;
+  const { getValues, edit, id, invalid, options, ...rest } = props;
+
+  const [_value, _setValue] = useState([]);
+
+  useEffect(() => {
+    if (!edit === false) return;
+    const value = getValues(props.name);
+    if (value) _setValue(value);
+  }, [edit]);
+
   return (
     <div className="w-ful">
       <div className="flex flex-wrap">
         {Array.isArray(options) &&
           options.map(({ label, value }) => {
             return (
-              <div key={uuid()} className="flex items-center h-7 space-x-1 mr-3">
+              <div
+                key={uuid()}
+                className={classNames("flex items-center h-7 space-x-1 mr-3", { hidden: edit === false })}>
                 <input ref={ref} {...rest} type="radio" value={value} />
                 {label && <label>{label}</label>}
               </div>
             );
           })}
+        {edit === false && <span className="p-1">{_value}</span>}
       </div>
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
@@ -157,7 +222,7 @@ const Radio = forwardRef((props, ref) => {
 });
 
 const InputDate = forwardRef((props, ref) => {
-  const { name, invalid, control, rules, className } = props;
+  const { getValues, edit, name, invalid, control, rules, className } = props;
 
   return (
     <div className="w-full space-y-1">
@@ -168,9 +233,13 @@ const InputDate = forwardRef((props, ref) => {
           rules={rules}
           render={({ field: { onChange, value } }) => (
             <ReactDatePicker
-              className={classNames("input", { [className]: className })}
               selected={value}
               onChange={onChange}
+              {...(edit === false && { readOnly: true })}
+              className={classNames("input", {
+                "bg-transparent border-transparent focus:border-transparent": edit === false,
+                [className]: className,
+              })}
             />
           )}
         />
@@ -181,7 +250,7 @@ const InputDate = forwardRef((props, ref) => {
 });
 
 const InputTime = forwardRef((props, ref) => {
-  const { name, invalid, control, rules, className } = props;
+  const { getValues, edit, name, invalid, control, rules, className } = props;
 
   return (
     <div className="w-full space-y-1">
@@ -192,13 +261,17 @@ const InputTime = forwardRef((props, ref) => {
           rules={rules}
           render={({ field: { onChange, value } }) => (
             <ReactDatePicker
-              className={classNames("input", { [className]: className })}
               dateFormat="HH:mm"
               timeIntervals={5}
               showTimeSelect
               showTimeSelectOnly
               selected={value}
               onChange={onChange}
+              {...(edit === false && { readOnly: true })}
+              className={classNames("input", {
+                "bg-transparent border-transparent focus:border-transparent": edit === false,
+                [className]: className,
+              })}
             />
           )}
         />
@@ -209,7 +282,7 @@ const InputTime = forwardRef((props, ref) => {
 });
 
 const InputDateTime = forwardRef((props, ref) => {
-  const { name, invalid, control, rules, className } = props;
+  const { getValues, edit, name, invalid, control, rules, className } = props;
 
   return (
     <div className="w-full space-y-1">
@@ -220,11 +293,16 @@ const InputDateTime = forwardRef((props, ref) => {
           rules={rules}
           render={({ field: { onChange, value } }) => (
             <ReactDatePicker
-              className={classNames("input", { [className]: className })}
               timeIntervals={5}
               showTimeSelect
               selected={value}
               onChange={onChange}
+              dateFormat="MM/dd/yyyy HH:mm"
+              {...(edit === false && { readOnly: true })}
+              className={classNames("input", {
+                "bg-transparent border-transparent focus:border-transparent": edit === false,
+                [className]: className,
+              })}
             />
           )}
         />
@@ -235,7 +313,7 @@ const InputDateTime = forwardRef((props, ref) => {
 });
 
 const InputBetween = forwardRef((props, ref) => {
-  const { id, schema, options, setValue } = props;
+  const { getValues, edit, id, schema, options, setValue } = props;
   const entries = Object.entries(schema);
 
   const handleClickButton = (unit, value) => {
@@ -252,14 +330,24 @@ const InputBetween = forwardRef((props, ref) => {
 
   return (
     <div className="w-full flex">
-      <div className="flex-1">
-        <FormControl {...entries[0][1]} className="rounded-r-none" />
+      <div className={classNames({ "flex-1": edit !== false })}>
+        <FormControl
+          {...entries[0][1]}
+          edit={edit}
+          className={classNames("rounded-r-none", { "w-20": edit === false })}
+        />
       </div>
-      <div className="flex items-center justify-center h-7 w-5 bg-header border-y">-</div>
-      <div className="flex-1">
-        <FormControl {...entries[1][1]} className={`rounded-l-none${options ? " rounded-r-none" : ""}`} />
+      <div className={classNames("flex items-center justify-center h-7 w-5", { "bg-header border-y": edit !== false })}>
+        -
       </div>
-      {options && (
+      <div className={classNames({ "flex-1": edit !== false })}>
+        <FormControl
+          {...entries[1][1]}
+          edit={edit}
+          className={classNames("rounded-l-none", { "w-20": edit === false, "rounded-r-none": options })}
+        />
+      </div>
+      {edit !== false && options && (
         <div className="flex [&>button]:bg-header [&>button]:text-sm [&>button]:border-l-0 [&>button]:rounded-none last:[&>button]:rounded-r">
           {InputBetweenOptions[options].map(({ label, unit, value }) => {
             return (

@@ -10,3 +10,5 @@ export * from "./CommonToast";
 export * from "./Tab";
 export * from "./Collapse";
 export * from "./Tree";
+export * from "./Wijmo";
+export * from "./Pagination";
