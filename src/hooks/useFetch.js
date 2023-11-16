@@ -9,7 +9,7 @@ const initializerArg = (initialData) => {
   };
 };
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch (action.type) {
     case "loading":
       return { ...state, isLoading: true };
@@ -18,7 +18,7 @@ function reducer(state, action) {
     case "error":
       return { ...state, isLoading: false, isError: true, isSuccess: false };
   }
-}
+};
 
 /**
  * @param {Object} props
@@ -29,7 +29,7 @@ function reducer(state, action) {
  * @returns
  */
 export const useFetch = (props) => {
-  const { api, key, enabled, onSuccess } = props;
+  const { api, key, enabled, onSuccess, onError } = props;
 
   const isArray = Array.isArray(api);
   const initialData = isArray ? Array(api.length).fill({}) : {};
@@ -47,15 +47,18 @@ export const useFetch = (props) => {
   }, [key, _key]);
 
   const fetchData = async (variables) => {
+    if (isLoading) return;
     try {
       dispatch({ type: "loading" });
-      const fetchFn = () => (isArray ? Promise.all(api.map((_) => _(variables))) : api(variables));
-      const res = await fetchFn();
+      const fn = () => (isArray ? Promise.all(api.map((_) => _(variables))) : api(variables));
+      const res = await fn();
       const data = isArray ? res.map(({ data }) => data) : res.data;
       dispatch({ type: "success", payload: data });
-      if (onSuccess instanceof Function) onSuccess();
+      if (onSuccess) onSuccess(data);
+      return data;
     } catch (error) {
       dispatch({ type: "error" });
+      if (onError) onError(error);
     }
   };
 

@@ -5,11 +5,20 @@ const instance = axios.create({
 });
 
 export const APIS = {
-  getComponentGroups: (page, size) => instance.get("/com/componentGroups", { params: { page, size } }),
+  getComponentGroups: (page, size) => instance.get(`/com/componentGroups?page=${page}&size=${size}`),
   getComponentGroup: (id) => instance.get(`/com/componentGroups/${id}`),
   getComponents: (grpId) => instance.get(`/com/componentGroups/${grpId}/components`),
   createComponentGroup: (data) => instance.post("/com/componentGroups", data),
+  createComponent: (grpId, data) => instance.post(`/com/componentGroups/${grpId}/components`, { grpId, ...data }),
 };
+
+export const OPTIONS = [
+  { label: "", value: "" },
+  { label: "a", value: "a" },
+  { label: "b", value: "b" },
+  { label: "c", value: "c" },
+  { label: "d", value: "d" },
+];
 
 export const SCHEMA_FORM = {
   __form__: "form",
@@ -36,7 +45,7 @@ export const SCHEMA_FORM_REGIST = {
 
 export const SCHEMA_GRID = {
   __grid__: "grid",
-  options: { checkbox: true, pagination: "inner", add: true, remove: true },
+  options: { checkbox: true, pagination: true },
   head: [[{ header: "a" }], [{ header: "d" }], [{ header: "e" }], [{ header: "f" }], [{ header: "e" }]],
   body: [
     {
@@ -52,36 +61,26 @@ export const SCHEMA_GRID = {
   ],
 };
 
-export const SCHEMA_GRID_COMPONENTS = () => {
-  return {
-    __grid__: "grid",
-    options: {
-      checkbox: true,
-      edit: false,
+export const SCHEMA_GRID_COMPONENTS = {
+  __grid__: "grid",
+  options: { checkbox: true, pagination: "inner", add: true, remove: true },
+  head: [
+    [{ header: "textField" }],
+    [{ header: "passwordField" }],
+    [{ header: "integerField" }],
+    [{ header: "selectField" }],
+    [{ header: "doubleField" }],
+  ],
+  body: [
+    {
+      colspan: 5,
+      cells: [
+        { binding: "textField" },
+        { binding: "passwordField", type: "password" },
+        { binding: "integerField", type: "number" },
+        { binding: "selectField", type: "select", options: [{ label: "a", value: "a" }] },
+        { binding: "doubleField", type: "number" },
+      ],
     },
-    head: [
-      [
-        { label: "id" },
-        { label: "TEXT_FIELD" },
-        { label: "PASSWORD_FIELD" },
-        { label: "INTEGER_FIELD" },
-        { label: "SELECT_FIELD" },
-        { label: "RADIO_FIELD" },
-        { label: "DATE_FIELD" },
-        { label: "TEXTAREA_FIELD" },
-      ],
-    ],
-    body: [
-      [
-        { cel: [{ id: "id" }] },
-        { cel: [{ id: "textField" }] },
-        { cel: [{ id: "passwordField" }] },
-        { cel: [{ id: "integerField" }] },
-        { cel: [{ id: "selectField" }] },
-        { cel: [{ id: "radioField" }] },
-        { cel: [{ id: "dateField" }] },
-        { cel: [{ id: "textareaField" }] },
-      ],
-    ],
-  };
+  ],
 };

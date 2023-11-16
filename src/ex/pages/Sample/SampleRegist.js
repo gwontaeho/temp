@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Grid, Group, Flex } from "@/components";
-import { useForm, useGrid, useFetch, useModal, useToast } from "@/hooks";
+import { Wijmo, Group, Flex, Tab } from "@/components";
+import { useForm, useWijmo, useFetch, useModal, useToast } from "@/hooks";
 import { SCHEMA_FORM_REGIST, SCHEMA_GRID_COMPONENTS, APIS } from "./SampleService";
 
 const options1 = [
@@ -21,27 +21,39 @@ export const SampleRegist = () => {
   const { showToast } = useToast();
 
   const { schema, handleSubmit } = useForm({ defaultSchema: SCHEMA_FORM_REGIST });
-  const { grid } = useGrid({ defaultSchema: SCHEMA_GRID_COMPONENTS() });
+  const grid1 = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS });
+  const grid2 = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS });
+  const grid3 = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS });
 
-  const { fetchData } = useFetch({
+  const cc = useFetch({
+    api: [
+      (grpId) => APIS.createComponent(grpId, grid1.getData()[0]),
+      (grpId) => APIS.createComponent(grpId, grid2.getData()[0]),
+      (grpId) => APIS.createComponent(grpId, grid3.getData()[0]),
+    ],
+  });
+
+  const { data, fetchData } = useFetch({
     api: APIS.createComponentGroup,
-    onSuccess: () => {
-      showToast();
-      navigate("/page/sample");
+    onSuccess: (data) => {
+      const grpId = data.id;
+      cc.fetchData(grpId);
     },
   });
 
   const handleRegist = () => {
     handleSubmit((data) => {
-      console.log(data);
-      showModal({ message: "그룹을 등록", onConfirm: () => fetchData(data) });
+      showModal({
+        message: "그룹을 등록",
+        onConfirm: () => fetchData(data),
+      });
     })();
   };
 
   return (
     <Flex>
       <Group>
-        <Group.Header>Search Example</Group.Header>
+        <Group.Header>등록페이지</Group.Header>
         <Group.Body>
           <Group.Row>
             <Group.Control {...schema.textField} />
@@ -69,10 +81,19 @@ export const SampleRegist = () => {
           </Group.Right>
         </Group.Footer>
       </Group>
+
       <Group>
-        <Group.Body>
-          <Grid {...grid} />
-        </Group.Body>
+        <Tab tab={["첫번째", "두번째", "세번째"]}>
+          <Tab.Panel>
+            <Wijmo {...grid1.grid} />
+          </Tab.Panel>
+          <Tab.Panel>
+            <Wijmo {...grid2.grid} />
+          </Tab.Panel>
+          <Tab.Panel>
+            <Wijmo {...grid3.grid} />
+          </Tab.Panel>
+        </Tab>
       </Group>
     </Flex>
   );

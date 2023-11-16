@@ -105,7 +105,10 @@ export const FormEx = () => {
               <Group.Control {...schema.between2} />
             </Group.Row>
             <Group.Row>
-              <Group.Label />
+              <Group.Control label controlSize={2} />
+              <Group.Control />
+              <Group.Control label type="select" controlSize={2} />
+              <Group.Control />
             </Group.Row>
           </Group.Body>
         </form>

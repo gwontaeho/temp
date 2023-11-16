@@ -26,7 +26,8 @@ export const useForm = (props) => {
     getFieldState,
     reset,
     clearErrors,
-    formState: { errors },
+    watch,
+    formState: { errors, isSubmitted },
   } = _useForm();
   const { defaultSchema } = props || {};
   const { __form__, ..._defaultSchema } = defaultSchema || {};
@@ -147,5 +148,7 @@ export const useForm = (props) => {
     errors,
     clearValues,
     clearErrors,
+    watch,
+    isSubmitted,
   };
 };

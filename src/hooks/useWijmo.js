@@ -9,26 +9,26 @@ export const useWijmo = ({ defaultSchema }) => {
   const [size, setSize] = useState(10);
 
   const getData = () => {
-    return gridRef.current.multiRow.collectionView.sourceCollection;
+    return gridRef.current.control.collectionView.sourceCollection;
   };
   const getCheckedIndex = () => {
-    return gridRef.current.multiRow.rows.filter((r) => r.isSelected).map((r) => r.dataIndex);
+    return gridRef.current.control.rows.filter((r) => r.isSelected).map((r) => r.dataIndex);
   };
   const getChecked = () => {
-    return gridRef.current.multiRow.rows.filter((r) => r.isSelected).map((r) => r.dataItem);
+    return gridRef.current.control.rows.filter((r) => r.isSelected).map((r) => r.dataItem);
   };
   const addRow = () => {
-    gridRef.current.multiRow.collectionView.addNew();
+    gridRef.current.control.collectionView.addNew();
   };
   const removeRow = (index) => {
     if (index === undefined) return;
-    gridRef.current.multiRow.collectionView.removeAt(index);
+    gridRef.current.control.collectionView.removeAt(index);
   };
   const removeChecked = () => {
     getCheckedIndex()
       .sort((a, b) => b - a)
       .forEach((index) => {
-        gridRef.current.multiRow.collectionView.removeAt(index);
+        gridRef.current.control.collectionView.removeAt(index);
       });
   };
 

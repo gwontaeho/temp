@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { FormControl } from "@/components/FormControl";
 import { Button } from "@/components/Button";
 
-const spanVariants = {
+const SPAN_VARIANTS = {
   1: "col-span-1",
   2: "col-span-2",
   3: "col-span-3",
@@ -35,7 +35,7 @@ const GroupHeader = ({ children }) => {
 };
 
 const GroupBody = ({ children }) => {
-  return <div className="w-full overflow-auto">{children}</div>;
+  return <div className="w-full border divide-y overflow-auto">{children}</div>;
 };
 
 const GroupFooter = ({ children }) => {
@@ -43,21 +43,13 @@ const GroupFooter = ({ children }) => {
 };
 
 const GroupRow = ({ children }) => {
-  return (
-    <div className="w-full flex flex-col min-h-[2.5rem] border-x first:border-t last:border-b sm:grid sm:grid-cols-12 sm:border-b">
-      {children}
-    </div>
-  );
+  return <div className="w-full flex flex-col min-h-[2.5rem] sm:grid sm:grid-cols-12 sm:divide-x">{children}</div>;
 };
 
 const GroupLabel = ({ children, labelSize = 2, required }) => {
-  const colSpan = spanVariants[labelSize];
+  const colSpan = SPAN_VARIANTS[labelSize];
   return (
-    <div
-      className={classNames(
-        "font-semibold relative flex items-center p-1 break-all bg-header sm:border-x first:border-l-0 last:border-r-0",
-        colSpan
-      )}>
+    <div className={classNames("font-semibold relative flex items-center p-1 break-all bg-header", colSpan)}>
       {children}
       {required && <span className="text-invalid absolute top-1 right-1">*</span>}
     </div>
@@ -67,15 +59,15 @@ const GroupLabel = ({ children, labelSize = 2, required }) => {
 const GroupControl = forwardRef((props, ref) => {
   const defaultControlSize = props.type === "between" && props.options ? 10 : 4;
   const { label, labelSize, controlSize = defaultControlSize, required, ...rest } = props;
-  const colSpan = spanVariants[controlSize];
+  const colSpan = SPAN_VARIANTS[controlSize];
   return (
     <>
-      {label && (
+      {typeof label === "string" && (
         <GroupLabel required={required} labelSize={labelSize}>
           {label}
         </GroupLabel>
       )}
-      <div className={classNames("p-1 flex items-center", colSpan)}>
+      <div className={classNames("p-1 flex items-center w-full", colSpan, { "bg-header": label === true })}>
         <FormControl ref={ref} {...rest} />
       </div>
     </>
@@ -83,7 +75,7 @@ const GroupControl = forwardRef((props, ref) => {
 });
 
 const GroupCol = ({ children, label, labelSize, colSize = 4 }) => {
-  const colSpan = spanVariants[colSize];
+  const colSpan = SPAN_VARIANTS[colSize];
 
   return (
     <>
@@ -94,7 +86,7 @@ const GroupCol = ({ children, label, labelSize, colSize = 4 }) => {
 };
 
 const GroupButton = ({ children, size = 2, ...rest }) => {
-  const colSpan = spanVariants[size];
+  const colSpan = SPAN_VARIANTS[size];
 
   return (
     <div className={classNames("p-1 flex items-center [&>button]:w-full", colSpan)}>

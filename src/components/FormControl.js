@@ -1,4 +1,5 @@
 import "react-datepicker/dist/react-datepicker.css";
+import "./FormControl.css";
 
 import { forwardRef, memo, useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
@@ -128,17 +129,30 @@ const Select = forwardRef((props, ref) => {
 
   return (
     <div className={classNames("space-y-1", { "w-fit": size === "fit", "w-full": size === "full" })}>
-      <select
-        {...rest}
-        ref={ref}
-        data-edit={edit}
-        {...(edit === false && { readOnly: true })}
-        className={classNames("input appearance-none", {
-          "pointer-events-none": edit === false,
-          [className]: className,
-        })}>
-        <Select.Options options={options} />
-      </select>
+      <div className="relative flex items-center">
+        <select
+          {...rest}
+          ref={ref}
+          data-edit={edit}
+          {...(edit === false && { readOnly: true })}
+          className={classNames("input appearance-none", {
+            "pointer-events-none": edit === false,
+            [className]: className,
+          })}>
+          <Select.Options options={options} />
+        </select>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-3 h-3 absolute right-1 pointer-events-none">
+          <path
+            fillRule="evenodd"
+            d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
       {invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );

@@ -18,6 +18,7 @@ import {
   MultiSelect,
 } from "@grapecity/wijmo.input";
 import { Button } from "./Button";
+import uuid from "react-uuid";
 
 export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data }) => {
   // schema
@@ -79,6 +80,7 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
       return {
         cells: _.map((__) => {
           const cells = { ...__, align: "center" };
+          cells.cellTemplate = `<div>qwd</div>`;
           return cells;
         }),
       };
@@ -93,7 +95,6 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
           const cells = { ...__ };
           const itemsSource = options;
           const displayMemberPath = "label";
-          if (i === 0) cells.width = "*";
 
           switch (type) {
             case "number":
@@ -139,44 +140,28 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
 
   return (
     <div className="space-y-4">
-      <div className="flex space-x-2 justify-end">
-        {schema.options?.add && (
-          <Button onClick={addRow}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-3 h-3">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-          </Button>
-        )}
-        {schema.options?.remove && (
-          <Button onClick={removeChecked}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-3 h-3">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-            </svg>
-          </Button>
-        )}
-      </div>
-      <wjGrid.MultiRow ref={gridRef} />
-      {schema.options?.pagination && (
-        <Pagination
-          page={pagination.page}
-          size={pagination.size}
-          onChangePage={handleChangePage}
-          onChangeSize={handleChangeSize}
-          totalCount={totalCount}
-        />
-      )}
+      <wjGrid.MultiRow ref={gridRef}>
+        {body.map((_) => {
+          return (
+            <wjGrid.MultiRowCellGroup key={uuid()} colspan={_.colspan}>
+              {_.cells.map((__) => {
+                return (
+                  <wjGrid.MultiRowCell key={uuid()} colspan={__.colspan} binding={__.binding}>
+                    {/* <wjGrid.MultiRowCellTemplate cellType="Cell" template={() => <div>asd</div>} /> */}
+                    <wjGrid.MultiRowCellTemplate
+                      cellType="CellEdit"
+                      template={(v) => {
+                        console.log(v);
+                        return <FormControl value={v.value} onChange={(e) => (v.value = e.target.value)} />;
+                      }}
+                    />
+                  </wjGrid.MultiRowCell>
+                );
+              })}
+            </wjGrid.MultiRowCellGroup>
+          );
+        })}
+      </wjGrid.MultiRow>
     </div>
   );
 };

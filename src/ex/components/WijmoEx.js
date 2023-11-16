@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useWijmo, useFetch } from "@/hooks";
-import { Group, Wijmo } from "@/components";
+import { Group } from "@/components";
+import { Wijmo } from "@/components/Wijmo.v2";
 
 const instance = axios.create({
   baseURL: "http://183.107.31.131:8000/template",
@@ -16,17 +17,21 @@ export const APIS = {
 const schema = {
   __grid__: "grid",
   options: { checkbox: true, pagination: "inner" },
-  head: [[{ header: "a" }], [{ header: "d" }], [{ header: "e" }], [{ header: "f" }], [{ header: "e" }]],
+  head: [
+    [{ header: "a", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }],
+    [{ header: "d" }],
+    [{ header: "e" }],
+  ],
   body: [
     {
-      colspan: 5,
-      cells: [
-        { binding: "id" },
-        { binding: "doubleField", type: "number" },
-        { binding: "integerField", type: "number" },
-        { binding: "passwordField" },
-        { binding: "selectField", type: "select", options: [{ label: "a", value: "a" }] },
-      ],
+      colspan: 3,
+      cells: [{ binding: "id" }, { binding: "text" }, { binding: "a" }, { binding: "doubleField" }],
+    },
+    {
+      cells: [{ binding: "b" }],
+    },
+    {
+      cells: [{ binding: "c" }],
     },
   ],
 };
