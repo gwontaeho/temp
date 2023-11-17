@@ -19,6 +19,7 @@ import {
 } from "@grapecity/wijmo.input";
 import { Button } from "./Button";
 import uuid from "react-uuid";
+import { Form } from "react-router-dom";
 
 export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data }) => {
   // schema
@@ -47,6 +48,7 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     gridRef.current.control.allowDelete = true;
     gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
     // gridRef.current.control.layoutDefinition = layoutDefinition();
+
     gridRef.current.control.itemsSourceChanged.addHandler((_) => {
       if (!_.collectionView) return;
       _.collectionView.collectionChanged.addHandler((__) => {
@@ -137,22 +139,29 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     } else pagination.setSize(nextSize);
     handleChangePage(0);
   };
+  console.log(body);
 
   return (
     <div className="space-y-4">
       <wjGrid.MultiRow ref={gridRef}>
         {body.map((_) => {
           return (
-            <wjGrid.MultiRowCellGroup key={uuid()} colspan={_.colspan}>
+            <wjGrid.MultiRowCellGroup colspan={_.colspan}>
               {_.cells.map((__) => {
                 return (
-                  <wjGrid.MultiRowCell key={uuid()} colspan={__.colspan} binding={__.binding}>
-                    {/* <wjGrid.MultiRowCellTemplate cellType="Cell" template={() => <div>asd</div>} /> */}
+                  <wjGrid.MultiRowCell colspan={__.colspan} binding={__.binding}>
+                    <wjGrid.MultiRowCellTemplate
+                      cellType="Cell"
+                      template={(v) => {
+                        console.log(v);
+                        return <div>{v.item.id}</div>;
+                      }}
+                    />
                     <wjGrid.MultiRowCellTemplate
                       cellType="CellEdit"
                       template={(v) => {
                         console.log(v);
-                        return <FormControl value={v.value} onChange={(e) => (v.value = e.target.value)} />;
+                        return <FormControl defaultValue={v.value} onChange={(e) => (v.value = e.target.value)} />;
                       }}
                     />
                   </wjGrid.MultiRowCell>
@@ -165,3 +174,35 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     </div>
   );
 };
+
+// {body.map((_) => {
+//   return (
+//     <wjGrid.MultiRowCellGroup key={uuid()} colspan={_.colspan}>
+//       {_.cells.map((__) => {
+//         const { colspan, binding, render, ...rest } = __;
+//         return (
+//           <wjGrid.MultiRowCell key={uuid()} colspan={colspan} binding={binding}>
+//             {/* <wjGrid.MultiRowCellTemplate
+//               cellType="Cell"
+//               template={(ctx) => {
+//                 return <div>{ctx.item[binding]}</div>;
+//               }}
+//             /> */}
+//             <wjGrid.MultiRowCellTemplate
+//               cellType="CellEdit"
+//               template={(ctx) => {
+//                 return (
+//                   <FormControl
+//                     {...rest}
+//                     defaultValue={ctx.value}
+//                     onChange={(e) => (ctx.value = e.target.value)}
+//                   />
+//                 );
+//               }}
+//             />
+//           </wjGrid.MultiRowCell>
+//         );
+//       })}
+//     </wjGrid.MultiRowCellGroup>
+//   );
+// })}

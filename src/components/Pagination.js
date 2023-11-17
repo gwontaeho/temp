@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import uuid from "react-uuid";
 import _ from "lodash";
+import { Icon } from "@/components";
 
 export const Pagination = ({
   page = 0,
@@ -50,15 +51,7 @@ export const Pagination = ({
           disabled={_pageGroup < 1}
           className="w-7 h-7 flex items-center justify-center rounded bg-bg shadow disabled:text-disabled"
           onClick={() => _setPageGroup((prev) => prev - 1)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-3 h-3">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
+          <Icon icon="left" size="sm" />
         </button>
         {_pageGroups[_pageGroup]?.map((_) => {
           return (
@@ -76,15 +69,7 @@ export const Pagination = ({
           className="w-7 h-7 flex items-center justify-center rounded bg-bg shadow disabled:text-disabled"
           disabled={_pageGroup >= _pageGroups.length - 1}
           onClick={() => _setPageGroup((prev) => prev + 1)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-3 h-3">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
+          <Icon icon="right" size="sm" />
         </button>
       </ul>
     </div>

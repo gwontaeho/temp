@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wijmo, Group, Flex, Tab } from "@/components";
+import { Wijmo, Group, Layout, Tab } from "@/components";
 import { useForm, useWijmo, useFetch, useModal, useToast } from "@/hooks";
 import { SCHEMA_FORM_REGIST, SCHEMA_GRID_COMPONENTS, APIS } from "./SampleService";
 
@@ -51,10 +51,10 @@ export const SampleRegist = () => {
   };
 
   return (
-    <Flex>
+    <Layout>
       <Group>
         <Group.Header>등록페이지</Group.Header>
-        <Group.Body>
+        <Group.Table>
           <Group.Row>
             <Group.Control {...schema.textField} />
             <Group.Control {...schema.passwordField} />
@@ -70,8 +70,8 @@ export const SampleRegist = () => {
           <Group.Row>
             <Group.Control {...schema.textareaField} />
           </Group.Row>
-        </Group.Body>
-        <Group.Footer>
+        </Group.Table>
+        <Group.Section>
           <Group.Left>
             <Group.Button onClick={() => navigate("/page/sample")}>목록</Group.Button>
             <Group.Button>초기화</Group.Button>
@@ -79,7 +79,7 @@ export const SampleRegist = () => {
           <Group.Right>
             <Group.Button onClick={handleRegist}>저장</Group.Button>
           </Group.Right>
-        </Group.Footer>
+        </Group.Section>
       </Group>
 
       <Group>
@@ -95,6 +95,6 @@ export const SampleRegist = () => {
           </Tab.Panel>
         </Tab>
       </Group>
-    </Flex>
+    </Layout>
   );
 };

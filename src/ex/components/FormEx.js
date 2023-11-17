@@ -1,4 +1,4 @@
-import { Group } from "@/components";
+import { Group, Button, Layout } from "@/components";
 import { useForm } from "@/hooks";
 import { useEffect } from "react";
 
@@ -70,69 +70,68 @@ export const FormEx = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <Layout direction="row">
       <Group>
         <Group.Header>Form Example</Group.Header>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Group.Body>
-            <Group.Row>
-              <Group.Control {...schema.text_1} />
-              <Group.Control {...schema.number_1} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.password_1} />
-              <Group.Control {...schema.select_1} options={OPTION} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.checkbox_1} options={OPTION} />
-              <Group.Control {...schema.radio_1} options={OPTION} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.textarea_1} />
-              <Group.Control {...schema.date_1} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.time_1} />
-              <Group.Control {...schema.datetime_1} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.between} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.between1} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.between2} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control label controlSize={2} />
-              <Group.Control />
-              <Group.Control label type="select" controlSize={2} />
-              <Group.Control />
-            </Group.Row>
-          </Group.Body>
-        </form>
-        <Group.Footer>
-          <Group.Right>
-            <Group.Button onClick={resetSchema}>reset schema</Group.Button>
-            <Group.Button onClick={() => setSchema("text_1", { type: "text" })}>text_1 to text</Group.Button>
-            <Group.Button onClick={() => setSchema("text_1", { type: "textarea" })}>text_1 to textarea</Group.Button>
-            <Group.Button onClick={() => setSchema("text_1", { required: true })}>text_1 required true</Group.Button>
-            <Group.Button onClick={() => setSchema("text_1", { required: false })}>text_1 required false</Group.Button>
-          </Group.Right>
-        </Group.Footer>
-        <Group.Footer>
-          <Group.Right>
-            <Group.Button onClick={() => clearErrors()}>에러 초기화</Group.Button>
-            <Group.Button onClick={clearValues}>값 초기화</Group.Button>
-            <Group.Button onClick={etr}>edit true</Group.Button>
-            <Group.Button onClick={() => etr(false)}>edit false</Group.Button>
-            <Group.Button onClick={validate}>validate</Group.Button>
-            <Group.Button onClick={() => console.log(getValues())}>get values</Group.Button>
-            <Group.Button onClick={() => console.log(getValues("text_1"))}>get text_1</Group.Button>
-          </Group.Right>
-        </Group.Footer>
+        <Group.Table form onSubmit={handleSubmit(onSubmit)}>
+          <Group.Row>
+            <Group.Control {...schema.text_1} />
+            <Group.Control {...schema.number_1} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.password_1} />
+            <Group.Control {...schema.select_1} options={OPTION} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.checkbox_1} options={OPTION} />
+            <Group.Control {...schema.radio_1} options={OPTION} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.textarea_1} />
+            <Group.Control {...schema.date_1} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.time_1} />
+            <Group.Control {...schema.datetime_1} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between1} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema.between2} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control label controlSize={2} />
+            <Group.Control />
+            <Group.Control label type="select" controlSize={2} />
+            <Group.Control />
+          </Group.Row>
+          <Group.Row>
+            <Group.Col colSize={4}>
+              <Button size="full">button size 4</Button>
+            </Group.Col>
+          </Group.Row>
+        </Group.Table>
+        <Layout.Right>
+          <Button onClick={resetSchema}>reset schema</Button>
+          <Button onClick={() => setSchema("text_1", { type: "text" })}>text_1 to text</Button>
+          <Button onClick={() => setSchema("text_1", { type: "textarea" })}>text_1 to textarea</Button>
+          <Button onClick={() => setSchema("text_1", { required: true })}>text_1 required true</Button>
+          <Button onClick={() => setSchema("text_1", { required: false })}>text_1 required false</Button>
+        </Layout.Right>
+        <Layout.Right>
+          <Button onClick={() => clearErrors()}>에러 초기화</Button>
+          <Button onClick={clearValues}>값 초기화</Button>
+          <Button onClick={etr}>edit true</Button>
+          <Button onClick={() => etr(false)}>edit false</Button>
+          <Button onClick={validate}>validate</Button>
+          <Button onClick={() => console.log(getValues())}>get values</Button>
+          <Button onClick={() => console.log(getValues("text_1"))}>get text_1</Button>
+        </Layout.Right>
       </Group>
-    </div>
+    </Layout>
   );
 };

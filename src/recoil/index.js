@@ -1,6 +1,8 @@
 import { RecoilRoot, atom } from "recoil";
+import i18n from "@/locales/i18n";
 
 const theme = {
+  isInit: false,
   isDark: localStorage.getItem("isDark") || false,
   lang: localStorage.getItem("lang") || "ko",
 };
@@ -14,6 +16,14 @@ const defaultValue = {
 export const themeState = atom({
   key: "themeState",
   default: defaultValue.theme,
+  effects: [
+    ({ onSet }) => {
+      onSet((n, o) => {
+        if (n.lang === o.lang) return;
+        i18n.changeLanguage(n.lang);
+      });
+    },
+  ],
 });
 
 export const modalState = atom({

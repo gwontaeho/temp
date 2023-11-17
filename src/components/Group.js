@@ -18,27 +18,38 @@ const SPAN_VARIANTS = {
   12: "col-span-12",
 };
 
-export const Group = ({ children, size = "full" }) => {
-  return (
-    <div
-      className={classNames("shadow rounded bg-card p-4 space-y-4", {
-        "w-full": size === "full",
-        "w-fit": size === "fit",
-      })}>
-      {children}
-    </div>
-  );
+export const Group = ({ children, form, onSubmit, size = "full" }) => {
+  const cn = classNames("shadow rounded bg-card p-4 space-y-4", {
+    "w-full": size === "full",
+    "w-fit": size === "fit",
+  });
+
+  if (form)
+    return (
+      <form onSubmit={onSubmit} className={cn}>
+        {children}
+      </form>
+    );
+
+  return <div className={cn}>{children}</div>;
 };
 
 const GroupHeader = ({ children }) => {
-  return <div className="w-full text-2xl font-semibold">{children}</div>;
+  return <div className="w-full text-lg font-semibold">{children}</div>;
 };
 
-const GroupBody = ({ children }) => {
+const GroupTable = ({ children, form, onSubmit }) => {
+  if (form)
+    return (
+      <form onSubmit={onSubmit} className="w-full border divide-y overflow-auto">
+        {children}
+      </form>
+    );
+
   return <div className="w-full border divide-y overflow-auto">{children}</div>;
 };
 
-const GroupFooter = ({ children }) => {
+const GroupSection = ({ children }) => {
   return <div className="w-full flex">{children}</div>;
 };
 
@@ -76,40 +87,18 @@ const GroupControl = forwardRef((props, ref) => {
 
 const GroupCol = ({ children, label, labelSize, colSize = 4 }) => {
   const colSpan = SPAN_VARIANTS[colSize];
-
   return (
     <>
       {label && <GroupLabel labelSize={labelSize}>{label}</GroupLabel>}
-      <div className={classNames("p-1 flex items-center", colSpan)}>{children}</div>
+      <div className={classNames("p-1 flex items-center space-x-1", colSpan)}>{children}</div>
     </>
   );
 };
 
-const GroupButton = ({ children, size = 2, ...rest }) => {
-  const colSpan = SPAN_VARIANTS[size];
-
-  return (
-    <div className={classNames("p-1 flex items-center [&>button]:w-full", colSpan)}>
-      <Button {...rest}>{children}</Button>
-    </div>
-  );
-};
-
-const GroupLeft = ({ children }) => {
-  return <div className="flex flex-1 items-center">{children}</div>;
-};
-
-const GroupRight = ({ children }) => {
-  return <div className="flex flex-1 items-center justify-end">{children}</div>;
-};
-
 Group.Header = GroupHeader;
-Group.Body = GroupBody;
-Group.Footer = GroupFooter;
+Group.Table = GroupTable;
 Group.Row = GroupRow;
 Group.Col = GroupCol;
 Group.Label = GroupLabel;
 Group.Control = GroupControl;
-Group.Button = GroupButton;
-Group.Left = GroupLeft;
-Group.Right = GroupRight;
+Group.Section = GroupSection;

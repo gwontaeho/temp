@@ -2,24 +2,19 @@ import "@grapecity/wijmo.styles/wijmo.css";
 import "./Wijmo.css";
 
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Pagination, FormControl } from "@/components";
+import { Pagination, FormControl, Icon } from "@/components";
 import * as wjGrid from "@grapecity/wijmo.react.grid.multirow";
-
 import { Selector } from "@grapecity/wijmo.grid.selector";
-import {
-  InputDate,
-  InputTime,
-  InputDateTime,
-  InputNumber,
-  InputMask,
-  ComboBox,
-  InputDateRange,
-  MultiSelect,
-} from "@grapecity/wijmo.input";
-import { Button } from "./Button";
+import { InputDate, InputTime, InputDateTime, InputNumber, InputMask, ComboBox } from "@grapecity/wijmo.input";
+import { CellMaker } from "@grapecity/wijmo.grid.cellmaker";
+
+import { Button } from "@/components/Button";
+import uuid from "react-uuid";
 
 export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data }) => {
+  const navigate = useNavigate();
   // schema
   const head = schema.head;
   const body = schema.body;
@@ -45,7 +40,7 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     gridRef.current.control.allowAddNew = true;
     gridRef.current.control.allowDelete = true;
     gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
-    // gridRef.current.control.layoutDefinition = layoutDefinition();
+    gridRef.current.control.layoutDefinition = layoutDefinition();
     gridRef.current.control.itemsSourceChanged.addHandler((_) => {
       if (!_.collectionView) return;
       _.collectionView.collectionChanged.addHandler((__) => {
@@ -77,7 +72,8 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
   const headerLayoutDefinition = () => {
     return head.map((_) => {
       return {
-        cells: _.map((__) => {
+        ..._,
+        cells: _.cells.map((__) => {
           const cells = { ...__, align: "center" };
           return cells;
         }),
@@ -94,6 +90,12 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
           const itemsSource = options;
           const displayMemberPath = "label";
           if (i === 0) cells.width = "*";
+          cells.cellTemplate = CellMaker.makeLink({
+            click: (e, ctx) => {
+              navigate(`/page/sample/${ctx.value}`);
+              console.log(e, ctx);
+            },
+          });
 
           switch (type) {
             case "number":
@@ -117,7 +119,6 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
               cells.format = "g";
               break;
           }
-
           return cells;
         }),
       };
@@ -139,34 +140,21 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
 
   return (
     <div className="space-y-4">
-      <div className="flex space-x-2 justify-end">
-        {schema.options?.add && (
-          <Button onClick={addRow}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-3 h-3">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-          </Button>
-        )}
-        {schema.options?.remove && (
-          <Button onClick={removeChecked}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-3 h-3">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-            </svg>
-          </Button>
-        )}
-      </div>
+      {schema.options?.add ||
+        (schema.options?.remove && (
+          <div className="flex space-x-2 justify-end">
+            {schema.options?.add && (
+              <Button onClick={addRow}>
+                <Icon icon="plus" size="sm" />
+              </Button>
+            )}
+            {schema.options?.remove && (
+              <Button onClick={removeChecked}>
+                <Icon icon="minus" size="sm" />
+              </Button>
+            )}
+          </div>
+        ))}
       <wjGrid.MultiRow ref={gridRef} />
       {schema.options?.pagination && (
         <Pagination

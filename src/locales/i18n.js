@@ -1,9 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import langKo from "./ko/lang-ko.json";
-import langEn from "./en/lang-en.json";
-import langTz from "./tz/lang-tz.json";
+import langKo from "./lang-ko.json";
+import langEn from "./lang-en.json";
+import langTz from "./lang-tz.json";
 
 const resources = {
   en: {
@@ -19,10 +19,8 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "ko",
-  interpolation: {
-    escapeValue: false,
-  },
+  lng: localStorage.getItem("lang") || "ko",
+  interpolation: { escapeValue: false },
 });
 
 export default i18n;

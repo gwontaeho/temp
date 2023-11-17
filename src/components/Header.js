@@ -1,11 +1,13 @@
-import { useTheme } from "@/hooks";
-import { FormControl } from "./FormControl";
-import { NavTop } from "./NavTop";
 import { useState } from "react";
+import { useTheme } from "@/hooks";
+import { NavTop } from "./NavTop";
+import { Icon, FormControl } from "@/components";
 import logo_tancis from "@/assets/imgs/logo_tancis.png";
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
 
@@ -14,15 +16,7 @@ export const Header = () => {
       <div className="flex h-20">
         <div className="w-60 flex items-center p-4 space-x-8">
           <button onClick={() => setOpen((prev) => !prev)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
+            <Icon icon="menu" size="lg" />
           </button>
           <div className="flex-1">
             <img src={logo_tancis} />
@@ -77,6 +71,7 @@ export const Header = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </button>
+            <div>{t("test")}</div>
             <FormControl
               type="select"
               value={theme.lang}
@@ -91,6 +86,7 @@ export const Header = () => {
           </div>
         </div>
       </div>
+
       {open && (
         <nav className="h-[calc(100vh-5rem)]">
           <ul className="text-xl">

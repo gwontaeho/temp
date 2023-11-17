@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import uuid from "react-uuid";
 import classNames from "classnames";
-import { Collapse } from "@/components/Collapse";
+import { Collapse, Icon } from "@/components";
 
 export const ROUTES = [
   {
@@ -58,17 +58,7 @@ const NavItem = (props) => {
     <li className="font-mono">
       <button className="h-8 px-2 text-lg flex w-full items-center justify-between" onClick={handleClick}>
         <p>{name}</p>
-        {children && (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className={classNames("w-3 h-3 transition", { "rotate-180": open })}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-          </svg>
-        )}
+        {children && <Icon icon="down" size="sm" className={classNames("transition", { "rotate-180": open })} />}
       </button>
       {Array.isArray(children) && (
         <Collapse open={open}>

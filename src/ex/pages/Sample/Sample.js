@@ -1,14 +1,11 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import { Group, Flex, Wijmo } from "@/components";
+import { Group, Layout, Wijmo, Navigation, PageHeader, Button } from "@/components";
 import { useForm, useFetch, useWijmo } from "@/hooks";
 import { OPTIONS, SCHEMA_FORM, SCHEMA_GRID, APIS } from "./SampleService";
 
 export const Sample = () => {
   const navigate = useNavigate();
 
-  const [con, setCon] = useState({});
   const { grid, page, size } = useWijmo({ defaultSchema: SCHEMA_GRID });
   const { schema, handleSubmit, isSubmitted } = useForm({ defaultSchema: SCHEMA_FORM });
 
@@ -19,52 +16,38 @@ export const Sample = () => {
   });
 
   const onSubmit = (data) => {
-    setCon(data);
     fetchData();
   };
 
   return (
-    <Flex>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Group>
-          <Group.Header>목록페이지</Group.Header>
-          <Group.Body>
-            <Group.Row>
-              <Group.Control {...schema.con1} />
-              <Group.Control {...schema.con2} options={OPTIONS} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema._con34} />
-            </Group.Row>
-          </Group.Body>
-          <Group.Footer>
-            <Group.Left>
-              <Group.Button>초기화</Group.Button>
-            </Group.Left>
-            <Group.Right>
-              <Group.Button onClick={() => navigate("/page/sample/regist")}>등록</Group.Button>
-              <Group.Button type="submit">검색</Group.Button>
-            </Group.Right>
-          </Group.Footer>
-        </Group>
-      </form>
+    <Layout>
+      <Navigation nodes={[{ label: "a", path: "a" }]} />
+      <PageHeader title="페이지 타이틀입니다" description="페이지 설명입니다" />
 
-      <Group>
-        <Wijmo {...grid} data={data} />
+      <Group form onSubmit={handleSubmit(onSubmit)}>
+        <Group.Table>
+          <Group.Row>
+            <Group.Control {...schema.con1} />
+            <Group.Control {...schema.con2} options={OPTIONS} />
+          </Group.Row>
+          <Group.Row>
+            <Group.Control {...schema._con34} />
+          </Group.Row>
+        </Group.Table>
+        <Layout.Right>
+          <Button onClick={() => navigate("/page/sample/regist")}>등록</Button>
+          <Button type="submit">검색</Button>
+        </Layout.Right>
       </Group>
 
-      {isSuccess && (
-        <div className="flex justify-center space-x-8">
-          <div>검색조건 1 : {con.con1}</div>
-          <div>검색조건 2 : {con.con2}</div>
-          <div>
-            검색조건 3 :
-            {con.con3 &&
-              con.con4 &&
-              ` ${dayjs(con.con3).format("YYYY-MM-DD")} ~ ${dayjs(con.con4).format("YYYY-MM-DD")}`}
-          </div>
-        </div>
-      )}
-    </Flex>
+      <Group>
+        <Group.Header>조회결과</Group.Header>
+        <Layout.Left>
+          <Button>엑셀업로드</Button>
+          <Button>엑셀다운로드</Button>
+        </Layout.Left>
+        <Wijmo {...grid} data={data} />
+      </Group>
+    </Layout>
   );
 };

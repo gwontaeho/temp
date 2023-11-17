@@ -1,4 +1,4 @@
-import { Flex, Group, Tree } from "@/components";
+import { Layout, Group, Tree } from "@/components";
 
 const treeviewItems = (search) => [
   {
@@ -177,13 +177,13 @@ const treeviewItems = (search) => [
 
 export const TreeEx = () => {
   return (
-    <Flex direction="row">
+    <Layout direction="row">
       <Group size="fit">
         <Tree data={treeviewItems()} />
       </Group>
       <Group>
         <Tree data={treeviewItems()} />
       </Group>
-    </Flex>
+    </Layout>
   );
 };

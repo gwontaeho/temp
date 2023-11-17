@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useWijmo, useFetch } from "@/hooks";
 import { Group } from "@/components";
-import { Wijmo } from "@/components/Wijmo.v2";
+import { Wijmo } from "@/components/Wijmo";
 
 const instance = axios.create({
   baseURL: "http://183.107.31.131:8000/template",
@@ -18,20 +18,20 @@ const schema = {
   __grid__: "grid",
   options: { checkbox: true, pagination: "inner" },
   head: [
-    [{ header: "a", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }],
-    [{ header: "d" }],
-    [{ header: "e" }],
+    { cells: [{ header: "a", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }] },
+    { cells: [{ header: "d" }] },
+    { cells: [{ header: "e" }] },
   ],
   body: [
     {
       colspan: 3,
-      cells: [{ binding: "id" }, { binding: "text" }, { binding: "a" }, { binding: "doubleField" }],
+      cells: [{ binding: "id" }, { binding: "textField" }, { binding: "doubleField" }],
     },
     {
-      cells: [{ binding: "b" }],
+      cells: [{ binding: "b", type: "select" }],
     },
     {
-      cells: [{ binding: "c" }],
+      cells: [{ binding: "c", type: "date" }],
     },
   ],
 };

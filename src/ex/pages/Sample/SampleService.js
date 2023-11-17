@@ -45,8 +45,14 @@ export const SCHEMA_FORM_REGIST = {
 
 export const SCHEMA_GRID = {
   __grid__: "grid",
-  options: { checkbox: true, pagination: true },
-  head: [[{ header: "a" }], [{ header: "d" }], [{ header: "e" }], [{ header: "f" }], [{ header: "e" }]],
+  options: { checkbox: true, pagination: true, isReadOnly: true },
+  head: [
+    { cells: [{ header: "a" }] },
+    { cells: [{ header: "d" }] },
+    { cells: [{ header: "e" }] },
+    { cells: [{ header: "f" }] },
+    { cells: [{ header: "g" }] },
+  ],
   body: [
     {
       colspan: 5,
@@ -65,11 +71,11 @@ export const SCHEMA_GRID_COMPONENTS = {
   __grid__: "grid",
   options: { checkbox: true, pagination: "inner", add: true, remove: true },
   head: [
-    [{ header: "textField" }],
-    [{ header: "passwordField" }],
-    [{ header: "integerField" }],
-    [{ header: "selectField" }],
-    [{ header: "doubleField" }],
+    { cells: [{ header: "textField" }] },
+    { cells: [{ header: "passwordField" }] },
+    { cells: [{ header: "integerField" }] },
+    { cells: [{ header: "selectField" }] },
+    { cells: [{ header: "doubleField" }] },
   ],
   body: [
     {

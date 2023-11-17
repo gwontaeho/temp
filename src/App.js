@@ -3,6 +3,7 @@ import RecoilProvider from "@/recoil";
 import { MainRoutes } from "@/routes/MainRoutes";
 import { PopupRoutes } from "@/routes/PopupRoutes";
 import { CommonModal, CommonToast } from "@/components";
+import "@/locales/i18n";
 
 function App() {
   return (

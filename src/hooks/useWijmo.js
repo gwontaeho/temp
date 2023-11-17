@@ -17,8 +17,8 @@ export const useWijmo = ({ defaultSchema }) => {
   const getChecked = () => {
     return gridRef.current.control.rows.filter((r) => r.isSelected).map((r) => r.dataItem);
   };
-  const addRow = () => {
-    gridRef.current.control.collectionView.addNew();
+  const addRow = (item) => {
+    gridRef.current.control.collectionView.addNew(item);
   };
   const removeRow = (index) => {
     if (index === undefined) return;

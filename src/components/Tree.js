@@ -1,7 +1,7 @@
 import { useState } from "react";
 import uuid from "react-uuid";
 import classNames from "classnames";
-import { Collapse } from "./Collapse";
+import { Collapse, Icon } from "@/components";
 
 const TreeItem = (props) => {
   const { children, name } = props;
@@ -15,17 +15,7 @@ const TreeItem = (props) => {
   return (
     <li className="font-mono">
       <button className="h-6 flex items-center space-x-2" onClick={handleClick}>
-        {children && (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className={classNames("w-3 h-3 transition", { "rotate-90": open })}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        )}
+        {children && <Icon icon="right" size="sm" className={classNames("transition", { "rotate-90": open })} />}
         <input type="checkbox" className="w-2.5" onClick={(e) => e.stopPropagation()} />
         <p>{name}</p>
       </button>

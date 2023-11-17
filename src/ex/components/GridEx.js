@@ -55,15 +55,15 @@ export const GridEx = () => {
     <div className="space-y-4">
       <Group>
         <Group.Header>Grid Example1</Group.Header>
-        <Group.Body>
+        <Group.Table>
           <Grid {...grid} data={data(0, 10, 121)} />
-        </Group.Body>
+        </Group.Table>
       </Group>
       <Group>
         <Group.Header>Grid Example2</Group.Header>
-        <Group.Body>
+        <Group.Table>
           <Grid {...grid} data={data(0, 10, 121)} />
-        </Group.Body>
+        </Group.Table>
       </Group>
     </div>
   );
