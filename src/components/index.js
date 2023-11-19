@@ -15,3 +15,4 @@ export * from "./Icon";
 export * from "./Navigation";
 export * from "./PageHeader";
 export * from "./Layout";
+export * from "./Table";

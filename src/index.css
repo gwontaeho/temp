@@ -3,32 +3,32 @@
 @tailwind utilities;
 
 body {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #9ca3afaa;
-  border-radius: 4px;
+    background-color: #9ca3afaa;
+    border-radius: 4px;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply text-base bg-bg text-txt;
-  }
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply text-base bg-bg text-txt;
+    }
 }
 
 @layer components {
-  .input {
-    @apply h-7 p-1 w-full transition bg-bg border rounded outline-none focus:border-bl data-[edit=false]:bg-transparent data-[edit=false]:border-transparent;
-  }
+    .input {
+        @apply h-7 p-1 w-full transition bg-bg border rounded outline-none focus:border-bl;
+    }
 }
