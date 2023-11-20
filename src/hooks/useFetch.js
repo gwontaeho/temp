@@ -59,6 +59,7 @@ export const useFetch = (props) => {
     } catch (error) {
       dispatch({ type: "error" });
       if (onError) onError(error);
+      throw error;
     }
   };
 

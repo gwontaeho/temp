@@ -3,17 +3,18 @@ module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     colors: {
-      w: "#ffffff",
-      bk: "#000000",
-      bg: "#0b1727",
-      bl: "#2c7be5",
-      txt: "#b6c1d2",
-      card: "#121e2d",
-      border: "#344050",
-      header: "#232e3c",
+      transparent: "transparent",
+      white: "#ffffff",
+      black: "#000000",
+      blue: "#2c7be5",
       invalid: "#e63757",
       disabled: "#4d5969",
-      transparent: "transparent",
+
+      text: "var(--tancis-text)",
+      card: "var(--tancis-card)",
+      border: "var(--tancis-border)",
+      header: "var(--tancis-header)",
+      background: "var(--tancis-background)",
     },
     fontSize: {
       sm: "0.7rem",

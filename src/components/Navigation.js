@@ -4,17 +4,17 @@ import { Icon } from "@/components";
 
 export const Navigation = ({ base = "/", nodes = [] }) => {
   return (
-    <ul className="flex items-center space-x-2">
+    <ul className="h-6 flex items-center space-x-2 text-blue">
       <li>
         <Link to={base}>
-          <Icon icon="home" size="md" />
+          <Icon icon="home" size="sm" />
         </Link>
       </li>
-      {nodes.map(({ path, label }, i) => {
+      {nodes.map(({ path, label }) => {
         return (
           <li key={uuid()} className="space-x-2 text-lg">
             <span>/</span>
-            <Link to={base + path}>{label}</Link>
+            {path ? <Link to={base + path}>{label}</Link> : <span>{label}</span>}
           </li>
         );
       })}

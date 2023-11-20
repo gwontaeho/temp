@@ -85,17 +85,19 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     return body.map((_) => {
       return {
         ..._,
-        cells: _.cells.map(({ type, mask, options, ...__ }, i) => {
+        cells: _.cells.map(({ type, mask, options, link, ...__ }, i) => {
           const cells = { ...__ };
           const itemsSource = options;
           const displayMemberPath = "label";
           if (i === 0) cells.width = "*";
-          cells.cellTemplate = CellMaker.makeLink({
-            click: (e, ctx) => {
-              navigate(`/page/sample/${ctx.value}`);
-              console.log(e, ctx);
-            },
-          });
+
+          if (link) {
+            cells.cellTemplate = CellMaker.makeLink({
+              click: (e, ctx) => {
+                navigate(`/page/sample/${ctx.value}`);
+              },
+            });
+          }
 
           switch (type) {
             case "number":
@@ -140,21 +142,20 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
 
   return (
     <div className="space-y-4">
-      {schema.options?.add ||
-        (schema.options?.remove && (
-          <div className="flex space-x-2 justify-end">
-            {schema.options?.add && (
-              <Button onClick={addRow}>
-                <Icon icon="plus" size="sm" />
-              </Button>
-            )}
-            {schema.options?.remove && (
-              <Button onClick={removeChecked}>
-                <Icon icon="minus" size="sm" />
-              </Button>
-            )}
-          </div>
-        ))}
+      {(schema.options?.add || schema.options?.remove) && (
+        <div className="flex space-x-2 justify-end">
+          {schema.options?.add && (
+            <Button onClick={addRow}>
+              <Icon icon="plus" size="xs" />
+            </Button>
+          )}
+          {schema.options?.remove && (
+            <Button onClick={removeChecked}>
+              <Icon icon="minus" size="xs" />
+            </Button>
+          )}
+        </div>
+      )}
       <wjGrid.MultiRow ref={gridRef} />
       {schema.options?.pagination && (
         <Pagination

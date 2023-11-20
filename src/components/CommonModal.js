@@ -1,10 +1,10 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useRecoilState } from "recoil";
 import { motion } from "framer-motion";
 
 import { modalState } from "@/recoil";
 import { Button } from "./Button";
-import { useEffect } from "react";
 
 export const CommonModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
@@ -13,7 +13,7 @@ export const CommonModal = () => {
     setModal((prev) => prev.filter((v) => id !== v.id));
   };
 
-  const handleCancle = (id, onCancel) => {
+  const handleCancel = (id, onCancel) => {
     if (onCancel instanceof Function) onCancel();
     handleClose(id);
   };
@@ -34,16 +34,19 @@ export const CommonModal = () => {
       <motion.div
         key={id}
         className="fixed w-full h-full flex items-center justify-center z-[9999]"
-        initial={{ translateY: 10, opacity: 0.5 }}
-        animate={{ background: "#00000080", translateY: 0, opacity: 1 }}>
-        <div className="w-96 border rounded bg-bg">
+        initial={{ opacity: 0.5 }}
+        animate={{ background: "#00000080", opacity: 1 }}>
+        <motion.div
+          className="w-96 border rounded bg-background"
+          initial={{ translateY: 10 }}
+          animate={{ translateY: 0 }}>
           <div className="text-xl p-4">알림</div>
           <div className="p-4 text-lg">{message}</div>
-          <div className="p-4 flex space-x-2">
-            <Button onClick={() => handleCancle(id, onCancel)}>취소</Button>
+          <div className="p-4 flex space-x-2 justify-end">
+            <Button onClick={() => handleCancel(id, onCancel)}>취소</Button>
             {onConfirm && <Button onClick={() => handleConfirm(id, onConfirm)}>확인</Button>}
           </div>
-        </div>
+        </motion.div>
       </motion.div>,
       document.body
     );

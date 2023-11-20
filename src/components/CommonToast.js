@@ -11,7 +11,7 @@ const Toast = (props) => {
 
   const { id, message, onConfirm, onCancel } = props;
 
-  const handleCancle = (id, onCancel) => {
+  const handleCancel = (id, onCancel) => {
     if (onCancel instanceof Function) onCancel();
     handleClose(id);
   };
@@ -36,14 +36,14 @@ const Toast = (props) => {
 
   return (
     <motion.div initial={{ translateX: 30, opacity: 0.5 }} animate={{ translateX: 0, opacity: 1 }}>
-      <div className="w-96 shadow border rounded bg-bg">
-        <div className="p-4 text-lg">{message}</div>
-        <div className="p-4 flex justify-end">
+      <div className="w-96 shadow border rounded bg-background">
+        <div className="p-4">{message}</div>
+        {/* <div className="p-4 flex justify-end">
           <div className="flex space-x-2">
-            <Button onClick={() => handleCancle(id, onCancel)}>닫기</Button>
+            <Button onClick={() => handleCancel(id, onCancel)}>닫기</Button>
             {onConfirm && <Button onClick={() => handleConfirm(id, onConfirm)}>확인</Button>}
           </div>
-        </div>
+        </div> */}
       </div>
     </motion.div>
   );

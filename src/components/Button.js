@@ -5,7 +5,7 @@ export const Button = ({ type = "button", children, size = "fit", ...rest }) => 
     <button
       {...rest}
       type={type}
-      className={classNames("px-2 py-1 h-7 border shadow rounded bg-bg", {
+      className={classNames("button", {
         "w-full": size === "full",
         "w-fit": size === "fit",
       })}>

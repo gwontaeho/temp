@@ -2,8 +2,11 @@ import { RecoilRoot, atom } from "recoil";
 import i18n from "@/locales/i18n";
 
 const theme = {
-  isInit: false,
-  isDark: localStorage.getItem("isDark") || false,
+  isDark:
+    localStorage.isDark === "true" ||
+    (!("isDark" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "true"
+      : "false",
   lang: localStorage.getItem("lang") || "ko",
 };
 
@@ -19,8 +22,15 @@ export const themeState = atom({
   effects: [
     ({ onSet }) => {
       onSet((n, o) => {
-        if (n.lang === o.lang) return;
-        i18n.changeLanguage(n.lang);
+        if (n.lang !== o.lang) {
+          localStorage.setItem("lang", n.lang);
+          i18n.changeLanguage(n.lang);
+        }
+        if (n.isDark !== o.isDark) {
+          localStorage.setItem("isDark", n.isDark);
+          if (n.isDark === "true") document.documentElement.classList.add("dark");
+          if (n.isDark === "false") document.documentElement.removeAttribute("class");
+        }
       });
     },
   ],

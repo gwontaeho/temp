@@ -49,16 +49,16 @@ export const Pagination = ({
       <ul className="flex space-x-1">
         <button
           disabled={_pageGroup < 1}
-          className="w-7 h-7 flex items-center justify-center rounded bg-bg shadow disabled:text-disabled"
+          className="w-7 h-7 flex items-center justify-center rounded bg-background shadow disabled:text-disabled"
           onClick={() => _setPageGroup((prev) => prev - 1)}>
-          <Icon icon="left" size="sm" />
+          <Icon icon="left" size="xs" />
         </button>
         {_pageGroups[_pageGroup]?.map((_) => {
           return (
             <li key={uuid()}>
               <button
                 {...(_page === _ && { "aria-current": "page" })}
-                className="w-7 h-7 rounded bg-bg shadow aria-[current=page]:text-bl"
+                className="w-7 h-7 rounded bg-background shadow aria-[current=page]:text-blue"
                 onClick={() => handleChangePage(_)}>
                 {_ + 1}
               </button>
@@ -66,10 +66,10 @@ export const Pagination = ({
           );
         })}
         <button
-          className="w-7 h-7 flex items-center justify-center rounded bg-bg shadow disabled:text-disabled"
+          className="w-7 h-7 flex items-center justify-center rounded bg-background shadow disabled:text-disabled"
           disabled={_pageGroup >= _pageGroups.length - 1}
           onClick={() => _setPageGroup((prev) => prev + 1)}>
-          <Icon icon="right" size="sm" />
+          <Icon icon="right" size="xs" />
         </button>
       </ul>
     </div>

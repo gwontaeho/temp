@@ -13,7 +13,7 @@ export const Tab = (props) => {
           return (
             <button
               key={uuid()}
-              className={classNames("h-10 px-4 text-lg font-semibold", { "text-bl": current === i })}
+              className={classNames("h-10 px-4 text-lg font-semibold", { "text-blue": current === i })}
               onClick={() => setCurrent(i)}>
               {t}
             </button>

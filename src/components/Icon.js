@@ -12,8 +12,9 @@ import { icons, iconSizes } from "@/assets/icons";
  * @type FC<IconProps>
  */
 export const Icon = ({ icon, className, size = "md" }) => {
-    return cloneElement(icons[icon], {
-        ...icons[icon].props,
-        className: classNames(iconSizes[size], { [className]: className }),
-    });
+  return cloneElement(icons[icon], {
+    ...icons[icon].props,
+    className: classNames(iconSizes[size], { [className]: className }),
+    strokeWidth: 2.5,
+  });
 };

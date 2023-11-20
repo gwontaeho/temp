@@ -5,8 +5,12 @@ import { toastState } from "@/recoil";
 export const useToast = () => {
   const setToast = useSetRecoilState(toastState);
 
+  /**
+   * @param {object} props
+   * @param {string} props.message
+   */
   const showToast = (props) => {
-    const { message, type, onConfirm, onCancle } = props || {};
+    const { message, type, onConfirm, onCancel } = props || {};
     setToast((prev) => [
       ...prev,
       {
@@ -15,7 +19,7 @@ export const useToast = () => {
         message,
         type,
         onConfirm,
-        onCancle,
+        onCancel,
       },
     ]);
   };

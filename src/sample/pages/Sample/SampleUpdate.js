@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Wijmo, Group, Layout, Tab, Button, Navigation, PageHeader } from "@/components";
 import { useForm, useWijmo, useFetch, useModal, useToast } from "@/hooks";
 import { SCHEMA_FORM_REGIST, SCHEMA_GRID_COMPONENTS_REGIST, APIS } from "./SampleService";
@@ -16,41 +16,66 @@ const option2 = [
 ];
 
 /**
- * 샘플 등록 페이지
+ * 샘플 수정 페이지
  */
-export const SampleRegist = () => {
+export const SampleUpdate = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { showModal } = useModal();
   const { showToast } = useToast();
 
-  const { schema, handleSubmit, clearValues } = useForm({ defaultSchema: SCHEMA_FORM_REGIST });
+  const { schema, handleSubmit, clearValues, getValues, setValues } = useForm({ defaultSchema: SCHEMA_FORM_REGIST });
   const { grid, getData } = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS_REGIST });
 
-  const cc = useFetch({ api: APIS.createComponent });
-  const ccg = useFetch({ api: APIS.createComponentGroup });
+  const {
+    data: [group, components],
+  } = useFetch({
+    api: [() => APIS.getComponentGroup(id), () => APIS.getComponents(id)],
+    enabled: true,
+    onSuccess: ([_]) => setValues(_),
+  });
+
+  //   const cc = useFetch({ api: APIS.createComponent });
+  const ccg = useFetch({ api: APIS.updateComponentGroup });
 
   const onSubmit = (data) => {
     showModal({
-      message: "그룹을 등록하시겠습니까",
+      message: "그룹을 수정하시겠습니까",
       onConfirm: () => handleConfirm(data),
     });
   };
 
   const handleConfirm = async (data) => {
-    try {
-      const { id } = await ccg.fetchData(data);
-      await cc.fetchData(id, getData());
-      console.log(id, getData());
-      showToast({ message: "그룹이 등록되었습니다" });
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   console.log(data);
+    //   await ccg.fetchData(id, {
+    //     id,
+    //     textField: "string",
+    //     passwordField: "string",
+    //     integerField: 0,
+    //     doubleField: 0,
+    //     checkboxField: "string",
+    //     radioField: "string",
+    //     selectField: "string",
+    //     dateField: "2023-11-20T08:41:04.025Z",
+    //     datetimeField: "2023-11-20T08:41:04.025Z",
+    //     timeField: "string",
+    //     fileField: "string",
+    //     textareaField: "string",
+    //   });
+    //   showToast({ message: "그룹이 수정되었습니다" });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
     <Layout>
-      <Navigation base="/page/sample" nodes={[{ path: "/", label: "List" }, { label: "Regist" }]} />
-      <PageHeader title="Sample Regist" description="Sample Regist Description" />
+      <Navigation
+        base="/page/sample"
+        nodes={[{ path: "/", label: "List" }, { path: `/${id}`, label: "Detail" }, { label: "Update" }]}
+      />
+      <PageHeader title="Sample Update" description={`${id}`} />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Group>
@@ -74,10 +99,10 @@ export const SampleRegist = () => {
 
           <Layout direction="row">
             <Layout.Left>
-              <Button onClick={() => navigate("/page/sample")}>목록</Button>
               <Button onClick={clearValues}>초기화</Button>
             </Layout.Left>
             <Layout.Right>
+              <Button onClick={() => navigate(`/page/sample/${id}`)}>취소</Button>
               <Button type="submit">저장</Button>
             </Layout.Right>
           </Layout>
@@ -87,7 +112,7 @@ export const SampleRegist = () => {
       <Group>
         <Tab tab={["첫번째"]}>
           <Tab.Panel>
-            <Wijmo {...grid} />
+            <Wijmo {...grid} data={components} />
           </Tab.Panel>
         </Tab>
       </Group>

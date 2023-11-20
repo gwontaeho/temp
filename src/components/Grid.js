@@ -340,7 +340,7 @@ const GridPagination = ({
         <ul className="flex space-x-1">
           <button
             disabled={pageGroup < 1}
-            className="px-2 py-1.5 rounded bg-bg w-fit shadow disabled:text-disabled"
+            className="px-2 py-1.5 rounded bg-background w-fit shadow disabled:text-disabled"
             onClick={() => setPageGroup((prev) => prev - 1)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -357,7 +357,7 @@ const GridPagination = ({
               <li key={`${__grid__}.page.${_}`} className={_ === page ? "active" : ""}>
                 <button
                   {...(page === _ && { "aria-current": "page" })}
-                  className="px-2 py-1.5 rounded bg-bg shadow aria-[current=page]:text-bl"
+                  className="px-2 py-1.5 rounded bg-background shadow aria-[current=page]:text-blue"
                   onClick={() => setPage(_)}>
                   {_ + 1}
                 </button>
@@ -365,7 +365,7 @@ const GridPagination = ({
             );
           })}
           <button
-            className="px-2 py-1.5 rounded bg-bg shadow disabled:text-disabled"
+            className="px-2 py-1.5 rounded bg-background shadow disabled:text-disabled"
             disabled={pageGroup >= pageGroups.length - 1}
             onClick={() => setPageGroup((prev) => prev + 1)}>
             <svg

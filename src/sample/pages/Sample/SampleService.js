@@ -7,8 +7,9 @@ const instance = axios.create({
 export const APIS = {
   getComponentGroups: (page, size) => instance.get(`/com/componentGroups?page=${page}&size=${size}`),
   getComponentGroup: (id) => instance.get(`/com/componentGroups/${id}`),
-  getComponents: (grpId) => instance.get(`/com/componentGroups/${grpId}/components`),
   createComponentGroup: (data) => instance.post("/com/componentGroups", data),
+  updateComponentGroup: (id, data) => instance.put(`/com/componentGroups/${id}`, data),
+  getComponents: (grpId) => instance.get(`/com/componentGroups/${grpId}/components`),
   createComponent: (grpId, data) => instance.post(`/com/componentGroups/${grpId}/components`, { grpId, ...data }),
 };
 
@@ -35,39 +36,51 @@ export const SCHEMA_FORM = {
 export const SCHEMA_FORM_REGIST = {
   __form__: "form",
   textField: { type: "text", label: "TEXT_FIELD", required: true },
-  passwordField: { type: "password", label: "PASSWORD_FIELD", required: true },
-  integerField: { type: "number", label: "INTEGER_FIELD", required: true },
-  selectField: { type: "select", label: "SELECT_FIELD", required: true },
-  radioField: { type: "radio", label: "RADIO_FIELD", required: true },
+  passwordField: { type: "password", label: "PASSWORD_FIELD" },
+  integerField: { type: "number", label: "INTEGER_FIELD" },
+  selectField: { type: "select", label: "SELECT_FIELD" },
+  radioField: { type: "radio", label: "RADIO_FIELD" },
   dateField: { type: "date", label: "DATE_FIELD" },
   textareaField: { type: "textarea", label: "TEXTAREA_FIELD" },
 };
 
 export const SCHEMA_GRID = {
   __grid__: "grid",
-  options: { checkbox: true, pagination: true, isReadOnly: true },
-  head: [
-    { cells: [{ header: "a" }] },
-    { cells: [{ header: "d" }] },
-    { cells: [{ header: "e" }] },
-    { cells: [{ header: "f" }] },
-    { cells: [{ header: "g" }] },
-  ],
+  options: { pagination: true, isReadOnly: true },
+  head: [{ cells: [{ header: "id" }] }, { cells: [{ header: "textField" }] }],
   body: [
     {
       colspan: 5,
-      cells: [
-        { binding: "id" },
-        { binding: "doubleField", type: "number" },
-        { binding: "integerField", type: "number" },
-        { binding: "passwordField" },
-        { binding: "selectField", type: "select", options: [{ label: "a", value: "a" }] },
-      ],
+      cells: [{ binding: "id", link: (data) => console.log(data) }, { binding: "textField" }],
     },
   ],
 };
 
 export const SCHEMA_GRID_COMPONENTS = {
+  __grid__: "grid",
+  options: { pagination: "inner", isReadOnly: true },
+  head: [
+    { cells: [{ header: "textField" }] },
+    { cells: [{ header: "passwordField" }] },
+    { cells: [{ header: "integerField" }] },
+    { cells: [{ header: "selectField" }] },
+    { cells: [{ header: "doubleField" }] },
+  ],
+  body: [
+    {
+      colspan: 5,
+      cells: [
+        { binding: "textField" },
+        { binding: "passwordField", type: "password" },
+        { binding: "integerField", type: "number" },
+        { binding: "selectField", type: "select", options: [{ label: "a", value: "a" }] },
+        { binding: "doubleField", type: "number" },
+      ],
+    },
+  ],
+};
+
+export const SCHEMA_GRID_COMPONENTS_REGIST = {
   __grid__: "grid",
   options: { checkbox: true, pagination: "inner", add: true, remove: true },
   head: [

@@ -5,7 +5,7 @@ import { modalState } from "@/recoil";
 export const useModal = () => {
   const setModal = useSetRecoilState(modalState);
 
-  const showModal = ({ message, type, onConfirm, onCancle } = {}) => {
+  const showModal = ({ message, type, onConfirm, onCancel } = {}) => {
     setModal((prev) => [
       ...prev,
       {
@@ -14,7 +14,7 @@ export const useModal = () => {
         message,
         type,
         onConfirm,
-        onCancle,
+        onCancel,
       },
     ]);
   };

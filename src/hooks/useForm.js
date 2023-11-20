@@ -68,6 +68,10 @@ export const useForm = (props) => {
     reset();
   };
 
+  const setValues = (values) => {
+    reset(values);
+  };
+
   // make schema object
   const getSchema = (entries) => {
     return entries.reduce((prev, curr) => {
@@ -150,5 +154,6 @@ export const useForm = (props) => {
     clearErrors,
     watch,
     isSubmitted,
+    setValues,
   };
 };

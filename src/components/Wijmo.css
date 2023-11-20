@@ -1,11 +1,18 @@
 .wj-multirow {
   border: none;
   background: none;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-color: var(--tancis-border) !important;
 }
 
 .wj-multirow * {
-  border-color: #344050 !important;
-  color: #b6c1d2 !important;
+  border-color: var(--tancis-border) !important;
+  color: var(--tancis-text) !important;
+}
+
+.wj-content {
+  border-radius: 0;
 }
 
 /* top left */
@@ -45,7 +52,7 @@
 
 /* cell */
 .wj-cell {
-  background-color: #0b1727 !important;
+  background-color: transparent !important;
   height: 2.5rem;
   line-height: calc(2.5rem - 1px);
   padding: 0 0.25rem;
@@ -66,7 +73,7 @@
 
 /* header */
 .wj-header {
-  background-color: #232e3c !important;
+  background-color: var(--tancis-header) !important;
 }
 
 /* control */
