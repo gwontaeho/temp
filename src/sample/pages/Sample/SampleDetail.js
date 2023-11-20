@@ -11,8 +11,6 @@ export const SampleDetail = () => {
   const navigate = useNavigate();
 
   const grid1 = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS });
-  const grid2 = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS });
-  const grid3 = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS });
 
   const {
     data: [group, components],
@@ -20,8 +18,6 @@ export const SampleDetail = () => {
     api: [() => APIS.getComponentGroup(id), () => APIS.getComponents(id)],
     enabled: true,
   });
-
-  console.log(group);
 
   return (
     <Layout>
@@ -61,15 +57,9 @@ export const SampleDetail = () => {
       </Group>
 
       <Group>
-        <Tab tab={["첫번째", "두번째", "세번째"]}>
+        <Tab tab={["첫번째"]}>
           <Tab.Panel>
             <Wijmo {...grid1.grid} data={components} />
-          </Tab.Panel>
-          <Tab.Panel>
-            <Wijmo {...grid2.grid} data={components} />
-          </Tab.Panel>
-          <Tab.Panel>
-            <Wijmo {...grid3.grid} data={components} />
           </Tab.Panel>
         </Tab>
       </Group>
