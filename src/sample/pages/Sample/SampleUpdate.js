@@ -24,8 +24,8 @@ export const SampleUpdate = () => {
   const { showModal } = useModal();
   const { showToast } = useToast();
 
-  const { schema, handleSubmit, clearValues, getValues, setValues } = useForm({ defaultSchema: SCHEMA_FORM_REGIST });
-  const { grid, getData } = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS_REGIST });
+  const { schema, handleSubmit, clearValues, setValues } = useForm({ defaultSchema: SCHEMA_FORM_REGIST });
+  const { grid } = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS_REGIST });
 
   const {
     data: [group, components],
@@ -35,10 +35,10 @@ export const SampleUpdate = () => {
     onSuccess: ([_]) => setValues(_),
   });
 
-  //   const cc = useFetch({ api: APIS.createComponent });
   const ccg = useFetch({ api: APIS.updateComponentGroup });
 
   const onSubmit = (data) => {
+    console.log(data);
     showModal({
       message: "그룹을 수정하시겠습니까",
       onConfirm: () => handleConfirm(data),
@@ -46,27 +46,13 @@ export const SampleUpdate = () => {
   };
 
   const handleConfirm = async (data) => {
-    // try {
-    //   console.log(data);
-    //   await ccg.fetchData(id, {
-    //     id,
-    //     textField: "string",
-    //     passwordField: "string",
-    //     integerField: 0,
-    //     doubleField: 0,
-    //     checkboxField: "string",
-    //     radioField: "string",
-    //     selectField: "string",
-    //     dateField: "2023-11-20T08:41:04.025Z",
-    //     datetimeField: "2023-11-20T08:41:04.025Z",
-    //     timeField: "string",
-    //     fileField: "string",
-    //     textareaField: "string",
-    //   });
-    //   showToast({ message: "그룹이 수정되었습니다" });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      await ccg.fetch(id, data);
+      showToast({ message: "그룹이 수정되었습니다" });
+      navigate(-1);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

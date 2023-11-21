@@ -25,7 +25,7 @@ const schema = {
   body: [
     {
       colspan: 3,
-      cells: [{ binding: "id" }, { binding: "textField" }, { binding: "doubleField" }],
+      cells: [{ binding: "id", colspan: 3 }],
     },
     {
       cells: [{ binding: "b", type: "select" }],
@@ -41,7 +41,7 @@ export const WijmoEx = () => {
     defaultSchema: schema,
   });
 
-  const { data, fetchData } = useFetch({
+  const { data, fetch } = useFetch({
     api: () => APIS.getComponentGroups(),
     // api: () => APIS.getComponentGroups(page, size),
     enabled: true,
@@ -59,7 +59,7 @@ export const WijmoEx = () => {
         <button onClick={() => addRow()}>add</button>
         <button onClick={() => removeRow(1)}>remove at</button>
         <button onClick={() => removeChecked()}>checked 삭제</button>
-        <button onClick={() => fetchData()}>refetch</button>
+        <button onClick={() => fetch()}>refetch</button>
       </div>
     </Group>
   );

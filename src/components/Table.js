@@ -1,4 +1,3 @@
-import { FC } from "react";
 import classNames from "classnames";
 
 /**
@@ -7,7 +6,7 @@ import classNames from "classnames";
  */
 
 /**
- * @type FC<tableProps>
+ * @param {tableProps} props
  */
 export const Table = (props) => {
   const { children, border = true } = props;
@@ -35,7 +34,7 @@ const Tr = ({ children }) => {
  */
 
 /**
- * @type FC<tableCellProps>
+ * @param {tableCellProps} props
  */
 const Th = (props) => {
   const { children, required, colSpan, rowSpan, width } = props;
@@ -53,7 +52,7 @@ const Th = (props) => {
 };
 
 /**
- * @type FC<tableCellProps>
+ * @param {tableCellProps} props
  */
 const Td = (props) => {
   const { children, required, colSpan, rowSpan, width } = props;

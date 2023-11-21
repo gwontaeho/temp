@@ -1,4 +1,5 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef } from "react";
+import _ from "lodash";
 
 const initializerArg = (initialData) => {
   return {
@@ -24,9 +25,9 @@ const reducer = (state, action) => {
  * @param {Object} props
  * @param {Function} props.api
  * @param {Function} props.onSuccess
+ * @param {Function} props.onError
  * @param {Array} props.key
  * @param {Boolean} props.enabled
- * @returns
  */
 export const useFetch = (props) => {
   const { api, key, enabled, onSuccess, onError } = props;
@@ -34,23 +35,29 @@ export const useFetch = (props) => {
   const isArray = Array.isArray(api);
   const initialData = isArray ? Array(api.length).fill({}) : {};
 
-  const [_key, _setKey] = useState(key);
+  const keyRef = useRef({});
+
   const [{ data, isLoading, isSuccess, isError }, dispatch] = useReducer(reducer, initializerArg(initialData));
 
   useEffect(() => {
-    if (enabled) fetchData();
-  }, [enabled, _key]);
+    if (enabled) {
+      const keyRefCurr = keyRef.current;
 
-  useEffect(() => {
-    if (String(key) === String(_key)) return;
-    _setKey(key);
-  }, [key, _key]);
+      if (_.isEqual(keyRefCurr.key, key)) {
+        if (new Date().getTime() - keyRefCurr.t < 1000) return;
+      }
+      keyRefCurr.key = key;
+      keyRefCurr.t = new Date().getTime();
+      fetch();
+    }
+  }, [enabled, key]);
 
-  const fetchData = async (variables) => {
+  const fetch = async (...variables) => {
     if (isLoading) return;
     try {
+      console.log("fetching");
       dispatch({ type: "loading" });
-      const fn = () => (isArray ? Promise.all(api.map((_) => _(variables))) : api(variables));
+      const fn = () => (isArray ? Promise.all(api.map((_) => _(...variables))) : api(...variables));
       const res = await fn();
       const data = isArray ? res.map(({ data }) => data) : res.data;
       dispatch({ type: "success", payload: data });
@@ -59,9 +66,8 @@ export const useFetch = (props) => {
     } catch (error) {
       dispatch({ type: "error" });
       if (onError) onError(error);
-      throw error;
     }
   };
 
-  return { data, fetchData, isLoading, isSuccess, isError };
+  return { data, fetch, isLoading, isSuccess, isError };
 };

@@ -6,11 +6,15 @@ const instance = axios.create({
 
 export const APIS = {
   getComponentGroups: (page, size) => instance.get(`/com/componentGroups?page=${page}&size=${size}`),
+
   getComponentGroup: (id) => instance.get(`/com/componentGroups/${id}`),
   createComponentGroup: (data) => instance.post("/com/componentGroups", data),
-  updateComponentGroup: (id, data) => instance.put(`/com/componentGroups/${id}`, data),
+  deleteComponentGroup: (id) => instance.delete(`/com/componentGroups/${id}`),
+  updateComponentGroup: (id, data) => instance.put(`/com/componentGroups/${id}`, { id, ...data }),
+
   getComponents: (grpId) => instance.get(`/com/componentGroups/${grpId}/components`),
   createComponent: (grpId, data) => instance.post(`/com/componentGroups/${grpId}/components`, { grpId, ...data }),
+  createGroupComponents: (data) => instance.post("/com/groupComponents", data),
 };
 
 export const OPTIONS = [
@@ -46,7 +50,7 @@ export const SCHEMA_FORM_REGIST = {
 
 export const SCHEMA_GRID = {
   __grid__: "grid",
-  options: { pagination: true, isReadOnly: true },
+  options: { checkbox: true, pagination: true, isReadOnly: true },
   head: [{ cells: [{ header: "id" }] }, { cells: [{ header: "textField" }] }],
   body: [
     {

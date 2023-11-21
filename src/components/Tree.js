@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import classNames from "classnames";
 import uuid from "react-uuid";
 import { Collapse, Icon } from "@/components";
@@ -34,12 +34,12 @@ const TreeItem = (props) => {
 };
 
 /**
- * @typedef TreeProps
+ * @typedef treeProps
  * @property {Array} data
  */
 
 /**
- * @type FC<TreeProps>
+ * @param {treeProps} props
  */
 export const Tree = (props) => {
   const { data } = props;

@@ -1,15 +1,15 @@
-import { FC, cloneElement } from "react";
+import { cloneElement } from "react";
 import classNames from "classnames";
 import { icons, iconSizes } from "@/assets/icons";
 
 /**
- * @typedef {object} IconProps
+ * @typedef {object} iconProps
  * @property {keyof icons} icon
  * @property {keyof iconSizes} size
  */
 
 /**
- * @type FC<IconProps>
+ * @param {iconProps} props
  */
 export const Icon = ({ icon, className, size = "md" }) => {
   return cloneElement(icons[icon], {

@@ -36,5 +36,17 @@ export const useWijmo = ({ defaultSchema }) => {
 
   const grid = { gridRef, schema, pagination, addRow, removeChecked };
 
-  return { grid, getData, getChecked, getCheckedIndex, addRow, removeRow, removeChecked, page, size };
+  return {
+    grid,
+    getData,
+    getChecked,
+    getCheckedIndex,
+    addRow,
+    removeRow,
+    removeChecked,
+    page,
+    size,
+    setPage,
+    setSize,
+  };
 };

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Group, Button, Layout } from "@/components";
+import { Group, Button, Layout, FormControl } from "@/components";
 import { useForm } from "@/hooks";
 
 const SCHEMA_SEARCH = {
@@ -143,8 +143,9 @@ export const FormEx = () => {
               <Group.Control />
             </Group.Row>
             <Group.Row>
-              <Group.Col colSize={4}>
+              <Group.Col colSize={12}>
                 <Button size="full">button size 4</Button>
+                <FormControl type="file" />
               </Group.Col>
             </Group.Row>
           </Group.Body>

@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm, useFetch, useWijmo } from "@/hooks";
+import { useForm, useFetch, useWijmo, useModal } from "@/hooks";
 import { Group, Layout, Wijmo, Navigation, PageHeader, Button } from "@/components";
 import { OPTIONS, SCHEMA_FORM, SCHEMA_GRID, APIS } from "./SampleService";
 
@@ -9,21 +10,45 @@ import { OPTIONS, SCHEMA_FORM, SCHEMA_GRID, APIS } from "./SampleService";
 export const Sample = () => {
   const navigate = useNavigate();
 
-  const { schema, handleSubmit, isSubmitted } = useForm({ defaultSchema: SCHEMA_FORM });
-  const { grid, page, size } = useWijmo({ defaultSchema: SCHEMA_GRID });
+  const { showModal } = useModal();
 
-  const { data, fetchData } = useFetch({
-    api: () => APIS.getComponentGroups(page, size),
+  const [condition, setCondition] = useState({});
+  const { schema, handleSubmit, isSubmitted } = useForm({ defaultSchema: SCHEMA_FORM });
+  const { grid, page, size, setPage, getChecked } = useWijmo({ defaultSchema: SCHEMA_GRID });
+
+  const { data, fetch } = useFetch({
+    api: () => APIS.getComponentGroups(page, size, condition),
     enabled: isSubmitted,
-    key: [page, size],
+    key: [page, size, condition],
   });
+
+  const dcg = useFetch({ api: APIS.deleteComponentGroup });
+
+  const handleClickDelete = () => {
+    if (!getChecked().length) return;
+    showModal({
+      message: "선택한 항목을 삭제하시겠습니까?",
+      onConfirm: handleConfirmDelete,
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    const dcgFetches = getChecked().map((_) => dcg.fetch(_.id));
+    await Promise.all(dcgFetches);
+    fetch();
+  };
+
+  const onSubmit = (data) => {
+    setPage(0);
+    setCondition(data);
+  };
 
   return (
     <Layout>
       <Navigation base="/page/sample" nodes={[{ label: "List" }]} />
       <PageHeader title="Sample List" description="Sample List Page Description" />
 
-      <form onSubmit={handleSubmit(fetchData)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Group>
           <Group.Body>
             <Group.Row>
@@ -43,6 +68,9 @@ export const Sample = () => {
 
       <Group>
         <Group.Header>Search Result</Group.Header>
+        <Layout.Right>
+          <Button onClick={handleClickDelete}>삭제</Button>
+        </Layout.Right>
         <Wijmo {...grid} data={data} />
       </Group>
     </Layout>

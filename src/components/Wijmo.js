@@ -37,8 +37,10 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     if (!gridRef.current) return;
     if (schema.options?.checkbox) new Selector(gridRef.current.control);
     if (schema.options?.isReadOnly) gridRef.current.control.isReadOnly = true;
+    console.log(gridRef.current.control);
     gridRef.current.control.allowAddNew = true;
     gridRef.current.control.allowDelete = true;
+    console.log(gridRef.current.control);
     gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
     gridRef.current.control.layoutDefinition = layoutDefinition();
     gridRef.current.control.itemsSourceChanged.addHandler((_) => {

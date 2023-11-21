@@ -46,7 +46,7 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     if (schema.options?.isReadOnly) gridRef.current.control.isReadOnly = true;
     gridRef.current.control.allowAddNew = true;
     gridRef.current.control.allowDelete = true;
-    gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
+    // gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
     // gridRef.current.control.layoutDefinition = layoutDefinition();
 
     gridRef.current.control.itemsSourceChanged.addHandler((_) => {
@@ -80,9 +80,10 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
   const headerLayoutDefinition = () => {
     return head.map((_) => {
       return {
-        cells: _.map((__) => {
+        ..._,
+        cells: _.cells.map((__) => {
           const cells = { ...__, align: "center" };
-          cells.cellTemplate = `<div>qwd</div>`;
+
           return cells;
         }),
       };
@@ -146,14 +147,19 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
       <wjGrid.MultiRow ref={gridRef}>
         {body.map((_) => {
           return (
-            <wjGrid.MultiRowCellGroup colspan={_.colspan}>
+            <wjGrid.MultiRowCellGroup key={uuid()} colspan={_.colspan}>
               {_.cells.map((__) => {
                 return (
-                  <wjGrid.MultiRowCell colspan={__.colspan} binding={__.binding}>
+                  <wjGrid.MultiRowCell key={uuid()} colspan={__.colspan} binding={__.binding}>
+                    <wjGrid.MultiRowCellTemplate
+                      cellType="ColumnHeader"
+                      template={(v) => {
+                        return <input />;
+                      }}
+                    />
                     <wjGrid.MultiRowCellTemplate
                       cellType="Cell"
                       template={(v) => {
-                        console.log(v);
                         return <div>{v.item.id}</div>;
                       }}
                     />

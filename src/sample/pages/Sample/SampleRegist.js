@@ -26,10 +26,13 @@ export const SampleRegist = () => {
   const { schema, handleSubmit, clearValues } = useForm({ defaultSchema: SCHEMA_FORM_REGIST });
   const { grid, getData } = useWijmo({ defaultSchema: SCHEMA_GRID_COMPONENTS_REGIST });
 
-  const cc = useFetch({ api: APIS.createComponent });
   const ccg = useFetch({ api: APIS.createComponentGroup });
+  const cgc = useFetch({ api: APIS.createGroupComponents });
 
   const onSubmit = (data) => {
+    // submit handler
+
+    // validation 성공 시 modal
     showModal({
       message: "그룹을 등록하시겠습니까",
       onConfirm: () => handleConfirm(data),
@@ -38,9 +41,14 @@ export const SampleRegist = () => {
 
   const handleConfirm = async (data) => {
     try {
-      const { id } = await ccg.fetchData(data);
-      await cc.fetchData(id, getData());
-      console.log(id, getData());
+      // 1. group 생성
+      const { id } = await ccg.fetch(data);
+
+      // 2. group components 생성
+      const componentsData = { id, components: getData().map((_) => ({ ..._, grpId: id })) };
+      await cgc.fetch(componentsData);
+
+      // 3. 성공 toast
       showToast({ message: "그룹이 등록되었습니다" });
     } catch (error) {
       console.log(error);

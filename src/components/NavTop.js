@@ -110,7 +110,7 @@ const NavItem = (props) => {
 
 export const NavTop = () => {
   return (
-    <nav className="flex items-center">
+    <nav className="hidden items-center lg:flex">
       <ul className="font-mono flex space-x-4">
         {ROUTES.map((child) => {
           return <NavItem key={uuid()} {...child} />;

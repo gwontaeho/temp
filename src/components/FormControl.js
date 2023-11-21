@@ -1,7 +1,7 @@
 import "react-datepicker/dist/react-datepicker.css";
 import "./FormControl.css";
 
-import { forwardRef, memo, useEffect, useRef, FC, useState } from "react";
+import { forwardRef, memo, useEffect, useRef, useState, FC } from "react";
 import { Controller } from "react-hook-form";
 import ReactDatePicker from "react-datepicker";
 import classNames from "classnames";
@@ -27,20 +27,20 @@ const SIZES = {
 };
 
 /**
- * @typedef {object} FormControlProps
+ * @typedef {object} formControlProps
  * @property {('text'|'number'|'password'|'select'|'radio'|'checkbox'|'textarea'|'date'|'time'|'datetime'|'file'|'between')} type
+ * @property {keyof SIZES} size
  * @property {object} leftText
  * @property {object} leftButton
  * @property {object} rightText
  * @property {object} rightButton
  * @property {array} options
- * @property {keyof SIZES} size
  */
 
 /**
- * @type FC<FormControlProps>
+ * @type FC<formControlProps>
  */
-export const FormControl = forwardRef((props, ref) => {
+const FormControl = forwardRef((props, ref) => {
   const {
     type,
     invalid,
@@ -210,7 +210,7 @@ const Select = forwardRef((props, ref) => {
   const { invalid, options, ...rest } = props;
   return (
     <div className="relative flex w-full items-center">
-      <select {...rest} ref={ref} className="input appearance-none">
+      <select {...rest} ref={ref} className="input appearance-none pr-5">
         <Select.Options options={options} />
       </select>
       <Icon icon="down" size="xs" className="absolute right-1 pointer-events-none" />
@@ -277,15 +277,19 @@ const InputDate = forwardRef((props, ref) => {
           name={name}
           control={control}
           rules={rules}
-          render={({ field: { onChange, value } }) => (
-            <ReactDatePicker
-              {...rest}
-              selected={value}
-              onChange={onChange}
-              className="input pl-5"
-              popperProps={{ strategy: "fixed" }}
-            />
-          )}
+          render={({ field: { onChange, value } }) => {
+            const _value = new Date(value);
+
+            return (
+              <ReactDatePicker
+                {...rest}
+                selected={isNaN(_value) ? undefined : _value}
+                onChange={onChange}
+                className="input pl-5"
+                popperProps={{ strategy: "fixed" }}
+              />
+            );
+          }}
         />
       ) : (
         <ReactDatePicker
@@ -313,19 +317,22 @@ const InputTime = forwardRef((props, ref) => {
           name={name}
           control={control}
           rules={rules}
-          render={({ field: { onChange, value } }) => (
-            <ReactDatePicker
-              {...rest}
-              dateFormat={dateFormat}
-              timeIntervals={5}
-              showTimeSelect
-              showTimeSelectOnly
-              selected={value}
-              onChange={onChange}
-              className="input pl-5"
-              popperProps={{ strategy: "fixed" }}
-            />
-          )}
+          render={({ field: { onChange, value } }) => {
+            const _value = new Date(value);
+            return (
+              <ReactDatePicker
+                {...rest}
+                dateFormat={dateFormat}
+                timeIntervals={5}
+                showTimeSelect
+                showTimeSelectOnly
+                selected={isNaN(_value) ? undefined : _value}
+                onChange={onChange}
+                className="input pl-5"
+                popperProps={{ strategy: "fixed" }}
+              />
+            );
+          }}
         />
       ) : (
         <ReactDatePicker
@@ -356,18 +363,21 @@ const InputDateTime = forwardRef((props, ref) => {
           name={name}
           control={control}
           rules={rules}
-          render={({ field: { onChange, value } }) => (
-            <ReactDatePicker
-              {...rest}
-              timeIntervals={5}
-              showTimeSelect
-              selected={value}
-              onChange={onChange}
-              dateFormat="MM/dd/yyyy HH:mm"
-              className="input pl-5"
-              popperProps={{ strategy: "fixed" }}
-            />
-          )}
+          render={({ field: { onChange, value } }) => {
+            const _value = new Date(value);
+            return (
+              <ReactDatePicker
+                {...rest}
+                timeIntervals={5}
+                showTimeSelect
+                selected={isNaN(_value) ? undefined : _value}
+                onChange={onChange}
+                dateFormat="MM/dd/yyyy HH:mm"
+                className="input pl-5"
+                popperProps={{ strategy: "fixed" }}
+              />
+            );
+          }}
         />
       ) : (
         <ReactDatePicker
@@ -392,6 +402,7 @@ const InputBetween = forwardRef((props, ref) => {
   const isEditFalse = edit === false;
 
   const handleClickButton = (unit, value) => {
+    if (!setValue) return;
     const isAdd = value > 0;
     const today = new Date();
     if (isAdd) {
@@ -426,7 +437,7 @@ const InputBetween = forwardRef((props, ref) => {
   };
 
   return (
-    <div className={classNames("w-full flex items-center")}>
+    <div className={classNames("w-full flex items-start")}>
       <Begin />
       <div
         className={classNames("flex items-center justify-center h-7 w-5", {
@@ -489,7 +500,14 @@ const InputBetweenOptions = {
 const InputFile = forwardRef((props, ref) => {
   const { invalid, ...rest } = props;
 
-  return <input {...rest} ref={ref} type="file" className="input" />;
+  return (
+    <input
+      {...rest}
+      ref={ref}
+      type="file"
+      className="file h-7 border rounded w-full file:h-full file:outline-none file:bg-header file:border-none file:text-text cursor-pointer"
+    />
+  );
 });
 
 const FormControlGroup = ({ children }) => {
@@ -503,4 +521,6 @@ const FormControlGroup = ({ children }) => {
   );
 };
 
-FormControl.Group = FormControlGroup;
+const Compound = Object.assign({}, FormControl, { Group: FormControlGroup });
+
+export { Compound as FormControl };
