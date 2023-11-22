@@ -1,5 +1,5 @@
 import "./index.css";
-import "./locales/i18n";
+import "./com/locales/i18n";
 
 import ReactDOM from "react-dom/client";
 import App from "./App";
