@@ -4,6 +4,8 @@ export const Collapse = ({ children, open }) => {
   const outer = useRef();
   const inner = useRef();
 
+  console.log(open);
+
   useEffect(() => {
     if (open) {
       outer.current.classList.add("transition-[height]");
@@ -32,7 +34,7 @@ export const Collapse = ({ children, open }) => {
   }, []);
 
   return (
-    <div ref={outer} aria-expanded={open} className="overflow-hidden">
+    <div ref={outer} aria-expanded={String(open)} className="overflow-hidden">
       <div ref={inner}>{children}</div>
     </div>
   );

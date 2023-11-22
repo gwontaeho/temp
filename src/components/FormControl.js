@@ -181,7 +181,7 @@ const FormControl = forwardRef((props, ref) => {
           </button>
         )}
       </div>
-      {invalid && <div className="text-invalid text-sm">invalid field</div>}
+      {!isEditFalse && invalid && <div className="text-invalid text-sm">invalid field</div>}
     </div>
   );
 });

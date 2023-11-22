@@ -76,7 +76,7 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
       return {
         ..._,
         cells: _.cells.map((__) => {
-          const cells = { ...__, align: "center" };
+          const cells = { ...__, align: "center", allowSorting: true };
           return cells;
         }),
       };
@@ -92,6 +92,7 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
           const itemsSource = options;
           const displayMemberPath = "label";
           if (i === 0) cells.width = "*";
+          cells.allowSorting = true;
 
           if (link) {
             cells.cellTemplate = CellMaker.makeLink({
@@ -158,7 +159,9 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
           )}
         </div>
       )}
+
       <wjGrid.MultiRow ref={gridRef} />
+
       {schema.options?.pagination && (
         <Pagination
           page={pagination.page}

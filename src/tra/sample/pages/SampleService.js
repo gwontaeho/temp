@@ -54,8 +54,10 @@ export const SCHEMA_GRID = {
   head: [{ cells: [{ header: "id" }] }, { cells: [{ header: "textField" }] }],
   body: [
     {
-      colspan: 5,
-      cells: [{ binding: "id", link: (data) => console.log(data) }, { binding: "textField" }],
+      cells: [{ binding: "id", link: (data) => console.log(data) }],
+    },
+    {
+      cells: [{ binding: "textField" }],
     },
   ],
 };

@@ -157,17 +157,27 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
                         return <input />;
                       }}
                     />
+
                     <wjGrid.MultiRowCellTemplate
                       cellType="Cell"
                       template={(v) => {
-                        return <div>{v.item.id}</div>;
+                        return <div>{v.item.textField}</div>;
                       }}
                     />
+
                     <wjGrid.MultiRowCellTemplate
                       cellType="CellEdit"
                       template={(v) => {
                         console.log(v);
-                        return <FormControl defaultValue={v.value} onChange={(e) => (v.value = e.target.value)} />;
+                        return (
+                          <div className="flex space-x-2">
+                            <FormControl defaultValue={v.value} onChange={(e) => (v.value = e.target.value)} />
+                            <FormControl
+                              defaultValue={v.item.textField}
+                              onChange={(e) => (v.item.textField = e.target.value)}
+                            />
+                          </div>
+                        );
                       }}
                     />
                   </wjGrid.MultiRowCell>

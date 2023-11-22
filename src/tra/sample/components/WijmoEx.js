@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useWijmo, useFetch } from "@/hooks";
 import { Group } from "@/components";
-import { Wijmo } from "@/components/Wijmo";
+import { Wijmo } from "@/components/Wijmo.v2";
 
 const instance = axios.create({
   baseURL: "http://183.107.31.131:8000/template",
@@ -20,7 +20,7 @@ const schema = {
   head: [
     { cells: [{ header: "a", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }] },
     { cells: [{ header: "d" }] },
-    { cells: [{ header: "e" }] },
+    { header: "E", cells: [{ header: "e" }] },
   ],
   body: [
     {
@@ -31,7 +31,7 @@ const schema = {
       cells: [{ binding: "b", type: "select" }],
     },
     {
-      cells: [{ binding: "c", type: "date" }],
+      cells: [{ header: "e", binding: "c", type: "date" }],
     },
   ],
 };

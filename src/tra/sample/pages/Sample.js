@@ -9,11 +9,12 @@ import { OPTIONS, SCHEMA_FORM, SCHEMA_GRID, APIS } from "./SampleService";
  */
 export const Sample = () => {
   const navigate = useNavigate();
-
   const { showModal } = useModal();
 
   const [condition, setCondition] = useState({});
+
   const { schema, handleSubmit, isSubmitted } = useForm({ defaultSchema: SCHEMA_FORM });
+
   const { grid, page, size, setPage, getChecked } = useWijmo({ defaultSchema: SCHEMA_GRID });
 
   const { data, fetch } = useFetch({

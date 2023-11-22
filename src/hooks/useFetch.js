@@ -54,6 +54,7 @@ export const useFetch = (props) => {
 
   const fetch = async (...variables) => {
     if (isLoading) return;
+    console.log("fetch");
     try {
       console.log("fetching");
       dispatch({ type: "loading" });

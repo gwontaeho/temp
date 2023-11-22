@@ -15,6 +15,7 @@ export const TableEx = () => {
             <Table.Th></Table.Th>
             <Table.Th></Table.Th>
           </Table.Tr>
+
           <Table.Tr>
             <Table.Td rowSpan={2}></Table.Td>
             <Table.Td>
@@ -44,6 +45,7 @@ export const TableEx = () => {
             <Table.Td colSpan={2}></Table.Td>
             <Table.Td></Table.Td>
           </Table.Tr>
+
           <Table.Tr>
             <Table.Td></Table.Td>
             <Table.Td></Table.Td>

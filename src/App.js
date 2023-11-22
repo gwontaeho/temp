@@ -2,16 +2,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RecoilProvider from "@/recoil";
 import { CommonModal, CommonToast } from "@/components";
 
-import { MainRoutes } from "@/routes/MainRoutes";
-import { PopupRoutes } from "@/routes/PopupRoutes";
+import { Main } from "@/routes/Main";
+import { Popup } from "@/routes/Popup";
 
 function App() {
   return (
     <RecoilProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/popup/*" element={<PopupRoutes />} />
-          <Route path="*" element={<MainRoutes />} />
+          <Route path="/popup/*" element={<Popup />} />
+          <Route path="*" element={<Main />} />
         </Routes>
         <CommonModal />
         <CommonToast />
