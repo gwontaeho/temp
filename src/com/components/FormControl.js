@@ -26,15 +26,31 @@ const SIZES = {
   full: "w-full",
 };
 
+const CONTROLS = (ref, props) => ({
+  text: <InputText {...props} ref={ref} />,
+  number: <InputNumber {...props} ref={ref} />,
+  password: <InputPassword {...props} ref={ref} />,
+  select: <Select {...props} ref={ref} />,
+  radio: <Radio {...props} ref={ref} />,
+  checkbox: <Checkbox {...props} ref={ref} />,
+  textarea: <Textarea {...props} ref={ref} />,
+  date: <InputDate {...props} ref={ref} />,
+  time: <InputTime {...props} ref={ref} />,
+  datetime: <InputDateTime {...props} ref={ref} />,
+  file: <InputFile {...props} ref={ref} />,
+  between: <InputBetween {...props} ref={ref} />,
+});
+
 /**
- * @typedef {object} formControlProps
- * @property {('text'|'number'|'password'|'select'|'radio'|'checkbox'|'textarea'|'date'|'time'|'datetime'|'file'|'between')} type
+ * @typedef {object} _formControlProps
+ * @property {keyof CONTROLS} type
  * @property {keyof SIZES} size
  * @property {object} leftText
  * @property {object} leftButton
  * @property {object} rightText
  * @property {object} rightButton
  * @property {array} options
+ * @typedef {_formControlProps & inputProps} formControlProps
  */
 
 /**
@@ -42,7 +58,8 @@ const SIZES = {
  */
 const FormControl = forwardRef((props, ref) => {
   const {
-    type,
+    type = "text",
+    size = "full",
     invalid,
     getValues,
     edit,
@@ -51,7 +68,6 @@ const FormControl = forwardRef((props, ref) => {
     leftButton,
     rightText,
     rightButton,
-    size = "full",
     ...inputProps
   } = props;
 
@@ -66,6 +82,11 @@ const FormControl = forwardRef((props, ref) => {
   const leftTextRef = useRef();
 
   const ignoreLeftText = ["date", "time", "datetime", "between"];
+
+  const betweenProps = { edit, hasRightButton, hasLeftButton };
+
+  let _inputProps = { ...inputProps };
+  if (type === "between") _inputProps = Object.assign(_inputProps, betweenProps);
 
   useEffect(() => {
     if (type === "between" || !getValues) return;
@@ -91,57 +112,6 @@ const FormControl = forwardRef((props, ref) => {
       input.style.paddingLeft = `${leftTextWidth}px`;
     } else input.removeAttribute("style");
   }, [type, hasLeftText]);
-
-  let control;
-  switch (type) {
-    case "text":
-      control = <InputText ref={ref} {...inputProps} />;
-      break;
-    case "number":
-      control = <InputNumber ref={ref} {...inputProps} />;
-      break;
-    case "password":
-      control = <InputPassword ref={ref} {...inputProps} />;
-      break;
-    case "select":
-      control = <Select ref={ref} {...inputProps} />;
-      break;
-    case "radio":
-      control = <Radio ref={ref} {...inputProps} />;
-      break;
-    case "checkbox":
-      control = <Checkbox ref={ref} {...inputProps} />;
-      break;
-    case "textarea":
-      control = <Textarea ref={ref} {...inputProps} />;
-      break;
-    case "date":
-      control = <InputDate ref={ref} {...inputProps} />;
-      break;
-    case "time":
-      control = <InputTime ref={ref} {...inputProps} />;
-      break;
-    case "datetime":
-      control = <InputDateTime ref={ref} {...inputProps} />;
-      break;
-    case "file":
-      control = <InputFile ref={ref} {...inputProps} />;
-      break;
-    case "between":
-      control = (
-        <InputBetween
-          ref={ref}
-          edit={edit}
-          hasRightButton={hasRightButton}
-          hasLeftButton={hasLeftButton}
-          {...inputProps}
-        />
-      );
-      break;
-    default:
-      control = <InputText ref={ref} {...inputProps} />;
-      break;
-  }
 
   return (
     <div className={classNames("space-y-1", SIZES[size])}>
@@ -170,10 +140,11 @@ const FormControl = forwardRef((props, ref) => {
               {leftText}
             </span>
           )}
-          {control}
+
+          {CONTROLS(ref, _inputProps)[type]}
+
           {hasRightText && type !== "between" && <span className="absolute right-0 px-1">{rightText}</span>}
         </div>
-
         {hasRightButton && (
           <button type="button" className="button border-l-0 rounded-l-none" onClick={rightButton.onClick}>
             {rightButton.icon && <Icon icon={rightButton.icon} size="xs" />}
@@ -186,21 +157,39 @@ const FormControl = forwardRef((props, ref) => {
   );
 });
 
-const InputText = forwardRef((props, ref) => {
+/**
+ * @typedef _inputProps
+ * @property {string} textColor
+ * @typedef {_inputProps & formattedInputProps} inputProps
+ */
+
+/**
+ * @type FC<inputProps>
+ */
+export const InputText = forwardRef((props, ref) => {
   const { invalid, ...rest } = props;
-  return <input {...rest} ref={ref} type="text" autoComplete="off" className="input" />;
+  return <FormattedInput {...rest} ref={ref} type="text" autoComplete="off" className="input" />;
 });
 
-const InputNumber = forwardRef((props, ref) => {
+/**
+ * @type FC<inputProps>
+ */
+export const InputNumber = forwardRef((props, ref) => {
   const { invalid, ...rest } = props;
-  return <input {...rest} ref={ref} type="number" autoComplete="off" className="input" />;
+  return <FormattedInput {...rest} ref={ref} type="number" autoComplete="off" className="input" />;
 });
 
-const InputPassword = forwardRef((props, ref) => {
+/**
+ * @type FC<inputProps>
+ */
+export const InputPassword = forwardRef((props, ref) => {
   const { invalid, ...rest } = props;
   return <input {...rest} ref={ref} type="password" autoComplete="off" className="input" />;
 });
 
+/**
+ * @type FC<inputProps>
+ */
 const Textarea = forwardRef((props, ref) => {
   const { invalid, ...rest } = props;
   return <textarea {...rest} ref={ref} className="input block h-14 overflow-hidden" />;
@@ -279,10 +268,10 @@ const InputDate = forwardRef((props, ref) => {
           rules={rules}
           render={({ field: { onChange, value } }) => {
             const _value = new Date(value);
-
             return (
               <ReactDatePicker
                 {...rest}
+                autoComplete="off"
                 selected={isNaN(_value) ? undefined : _value}
                 onChange={onChange}
                 className="input pl-5"
@@ -294,6 +283,7 @@ const InputDate = forwardRef((props, ref) => {
       ) : (
         <ReactDatePicker
           {...rest}
+          autoComplete="off"
           selected={selected}
           onChange={setSelected}
           className="input pl-5"
@@ -322,6 +312,7 @@ const InputTime = forwardRef((props, ref) => {
             return (
               <ReactDatePicker
                 {...rest}
+                autoComplete="off"
                 dateFormat={dateFormat}
                 timeIntervals={5}
                 showTimeSelect
@@ -337,6 +328,7 @@ const InputTime = forwardRef((props, ref) => {
       ) : (
         <ReactDatePicker
           {...rest}
+          autoComplete="off"
           selected={selected}
           onChange={setSelected}
           dateFormat={dateFormat}
@@ -368,6 +360,7 @@ const InputDateTime = forwardRef((props, ref) => {
             return (
               <ReactDatePicker
                 {...rest}
+                autoComplete="off"
                 timeIntervals={5}
                 showTimeSelect
                 selected={isNaN(_value) ? undefined : _value}
@@ -382,6 +375,7 @@ const InputDateTime = forwardRef((props, ref) => {
       ) : (
         <ReactDatePicker
           {...rest}
+          autoComplete="off"
           selected={selected}
           onChange={setSelected}
           timeIntervals={5}
@@ -437,7 +431,7 @@ const InputBetween = forwardRef((props, ref) => {
   };
 
   return (
-    <div className={classNames("w-full flex items-start")}>
+    <div className={classNames("w-full flex items-center")}>
       <Begin />
       <div
         className={classNames("flex items-center justify-center h-7 w-5", {
@@ -520,6 +514,78 @@ const FormControlGroup = ({ children }) => {
     </div>
   );
 };
+
+/**
+ * @typedef formattedInputProps
+ * @property {string} mask
+ * @property {boolean} exact
+ * @property {function} onBlur
+ * @property {function} onFocus
+ * @property {function} onChange
+ * @property {function} onValueChange
+ * @property {(string|number)} value
+ * @property {('upper'|'lower')} letterCase
+ */
+
+/**
+ * @type FC<formattedInputProps>
+ */
+export const FormattedInput = forwardRef((props, ref) => {
+  const { exact = true, onChange, onValueChange, mask, letterCase, type, ...rest } = props;
+
+  const LETTER_SET = ["a", "A", "0", "*"];
+  const REG_NUMBER = /^[0-9]+$/;
+
+  const handleChange = (e) => {
+    if (letterCase === "lower") e.target.value = e.target.value.toLowerCase();
+    if (letterCase === "upper") e.target.value = e.target.value.toUpperCase();
+
+    let values = mask ? handleFormat(e) : { value: e.target.value };
+    if (onValueChange) onValueChange(values);
+    if (onChange) onChange(e);
+  };
+
+  const handleFormat = (e) => {
+    const oldValue = e.target.value;
+    let maskedValueArray = mask.split("");
+    let oldValueArray = oldValue.split("");
+    let newValueArray = [];
+    let formattedValueArray = [];
+    const maxFormattedLength = maskedValueArray.length;
+    const maxLength = maskedValueArray.filter((_) => LETTER_SET.includes(_)).length;
+
+    for (let i = 0; i < oldValueArray.length; i++) {
+      let skip = 0;
+      for (let j = i + skip; !LETTER_SET.includes(maskedValueArray[i + skip]) && i + skip < maxFormattedLength; j++) {
+        if (maskedValueArray[i] === oldValueArray[i]) break;
+        formattedValueArray[j] = maskedValueArray[j];
+        skip++;
+      }
+      let letter = oldValueArray[i];
+      const letterType = maskedValueArray[i + skip];
+      const isNumber = REG_NUMBER.test(letter);
+      const shouldUpperString = letterType === "A";
+      const shouldLowerString = letterType === "a";
+      const shouldNumber = letterType === "0";
+      if (shouldNumber && !isNumber) break;
+      if ((shouldUpperString || shouldLowerString) && isNumber) break;
+      if (shouldUpperString) letter = letter.toUpperCase();
+      if (shouldLowerString) letter = letter.toLowerCase();
+      if (maskedValueArray[i] !== letter) newValueArray.push(letter);
+      formattedValueArray[i + skip] = letter;
+    }
+
+    let value = newValueArray.join("");
+    let formattedValue = formattedValueArray.join("");
+    value = exact ? value.substring(0, maxLength) : value;
+    formattedValue = exact ? formattedValue.substring(0, maxFormattedLength) : formattedValue;
+
+    e.target.value = formattedValue;
+    return { value, formattedValue };
+  };
+
+  return <input {...rest} ref={ref} onChange={handleChange} />;
+});
 
 const Compound = Object.assign({}, FormControl, { Group: FormControlGroup });
 

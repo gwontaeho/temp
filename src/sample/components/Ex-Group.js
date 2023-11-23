@@ -1,6 +1,6 @@
 import { Layout, Group, Table, Button } from "@/com/components";
 
-export const GroupEx = () => {
+export const ExGroup = () => {
   return (
     <Layout gap={16}>
       <Group>

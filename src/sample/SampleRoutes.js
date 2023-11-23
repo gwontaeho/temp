@@ -8,6 +8,60 @@ export const SampleRoutes = [
         base: "/components",
         children: [
           {
+            name: "Controls",
+            base: "/controls",
+            children: [
+              {
+                name: "Text",
+                to: "/text",
+              },
+              {
+                name: "Number",
+                to: "/number",
+              },
+              {
+                name: "Password",
+                to: "/password",
+              },
+              {
+                name: "Select",
+                to: "/select",
+              },
+              {
+                name: "Radio",
+                to: "/radio",
+              },
+              {
+                name: "Checkbox",
+                to: "/checkbox",
+              },
+              {
+                name: "Textarea",
+                to: "/textarea",
+              },
+              {
+                name: "Date",
+                to: "/date",
+              },
+              {
+                name: "Time",
+                to: "/time",
+              },
+              {
+                name: "Datetime",
+                to: "/datetime",
+              },
+              {
+                name: "Between",
+                to: "/between",
+              },
+              {
+                name: "File",
+                to: "/file",
+              },
+            ],
+          },
+          {
             name: "Group",
             to: "/group",
           },
