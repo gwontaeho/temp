@@ -6,7 +6,7 @@ export const ExText = () => {
       <Group>
         <Group.Body>
           <Group.Row>
-            <Group.Control label="text input" />
+            <Group.Control label="text input" mask="JK AAAAAA" />
           </Group.Row>
         </Group.Body>
       </Group>

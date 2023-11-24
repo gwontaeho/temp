@@ -7,7 +7,7 @@ import ReactDatePicker from "react-datepicker";
 import classNames from "classnames";
 import uuid from "react-uuid";
 import dayjs from "dayjs";
-import { Button, Icon } from "@/com/components";
+import { Button, Icon, Tooltip } from "@/com/components";
 
 const SIZES = {
   1: "w-1/12",
@@ -114,7 +114,7 @@ const FormControl = forwardRef((props, ref) => {
   }, [type, hasLeftText]);
 
   return (
-    <div className={classNames("space-y-1", SIZES[size])}>
+    <div className={classNames("space-y-1", SIZES[size], { "[&_.input]:border-invalid": invalid })}>
       {type !== "between" && isEditFalse && (
         <div className="space-x-1">
           {hasLeftText && <span>{leftText}</span>}
@@ -141,10 +141,13 @@ const FormControl = forwardRef((props, ref) => {
             </span>
           )}
 
-          {CONTROLS(ref, _inputProps)[type]}
+          <Tooltip enabled={type !== "between" && !!invalid} text="invalid field" size="full">
+            {CONTROLS(ref, _inputProps)[type]}
+          </Tooltip>
 
           {hasRightText && type !== "between" && <span className="absolute right-0 px-1">{rightText}</span>}
         </div>
+
         {hasRightButton && (
           <button type="button" className="button border-l-0 rounded-l-none" onClick={rightButton.onClick}>
             {rightButton.icon && <Icon icon={rightButton.icon} size="xs" />}
@@ -152,7 +155,7 @@ const FormControl = forwardRef((props, ref) => {
           </button>
         )}
       </div>
-      {!isEditFalse && invalid && <div className="text-invalid text-sm">invalid field</div>}
+      {/* {!isEditFalse && invalid && <div className="text-invalid text-sm">invalid field</div>} */}
     </div>
   );
 });
@@ -431,7 +434,7 @@ const InputBetween = forwardRef((props, ref) => {
   };
 
   return (
-    <div className={classNames("w-full flex items-center")}>
+    <div className={classNames("w-full flex items-start")}>
       <Begin />
       <div
         className={classNames("flex items-center justify-center h-7 w-5", {

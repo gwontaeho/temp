@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Group, Button, Layout, FormControl, FormattedInput } from "@/com/components";
+import { Group, Button, Layout, FormControl } from "@/com/components";
 import { useForm } from "@/com/hooks";
 
 const SCHEMA_SEARCH = {

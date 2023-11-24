@@ -37,8 +37,6 @@ export const ExGroup = () => {
             />
           </Group.Row>
           <Group.Row>
-            <Group.Control label="select" type="select" />
-
             <Group.Control
               label="between"
               type="between"
