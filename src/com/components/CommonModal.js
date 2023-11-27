@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { motion } from "framer-motion";
 import Draggable from "react-draggable";
 import { IconButton, Button } from "@/com/components";
-
 import { modalState } from "@/com/recoil";
 
 const MODAL_SIZES = {

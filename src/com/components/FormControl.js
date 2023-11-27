@@ -1,13 +1,13 @@
 import "react-datepicker/dist/react-datepicker.css";
 import "./FormControl.css";
 
-import { forwardRef, memo, useEffect, useRef, useState, FC } from "react";
+import { forwardRef, memo, useState, FC } from "react";
 import { Controller } from "react-hook-form";
 import ReactDatePicker from "react-datepicker";
 import classNames from "classnames";
 import uuid from "react-uuid";
 import dayjs from "dayjs";
-import { Button, Icon, Tooltip } from "@/com/components";
+import { Icon, Tooltip } from "@/com/components";
 
 const SIZES = {
   1: "w-1/12",
@@ -50,7 +50,7 @@ const CONTROLS = (ref, props) => ({
  * @property {object} rightText
  * @property {object} rightButton
  * @property {array} options
- * @typedef {_formControlProps & inputProps} formControlProps
+ * @typedef {_formControlProps & formattedInputProps} formControlProps
  */
 
 /**
@@ -60,146 +60,126 @@ const FormControl = forwardRef((props, ref) => {
   const {
     type = "text",
     size = "full",
+    edit = true,
     invalid,
     getValues,
-    edit,
     button,
     leftText,
     leftButton,
     rightText,
     rightButton,
-    ...inputProps
+    setValue,
+    ...rest
   } = props;
 
-  const isEditFalse = edit === false;
-  const hasLeftButton = Boolean(leftButton && !isEditFalse && type !== "between");
-  const hasRightButton = Boolean(rightButton && !isEditFalse && type !== "between");
-  const hasLeftText = Boolean(leftText);
+  const isBetween = type === "between";
+  const hasLeftButton = Boolean(leftButton && edit);
+  const hasRightButton = Boolean(rightButton && edit);
   const hasRightText = Boolean(rightText);
 
-  const controlRef = useRef();
-  const textRef = useRef();
-  const leftTextRef = useRef();
+  const Control = () => {
+    let inputProps = isBetween ? { ...rest, edit, setValue, hasRightButton, hasLeftButton } : rest;
 
-  const ignoreLeftText = ["date", "time", "datetime", "between"];
+    return (
+      <Tooltip enabled={!isBetween && !!invalid} text="invalid field" size="full">
+        {CONTROLS(ref, inputProps)[type]}
+      </Tooltip>
+    );
+  };
 
-  const betweenProps = { edit, hasRightButton, hasLeftButton };
+  const LeftButton = () => {
+    if (!hasLeftButton) return;
+    return (
+      <button type="button" className="button border-r-0 rounded-r-none" onClick={leftButton.onClick}>
+        {leftButton.icon && <Icon icon={leftButton.icon} size="xs" />}
+        {leftButton.text && <span>{leftButton.text}</span>}
+      </button>
+    );
+  };
 
-  let _inputProps = { ...inputProps };
-  if (type === "between") _inputProps = Object.assign(_inputProps, betweenProps);
+  const RightText = () => {
+    if (!hasRightText || isBetween) return;
+    return <span className="absolute right-0 px-1">{rightText}</span>;
+  };
 
-  useEffect(() => {
-    if (type === "between" || !getValues) return;
+  const RightButton = () => {
+    if (!hasRightButton) return;
+    return (
+      <button type="button" className="button border-l-0 rounded-l-none" onClick={rightButton.onClick}>
+        {rightButton.icon && <Icon icon={rightButton.icon} size="xs" />}
+        {rightButton.text && <span>{rightButton.text}</span>}
+      </button>
+    );
+  };
 
-    const controlElement = controlRef.current;
-    const textElement = textRef.current;
+  const InvalidMessage = () => {
+    if (!edit || !invalid) return;
+    return <div className="text-invalid text-sm">invalid field</div>;
+  };
 
-    if (isEditFalse) {
-      controlElement.classList.add("hidden");
-      const value = getValues(props.name);
-      if (value) textElement.innerHTML = value;
-    } else controlElement.classList.remove("hidden");
-  }, [isEditFalse]);
+  const Text = () => {
+    if (edit || isBetween) return;
 
-  useEffect(() => {
-    if (ignoreLeftText.includes(type)) return;
+    let value = getValues([props.name]);
+    switch (type) {
+      case "date":
+        value = dayjs(value).format("YYYY/MM/DD");
+        break;
+      case "time":
+        value = dayjs(value).format("HH:mm");
+        break;
+      case "datetime":
+        value = dayjs(value).format("YYYY/MM/DD");
+        break;
+    }
 
-    const input = controlRef.current.getElementsByClassName("input")[0];
-    if (!input) return;
-
-    if (hasLeftText) {
-      const leftTextWidth = leftTextRef.current.offsetWidth;
-      input.style.paddingLeft = `${leftTextWidth}px`;
-    } else input.removeAttribute("style");
-  }, [type, hasLeftText]);
+    return (
+      <div className="space-x-1">
+        <span className="break-all">{value}</span>
+        {hasRightText && <span>{rightText}</span>}
+      </div>
+    );
+  };
 
   return (
     <div className={classNames("space-y-1", SIZES[size], { "[&_.input]:border-invalid": invalid })}>
-      {type !== "between" && isEditFalse && (
-        <div className="space-x-1">
-          {hasLeftText && <span>{leftText}</span>}
-          <span ref={textRef} className="break-all" />
-          {hasRightText && <span>{rightText}</span>}
-        </div>
-      )}
+      <Text />
       <div
-        ref={controlRef}
         className={classNames("flex w-full", {
           "[&_.input]:rounded-r-none": hasRightButton,
           "[&_.input]:rounded-l-none": hasLeftButton,
+          hidden: !isBetween && !edit,
         })}>
-        {hasLeftButton && (
-          <button type="button" className="button border-r-0 rounded-r-none" onClick={leftButton.onClick}>
-            {leftButton.icon && <Icon icon={leftButton.icon} size="xs" />}
-            {leftButton.text && <span>{leftButton.text}</span>}
-          </button>
-        )}
+        <LeftButton />
         <div className={classNames("w-full relative flex items-center")}>
-          {hasLeftText && !ignoreLeftText.includes(type) && (
-            <span ref={leftTextRef} className="absolute left-0 px-1 z-10">
-              {leftText}
-            </span>
-          )}
-
-          <Tooltip enabled={type !== "between" && !!invalid} text="invalid field" size="full">
-            {CONTROLS(ref, _inputProps)[type]}
-          </Tooltip>
-
-          {hasRightText && type !== "between" && <span className="absolute right-0 px-1">{rightText}</span>}
+          <Control />
+          <RightText />
         </div>
-
-        {hasRightButton && (
-          <button type="button" className="button border-l-0 rounded-l-none" onClick={rightButton.onClick}>
-            {rightButton.icon && <Icon icon={rightButton.icon} size="xs" />}
-            {rightButton.text && <span>{rightButton.text}</span>}
-          </button>
-        )}
+        <RightButton />
       </div>
-      {/* {!isEditFalse && invalid && <div className="text-invalid text-sm">invalid field</div>} */}
+      <InvalidMessage />
     </div>
   );
 });
 
-/**
- * @typedef _inputProps
- * @property {string} textColor
- * @typedef {_inputProps & formattedInputProps} inputProps
- */
-
-/**
- * @type FC<inputProps>
- */
-export const InputText = forwardRef((props, ref) => {
-  const { invalid, ...rest } = props;
-  return <FormattedInput {...rest} ref={ref} type="text" autoComplete="off" className="input" />;
+const InputText = forwardRef((props, ref) => {
+  return <FormattedInput {...props} ref={ref} autoComplete="off" className="input" />;
 });
 
-/**
- * @type FC<inputProps>
- */
-export const InputNumber = forwardRef((props, ref) => {
-  const { invalid, ...rest } = props;
-  return <FormattedInput {...rest} ref={ref} type="number" autoComplete="off" className="input" />;
+const InputNumber = forwardRef((props, ref) => {
+  return <FormattedInput {...props} ref={ref} inputMode="numeric" autoComplete="off" className="input" />;
 });
 
-/**
- * @type FC<inputProps>
- */
-export const InputPassword = forwardRef((props, ref) => {
-  const { invalid, ...rest } = props;
-  return <input {...rest} ref={ref} type="password" autoComplete="off" className="input" />;
+const InputPassword = forwardRef((props, ref) => {
+  return <input {...props} ref={ref} type="password" autoComplete="off" className="input" />;
 });
 
-/**
- * @type FC<inputProps>
- */
 const Textarea = forwardRef((props, ref) => {
-  const { invalid, ...rest } = props;
-  return <textarea {...rest} ref={ref} className="input block h-14 overflow-hidden" />;
+  return <textarea {...props} ref={ref} className="input overflow-hidden" />;
 });
 
 const Select = forwardRef((props, ref) => {
-  const { invalid, options, ...rest } = props;
+  const { options, ...rest } = props;
   return (
     <div className="relative flex w-full items-center">
       <select {...rest} ref={ref} className="input appearance-none pr-5">
@@ -224,7 +204,7 @@ Select.Options = memo(({ options }) => {
 });
 
 const Checkbox = forwardRef((props, ref) => {
-  const { id, invalid, options, ...rest } = props;
+  const { id, options, ...rest } = props;
   return (
     <div id={id} className="flex flex-wrap">
       {Array.isArray(options) &&
@@ -241,7 +221,7 @@ const Checkbox = forwardRef((props, ref) => {
 });
 
 const Radio = forwardRef((props, ref) => {
-  const { id, invalid, options, ...rest } = props;
+  const { id, options, ...rest } = props;
   return (
     <div id={id} className="flex flex-wrap">
       {Array.isArray(options) &&
@@ -257,8 +237,8 @@ const Radio = forwardRef((props, ref) => {
   );
 });
 
-const InputDate = forwardRef((props, ref) => {
-  const { name, invalid, control, rules, ...rest } = props;
+const InputDate = (props) => {
+  const { name, control, rules, ...rest } = props;
   const [selected, setSelected] = useState();
 
   return (
@@ -295,10 +275,10 @@ const InputDate = forwardRef((props, ref) => {
       )}
     </div>
   );
-});
+};
 
 const InputTime = forwardRef((props, ref) => {
-  const { name, invalid, control, rules, ...rest } = props;
+  const { name, control, rules, ...rest } = props;
   const [selected, setSelected] = useState();
   const dateFormat = "HH:mm";
 
@@ -393,73 +373,87 @@ const InputDateTime = forwardRef((props, ref) => {
 });
 
 const InputBetween = forwardRef((props, ref) => {
-  const { edit, schema, options, setValue } = props;
+  const { edit, schema, options, setValue, hasLeftButton, hasRightButton } = props;
   const [begin, end] = Object.entries(schema);
 
-  const isEditFalse = edit === false;
-
-  const handleClickButton = (unit, value) => {
-    if (!setValue) return;
-    const isAdd = value > 0;
-    const today = new Date();
-    if (isAdd) {
-      setValue(begin[0], today);
-      setValue(end[0], dayjs(today).add(value, unit).toDate());
-    } else {
-      setValue(begin[0], dayjs(today).add(value, unit).toDate());
-      setValue(end[0], today);
-    }
-  };
-
   const Begin = () => {
-    const schema = begin[1];
+    const schema = { name: begin[0], ...begin[1] };
     return (
-      <div className={classNames("[&_.input]:rounded-r-none [&_.button]:rounded-r-none", { "flex-1": !isEditFalse })}>
-        <FormControl {...schema} edit={edit} />
+      <div
+        className={classNames("[&_.input]:rounded-r-none [&_.button]:rounded-r-none", {
+          "[&_.button]:rounded-l-none": hasLeftButton,
+          "flex-1": edit,
+        })}>
+        <FormControl {...schema} />
       </div>
     );
   };
 
   const End = () => {
-    const schema = end[1];
+    const schema = { name: end[0], ...end[1] };
     return (
       <div
         className={classNames("[&_.input]:rounded-l-none [&_.button]:rounded-l-none", {
-          "flex-1": !isEditFalse,
-          "[&_.input]:rounded-r-none [&_.button]:rounded-r-none": options,
+          "[&_.button]:rounded-r-none": options || hasRightButton,
+          "[&_.input]:rounded-r-none": options,
+          "flex-1": edit,
         })}>
-        <FormControl {...schema} edit={edit} />
+        <FormControl {...schema} />
+      </div>
+    );
+  };
+
+  const Buttons = () => {
+    if (!options || !edit) return;
+
+    const handleClickButton = (unit, value) => {
+      if (!setValue) return;
+      const isAdd = value > 0;
+      const today = new Date();
+      if (isAdd) {
+        setValue(begin[0], today);
+        setValue(end[0], dayjs(today).add(value, unit).toDate());
+      } else {
+        setValue(begin[0], dayjs(today).add(value, unit).toDate());
+        setValue(end[0], today);
+      }
+    };
+
+    return (
+      <div className="flex">
+        {BETWEEN_BUTTON_OPTIONS[options].map(({ label, unit, value }) => {
+          return (
+            <button
+              key={uuid()}
+              onClick={() => handleClickButton(unit, value)}
+              type="button"
+              className={classNames("button bg-header text-sm border-l-0 rounded-none", {
+                "last:rounded-r": !hasRightButton,
+              })}>
+              {label}
+            </button>
+          );
+        })}
       </div>
     );
   };
 
   return (
-    <div className={classNames("w-full flex items-start")}>
+    <div className={classNames("w-full flex")}>
       <Begin />
       <div
-        className={classNames("flex items-center justify-center h-7 w-5", {
-          "bg-header border-y": !isEditFalse,
+        className={classNames("flex items-center justify-center w-5", {
+          "h-7 bg-header border-y": edit,
         })}>
         -
       </div>
       <End />
-
-      {!isEditFalse && options && (
-        <div className="flex [&>button]:bg-header [&>button]:text-sm [&>button]:border-l-0 [&>button]:rounded-none last:[&>button]:rounded-r">
-          {InputBetweenOptions[options].map(({ label, unit, value }) => {
-            return (
-              <Button key={uuid()} onClick={() => handleClickButton(unit, value)}>
-                {label}
-              </Button>
-            );
-          })}
-        </div>
-      )}
+      <Buttons />
     </div>
   );
 });
 
-const InputBetweenOptions = {
+const BETWEEN_BUTTON_OPTIONS = {
   date1: [
     { label: "-3M", unit: "M", value: -3 },
     { label: "-1M", unit: "M", value: -1 },
@@ -528,13 +522,24 @@ const FormControlGroup = ({ children }) => {
  * @property {function} onValueChange
  * @property {(string|number)} value
  * @property {('upper'|'lower')} letterCase
+ * @property {boolean} thousandSeparator
+ * @property {number} decimalScale
  */
 
 /**
  * @type FC<formattedInputProps>
  */
 export const FormattedInput = forwardRef((props, ref) => {
-  const { exact = true, onChange, onValueChange, mask, letterCase, type, ...rest } = props;
+  const {
+    thousandSeparator = false,
+    exact = true,
+    decimalScale,
+    onChange,
+    onValueChange,
+    letterCase,
+    mask,
+    ...rest
+  } = props;
 
   const LETTER_SET = ["a", "A", "0", "*"];
   const REG_NUMBER = /^[0-9]+$/;
@@ -543,12 +548,34 @@ export const FormattedInput = forwardRef((props, ref) => {
     if (letterCase === "lower") e.target.value = e.target.value.toLowerCase();
     if (letterCase === "upper") e.target.value = e.target.value.toUpperCase();
 
-    let values = mask ? handleFormat(e) : { value: e.target.value };
+    let values = { value: e.target.value };
+
+    if (thousandSeparator || decimalScale) values = handleNumber(e);
+    if (!(thousandSeparator || decimalScale) && mask) values = handleMask(e);
+
     if (onValueChange) onValueChange(values);
     if (onChange) onChange(e);
   };
 
-  const handleFormat = (e) => {
+  const handleNumber = (e) => {
+    if (decimalScale > 0) {
+      if (isNaN(Number(e.target.value.replaceAll(",", "")))) e.target.value = e.target.value.replaceAll(/[\D]/g, "");
+      const int = e.target.value.split(".")[0];
+      const dec = e.target.value.split(".")[1]?.replaceAll(",", "").slice(0, decimalScale);
+      e.target.value = int + (dec !== undefined ? "." + dec : "");
+    }
+
+    if (thousandSeparator) {
+      if (isNaN(Number(e.target.value.replaceAll(",", "")))) e.target.value = e.target.value.replaceAll(/[\D]/g, "");
+      const int = e.target.value.split(".")[0];
+      const dec = e.target.value.split(".")[1]?.replaceAll(",", "");
+      e.target.value = Number(int.replaceAll(",", "")).toLocaleString() + (dec !== undefined ? "." + dec : "");
+    }
+
+    return { value: Number(e.target.value.replaceAll(",", "")), formattedValue: e.target.value };
+  };
+
+  const handleMask = (e) => {
     const oldValue = e.target.value;
     let maskedValueArray = mask.split("");
     let oldValueArray = oldValue.split("");

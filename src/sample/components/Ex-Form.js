@@ -23,41 +23,24 @@ const SCHEMA_SEARCH = {
   time_1: { type: "time", label: "time", required: true },
   datetime_1: { type: "datetime", label: "datetime", required: true },
   file: { type: "file", required: true },
+
   between: {
     type: "between",
-    label: "between 1",
+    label: "between",
     options: "date1",
-    rightButton: { icon: "search" },
+    // rightButton: { icon: "search" },
     leftText: "aqwdqwda",
+    leftButton: { icon: "search" },
+
     schema: {
-      begin1: {
+      begin: {
         type: "date",
         required: true,
         leftText: "aa",
         leftButton: { icon: "search" },
         rightButton: { icon: "search" },
       },
-      end1: { type: "date", required: true, leftButton: { icon: "search" }, rightButton: { icon: "search" } },
-    },
-  },
-  between1: {
-    type: "between",
-    label: "between 2",
-    options: "date2",
-    schema: { begin2: { type: "date" }, end2: { type: "date" } },
-  },
-  between2: {
-    type: "between",
-    label: "between 3",
-    options: "date3",
-    schema: { begin3: { type: "date" }, end3: { type: "date" } },
-  },
-  between3: {
-    type: "between",
-    label: "between 4",
-    schema: {
-      begin4: { type: "date", leftButton: { icon: "search" } },
-      end4: { type: "date", rightButton: { icon: "search" } },
+      end: { type: "date", required: true, leftButton: { icon: "search" } },
     },
   },
 };
@@ -105,8 +88,8 @@ export const ExForm = () => {
         <form>
           <Group.Body>
             <Group.Row>
-              <Group.Control {...schema.text_1} mask="JJ 0000" exact={false} onValueChange={(e) => console.log(e)} />
-              <Group.Control {...schema.number_1} />
+              <Group.Control {...schema.text_1} exact={false} onValueChange={(e) => console.log(e)} />
+              <Group.Control {...schema.number_1} letterCase="upper" thousandSeparator={true} />
             </Group.Row>
             <Group.Row>
               <Group.Control {...schema.password_1} />
@@ -129,31 +112,14 @@ export const ExForm = () => {
               <Group.Control {...schema.between} controlSize={10} />
             </Group.Row>
             <Group.Row>
-              <Group.Control {...schema.between1} controlSize={10} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.between2} controlSize={10} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.between3} controlSize={10} />
-            </Group.Row>
-            <Group.Row>
-              <Group.Label type="text" />
-              <Group.Control />
-              <Group.Label type="text" required={true} />
-              <Group.Control />
-            </Group.Row>
-            <Group.Row>
-              <Group.Col colSize={12}>
-                <Button size="full">button size 4</Button>
-                <FormControl type="file" />
-              </Group.Col>
+              <Group.Control {...schema.file} controlSize={10} />
             </Group.Row>
           </Group.Body>
         </form>
 
         <Layout.Right>
           <Button onClick={resetSchema}>reset schema</Button>
+          <Button onClick={() => setValue("text_1", "test123")}>set text_1</Button>
           <Button onClick={() => setSchema("text_1", { type: "text" })}>text_1 to text</Button>
           <Button onClick={() => setSchema("text_1", { type: "textarea" })}>text_1 to textarea</Button>
           <Button onClick={() => setSchema("text_1", { required: true })}>text_1 required true</Button>
@@ -165,6 +131,7 @@ export const ExForm = () => {
           <Button onClick={clearValues}>값 초기화</Button>
           <Button onClick={etr}>edit true</Button>
           <Button onClick={() => etr(false)}>edit false</Button>
+          <Button onClick={() => setEditable("between3", false)}>bt3 edit false</Button>
           <Button onClick={validate}>validate</Button>
           <Button onClick={() => console.log(getValues())}>get values</Button>
           <Button onClick={() => console.log(getValues("text_1"))}>get text_1</Button>

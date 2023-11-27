@@ -38,9 +38,9 @@
 
 @layer components {
   .input {
-    @apply min-h-[1.75rem] h-7 p-1 w-full transition bg-background border rounded outline-none focus:border-blue;
+    @apply block min-h-[1.75rem] h-7 p-1 w-full transition bg-background border rounded outline-none focus:border-blue;
   }
   .button {
-    @apply min-h-[1.75rem] px-2 py-1 transition bg-background border rounded;
+    @apply block min-h-[1.75rem] h-7 px-2 transition bg-background border rounded;
   }
 }

@@ -10,11 +10,11 @@ import { useForm as _useForm } from "react-hook-form";
 // validate
 
 /**
- * @param {Object} props
- * @param {Object} props.defaultSchema
- * @param {Object} props.values
+ * @param {object} props
+ * @param {object} props.defaultSchema
+ * @param {object} props.values
  */
-export const useForm = (props) => {
+export const useForm = (props = {}) => {
   const {
     register,
     getValues,
@@ -29,8 +29,8 @@ export const useForm = (props) => {
     watch,
     formState: { errors, isSubmitted },
   } = _useForm({ values: props.values });
-  const { defaultSchema } = props || {};
-  const { __form__, ..._defaultSchema } = defaultSchema || {};
+  const { defaultSchema = {} } = props;
+  const { __form__, ..._defaultSchema } = defaultSchema;
   const [_schema, _setSchema] = useState(_defaultSchema);
 
   // update schema
@@ -39,14 +39,14 @@ export const useForm = (props) => {
   };
 
   // reset schema
-  const resetSchema = (key, value) => {
+  const resetSchema = () => {
     _setSchema(_defaultSchema);
     reset();
   };
 
   // update schema edit false|true
   const setEditable = (key, value) => {
-    if (value === undefined) {
+    if (value === undefined)
       return _setSchema((prev) =>
         Object.fromEntries(
           Object.entries(prev).map((_) => {
@@ -54,7 +54,7 @@ export const useForm = (props) => {
           })
         )
       );
-    }
+
     _setSchema((prev) => ({ ...prev, [key]: { ...prev[key], edit: value } }));
   };
 
@@ -80,7 +80,7 @@ export const useForm = (props) => {
       const getCommon = (name, origin) => {
         const { type, pattern, validate, minLength, maxLength, required, ...rest } = origin;
         const id = __form__ + "." + name;
-        const common = { id, type, getValues, ...rest };
+        const common = { id, type, getValues, setValue, ...rest };
         const invalid = errors[name];
         if (invalid) common.invalid = invalid;
         return common;
@@ -97,16 +97,14 @@ export const useForm = (props) => {
       const getRules = (origin) => {
         const rules = {};
         const { pattern, validate, minLength, maxLength, required } = origin;
-
         if (maxLength) rules.maxLength = maxLength;
         if (required) rules.required = required;
         if (minLength) rules.minLength = minLength;
         if (pattern) rules.pattern = pattern;
         if (validate) rules.validate = validate;
-
-        rules.onChange = () => {
-          if (getFieldState(name).invalid) trigger(name);
-        };
+        // rules.onChange = () => {
+        //   if (getFieldState(name).invalid) trigger(name);
+        // };
         return rules;
       };
 
@@ -125,8 +123,19 @@ export const useForm = (props) => {
         case "datetime":
           obj = Object.assign(getCommon(name, origin), getControl(name, origin), getInputProps(origin));
           break;
+        // case "between":
+        //   obj = Object.assign(getCommon(name, origin), { schema: getSchema(Object.entries(origin.schema)), setValue });
+        //   break;
         case "between":
-          obj = Object.assign(getCommon(name, origin), { schema: getSchema(Object.entries(origin.schema)), setValue });
+          obj = Object.assign(getCommon(name, origin), {
+            schema: getSchema(
+              Object.entries(origin.schema).map((_) => {
+                const withEdit = _[1];
+                withEdit.edit = origin.edit === false ? false : true;
+                return [_[0], withEdit];
+              })
+            ),
+          });
           break;
         default:
           obj = Object.assign(getCommon(name, origin), getRegister(name, origin), getInputProps(origin));
