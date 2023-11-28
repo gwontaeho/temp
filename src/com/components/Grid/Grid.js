@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { FormControl } from "./FormControl";
+import { FormControl } from "../FormControl/FormControl";
 import _ from "lodash";
 
 export const Grid = (props) => {

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Wijmo, Group, Layout, Tab, Button, Navigation, PageHeader } from "@/com/components";
+import { Page, Wijmo, Group, Layout, Tab, Button } from "@/com/components";
 import { useForm, useWijmo, useFetch, useModal, useToast } from "@/com/hooks";
 import { SCHEMA_FORM_REGIST, SCHEMA_GRID_COMPONENTS_REGIST, APIS } from "./SampleService";
 
@@ -56,9 +56,9 @@ export const SampleRegist = () => {
   };
 
   return (
-    <Layout>
-      <Navigation base="/sample/pages" nodes={[{ path: "/", label: "List" }, { label: "Regist" }]} />
-      <PageHeader title="Sample Regist" description="Sample Regist Description" />
+    <Page>
+      <Page.Navigation base="/sample/pages" nodes={[{ path: "/", label: "List" }, { label: "Regist" }]} />
+      <Page.Header title="Sample Regist" description="Sample Regist Description" />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Group>
@@ -99,6 +99,6 @@ export const SampleRegist = () => {
           </Tab.Panel>
         </Tab>
       </Group>
-    </Layout>
+    </Page>
   );
 };

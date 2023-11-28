@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useWijmo, useFetch } from "@/com/hooks";
 import { Group } from "@/com/components";
-import { Wijmo } from "@/com/components/Wijmo.v2";
+import { Wijmo } from "@/com/components/Wijmo.v2/Wijmo.v2";
+import uuid from "react-uuid";
 
 const instance = axios.create({
   baseURL: "http://183.107.31.131:8000/template",
@@ -28,12 +29,23 @@ const schema = {
       cells: [{ binding: "id", colspan: 3 }],
     },
     {
-      cells: [{ binding: "b", type: "select" }],
-    },
-    {
-      cells: [{ header: "e", binding: "c", type: "date" }],
+      cells: [{ binding: "a" }],
     },
   ],
+};
+
+const getMockData = () => {
+  return {
+    page: 0,
+    size: 10,
+    totCnt: 99,
+    content: Array(10)
+      .fill(null)
+      .map((_) => ({
+        id: uuid(),
+        a: Math.random() * 1000,
+      })),
+  };
 };
 
 export const ExWijmo = () => {
@@ -48,9 +60,11 @@ export const ExWijmo = () => {
     // key: [page, size],
   });
 
+  console.log(getMockData());
+
   return (
     <Group>
-      <Wijmo {...grid} data={data} />
+      <Wijmo {...grid} data={getMockData()} />
 
       <div className="space-x-2">
         <button onClick={() => console.log(getData())}>데이터 가져오기</button>

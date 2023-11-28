@@ -52,7 +52,11 @@ export const Layout = (props) => {
 };
 
 const LayoutLeft = ({ children }) => {
-  return <div className="w-full max-w-fit flex space-x-1">{children}</div>;
+  return <div className="w-full flex space-x-1">{children}</div>;
+};
+
+const LayoutCenter = ({ children }) => {
+  return <div className="w-full max-w-fit flex space-x-1 justify-center">{children}</div>;
 };
 
 const LayoutRight = ({ children }) => {
@@ -61,3 +65,4 @@ const LayoutRight = ({ children }) => {
 
 Layout.Left = LayoutLeft;
 Layout.Right = LayoutRight;
+Layout.Center = LayoutCenter;

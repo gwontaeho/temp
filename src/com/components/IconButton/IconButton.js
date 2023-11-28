@@ -1,5 +1,5 @@
-import { Icon } from "@/com/components/Icon";
-import { iconProps } from ".";
+import { Icon } from "@/com/components/Icon/Icon";
+import { iconProps } from "..";
 
 /**
  * @typedef {object} _iconButtonProps

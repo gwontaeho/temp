@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, memo } from "react";
 
 export const Collapse = ({ children, open }) => {
   const outer = useRef();

@@ -206,7 +206,7 @@ Select.Options = memo(({ options }) => {
 const Checkbox = forwardRef((props, ref) => {
   const { id, options, ...rest } = props;
   return (
-    <div id={id} className="flex flex-wrap">
+    <div id={id} className="flex flex-wrap w-fit">
       {Array.isArray(options) &&
         options.map(({ label, value }) => {
           return (
@@ -223,7 +223,7 @@ const Checkbox = forwardRef((props, ref) => {
 const Radio = forwardRef((props, ref) => {
   const { id, options, ...rest } = props;
   return (
-    <div id={id} className="flex flex-wrap">
+    <div id={id} className="flex flex-wrap w-fit">
       {Array.isArray(options) &&
         options.map(({ label, value }) => {
           return (

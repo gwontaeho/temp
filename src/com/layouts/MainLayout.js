@@ -1,4 +1,4 @@
-import { Header, NavVertical } from "@/com/components";
+import { Header, NavVertical } from "@/com/components/_";
 
 export const MainLayout = ({ children }) => {
   return (

@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { motion } from "framer-motion";
 
 import { toastState } from "@/com/recoil";
-import { Button } from "./Button";
+import { Button } from "../../Button/Button";
 import { useEffect } from "react";
 
 const Toast = (props) => {

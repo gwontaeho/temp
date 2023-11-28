@@ -10,7 +10,7 @@ import { ExTree } from "@/sample/components/Ex-Tree";
 import { ExTable } from "@/sample/components/Ex-Table";
 import { ExWijmo } from "@/sample/components/Ex-Wijmo";
 
-import { Sample } from "@/sample/pages/Sample";
+import { SampleList } from "@/sample/pages/SampleList";
 import { SampleDetail } from "@/sample/pages/SampleDetail";
 import { SampleRegist } from "@/sample/pages/SampleRegist";
 import { SampleUpdate } from "@/sample/pages/SampleUpdate";
@@ -28,7 +28,7 @@ export const SampleMain = () => {
       <Route path="/components/wijmo" element={<ExWijmo />} />
       <Route path="/components/table" element={<ExTable />} />
 
-      <Route path="/pages" element={<Sample />} />
+      <Route path="/pages" element={<SampleList />} />
       <Route path="/pages/:id" element={<SampleDetail />} />
       <Route path="/pages/:id/update" element={<SampleUpdate />} />
       <Route path="/pages/regist" element={<SampleRegist />} />

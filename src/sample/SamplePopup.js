@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
-import { PopupSampleSearch } from "./pages/Popup-SampleSearch";
+import { PopupSearch } from "./pages/SampleList";
 
 export const SamplePopup = () => {
   return (
     <Routes>
-      <Route path="/pages" element={<PopupSampleSearch />} />
+      <Route path="/pages" element={<PopupSearch />} />
     </Routes>
   );
 };

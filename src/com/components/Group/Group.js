@@ -1,7 +1,7 @@
 import React, { FC, forwardRef } from "react";
 import classNames from "classnames";
 import { FormControl } from "@/com/components";
-import { formControlProps } from "@/com/components/FormControl";
+import { formControlProps } from "@/com/components/FormControl/FormControl";
 
 const SIZES = {
   1: "col-span-1",

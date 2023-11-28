@@ -2,26 +2,19 @@ import "@grapecity/wijmo.styles/wijmo.css";
 // import "./Wijmo.css";
 
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Pagination, FormControl } from "@/com/components";
+import { Pagination, Icon } from "@/com/components";
 import * as wjGrid from "@grapecity/wijmo.react.grid.multirow";
-
 import { Selector } from "@grapecity/wijmo.grid.selector";
-import {
-  InputDate,
-  InputTime,
-  InputDateTime,
-  InputNumber,
-  InputMask,
-  ComboBox,
-  InputDateRange,
-  MultiSelect,
-} from "@grapecity/wijmo.input";
-import { Button } from "./Button";
-import uuid from "react-uuid";
-import { Form } from "react-router-dom";
+import { InputDate, InputTime, InputDateTime, InputNumber, InputMask, ComboBox } from "@grapecity/wijmo.input";
+import { CellMaker } from "@grapecity/wijmo.grid.cellmaker";
 
-export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data }) => {
+import { Button } from "@/com/components/Button/Button";
+import uuid from "react-uuid";
+
+export const Wijmo = ({ gridRef, schema = {}, pagination, addRow, removeChecked, onSelect, data } = {}) => {
+  const navigate = useNavigate();
   // schema
   const head = schema.head;
   const body = schema.body;
@@ -41,16 +34,24 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
   }, [originTotalCount]);
 
   useEffect(() => {
-    if (!gridRef.current) return;
+    if (!gridRef?.current) return;
     if (schema.options?.checkbox) new Selector(gridRef.current.control);
     if (schema.options?.isReadOnly) gridRef.current.control.isReadOnly = true;
+
+    gridRef.current.control.selectionMode = "Row";
     gridRef.current.control.allowAddNew = true;
     gridRef.current.control.allowDelete = true;
-    // gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
-    // gridRef.current.control.layoutDefinition = layoutDefinition();
+    gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
+    gridRef.current.control.layoutDefinition = layoutDefinition();
+
+    gridRef.current.control.selectionChanged.addHandler((_, __) => {
+      if (!onSelect) return;
+      onSelect(_.selectedItems);
+    });
 
     gridRef.current.control.itemsSourceChanged.addHandler((_) => {
       if (!_.collectionView) return;
+
       _.collectionView.collectionChanged.addHandler((__) => {
         const { pageSize, sourceCollection } = __;
         if (!isInnerPagination) return;
@@ -72,18 +73,18 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
   }, []);
 
   useEffect(() => {
-    if (!gridRef.current) return;
+    if (!gridRef?.current) return;
     gridRef.current.control.itemsSource = _.cloneDeep(originContent);
     gridRef.current.control.collectionView.pageSize = pagination.size;
   }, [data]);
 
   const headerLayoutDefinition = () => {
+    if (!head) return;
     return head.map((_) => {
       return {
         ..._,
         cells: _.cells.map((__) => {
-          const cells = { ...__, align: "center" };
-
+          const cells = { ...__, align: "center", allowSorting: true };
           return cells;
         }),
       };
@@ -91,13 +92,23 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
   };
 
   const layoutDefinition = () => {
+    if (!body) return;
     return body.map((_) => {
       return {
         ..._,
-        cells: _.cells.map(({ type, mask, options, ...__ }, i) => {
+        cells: _.cells.map(({ type, mask, options, link, ...__ }, i) => {
           const cells = { ...__ };
           const itemsSource = options;
           const displayMemberPath = "label";
+          cells.allowSorting = true;
+
+          if (link) {
+            cells.cellTemplate = CellMaker.makeLink({
+              click: (e, ctx) => {
+                navigate(`/sample/pages/${ctx.value}`);
+              },
+            });
+          }
 
           switch (type) {
             case "number":
@@ -121,7 +132,6 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
               cells.format = "g";
               break;
           }
-
           return cells;
         }),
       };
@@ -140,85 +150,35 @@ export const Wijmo = ({ gridRef, schema, pagination, addRow, removeChecked, data
     } else pagination.setSize(nextSize);
     handleChangePage(0);
   };
-  console.log(body);
 
   return (
     <div className="space-y-4">
-      <wjGrid.MultiRow ref={gridRef}>
-        {body.map((_) => {
-          return (
-            <wjGrid.MultiRowCellGroup key={uuid()} colspan={_.colspan}>
-              {_.cells.map((__) => {
-                return (
-                  <wjGrid.MultiRowCell key={uuid()} colspan={__.colspan} binding={__.binding}>
-                    <wjGrid.MultiRowCellTemplate
-                      cellType="ColumnHeader"
-                      template={(v) => {
-                        return <input />;
-                      }}
-                    />
+      {(schema.options?.add || schema.options?.remove) && (
+        <div className="flex space-x-2 justify-end">
+          {schema.options?.add && (
+            <Button onClick={addRow}>
+              <Icon icon="plus" size="xs" />
+            </Button>
+          )}
+          {schema.options?.remove && (
+            <Button onClick={removeChecked}>
+              <Icon icon="minus" size="xs" />
+            </Button>
+          )}
+        </div>
+      )}
 
-                    <wjGrid.MultiRowCellTemplate
-                      cellType="Cell"
-                      template={(v) => {
-                        return <div>{v.item.textField}</div>;
-                      }}
-                    />
+      <wjGrid.MultiRow ref={gridRef} />
 
-                    <wjGrid.MultiRowCellTemplate
-                      cellType="CellEdit"
-                      template={(v) => {
-                        console.log(v);
-                        return (
-                          <div className="flex space-x-2">
-                            <FormControl defaultValue={v.value} onChange={(e) => (v.value = e.target.value)} />
-                            <FormControl
-                              defaultValue={v.item.textField}
-                              onChange={(e) => (v.item.textField = e.target.value)}
-                            />
-                          </div>
-                        );
-                      }}
-                    />
-                  </wjGrid.MultiRowCell>
-                );
-              })}
-            </wjGrid.MultiRowCellGroup>
-          );
-        })}
-      </wjGrid.MultiRow>
+      {schema.options?.pagination && (
+        <Pagination
+          page={pagination.page}
+          size={pagination.size}
+          onChangePage={handleChangePage}
+          onChangeSize={handleChangeSize}
+          totalCount={totalCount}
+        />
+      )}
     </div>
   );
 };
-
-// {body.map((_) => {
-//   return (
-//     <wjGrid.MultiRowCellGroup key={uuid()} colspan={_.colspan}>
-//       {_.cells.map((__) => {
-//         const { colspan, binding, render, ...rest } = __;
-//         return (
-//           <wjGrid.MultiRowCell key={uuid()} colspan={colspan} binding={binding}>
-//             {/* <wjGrid.MultiRowCellTemplate
-//               cellType="Cell"
-//               template={(ctx) => {
-//                 return <div>{ctx.item[binding]}</div>;
-//               }}
-//             /> */}
-//             <wjGrid.MultiRowCellTemplate
-//               cellType="CellEdit"
-//               template={(ctx) => {
-//                 return (
-//                   <FormControl
-//                     {...rest}
-//                     defaultValue={ctx.value}
-//                     onChange={(e) => (ctx.value = e.target.value)}
-//                   />
-//                 );
-//               }}
-//             />
-//           </wjGrid.MultiRowCell>
-//         );
-//       })}
-//     </wjGrid.MultiRowCellGroup>
-//   );
-// })}

@@ -1,13 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import { useForm, useFetch, useWijmo, useModal, useCondition, usePopup } from "@/com/hooks";
-import { Group, Layout, Wijmo, Navigation, PageHeader, Button, Tooltip, Icon } from "@/com/components";
+import { Page, Group, Layout, Wijmo, Button } from "@/com/components";
 import { OPTIONS, SCHEMA_FORM, SCHEMA_GRID, APIS, SCHEMA_GRID_COMPONENTS } from "./SampleService";
 
-const Modal = ({ _form, onSubmit }) => {
-  const { openModal } = useModal();
-  const sm = () => {
-    openModal({});
+export const PopupSearch = () => {
+  const { postMessage } = usePopup();
+
+  const { condition } = useCondition();
+  const _form = useForm({ defaultSchema: SCHEMA_FORM, values: condition });
+
+  const onSubmit = (data) => {
+    postMessage(data);
   };
+
+  return (
+    <Page>
+      <Page.Header title="Sample Search Popup" description="Sample Search Popup Description" />
+      <form onSubmit={_form.handleSubmit(onSubmit)}>
+        <Group>
+          <Group.Body>
+            <Group.Row>
+              <Group.Control {..._form.schema.con1} />
+              <Group.Control {..._form.schema.con2} options={OPTIONS} />
+            </Group.Row>
+            <Group.Row>
+              <Group.Control {..._form.schema._con34} controlSize={10} />
+            </Group.Row>
+          </Group.Body>
+          <Layout.Right>
+            <Button type="submit">검색</Button>
+          </Layout.Right>
+        </Group>
+      </form>
+    </Page>
+  );
+};
+
+const ModalSearch = () => {
+  const { condition, setCondition } = useCondition({ pathname: "/sample/pages" });
+  const _form = useForm({ defaultSchema: SCHEMA_FORM, values: condition });
+
+  const onSubmit = (data) => {
+    setCondition(data);
+  };
+
   return (
     <Layout>
       <form onSubmit={_form.handleSubmit(onSubmit)}>
@@ -22,7 +58,6 @@ const Modal = ({ _form, onSubmit }) => {
             </Group.Row>
           </Group.Body>
           <Layout.Right>
-            <Button onClick={sm}>모달</Button>
             <Button type="submit">검색</Button>
           </Layout.Right>
         </Group>
@@ -31,10 +66,10 @@ const Modal = ({ _form, onSubmit }) => {
   );
 };
 
-export const Sample = () => {
+export const SampleList = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
-  const { openPopup, closePopup } = usePopup();
+  const { openPopup } = usePopup();
 
   const { condition, setCondition } = useCondition();
   const _form = useForm({ defaultSchema: SCHEMA_FORM, values: condition });
@@ -46,8 +81,8 @@ export const Sample = () => {
   const dcg = useFetch({ api: APIS.deleteComponentGroup });
   const gcgs = useFetch({
     api: () => APIS.getComponentGroups(_wijmo.page, _wijmo.size, condition),
-    enabled: condition,
     key: [_wijmo.page, _wijmo.size, condition],
+    enabled: condition,
   });
 
   const handleClickDelete = () => {
@@ -76,25 +111,17 @@ export const Sample = () => {
   };
 
   const handleShowModal = () => {
-    openModal({ size: "lg", backdrop: false, render: <Modal _form={_form} onSubmit={onSubmit} /> });
+    openModal({ size: "lg", backdrop: false, render: <ModalSearch _form={_form} onSubmit={onSubmit} /> });
   };
 
   const handleShowPopup = () => {
-    openPopup({ url: "/sample/pages", params: { adw: "awdd" }, callback: (data) => setCondition(data) });
-  };
-
-  const handleShowPopup2 = () => {
-    openPopup({ id: "ff", url: "/sample/pages", callback: (data) => console.log(data) });
-  };
-
-  const handleClosePopup = () => {
-    closePopup();
+    openPopup({ url: "/sample/pages", callback: (data) => setCondition(data) });
   };
 
   return (
-    <Layout>
-      <Navigation base="/page/sample" nodes={[{ label: "List" }]} />
-      <PageHeader title="Sample List" description="Sample List Page Description" />
+    <Page>
+      <Page.Navigation base="/page/sample" nodes={[{ label: "List" }]} />
+      <Page.Header title="Sample List" description="Sample List Page Description" />
 
       <form onSubmit={_form.handleSubmit(onSubmit)}>
         <Group>
@@ -108,15 +135,9 @@ export const Sample = () => {
             </Group.Row>
           </Group.Body>
           <Layout.Right>
-            <Tooltip text="tooltip test 123!@#">
-              <Icon icon="question" />
-            </Tooltip>
-            <Button onClick={handleClosePopup}>팝업닫기</Button>
-            <Button onClick={handleShowPopup2}>팝업test</Button>
-            <Button onClick={handleShowPopup}>팝업</Button>
-            <Button onClick={handleShowModal}>모달</Button>
-            <Button onClick={() => console.log(_form.getValues())}>검색조건 조회</Button>
             <Button onClick={() => navigate("/sample/pages/regist")}>등록</Button>
+            <Button onClick={handleShowPopup}>팝업으로 검색</Button>
+            <Button onClick={handleShowModal}>모달로 검색</Button>
             <Button type="submit">검색</Button>
           </Layout.Right>
         </Group>
@@ -154,6 +175,6 @@ export const Sample = () => {
           {gcs.isSuccess && <Wijmo {..._wijmo2.grid} data={gcs.data} />}
         </Group>
       )}
-    </Layout>
+    </Page>
   );
 };

@@ -1,4 +1,4 @@
-import { Layout, Group, Table, Button } from "@/com/components";
+import { Layout, Group, Table } from "@/com/components";
 
 export const ExGroup = () => {
   return (

@@ -2,7 +2,12 @@ import uuid from "react-uuid";
 import { Link } from "react-router-dom";
 import { Icon } from "@/com/components";
 
-export const Navigation = ({ base = "/", nodes = [] }) => {
+export const Page = (props) => {
+  const { children } = props;
+  return <div className="space-y-4">{children}</div>;
+};
+
+Page.Navigation = ({ base = "/", nodes = [] }) => {
   return (
     <ul className="h-6 flex items-center space-x-2 text-blue">
       <li>
@@ -19,5 +24,14 @@ export const Navigation = ({ base = "/", nodes = [] }) => {
         );
       })}
     </ul>
+  );
+};
+
+Page.Header = ({ title, description }) => {
+  return (
+    <div className="p-4 space-y-1 bg-card rounded shadow">
+      {title && <div className="text-xl font-semibold">{title}</div>}
+      {description && <p>{description}</p>}
+    </div>
   );
 };

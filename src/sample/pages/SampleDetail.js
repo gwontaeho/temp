@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useWijmo, useFetch } from "@/com/hooks";
-import { Wijmo, Group, Layout, Button, Navigation, PageHeader, Tab } from "@/com/components";
+import { Page, Wijmo, Group, Layout, Button, Tab } from "@/com/components";
 import { SCHEMA_GRID_COMPONENTS, APIS } from "./SampleService";
 
 /**
@@ -20,9 +20,9 @@ export const SampleDetail = () => {
   });
 
   return (
-    <Layout>
-      <Navigation base="/page/sample" nodes={[{ path: "/", label: "List" }, { label: "Detail" }]} />
-      <PageHeader title="Sample Detail" description="Sample Detail Description" />
+    <Page>
+      <Page.Navigation base="/page/sample" nodes={[{ path: "/", label: "List" }, { label: "Detail" }]} />
+      <Page.Header title="Sample Detail" description="Sample Detail Description" />
 
       <Group>
         <Group.Body>
@@ -63,6 +63,6 @@ export const SampleDetail = () => {
           </Tab.Panel>
         </Tab>
       </Group>
-    </Layout>
+    </Page>
   );
 };
