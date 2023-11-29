@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import uuid from "react-uuid";
 import _ from "lodash";
 import { Icon } from "@/com/components";
@@ -11,34 +11,21 @@ export const Pagination = ({
   onChangePage,
   onChangeSize,
 }) => {
-  const [_size, _setSize] = useState();
-  const [_page, _setPage] = useState();
   const [_pageGroup, _setPageGroup] = useState(0);
-
   const _pageGroups = _.chunk([...Array(Math.ceil(totalCount / size)).keys()], pageGroupSize);
 
-  useEffect(() => {
-    _setPage(page);
-  }, [page]);
-
-  useEffect(() => {
-    _setSize(size);
-  }, [size]);
-
   const handleChangePage = (nextPage) => {
-    _setPage(nextPage);
     if (onChangePage) onChangePage(nextPage);
   };
 
   const handleChangeSize = (nextSize) => {
-    _setSize(nextSize);
     handleChangePage(0);
     if (onChangeSize) onChangeSize(nextSize);
   };
 
   return (
     <div className="flex justify-between">
-      <select className="input w-14" value={_size} onChange={(e) => handleChangeSize(Number(e.target.value))}>
+      <select className="input w-14" value={size} onChange={(e) => handleChangeSize(Number(e.target.value))}>
         <option value="10">10</option>
         <option value="20">20</option>
         <option value="30">30</option>
@@ -57,7 +44,7 @@ export const Pagination = ({
           return (
             <li key={uuid()}>
               <button
-                {...(_page === _ && { "aria-current": "page" })}
+                {...(page === _ && { "aria-current": "page" })}
                 className="button min-w-[1.75rem] aria-[current=page]:text-blue"
                 onClick={() => handleChangePage(_)}>
                 {_ + 1}

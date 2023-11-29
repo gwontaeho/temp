@@ -1,27 +1,36 @@
 import "@grapecity/wijmo.styles/wijmo.css";
-
-import "./Wijmo.v2.css";
+// import "./Wijmo.css";
+import "./_Wijmo.css";
 
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Pagination, Icon } from "@/com/components";
 import * as wjGrid from "@grapecity/wijmo.react.grid.multirow";
 import { Selector } from "@grapecity/wijmo.grid.selector";
 import { InputDate, InputTime, InputDateTime, InputNumber, InputMask, ComboBox } from "@grapecity/wijmo.input";
 import { CellMaker } from "@grapecity/wijmo.grid.cellmaker";
-import { Button } from "@/com/components";
+import { Button } from "@/com/components/Button/Button";
 
-export const Wijmo = (props = {}) => {
-  const { gridRef, schema = {}, size, page, setSize, setPage, addRow, removeChecked, onSelect, data } = props;
+export const Wijmo = ({ gridRef, schema = {}, pagination, addRow, removeChecked, onSelect, data } = {}) => {
   const navigate = useNavigate();
+  const head = schema.head;
+  const body = schema.body;
 
-  const [initialize, setInitialize] = useState(false);
-  const [totalCount, setTotalCount] = useState(data.totCnt);
+  const isInnerPagination = schema.options?.pagination === "inner";
 
-  const contentRef = useRef(data.content);
+  const originContent = data?.content || [];
+  const originTotalCount = isInnerPagination ? originContent.length : data?.totCnt || 0;
+
+  const [totalCount, setTotalCount] = useState(originTotalCount);
 
   useEffect(() => {
+    if (!originTotalCount) return;
+    setTotalCount(originTotalCount);
+  }, [originTotalCount]);
+
+  useEffect(() => {
+    if (!gridRef?.current) return;
     if (schema.options?.checkbox) new Selector(gridRef.current.control);
     if (schema.options?.isReadOnly) gridRef.current.control.isReadOnly = true;
 
@@ -29,82 +38,53 @@ export const Wijmo = (props = {}) => {
     gridRef.current.control.allowAddNew = true;
     gridRef.current.control.allowDelete = true;
 
-    gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition(schema.head);
-    gridRef.current.control.layoutDefinition = layoutDefinition(schema.body);
+    console.log(gridRef.current.control);
+    console.log(gridRef.current.control);
 
-    gridRef.current.control.rowAdded.addHandler(handleRowAdded);
-    gridRef.current.control.deletedRow.addHandler(handleDeletedRow);
-    gridRef.current.control.formatItem.addHandler(handleFormatItem);
-    gridRef.current.control.itemsSourceChanged.addHandler(handleItemsSourceChanged);
-    gridRef.current.control.selectionChanged.addHandler(handleSelectionChanged);
+    gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition();
+    gridRef.current.control.layoutDefinition = layoutDefinition();
 
-    setInitialize(true);
+    gridRef.current.control.formatItem.addHandler((s, e) => {
+      console.log(s);
+      console.log(e);
+    });
+
+    gridRef.current.control.selectionChanged.addHandler((_, __) => {
+      if (!onSelect) return;
+      onSelect(_.selectedItems);
+    });
+
+    gridRef.current.control.itemsSourceChanged.addHandler((_) => {
+      if (!_.collectionView) return;
+
+      _.collectionView.collectionChanged.addHandler((__) => {
+        const { pageSize, sourceCollection } = __;
+        if (!isInnerPagination) return;
+        setTotalCount((prev) => {
+          const next = sourceCollection.length;
+          const lastPageItemCount = prev % pageSize || pageSize;
+          if (prev < next) {
+            const greater = next - prev > pageSize - lastPageItemCount;
+            if (greater) return next;
+          }
+          if (prev > next) {
+            const less = prev - next >= lastPageItemCount;
+            if (less) return next;
+          }
+          return prev;
+        });
+      });
+    });
   }, []);
 
   useEffect(() => {
-    gridRef.current.control.itemsSource = _.cloneDeep(data.content);
-    // setGridSize(gridRef.current.control, size);
-    // setGridPage(gridRef.current.control, page);
+    if (!gridRef?.current) return;
+    gridRef.current.control.itemsSource = _.cloneDeep(originContent);
+    gridRef.current.control.collectionView.pageSize = pagination.size;
   }, [data]);
 
-  useEffect(() => {
-    setGridPage(gridRef.current.control, page);
-  }, [page]);
-
-  useEffect(() => {
-    setGridSize(gridRef.current.control, size);
-  }, [size]);
-
-  const handleFormatItem = (s, e) => {
-    if (e.panel !== s.cells) return;
-    if (s.collectionView.pageSize === 0) return;
-    if (s.collectionView.itemCount <= e.row) return;
-
-    const chunkedContent = _.chunk(contentRef.current, s.collectionView.pageSize);
-    if (!chunkedContent?.[s.collectionView.pageIndex]?.[e.row]) return e.cell.classList.add("cell-new");
-
-    const originalCellData = chunkedContent?.[s.collectionView.pageIndex]?.[e.row]?.[e.getColumn().binding];
-    const currentCellData = e.getRow().dataItem?.[e.getColumn().binding];
-    if (originalCellData !== currentCellData) return e.cell.classList.add("cell-changed");
-  };
-
-  const handleSelectionChanged = (_) => {
-    if (!onSelect) return;
-    onSelect(_.selectedItems);
-  };
-
-  const handleItemsSourceChanged = (_) => {
-    _.collectionView.collectionChanged.addHandler((__) => {
-      setTotalCount(__.totalItemCount);
-    });
-  };
-
-  const handleRowAdded = (s, e) => {};
-
-  const handleDeletedRow = (s, e) => {
-    const pageIndex = s.collectionView.pageIndex;
-    const rowIndex = e.row;
-    contentRef.current = contentRef.current.filter((_, i) => i !== pageIndex * size + rowIndex);
-  };
-
-  const setGridSize = (grid, nextSize) => {
-    grid.collectionView.pageSize = nextSize;
-  };
-
-  const setGridPage = (grid, nextPage) => {
-    grid.collectionView.moveToPage(nextPage);
-  };
-
-  const handleChangePage = (nextPage) => {
-    setPage(nextPage);
-  };
-
-  const handleChangeSize = (nextSize) => {
-    setSize(nextSize);
-    handleChangePage(0);
-  };
-
-  const headerLayoutDefinition = (head) => {
+  const headerLayoutDefinition = () => {
+    if (!head) return;
     return head.map((_) => {
       return {
         ..._,
@@ -116,7 +96,8 @@ export const Wijmo = (props = {}) => {
     });
   };
 
-  const layoutDefinition = (body) => {
+  const layoutDefinition = () => {
+    if (!body) return;
     return body.map((_) => {
       return {
         ..._,
@@ -161,21 +142,34 @@ export const Wijmo = (props = {}) => {
     });
   };
 
+  const handleChangePage = (nextPage) => {
+    if (isInnerPagination) {
+      gridRef.current.control.collectionView.moveToPage(nextPage);
+    } else pagination.setPage(nextPage);
+  };
+
+  const handleChangeSize = (nextSize) => {
+    if (isInnerPagination) {
+      gridRef.current.control.collectionView.pageSize = nextSize;
+    } else pagination.setSize(nextSize);
+    handleChangePage(0);
+  };
+
   return (
-    <div className="space-y-4" hidden={!initialize}>
+    <div className="space-y-4">
       {(schema.options?.add || schema.options?.remove) && (
         <div className="flex space-x-2 justify-end">
-          {/* {schema.options?.import && (
+          {schema.options?.import && (
             <Button onClick={addRow}>
               <Icon icon="plus" size="xs" />
             </Button>
-          )} */}
+          )}
 
-          {/* {schema.options?.export && (
+          {schema.options?.export && (
             <Button onClick={addRow}>
               <Icon icon="plus" size="xs" />
             </Button>
-          )} */}
+          )}
 
           {schema.options?.add && (
             <Button onClick={addRow}>
@@ -194,8 +188,8 @@ export const Wijmo = (props = {}) => {
 
       {schema.options?.pagination && (
         <Pagination
-          page={page}
-          size={size}
+          page={pagination.page}
+          size={pagination.size}
           onChangePage={handleChangePage}
           onChangeSize={handleChangeSize}
           totalCount={totalCount}

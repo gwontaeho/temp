@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
-export const useWijmo = ({ defaultSchema, onSelect }) => {
-  const gridRef = useRef({});
+export const useWijmo = ({ defaultSchema }) => {
+  const gridRef = useRef();
 
   const schema = defaultSchema;
 
@@ -32,8 +32,7 @@ export const useWijmo = ({ defaultSchema, onSelect }) => {
       });
   };
 
-  const pagination = { page, setPage, size, setSize };
-  const grid = { gridRef, schema, pagination, addRow, removeChecked, onSelect };
+  const grid = { gridRef, schema, page, setPage, size, setSize, addRow, removeChecked };
 
   return {
     grid,

@@ -51,7 +51,7 @@ export const SCHEMA_FORM_REGIST = {
 export const SCHEMA_GRID = {
   __grid__: "grid",
   options: { checkbox: true, pagination: true, isReadOnly: true },
-  head: [{ cells: [{ header: "id" }] }, { cells: [{ header: "textField" }] }],
+  head: [{ cells: [{ header: "id", binding: "id" }] }, { cells: [{ header: "textField", binding: "textField" }] }],
   body: [
     { cells: [{ binding: "id", link: (data) => console.log(data), width: "*" }] },
     { cells: [{ binding: "textField" }] },

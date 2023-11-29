@@ -271,6 +271,7 @@ const InputDate = (props) => {
           onChange={setSelected}
           className="input pl-5"
           popperProps={{ strategy: "fixed" }}
+          portalId="root"
         />
       )}
     </div>

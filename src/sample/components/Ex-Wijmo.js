@@ -2,6 +2,7 @@ import axios from "axios";
 import { useWijmo, useFetch } from "@/com/hooks";
 import { Group } from "@/com/components";
 import { Wijmo } from "@/com/components/Wijmo.v2/Wijmo.v2";
+
 import uuid from "react-uuid";
 
 const instance = axios.create({
@@ -17,11 +18,11 @@ export const APIS = {
 
 const schema = {
   __grid__: "grid",
-  options: { checkbox: true, pagination: "inner" },
+  options: { checkbox: true, pagination: true, add: true, remove: true },
   head: [
-    { cells: [{ header: "a", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }] },
-    { cells: [{ header: "d" }] },
-    { header: "E", cells: [{ header: "e" }] },
+    { cells: [{ header: "a", binding: "id", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }] },
+    { cells: [{ header: "d", binding: "a" }] },
+    { cells: [{ header: "e", binding: "b" }] },
   ],
   body: [
     {
@@ -29,7 +30,10 @@ const schema = {
       cells: [{ binding: "id", colspan: 3 }],
     },
     {
-      cells: [{ binding: "a" }],
+      cells: [{ header: "d", binding: "a" }],
+    },
+    {
+      cells: [{ header: "e", binding: "b" }],
     },
   ],
 };
@@ -38,33 +42,36 @@ const getMockData = () => {
   return {
     page: 0,
     size: 10,
-    totCnt: 99,
-    content: Array(10)
+    totCnt: 43,
+    content: Array(43)
       .fill(null)
       .map((_) => ({
         id: uuid(),
         a: Math.random() * 1000,
+        b: Math.random() * 1000,
       })),
   };
 };
+
+const data = getMockData();
 
 export const ExWijmo = () => {
   const { grid, getData, getChecked, getCheckedIndex, addRow, removeRow, removeChecked, page, size } = useWijmo({
     defaultSchema: schema,
   });
 
-  const { data, fetch } = useFetch({
-    api: () => APIS.getComponentGroups(),
-    // api: () => APIS.getComponentGroups(page, size),
-    enabled: true,
-    // key: [page, size],
-  });
+  //   const { data, fetch } = useFetch({
+  // api: () => APIS.getComponentGroups(),
+  // api: () => APIS.getComponentGroups(page, size),
+  // enabled: true,
+  // key: [page, size],
+  //   });
 
-  console.log(getMockData());
+  //   console.log(getMockData());
 
   return (
     <Group>
-      <Wijmo {...grid} data={getMockData()} />
+      <Wijmo {...grid} data={data} />
 
       <div className="space-x-2">
         <button onClick={() => console.log(getData())}>데이터 가져오기</button>
