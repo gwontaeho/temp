@@ -22,7 +22,7 @@ const SIZES = {
 type TooltipProps = React.PropsWithChildren & {
   text: string;
   enabled: boolean;
-  size: keyof typeof SIZES;
+  size?: keyof typeof SIZES;
 };
 
 export const Tooltip = (props: TooltipProps) => {

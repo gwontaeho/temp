@@ -1,47 +1,44 @@
 import { useEffect } from "react";
 import { Group, Button, Layout, FormControl } from "@/com/components";
 import { useForm } from "@/com/hooks";
+import ReactDatePicker from "react-datepicker";
+
+// type FormControlType =
+//   | "text"
+//   | "number"
+//   | "password"
+//   | "select"
+//   | "radio"
+//   | "checkbox"
+//   | "textarea"
+//   | "date"
+//   | "time"
+//   | "datetime"
+//   | "file"
+//   | "between";
 
 const SCHEMA_SEARCH = {
-  __form__: "search",
-  text_1: {
-    type: "text",
-    label: "text",
-    required: true,
-    leftButton: { icon: "up" },
-    rightButton: { icon: "search" },
-    rightText: "kg",
-    leftText: "cm",
-  },
-  number_1: { type: "number", label: "number", validate: (e) => e > 4, rightButton: { icon: "home" } },
-  password_1: { type: "password", label: "password", required: true, leftButton: { icon: "down" } },
-  select_1: { type: "select", label: "select", required: true, rightButton: { icon: "right" } },
-  checkbox_1: { type: "checkbox", label: "checkbox", required: true },
-  radio_1: { type: "radio", label: "radio", required: true },
-  textarea_1: { type: "textarea", label: "textarea", required: true, rightButton: { icon: "search" } },
-  date_1: { type: "date", label: "Date", required: true, leftButton: { icon: "search" }, leftText: "11" },
-  time_1: { type: "time", label: "time", required: true },
-  datetime_1: { type: "datetime", label: "datetime", required: true },
-  file: { type: "file", required: true },
-
-  between: {
-    type: "between",
-    label: "between",
-    button: "date1",
-    // rightButton: { icon: "search" },
-    leftText: "aqwdqwda",
-    leftButton: { icon: "search" },
-
-    schema: {
-      begin: {
-        type: "date",
-        required: true,
-        leftText: "aa",
-        leftButton: { icon: "search" },
-        rightButton: { icon: "search" },
+  id: "search",
+  schema: {
+    text: { type: "text", label: "text" },
+    number: { type: "number", label: "number" },
+    password: { type: "password", label: "password" },
+    textarea: { type: "textarea", label: "textarea" },
+    select: { type: "select", label: "select" },
+    checkbox: { type: "checkbox", label: "checkbox" },
+    radio: { type: "radio", label: "radio" },
+    date: { type: "date", label: "date" },
+    time: { type: "time", label: "time" },
+    range: {
+      type: "range",
+      label: "range",
+      schema: {
+        start: { type: "date" },
+        end: { type: "date" },
       },
-      end: { type: "date", required: true, leftButton: { icon: "search" } },
     },
+    datetime: { type: "datetime", label: "datetime" },
+    timerange: { type: "timerange", label: "timerange" },
   },
 };
 
@@ -59,6 +56,7 @@ export const ExForm = () => {
   const {
     schema,
     setSchema,
+    setFocus,
     setEditable,
     getValues,
     handleSubmit,
@@ -67,9 +65,9 @@ export const ExForm = () => {
     resetSchema,
     validate,
     clearValues,
-  } = useForm({
-    defaultSchema: SCHEMA_SEARCH,
-  });
+  } = useForm({ defaultSchema: SCHEMA_SEARCH });
+
+  console.log(schema);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -88,32 +86,32 @@ export const ExForm = () => {
         <form>
           <Group.Body>
             <Group.Row>
-              <Group.Control {...schema.text_1} exact={false} onValueChange={(e) => console.log(e)} />
-              <Group.Control {...schema.number_1} letterCase="upper" thousandSeparator={true} />
+              <Group.Control {...schema.text} />
+              <Group.Control {...schema.number} />
             </Group.Row>
             <Group.Row>
-              <Group.Control {...schema.password_1} />
-              <Group.Control {...schema.select_1} options={OPTION} />
+              <Group.Control {...schema.password} />
+              <Group.Control {...schema.textarea} />
             </Group.Row>
             <Group.Row>
-              <Group.Control {...schema.checkbox_1} options={OPTION} />
-              <Group.Control {...schema.radio_1} options={OPTION} />
+              <Group.Control {...schema.select} />
+              <Group.Control {...schema.checkbox} />
             </Group.Row>
 
             <Group.Row>
-              <Group.Control {...schema.textarea_1} />
-              <Group.Control {...schema.date_1} />
+              <Group.Control {...schema.radio} />
+              <Group.Control {...schema.date} />
             </Group.Row>
             <Group.Row>
-              <Group.Control {...schema.time_1} />
-              <Group.Control {...schema.datetime_1} />
+              <Group.Control {...schema.time} />
+              <Group.Control {...schema.datetime} />
             </Group.Row>
             <Group.Row>
-              <Group.Control {...schema.between} controlSize={10} />
+              <Group.Control {...schema.range} controlSize={10} />
             </Group.Row>
-            <Group.Row>
-              <Group.Control {...schema.file} controlSize={10} />
-            </Group.Row>
+            {/* <Group.Row>
+              <Group.Control {...schema.timerange} />
+            </Group.Row> */}
           </Group.Body>
         </form>
 
@@ -127,6 +125,7 @@ export const ExForm = () => {
           <Button onClick={() => setSchema("text_1", { leftText: null })}>remove text_1 lefttext</Button>
         </Layout.Right>
         <Layout.Right>
+          <Button onClick={() => setFocus("date")}>focus</Button>
           <Button onClick={() => clearErrors()}>에러 초기화</Button>
           <Button onClick={clearValues}>값 초기화</Button>
           <Button onClick={etr}>edit true</Button>

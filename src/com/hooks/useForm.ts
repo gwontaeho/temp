@@ -21,6 +21,8 @@ type GroupControlProps = {
   disabled?: boolean;
   validate?: () => void;
   invalid?: boolean;
+  schema?: any;
+  edit?: boolean;
 };
 
 type FormValuesType = {
@@ -28,8 +30,8 @@ type FormValuesType = {
 };
 
 type FormSchemaType = {
-  formId: string;
-  formControls: FormControlSchemaType;
+  id: string;
+  schema: FormControlSchemaType;
 };
 
 type FormControlSchemaType = {
@@ -62,15 +64,15 @@ export const useForm = (props: UseFormProps) => {
     formState: { errors, isSubmitted },
   } = rhf.useForm<FormValuesType>({ values });
 
-  const { formId, formControls } = defaultSchema;
-  const [_schema, _setSchema] = useState<FormControlSchemaType>(formControls);
+  const { id, schema } = defaultSchema;
+  const [_schema, _setSchema] = useState<FormControlSchemaType>(schema);
 
   const setSchema = (name: string, value: any) => {
     _setSchema((prev) => ({ ...prev, [name]: { ...prev[name], ...value } }));
   };
 
   const resetSchema = () => {
-    _setSchema(formControls);
+    _setSchema(schema);
     reset();
   };
 
@@ -100,81 +102,18 @@ export const useForm = (props: UseFormProps) => {
     reset(values);
   };
 
-  const getSchema = (entries: Entries<FormControlSchemaType>): object => {
-    return entries.reduce((prev: Entry<FormControlSchemaType>, curr: Entry<FormControlSchemaType>) => {
-      const [name, origin] = curr;
-
-      const getCommon = (name: string, origin: GroupControlProps) => {
-        const { type, pattern, validate, minLength, maxLength, required, ...rest } = origin;
-        const id = formId + "." + name;
-        const common = { id, type, getValues, setValue, ...rest };
-        const invalid = errors[name];
-        if (invalid) common.invalid = invalid;
-        return common;
-      };
-
-      const getInputProps = (origin) => {
-        const inputProps = {};
-        const { maxLength, required } = origin;
-        if (maxLength) inputProps.maxLength = maxLength;
-        if (required) inputProps.required = required;
-        return inputProps;
-      };
-
-      const getRules = (origin) => {
-        const rules = {};
-        const { pattern, validate, minLength, maxLength, required } = origin;
-        if (maxLength) rules.maxLength = maxLength;
-        if (required) rules.required = required;
-        if (minLength) rules.minLength = minLength;
-        if (pattern) rules.pattern = pattern;
-        if (validate) rules.validate = validate;
-        // rules.onChange = () => {
-        //   if (getFieldState(name).invalid) trigger(name);
-        // };
-        return rules;
-      };
-
-      const getRegister = (name, origin) => {
-        return register(name, { ...getRules(origin) });
-      };
-
-      const getControl = (name, origin) => {
-        return { name, control, rules: getRules(origin) };
-      };
-
-      let obj;
-      switch (origin.type) {
-        case "date":
-        case "time":
-        case "datetime":
-          obj = Object.assign(getCommon(name, origin), getControl(name, origin), getInputProps(origin));
-          break;
-        // case "between":
-        //   obj = Object.assign(getCommon(name, origin), { schema: getSchema(Object.entries(origin.schema)), setValue });
-        //   break;
-        case "between":
-          obj = Object.assign(getCommon(name, origin), {
-            schema: getSchema(
-              Object.entries(origin.schema).map((_) => {
-                const withEdit = _[1];
-                withEdit.edit = origin.edit === false ? false : true;
-                return [_[0], withEdit];
-              })
-            ),
-          });
-          break;
-        default:
-          obj = Object.assign(getCommon(name, origin), getRegister(name, origin), getInputProps(origin));
-      }
-      return { ...prev, [name]: obj };
-    }, {});
+  const getSchema = (s: any): any => {
+    if (!s) return undefined;
+    return Object.fromEntries(
+      Object.entries(s).map(([key, value]: any) => {
+        const { schema, ...rest } = value;
+        return [key, { ...rest, name: key, control, schema: getSchema(schema) }];
+      })
+    );
   };
 
-  const schema = getSchema(Object.entries(_schema));
-
   return {
-    schema,
+    schema: getSchema(_schema),
     setSchema,
     resetSchema,
     setEditable,
