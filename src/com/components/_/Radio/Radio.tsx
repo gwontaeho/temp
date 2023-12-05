@@ -8,9 +8,9 @@ type RadioProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
   (props: RadioProps, ref: React.ForwardedRef<HTMLInputElement>) => {
-    const { id, options, ...rest } = props;
+    const { options, ...rest } = props;
     return (
-      <div id={id} className="flex flex-wrap w-fit">
+      <div className="flex flex-wrap w-fit">
         {Array.isArray(options) &&
           options.map(({ label, value }) => {
             return (

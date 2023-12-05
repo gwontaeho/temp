@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import Draggable from "react-draggable";
@@ -14,25 +14,34 @@ const MODAL_SIZES = {
   xl: "max-w-[90vw]",
 };
 
-const Modal = (props) => {
-  const { id, message, onConfirm, onCancel, render, backdrop = true, size = "sm" } = props;
+export type ModalProps = {
+  id: string;
+  backdrop?: boolean;
+  size?: keyof typeof MODAL_SIZES;
+  content?: React.ReactNode;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+};
 
-  const ref = useRef();
+const Modal = (props: ModalProps) => {
+  const { id, onConfirm, onCancel, content, backdrop = true, size = "sm" } = props;
 
-  const [modal, setModal] = useRecoilState(modalState);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const handleClose = (id) => {
+  const setModal = useSetRecoilState(modalState);
+
+  const handleClose = () => {
     setModal((prev) => prev.filter((v) => id !== v.id));
   };
 
-  const handleCancel = (id, onCancel) => {
+  const handleCancel = () => {
     if (onCancel instanceof Function) onCancel();
-    handleClose(id);
+    handleClose();
   };
 
-  const handleConfirm = (id, onConfirm) => {
+  const handleConfirm = () => {
     if (onConfirm instanceof Function) onConfirm();
-    handleClose(id);
+    handleClose();
   };
 
   return createPortal(
@@ -42,7 +51,7 @@ const Modal = (props) => {
           className="fixed w-full h-full z-[1000]"
           initial={{ opacity: 0.5 }}
           animate={{ background: "#00000080", opacity: 1 }}
-          onClick={() => handleClose(id)}
+          onClick={() => handleClose()}
         />
       )}
       <Draggable nodeRef={ref} handle=".handle" positionOffset={{ x: "-50%", y: "-50%" }}>
@@ -53,18 +62,15 @@ const Modal = (props) => {
             MODAL_SIZES[size]
           )}>
           <div className="cursor-move handle flex items-center justify-end px-4 h-10">
-            <IconButton icon="close" onClick={() => handleClose(id)} />
+            <IconButton icon="close" onClick={() => handleClose()} />
           </div>
-          {render || (
-            <>
-              <div className="text-xl p-4">알림</div>
-              <div className="p-4 text-lg">{message}</div>
-              <div className="p-4 flex space-x-2 justify-end">
-                <Button onClick={() => handleCancel(id, onCancel)}>닫기</Button>
-                {onConfirm && <Button onClick={() => handleConfirm(id, onConfirm)}>확인</Button>}
-              </div>
-            </>
-          )}
+
+          <div className="text-xl p-4">알림</div>
+          <div className="p-4 text-lg">{content}</div>
+          <div className="p-4 flex space-x-2 justify-end">
+            <Button onClick={() => handleCancel()}>닫기</Button>
+            {onConfirm && <Button onClick={() => handleConfirm()}>확인</Button>}
+          </div>
         </motion.div>
       </Draggable>
     </Fragment>,

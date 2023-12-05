@@ -3,22 +3,26 @@ import { v4 as uuid } from "uuid";
 import _ from "lodash";
 import { Icon } from "@/com/components";
 
-export const Pagination = ({
-  page = 0,
-  size = 10,
-  totalCount = 100,
-  pageGroupSize = 10,
-  onChangePage,
-  onChangeSize,
-}) => {
-  const [_pageGroup, _setPageGroup] = useState(0);
-  const _pageGroups = _.chunk([...Array(Math.ceil(totalCount / size)).keys()], pageGroupSize);
+type PaginationProps = {
+  page?: number;
+  size?: number;
+  totalCount?: number;
+  pageGroupSize?: number;
+  onChangePage?: (page: number) => void;
+  onChangeSize?: (page: number) => void;
+};
 
-  const handleChangePage = (nextPage) => {
+export const Pagination = (props: PaginationProps) => {
+  const { page = 0, size = 10, totalCount = 100, pageGroupSize = 10, onChangePage, onChangeSize } = props;
+
+  const [_pageGroup, _setPageGroup] = useState(0);
+  const _pageGroups = _.chunk(Array.from(Array(Math.ceil(totalCount / size)).keys()), pageGroupSize);
+
+  const handleChangePage = (nextPage: number) => {
     if (onChangePage) onChangePage(nextPage);
   };
 
-  const handleChangeSize = (nextSize) => {
+  const handleChangeSize = (nextSize: number) => {
     handleChangePage(0);
     if (onChangeSize) onChangeSize(nextSize);
   };

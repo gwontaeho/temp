@@ -1,3 +1,4 @@
+import React from "react";
 import classNames from "classnames";
 
 const gaps = {
@@ -17,29 +18,20 @@ const gaps = {
     col: "space-y-8",
     row: "space-x-8",
   },
-  8: {
-    col: "space-y-8",
-    row: "space-x-8",
-  },
   16: {
     col: "space-y-16",
     row: "space-x-16",
   },
 };
 
-/**
- * @typedef {object} LayoutProps
- * @property {('col'|'row')} direction
- * @property {keyof gaps} gap
- */
+type LayoutProps = {
+  children?: React.ReactNode;
+  direction: "col" | "row";
+  gap: keyof typeof gaps;
+};
 
-/**
- * @param {LayoutProps} props
- */
-export const Layout = (props) => {
-  const { children, direction = "col", gap = 4 } = props;
+export const Layout = ({ children, direction = "col", gap = 4 }: LayoutProps) => {
   const isRow = direction === "row";
-
   return (
     <div
       className={classNames("flex", gaps[gap][direction], {
@@ -51,15 +43,15 @@ export const Layout = (props) => {
   );
 };
 
-const LayoutLeft = ({ children }) => {
+const LayoutLeft = ({ children }: LayoutProps) => {
   return <div className="w-full flex space-x-1">{children}</div>;
 };
 
-const LayoutCenter = ({ children }) => {
+const LayoutCenter = ({ children }: LayoutProps) => {
   return <div className="w-full max-w-fit flex space-x-1 justify-center">{children}</div>;
 };
 
-const LayoutRight = ({ children }) => {
+const LayoutRight = ({ children }: LayoutProps) => {
   return <div className="w-full flex justify-end space-x-1">{children}</div>;
 };
 

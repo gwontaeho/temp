@@ -1,26 +1,38 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import classNames from "classnames";
 import { v4 as uuid } from "uuid";
 import { Collapse, Icon } from "@/com/components";
 
-const TreeItem = (props) => {
+type TreeItemProps = {
+  children?: React.ReactNode;
+  name: string;
+  parent: string[];
+  _key: string;
+};
+
+type TreeProps = {
+  data?: any;
+};
+
+const TreeItem = (props: TreeItemProps) => {
   const { children, name, parent, _key } = props;
 
-  const childrenRef = useRef();
+  const childrenRef = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen((prev) => !prev);
   };
 
-  const handleCheck = (e) => {
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
       parent.forEach((_) => {
-        document.getElementsByName(_)[0].indeterminate = true;
+        (document.getElementsByName(_)[0] as HTMLInputElement).indeterminate = true;
       });
     }
 
     if (children) {
+      if (childrenRef.current === null) return;
       Array.from(childrenRef.current.getElementsByTagName("input")).forEach((_) => {
         _.checked = e.target.checked;
         _.indeterminate = false;
@@ -56,19 +68,11 @@ const TreeItem = (props) => {
   );
 };
 
-/**
- * @typedef treeProps
- * @property {Array} data
- */
-
-/**
- * @param {treeProps} props
- */
-export const Tree = (props) => {
+export const Tree = (props: TreeProps) => {
   const { data } = props;
 
-  const dataWithKey = (data, parent = []) => {
-    return data.map((_) => {
+  const dataWithKey = (data: any, parent: any = []) => {
+    return data.map((_: any) => {
       let withKey = { ..._ };
       const key = uuid();
       withKey.key = key;
@@ -80,7 +84,7 @@ export const Tree = (props) => {
 
   return (
     <ul className="w-fit">
-      {dataWithKey(data)?.map((child) => {
+      {dataWithKey(data)?.map((child: any) => {
         return <TreeItem _key={child.key} {...child} />;
       })}
     </ul>

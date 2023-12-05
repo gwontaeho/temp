@@ -10,7 +10,7 @@ import * as wjGrid from "@grapecity/wijmo.react.grid.multirow";
 import { Selector } from "@grapecity/wijmo.grid.selector";
 import { InputDate, InputTime, InputDateTime, InputNumber, InputMask, ComboBox } from "@grapecity/wijmo.input";
 import { CellMaker } from "@grapecity/wijmo.grid.cellmaker";
-import { Button } from "@/com/components/Button/Button";
+import { Button } from "@/com/components/Button";
 
 export const Wijmo = ({ gridRef, schema = {}, pagination, addRow, removeChecked, onSelect, data } = {}) => {
   const navigate = useNavigate();

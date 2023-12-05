@@ -1,3 +1,4 @@
+import React from "react";
 import classNames from "classnames";
 
 const SIZES = {
@@ -17,14 +18,13 @@ const SIZES = {
   full: "w-full",
 };
 
-/**
- * @typedef buttonProps
- * @property {function} onClick
- * @property {keyof SIZES} size
- */
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  size?: keyof typeof SIZES;
+};
 
-export const Button = (props) => {
-  const { type = "button", size = "fit", children, ...rest } = props;
+export const Button = (props: ButtonProps) => {
+  const { children, type, size = "fit", ...rest } = props;
+
   return (
     <button {...rest} type={type} className={classNames("button", SIZES[size])}>
       {children}

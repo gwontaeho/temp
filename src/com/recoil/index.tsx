@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
-
-import { RecoilRoot, atom } from "recoil";
+import React from "react";
+import { RecoilRoot, atom, atomFamily } from "recoil";
+import { ModalProps } from "@/com/components/_";
 import i18n from "@/com/locales/i18n";
 
 const theme = {
@@ -39,7 +39,7 @@ export const themeState = atom({
   ],
 });
 
-export const modalState = atom({
+export const modalState = atom<ModalProps[]>({
   key: "modalState",
   default: defaultValue.modal,
 });
@@ -54,7 +54,7 @@ export const conditionState = atom({
   default: defaultValue.condition,
 });
 
-const RecoilProvider = ({ children }: PropsWithChildren) => {
+const RecoilProvider = ({ children }: { children?: React.ReactNode }) => {
   return <RecoilRoot>{children}</RecoilRoot>;
 };
 

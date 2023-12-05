@@ -29,13 +29,13 @@ type FormValuesType = {
   [name: string]: any;
 };
 
+type FormControlSchemaType = {
+  [name: string]: GroupControlProps;
+};
+
 type FormSchemaType = {
   id: string;
   schema: FormControlSchemaType;
-};
-
-type FormControlSchemaType = {
-  [name: string]: GroupControlProps;
 };
 
 type UseFormProps = {
@@ -106,8 +106,20 @@ export const useForm = (props: UseFormProps) => {
     if (!s) return undefined;
     return Object.fromEntries(
       Object.entries(s).map(([key, value]: any) => {
-        const { schema, ...rest } = value;
-        return [key, { ...rest, name: key, control, schema: getSchema(schema) }];
+        const { edit = true, schema, ...rest } = value;
+        return [
+          key,
+          {
+            ...rest,
+            name: key,
+            control,
+            setValue,
+            getValues,
+            edit: Boolean(edit),
+            schema: getSchema(schema),
+            invalid: errors[key],
+          },
+        ];
       })
     );
   };

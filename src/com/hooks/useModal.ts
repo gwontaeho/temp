@@ -1,20 +1,12 @@
 import { v4 as uuid } from "uuid";
 import { useSetRecoilState } from "recoil";
+import { ModalProps } from "@/com/components/_";
 import { modalState } from "@/com/recoil";
 
 export const useModal = () => {
   const setModal = useSetRecoilState(modalState);
 
-  /**
-   * @param {object} props
-   * @param {('sm'|'md'|'lg')} props.size
-   * @param {string} props.message
-   * @param {boolean} props.backdrop
-   * @param {function} props.onConfirm
-   * @param {function} props.onCancel
-   * @param {any} props.render
-   */
-  const openModal = (props) => {
+  const openModal = (props: ModalProps) => {
     setModal((prev) => [...prev, { ...props, id: uuid(), isOpen: true }]);
   };
 

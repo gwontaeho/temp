@@ -4,7 +4,6 @@ import { ExText } from "./components/controls/Ex-Text";
 
 import { ExGroup } from "@/sample/components/Ex-Group";
 import { ExForm } from "@/sample/components/Ex-Form";
-import { ExGrid } from "@/sample/components/Ex-Grid";
 import { ExTab } from "@/sample/components/Ex-Tab";
 import { ExTree } from "@/sample/components/Ex-Tree";
 import { ExTable } from "@/sample/components/Ex-Table";
@@ -22,7 +21,6 @@ export const SampleMain = () => {
 
       <Route path="/components/group" element={<ExGroup />} />
       <Route path="/components/form" element={<ExForm />} />
-      <Route path="/components/grid" element={<ExGrid />} />
       <Route path="/components/tab" element={<ExTab />} />
       <Route path="/components/tree" element={<ExTree />} />
       <Route path="/components/wijmo" element={<ExWijmo />} />

@@ -7,7 +7,7 @@ export type IconSizesType = keyof typeof iconSizes;
 
 export type IconProps = {
   icon: IconsType;
-  size: IconSizesType;
+  size?: IconSizesType;
   className?: string;
 };
 

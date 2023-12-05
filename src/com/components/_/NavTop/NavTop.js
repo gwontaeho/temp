@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { Routes } from "@/com/routes/Routes";
-import { Icon } from "@/com/components/Icon/Icon";
+import { Icon } from "@/com/components/Icon";
 
 const NavItem = (props) => {
   const { name, children, path, base } = props;

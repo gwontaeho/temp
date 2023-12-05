@@ -1,13 +1,31 @@
+import React from "react";
 import { v4 as uuid } from "uuid";
 import { Link } from "react-router-dom";
 import { Icon } from "@/com/components";
 
-export const Page = (props) => {
+type NodeType = { path: string; label: string };
+
+type PageNavigationProps = {
+  base: string;
+  nodes: NodeType[];
+};
+
+type PageHeaderProps = {
+  title?: string;
+  description?: string;
+};
+
+type PageProps = {
+  children?: React.ReactNode;
+};
+
+export const Page = (props: PageProps) => {
   const { children } = props;
   return <div className="space-y-4">{children}</div>;
 };
 
-Page.Navigation = ({ base = "/", nodes = [] }) => {
+const PageNavigation = (props: PageNavigationProps) => {
+  const { base = "/", nodes = [] } = props;
   return (
     <ul className="h-6 flex items-center space-x-2 text-blue">
       <li>
@@ -15,7 +33,7 @@ Page.Navigation = ({ base = "/", nodes = [] }) => {
           <Icon icon="home" size="sm" />
         </Link>
       </li>
-      {nodes.map(({ path, label }) => {
+      {nodes.map(({ path, label }: NodeType) => {
         return (
           <li key={uuid()} className="space-x-2 text-lg">
             <span>/</span>
@@ -27,7 +45,8 @@ Page.Navigation = ({ base = "/", nodes = [] }) => {
   );
 };
 
-Page.Header = ({ title, description }) => {
+const PageHeader = (props: PageHeaderProps) => {
+  const { title, description } = props;
   return (
     <div className="p-4 space-y-1 bg-card rounded shadow">
       {title && <div className="text-xl font-semibold">{title}</div>}
@@ -35,3 +54,6 @@ Page.Header = ({ title, description }) => {
     </div>
   );
 };
+
+Page.Navigation = PageNavigation;
+Page.Header = PageHeader;

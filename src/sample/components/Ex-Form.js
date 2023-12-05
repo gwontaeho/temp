@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Group, Button, Layout, FormControl } from "@/com/components";
 import { useForm } from "@/com/hooks";
-import ReactDatePicker from "react-datepicker";
 
 // type FormControlType =
 //   | "text"
@@ -29,6 +28,7 @@ const SCHEMA_SEARCH = {
     radio: { type: "radio", label: "radio" },
     date: { type: "date", label: "date" },
     time: { type: "time", label: "time" },
+    datetime: { type: "datetime", label: "datetime" },
     range: {
       type: "range",
       label: "range",
@@ -37,8 +37,6 @@ const SCHEMA_SEARCH = {
         end: { type: "date" },
       },
     },
-    datetime: { type: "datetime", label: "datetime" },
-    timerange: { type: "timerange", label: "timerange" },
   },
 };
 

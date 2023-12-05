@@ -39,8 +39,8 @@ type wijmoProps = {
   page: number;
   setSize: React.Dispatch<React.SetStateAction<number>>;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  addRow: Function;
-  removeChecked: Function;
+  addRow: any;
+  removeChecked: any;
   onSelect: Function;
 };
 

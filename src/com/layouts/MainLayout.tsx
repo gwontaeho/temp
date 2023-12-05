@@ -1,6 +1,7 @@
+import React from "react";
 import { Header, NavVertical } from "@/com/components/_";
 
-export const MainLayout = ({ children }) => {
+export const MainLayout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <>
       <Header />

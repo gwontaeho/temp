@@ -16,7 +16,6 @@ import {
   InputDate,
   InputTime,
   InputDatetime,
-  InputDaterange,
   InputRange,
 } from "@/com/components/_";
 
@@ -60,16 +59,13 @@ export type FormControlOptionsType = {
 
 type FormControlTextModeProps = {
   type?: FormControlType;
-  name?: string;
-  edit?: boolean;
   value?: any;
+  getValues?: any;
 };
 
-type FormControlEditModeProps = {
-  type?: FormControlType;
-  name?: string;
-  value?: any;
+type FormControlEditModeProps = FormControlTextModeProps & {
   edit?: boolean;
+  name?: string;
   rightText?: string;
   options?: FormControlOptionsType;
   leftButton?: { icon: IconsType; onClick: () => void };
@@ -80,26 +76,16 @@ type FormControlEditModeProps = {
   disabled?: boolean;
 };
 
-type FormControlMainProps = FormControlEditModeProps &
-  FormControlTextModeProps & {
-    size?: keyof typeof SIZES;
-    invalid?: boolean;
-    control?: any;
-  };
+type FormControlMainProps = FormControlEditModeProps & {
+  size?: keyof typeof SIZES;
+  invalid?: boolean;
+  control?: any;
+};
 
 export type FormControlProps = FormControlMainProps;
 
-const FormControlTextMode = (props: FormControlTextModeProps) => {
-  const { type, name, value, edit = true } = props;
-
-  const [text, setText] = React.useState<string>();
-
-  if (edit) return null;
-  return <span className="break-all">{value}</span>;
-};
-
 const FormControlEditMode = React.forwardRef<any>((props: FormControlEditModeProps, ref) => {
-  const { edit = true, rightButton, leftButton, rightText, setValue, ...rest } = props;
+  const { edit, rightButton, leftButton, rightText, getValues, setValue, ...rest } = props;
 
   return (
     <div
@@ -138,10 +124,8 @@ const FormControlEditMode = React.forwardRef<any>((props: FormControlEditModePro
               return <InputTime {...rest} />;
             case "datetime":
               return <InputDatetime {...rest} />;
-            case "daterange":
-              return <InputDaterange {...props} />;
             case "range":
-              return <InputRange {...props} />;
+              return <InputRange {...rest} />;
             default:
               return <InputText {...rest} ref={ref} />;
           }
@@ -157,41 +141,43 @@ const FormControlEditMode = React.forwardRef<any>((props: FormControlEditModePro
   );
 });
 
-const WithController = (props: { children: React.ReactElement; name: string; control: Control }) => {
-  const { children, name, control } = props;
-  const { field } = useController({ name, control });
-  return React.cloneElement(children, field);
+const FormControlTextMode = (props: FormControlTextModeProps) => {
+  const { type, value } = props;
+
+  console.log(value);
+  return null;
+
+  return <span className="break-all">{value}</span>;
 };
 
 const FormControlMain = React.forwardRef((props: FormControlMainProps, ref) => {
-  const { size = "full", invalid } = props;
-
-  const textModeProps = {
-    type: props.type,
-    name: props.name,
-    value: props.value,
-    edit: props.edit,
-  };
-
   return (
-    <div className={classNames(SIZES[size])}>
-      <FormControlTextMode {...textModeProps} />
-      <Tooltip enabled={Boolean(invalid)} size="full" text="invalid field">
+    <div className="w-full">
+      {!props.edit && <FormControlTextMode type={props.type} value={props.value} getValues={props.getValues} />}
+      <Tooltip enabled={Boolean(props.invalid)} size="full" text="invalid field">
         <FormControlEditMode ref={ref} {...props} />
       </Tooltip>
-      {invalid && <div className="text-invalid text-sm mt-1">invalid field</div>}
+      {props.invalid && <div className="text-invalid text-sm mt-1">invalid field</div>}
     </div>
   );
 });
 
+const WithController = (props: { children: React.ReactElement; name: string; control: Control }) => {
+  const { children, name, control } = props;
+  const { field } = useController({ name, control });
+
+  return React.cloneElement(children, field);
+};
+
 export const FormControl = React.forwardRef((props: FormControlProps, ref) => {
-  console.log(props);
   const { control, ...rest } = props;
+
   if (props.name && control)
     return (
       <WithController name={props.name} control={props.control}>
         <FormControlMain ref={ref} {...rest} />
       </WithController>
     );
+
   return <FormControlMain ref={ref} {...props} />;
 });

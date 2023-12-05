@@ -1,14 +1,24 @@
+import React from "react";
 import classNames from "classnames";
 
-/**
- * @typedef {object} tableProps
- * @property {boolean} border
- */
+type TableProps = {
+  children?: React.ReactNode;
+  border?: boolean;
+};
 
-/**
- * @param {tableProps} props
- */
-export const Table = (props) => {
+type TrProps = {
+  children?: React.ReactNode;
+};
+
+type TableCellProps = {
+  children?: React.ReactNode;
+  required?: boolean;
+  colSpan?: number;
+  rowSpan?: number;
+  width?: string | number;
+};
+
+export const Table = (props: TableProps) => {
   const { children, border = true } = props;
 
   return (
@@ -21,25 +31,15 @@ export const Table = (props) => {
   );
 };
 
-const Tr = ({ children }) => {
+const Tr = (props: TrProps) => {
+  const { children } = props;
   return <tr>{children}</tr>;
 };
 
-/**
- * @typedef {object} tableCellProps
- * @property {boolean} required
- * @property {number} colSpan
- * @property {number} rowSpan
- * @property {string} width
- */
-
-/**
- * @param {tableCellProps} props
- */
-const Th = (props) => {
-  const { children, required, colSpan, rowSpan, width } = props;
+const Th = (props: TableCellProps) => {
+  const { children, required, colSpan, rowSpan } = props;
   return (
-    <th className="relative" colSpan={colSpan} rowSpan={rowSpan} width={width}>
+    <th className="relative" colSpan={colSpan} rowSpan={rowSpan}>
       {children}
       {required && (
         <span
@@ -51,10 +51,7 @@ const Th = (props) => {
   );
 };
 
-/**
- * @param {tableCellProps} props
- */
-const Td = (props) => {
+const Td = (props: TableCellProps) => {
   const { children, required, colSpan, rowSpan, width } = props;
   return (
     <td className="relative" colSpan={colSpan} rowSpan={rowSpan} width={width}>

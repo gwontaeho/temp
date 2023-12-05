@@ -1,8 +1,13 @@
-import { useState, Children, cloneElement } from "react";
+import React, { useState, Children, cloneElement } from "react";
 import classNames from "classnames";
 import { v4 as uuid } from "uuid";
 
-export const Tab = (props) => {
+type TabProps = {
+  children?: React.ReactNode;
+  tab: string[];
+};
+
+export const Tab = (props: TabProps) => {
   const { children, tab } = props;
   const [current, setCurrent] = useState(0);
 
@@ -20,12 +25,21 @@ export const Tab = (props) => {
           );
         })}
       </div>
-      <div>{Children.map(children, (child, i) => cloneElement(child, { isCurrent: current === i }))}</div>
+      <div>
+        {Children.map(children, (child: any, i) => {
+          return cloneElement(child, { isCurrent: current === i });
+        })}
+      </div>
     </div>
   );
 };
 
-const TabPanel = (props) => {
+type TabPanelProps = {
+  children?: React.ReactNode;
+  isCurrent: Boolean;
+};
+
+const TabPanel = (props: TabPanelProps) => {
   const { children, isCurrent } = props;
   return <div hidden={!isCurrent}>{children}</div>;
 };
