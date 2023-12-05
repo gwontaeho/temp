@@ -51,10 +51,8 @@ type InputDaterangeProps = {
 
 export const InputRange = (props: InputDaterangeProps) => {
   const { schema, rangebutton, setValue, hasLeftButton, hasRightButton } = props;
-  console.log(props);
 
-  const [start, setStart] = React.useState();
-  const [end, setEnd] = React.useState();
+  const [start, end] = Object.entries<FormControlProps>(schema);
 
   const handleClickButton = (unit: DateUnitType, value: number) => {
     // if (!setValue) return;
@@ -71,9 +69,9 @@ export const InputRange = (props: InputDaterangeProps) => {
 
   return (
     <div className={classNames("w-full flex")}>
-      <FormControl type="date" />
+      <FormControl {...start[1]} mainClassName={classNames("[&_.input]:rounded-r-none")} />
       <div className={classNames("flex items-center justify-center min-w-[1.25rem] h-7 bg-header border-y")}>-</div>
-      <FormControl type="date" />
+      <FormControl {...end[1]} mainClassName={classNames("[&_.input]:rounded-l-none")} />
       {rangebutton && (
         <div className="flex">
           {(RANGE_BUTTON_OPTIONS[rangebutton] as []).map((props: RangeButtonOptionType) => {

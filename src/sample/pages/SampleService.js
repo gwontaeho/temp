@@ -26,14 +26,16 @@ export const OPTIONS = [
 ];
 
 export const SCHEMA_FORM = {
-  __form__: "form",
-  con1: { type: "text", label: "검색조건 1" },
-  con2: { type: "select", label: "검색조건 2" },
-  _con34: {
-    type: "between",
-    label: "검색조건 3",
-    options: "date1",
-    schema: { con3: { type: "date", label: "검색조건 1" }, con4: { type: "date", label: "검색조건 2" } },
+  id: "form",
+  schema: {
+    con1: { type: "text", label: "검색조건 1" },
+    con2: { type: "select", label: "검색조건 2" },
+    _con34: {
+      type: "between",
+      label: "검색조건 3",
+      options: "date1",
+      schema: { con3: { type: "date", label: "검색조건 1" }, con4: { type: "date", label: "검색조건 2" } },
+    },
   },
 };
 

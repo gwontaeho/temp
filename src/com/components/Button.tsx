@@ -23,7 +23,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 export const Button = (props: ButtonProps) => {
-  const { children, type, size = "fit", ...rest } = props;
+  const { children, type = "button", size = "fit", ...rest } = props;
 
   return (
     <button {...rest} type={type} className={classNames("button", SIZES[size])}>

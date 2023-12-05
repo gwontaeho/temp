@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Group, Button, Layout, FormControl } from "@/com/components";
+import { Group, Button, Layout } from "@/com/components";
+import { FormSchemaType } from "@/com/hooks";
 import { useForm } from "@/com/hooks";
 
 // type FormControlType =
@@ -80,7 +81,7 @@ export const ExForm = () => {
   return (
     <Layout>
       <Group>
-        <Group.Header>Form Example</Group.Header>
+        <Group.Header title="Form" />
         <form>
           <Group.Body>
             <Group.Row>
@@ -129,7 +130,7 @@ export const ExForm = () => {
           <Button onClick={etr}>edit true</Button>
           <Button onClick={() => etr(false)}>edit false</Button>
           <Button onClick={() => setEditable("between3", false)}>bt3 edit false</Button>
-          <Button onClick={validate}>validate</Button>
+          {/* <Button onClick={validate}>validate</Button> */}
           <Button onClick={() => console.log(getValues())}>get values</Button>
           <Button onClick={() => console.log(getValues("text_1"))}>get text_1</Button>
         </Layout.Right>

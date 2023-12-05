@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@/com/hooks";
 import { Icon, FormControl } from "@/com/components";
 import logo_tancis from "@/com/assets/imgs/logo_tancis.png";
-import { NavTop } from "../NavTop/NavTop";
+import { NavTop } from "./NavTop";
 
 const ModeControl = () => {
   const { theme, setTheme } = useTheme();

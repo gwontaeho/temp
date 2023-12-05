@@ -80,6 +80,7 @@ type FormControlMainProps = FormControlEditModeProps & {
   size?: keyof typeof SIZES;
   invalid?: boolean;
   control?: any;
+  mainClassName?: string;
 };
 
 export type FormControlProps = FormControlMainProps;
@@ -152,7 +153,7 @@ const FormControlTextMode = (props: FormControlTextModeProps) => {
 
 const FormControlMain = React.forwardRef((props: FormControlMainProps, ref) => {
   return (
-    <div className="w-full">
+    <div className={classNames("w-full", props.mainClassName)}>
       {!props.edit && <FormControlTextMode type={props.type} value={props.value} getValues={props.getValues} />}
       <Tooltip enabled={Boolean(props.invalid)} size="full" text="invalid field">
         <FormControlEditMode ref={ref} {...props} />

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as rhf from "react-hook-form";
+import { GroupControlProps } from "@/com/components";
 
 // required
 // min
@@ -9,21 +10,21 @@ import * as rhf from "react-hook-form";
 // pattern
 // validate
 
-type GroupControlProps = {
-  type: string;
-  name: string;
-  min?: string | number;
-  max?: string | number;
-  maxLength?: number;
-  minLength?: number;
-  pattern?: string;
-  required?: boolean;
-  disabled?: boolean;
-  validate?: () => void;
-  invalid?: boolean;
-  schema?: any;
-  edit?: boolean;
-};
+// type GroupControlProps = {
+//   type: string;
+//   name: string;
+//   min?: string | number;
+//   max?: string | number;
+//   maxLength?: number;
+//   minLength?: number;
+//   pattern?: string;
+//   required?: boolean;
+//   disabled?: boolean;
+//   validate?: () => void;
+//   invalid?: boolean;
+//   schema?: any;
+//   edit?: boolean;
+// };
 
 type FormValuesType = {
   [name: string]: any;
@@ -33,21 +34,17 @@ type FormControlSchemaType = {
   [name: string]: GroupControlProps;
 };
 
-type FormSchemaType = {
+export type FormSchemaType = {
   id: string;
   schema: FormControlSchemaType;
 };
 
 type UseFormProps = {
   defaultSchema: FormSchemaType;
-  values: object;
+  values?: object;
 };
 
-type Entry<T> = [keyof T, T[keyof T]];
-
-type Entries<T> = Entry<T>[];
-
-export const useForm = (props: UseFormProps) => {
+export const useForm = <T extends UseFormProps>(props: T) => {
   const { defaultSchema, values } = props;
 
   const {

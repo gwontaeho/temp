@@ -3,8 +3,15 @@ import { v4 as uuid } from "uuid";
 import { Routes } from "@/com/routes/Routes";
 import { Icon } from "@/com/components/Icon";
 
-const NavItem = (props) => {
-  const { name, children, path, base } = props;
+type NavItemProps = {
+  children?: any[];
+  name?: string;
+  path?: string;
+  base?: string;
+};
+
+const NavItem = (props: NavItemProps) => {
+  const { name, children, path, base = "" } = props;
   const depth_1 = path || base;
 
   return (
@@ -20,7 +27,7 @@ const NavItem = (props) => {
               {name}
             </Link>
           </li>
-          {children.map((child) => {
+          {children?.map((child) => {
             const { name, path, base } = child;
             const depth_2 = path || base;
             return (

@@ -118,7 +118,7 @@ export const SampleList = () => {
   };
 
   const handleShowModal = () => {
-    openModal({ size: "lg", backdrop: false, render: <ModalSearch _form={_form} onSubmit={onSubmit} /> });
+    openModal({ size: "lg", backdrop: false, content: <ModalSearch _form={_form} onSubmit={onSubmit} /> });
   };
 
   const handleShowPopup = () => {

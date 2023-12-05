@@ -1,6 +1,6 @@
 import React from "react";
-import { RecoilRoot, atom, atomFamily } from "recoil";
-import { ModalProps } from "@/com/components/_";
+import { RecoilRoot, atom } from "recoil";
+import { ModalProps, ToastProps } from "@/com/components/_";
 import i18n from "@/com/locales/i18n";
 
 const theme = {
@@ -44,9 +44,9 @@ export const modalState = atom<ModalProps[]>({
   default: defaultValue.modal,
 });
 
-export const toastState = atom({
+export const toastState = atom<ToastProps[]>({
   key: "toastState",
-  default: defaultValue.toast as object[],
+  default: defaultValue.toast,
 });
 
 export const conditionState = atom({

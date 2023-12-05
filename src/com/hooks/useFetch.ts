@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useRef } from "react";
 import _ from "lodash";
 
-const initializerArg = (initialData) => {
+const initializerArg = (initialData: any) => {
   return {
     data: initialData,
     isLoading: false,
@@ -10,7 +10,7 @@ const initializerArg = (initialData) => {
   };
 };
 
-const reducer = (state, action) => {
+const reducer = (state: any, action: any) => {
   switch (action.type) {
     case "loading":
       return { ...state, isLoading: true };
@@ -21,21 +21,24 @@ const reducer = (state, action) => {
   }
 };
 
-/**
- * @param {Object} props
- * @param {Function} props.api
- * @param {Function} props.onSuccess
- * @param {Function} props.onError
- * @param {Array} props.key
- * @param {Boolean} props.enabled
- */
-export const useFetch = (props) => {
+type ApiType = (...variables: any) => any;
+
+type UseFetchProps = {
+  api: ApiType | ApiType[];
+  key?: any[];
+  enabled?: boolean;
+  notifyStatus?: boolean;
+  onSuccess?: (data?: any) => void;
+  onError?: (error?: any) => void;
+};
+
+export const useFetch = (props: UseFetchProps) => {
   const { api, key = [], enabled, onSuccess, onError, notifyStatus } = props;
 
   const isArray = Array.isArray(api);
   const initialData = isArray ? Array(api.length).fill(undefined) : undefined;
 
-  const keyRef = useRef({});
+  const keyRef = useRef<any>({});
   const statusRef = useRef({ isLoading: false, isSuccess: false, isError: false });
 
   const [{ data, isLoading, isSuccess, isError }, dispatch] = useReducer(reducer, initializerArg(initialData));
@@ -51,14 +54,14 @@ export const useFetch = (props) => {
     }
   }, [enabled, ...key]);
 
-  const fetch = async (...variables) => {
+  const fetch = async (...variables: any) => {
     if (statusRef.current.isLoading) return;
     try {
       statusRef.current.isLoading = true;
       if (notifyStatus) dispatch({ type: "loading" });
       const fn = () => (isArray ? Promise.all(api.map((_) => _(...variables))) : api(...variables));
       const res = await fn();
-      const data = isArray ? res.map(({ data }) => data) : res.data;
+      const data = isArray ? res.map(({ data }: any) => data) : res.data;
       dispatch({ type: "success", payload: data });
       if (onSuccess) onSuccess(data);
       statusRef.current.isLoading = false;

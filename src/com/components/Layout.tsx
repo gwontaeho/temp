@@ -26,8 +26,8 @@ const gaps = {
 
 type LayoutProps = {
   children?: React.ReactNode;
-  direction: "col" | "row";
-  gap: keyof typeof gaps;
+  direction?: "col" | "row";
+  gap?: keyof typeof gaps;
 };
 
 export const Layout = ({ children, direction = "col", gap = 4 }: LayoutProps) => {

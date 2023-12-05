@@ -29,7 +29,7 @@ type GroupLabelProps = FormControlProps & {
   required?: boolean;
 };
 
-type GroupControlProps = GroupLabelProps & {
+export type GroupControlProps = GroupLabelProps & {
   controlSize?: keyof typeof SIZES;
 };
 

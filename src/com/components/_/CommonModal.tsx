@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import Draggable from "react-draggable";
@@ -16,9 +16,9 @@ const MODAL_SIZES = {
 
 export type ModalProps = {
   id: string;
+  content?: React.ReactNode;
   backdrop?: boolean;
   size?: keyof typeof MODAL_SIZES;
-  content?: React.ReactNode;
   onConfirm?: () => void;
   onCancel?: () => void;
 };
@@ -61,12 +61,11 @@ const Modal = (props: ModalProps) => {
             "absolute top-1/2 left-1/2 w-full border rounded bg-background z-[1001]",
             MODAL_SIZES[size]
           )}>
-          <div className="cursor-move handle flex items-center justify-end px-4 h-10">
+          <div className="handle cursor-move flex items-center justify-between px-4 h-16">
+            <div className="text-lg">알림</div>
             <IconButton icon="close" onClick={() => handleClose()} />
           </div>
-
-          <div className="text-xl p-4">알림</div>
-          <div className="p-4 text-lg">{content}</div>
+          <div className="p-4">{content}</div>
           <div className="p-4 flex space-x-2 justify-end">
             <Button onClick={() => handleCancel()}>닫기</Button>
             {onConfirm && <Button onClick={() => handleConfirm()}>확인</Button>}
@@ -79,7 +78,7 @@ const Modal = (props: ModalProps) => {
 };
 
 export const CommonModal = () => {
-  const [modal] = useRecoilState(modalState);
+  const modal = useRecoilValue(modalState);
 
   useEffect(() => {
     if (modal.length) document.body.style.overflow = "hidden";

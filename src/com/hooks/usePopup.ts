@@ -1,8 +1,15 @@
 import { useEffect, useRef } from "react";
 import { v4 as uuid } from "uuid";
 
+type PopupType = {
+  id?: string;
+  url: string;
+  params?: any;
+  callback?: (data: any) => void;
+};
+
 export const usePopup = () => {
-  const popupRef = useRef({});
+  const popupRef = useRef<any>({});
 
   useEffect(() => {
     return () => {
@@ -12,20 +19,20 @@ export const usePopup = () => {
 
   const getParams = () => {
     const qs = window.location.search;
-    const params = new URLSearchParams(qs).get("params");
+    const params = new URLSearchParams(qs).get("params") || "";
     return JSON.parse(decodeURIComponent(params));
   };
 
-  const closePopup = (id) => {
+  const closePopup = (id?: string) => {
     if (id === undefined)
-      return Object.entries(popupRef.current).map(([_, { popup }]) => {
+      return Object.entries(popupRef.current).map(([_, { popup }]: any) => {
         if (popup.closed) return;
         popup.close();
       });
     popupRef.current[id].popup?.close();
   };
 
-  const openPopup = ({ id = "", url, params, callback }) => {
+  const openPopup = ({ id = "", url, params, callback }: PopupType) => {
     const encodedParams = params ? "?params=" + encodeURIComponent(JSON.stringify(params)) : "";
     const features = "width=800,height=600";
     const name = id + "__" + uuid();
@@ -38,22 +45,21 @@ export const usePopup = () => {
 
     popupRef.current[id] = { id, name, popup };
 
-    const handleMessage = (e) => {
-      const { source, data } = e;
-      if (source.name !== popup.name) return;
+    const handleMessage = (e: any) => {
+      if (e.source.name !== popup.name) return;
       if (!callback) return;
-      callback(data);
+      callback(e.data);
     };
 
     window.addEventListener("message", handleMessage);
 
-    popup.onunload = (e) => {
+    popup.onunload = (e: any) => {
       if (e.target.location.origin === "null") return;
       window.removeEventListener("message", handleMessage);
     };
   };
 
-  const postMessage = (data) => {
+  const postMessage = (data: any) => {
     if (!window.opener) return;
     window.opener.postMessage(data);
   };

@@ -7,7 +7,7 @@ export const useModal = () => {
   const setModal = useSetRecoilState(modalState);
 
   const openModal = (props: ModalProps) => {
-    setModal((prev) => [...prev, { ...props, id: uuid(), isOpen: true }]);
+    setModal((prev) => [...prev, { ...props, id: uuid() }]);
   };
 
   const closeModal = () => {

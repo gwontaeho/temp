@@ -5,7 +5,16 @@ import classNames from "classnames";
 import { Collapse, Icon } from "@/com/components";
 import { Routes } from "@/com/routes/Routes";
 
-const NavItem = (props) => {
+type NavItemProps = {
+  children?: any[];
+  depth_1?: any;
+  _base?: string;
+  base?: string;
+  to?: string;
+  name?: string;
+};
+
+const NavItem = (props: NavItemProps) => {
   const { children, depth_1, _base = "", base = "", to = "", name } = props;
   const __base = _base + base;
 
