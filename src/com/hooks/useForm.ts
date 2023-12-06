@@ -2,142 +2,130 @@ import { useState } from "react";
 import * as rhf from "react-hook-form";
 import { GroupControlProps } from "@/com/components";
 
-// required
-// min
-// max
-// minLength
-// maxLength
-// pattern
-// validate
+export type FormRulesType = Partial<{
+    required: Boolean;
+    min: number;
+    max: number;
+    maxLength: number;
+    minLength: number;
+    pattern: RegExp;
+    validate: (value: FormFieldValueType, formValues: FormValuesType) => void;
+}>;
 
-// type GroupControlProps = {
-//   type: string;
-//   name: string;
-//   min?: string | number;
-//   max?: string | number;
-//   maxLength?: number;
-//   minLength?: number;
-//   pattern?: string;
-//   required?: boolean;
-//   disabled?: boolean;
-//   validate?: () => void;
-//   invalid?: boolean;
-//   schema?: any;
-//   edit?: boolean;
-// };
+export type FormFieldNameType = string;
+export type FormFieldValueType = any;
+export type FormValuesType = Record<FormFieldNameType, FormFieldValueType>;
+export type FormSchemaType = { id: string; schema: FormControlSchemaType };
 
-type FormValuesType = {
-  [name: string]: any;
-};
+type FormControlSchemaType = Record<string, GroupControlProps>;
+type UseFormProps = { defaultSchema: FormSchemaType; values?: object };
 
-type FormControlSchemaType = {
-  [name: string]: GroupControlProps;
-};
+export const useForm = (props: UseFormProps) => {
+    const { defaultSchema, values } = props;
 
-export type FormSchemaType = {
-  id: string;
-  schema: FormControlSchemaType;
-};
+    const {
+        control,
+        register,
+        getValues,
+        setValue,
+        setFocus,
+        handleSubmit,
+        trigger,
+        reset,
+        clearErrors,
+        watch,
+        formState: { errors, isSubmitted },
+    } = rhf.useForm<FormValuesType>({ values });
 
-type UseFormProps = {
-  defaultSchema: FormSchemaType;
-  values?: object;
-};
+    const { id, schema } = defaultSchema;
+    const [_schema, _setSchema] = useState<FormControlSchemaType>(schema);
 
-export const useForm = <T extends UseFormProps>(props: T) => {
-  const { defaultSchema, values } = props;
+    const setSchema = (name: string, value: any) => {
+        _setSchema((prev) => ({ ...prev, [name]: { ...prev[name], ...value } }));
+    };
 
-  const {
-    control,
-    register,
-    getValues,
-    setValue,
-    setFocus,
-    handleSubmit,
-    trigger,
-    reset,
-    clearErrors,
-    watch,
-    formState: { errors, isSubmitted },
-  } = rhf.useForm<FormValuesType>({ values });
+    const resetSchema = () => {
+        _setSchema(schema);
+        reset();
+    };
 
-  const { id, schema } = defaultSchema;
-  const [_schema, _setSchema] = useState<FormControlSchemaType>(schema);
+    const setEditable = <T>(arg: T, value?: boolean) => {
+        if (value === undefined)
+            return _setSchema((prev) =>
+                Object.fromEntries(
+                    Object.entries(prev).map((_) => {
+                        return [_[0], { ..._[1], edit: !!arg }];
+                    })
+                )
+            );
 
-  const setSchema = (name: string, value: any) => {
-    _setSchema((prev) => ({ ...prev, [name]: { ...prev[name], ...value } }));
-  };
+        if (typeof arg === "string") {
+            _setSchema((prev) => ({ ...prev, [arg]: { ...prev[arg], edit: value } }));
+        }
+    };
 
-  const resetSchema = () => {
-    _setSchema(schema);
-    reset();
-  };
+    const validate = (name: FormFieldValueType) => {
+        if (name in _schema) trigger(name, { shouldFocus: true });
+        else trigger();
+    };
 
-  const setEditable = (name: string, value?: boolean) => {
-    if (value === undefined)
-      return _setSchema((prev) =>
-        Object.fromEntries(
-          Object.entries(prev).map((_) => {
-            return [_[0], { ..._[1], edit: !!name }];
-          })
-        )
-      );
+    const clearValues = () => {
+        reset();
+    };
 
-    _setSchema((prev) => ({ ...prev, [name]: { ...prev[name], edit: value } }));
-  };
+    const setValues = (values: FormValuesType) => {
+        reset(values);
+    };
 
-  const validate = (name: string) => {
-    if (name in _schema) trigger(name, { shouldFocus: true });
-    else trigger();
-  };
+    const getSchema = (s: FormControlSchemaType): any => {
+        if (!s) return undefined;
+        return Object.fromEntries(
+            Object.entries(s).map(([key, value]: any) => {
+                const { schema, required, min, max, minLength, maxLength, pattern, validate, ...rest } = value;
 
-  const clearValues = () => {
-    reset();
-  };
+                const rules = {
+                    required,
+                    min,
+                    max,
+                    minLength,
+                    maxLength,
+                    pattern,
+                    validate,
+                };
 
-  const setValues = (values: object) => {
-    reset(values);
-  };
+                return [
+                    key,
+                    {
+                        ...rest,
+                        name: key,
+                        invalid: errors[key],
+                        schema: getSchema(schema),
+                        control,
+                        setValue,
+                        getValues,
+                        rules,
+                    },
+                ];
+            })
+        );
+    };
 
-  const getSchema = (s: any): any => {
-    if (!s) return undefined;
-    return Object.fromEntries(
-      Object.entries(s).map(([key, value]: any) => {
-        const { edit = true, schema, ...rest } = value;
-        return [
-          key,
-          {
-            ...rest,
-            name: key,
-            control,
-            setValue,
-            getValues,
-            edit: Boolean(edit),
-            schema: getSchema(schema),
-            invalid: errors[key],
-          },
-        ];
-      })
-    );
-  };
-
-  return {
-    schema: getSchema(_schema),
-    setSchema,
-    resetSchema,
-    setEditable,
-    getValues,
-    setValue,
-    setFocus,
-    control,
-    register,
-    handleSubmit,
-    validate,
-    errors,
-    clearValues,
-    clearErrors,
-    watch,
-    isSubmitted,
-    setValues,
-  };
+    return {
+        schema: getSchema(_schema),
+        setSchema,
+        resetSchema,
+        setEditable,
+        getValues,
+        setValue,
+        setFocus,
+        register,
+        handleSubmit,
+        validate,
+        clearValues,
+        clearErrors,
+        watch,
+        setValues,
+        errors,
+        isSubmitted,
+    };
 };
