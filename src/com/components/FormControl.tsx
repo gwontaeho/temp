@@ -1,6 +1,6 @@
 import "react-datepicker/dist/react-datepicker.css";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useController, Control } from "react-hook-form";
 import classNames from "classnames";
 import { Icon, IconsType, Tooltip } from "@/com/components";

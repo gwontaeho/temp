@@ -34,13 +34,22 @@ const NavItem = (props: NavItemProps) => {
         <li className="font-mono">
             <button className="h-8 px-2 text-lg flex w-full items-center justify-between" onClick={handleClick}>
                 <p className={classNames({ "text-blue": current })}>{name}</p>
-                {children && <Icon icon="down" size="xs" className={classNames("transition", { "rotate-180": open })} />}
+                {children && (
+                    <Icon icon="down" size="xs" className={classNames("transition", { "rotate-180": open })} />
+                )}
             </button>
             {Array.isArray(children) && (
                 <Collapse open={open}>
                     <ul className="pl-4">
                         {children.map((child) => {
-                            return <NavItem key={depth_1.base + __base + to + (child.base || child.to)} depth_1={depth_1} _base={__base} {...child} />;
+                            return (
+                                <NavItem
+                                    key={depth_1.base + __base + to + (child.base || child.to)}
+                                    depth_1={depth_1}
+                                    _base={__base}
+                                    {...child}
+                                />
+                            );
                         })}
                     </ul>
                 </Collapse>

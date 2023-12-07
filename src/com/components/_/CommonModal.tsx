@@ -55,7 +55,13 @@ const Modal = (props: ModalProps) => {
                 />
             )}
             <Draggable nodeRef={ref} handle=".handle" positionOffset={{ x: "-50%", y: "-50%" }}>
-                <motion.div ref={ref} className={classNames("absolute top-1/2 left-1/2 w-full border rounded bg-background z-[1001]", MODAL_SIZES[size])}>
+                <motion.div
+                    ref={ref}
+                    className={classNames(
+                        "absolute top-1/2 left-1/2 w-full border rounded bg-background z-[1001]",
+                        MODAL_SIZES[size]
+                    )}
+                >
                     <div className="handle cursor-move flex items-center justify-between px-4 h-16">
                         <div className="text-lg">알림</div>
                         <IconButton icon="close" onClick={() => handleClose()} />
