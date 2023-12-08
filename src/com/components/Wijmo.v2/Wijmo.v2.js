@@ -1,10 +1,9 @@
 import "@grapecity/wijmo.styles/wijmo.css";
-
 import "./Wijmo.v2.css";
 
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Pagination, Icon } from "@/com/components";
 import * as wjGrid from "@grapecity/wijmo.react.grid.multirow";
 import { Selector } from "@grapecity/wijmo.grid.selector";
@@ -12,39 +11,61 @@ import { InputDate, InputTime, InputDateTime, InputNumber, InputMask, ComboBox }
 import { CellMaker } from "@grapecity/wijmo.grid.cellmaker";
 import { Button } from "@/com/components";
 
+const defaultSchema = {
+  options: {},
+};
+
+const defaultData = {
+  page: 0,
+  size: 0,
+  totCnt: 0,
+  content: [],
+};
+
 export const Wijmo = (props = {}) => {
-  const { gridRef, schema = {}, size, page, setSize, setPage, addRow, removeChecked, onSelect, data } = props;
+  const {
+    gridRef,
+    contentRef,
+    schema = defaultSchema,
+    data = defaultData,
+    size,
+    page,
+    setSize,
+    setPage,
+    addRow,
+    removeChecked,
+    onSelect,
+  } = props;
   const navigate = useNavigate();
 
   const [initialize, setInitialize] = useState(false);
-  const [totalCount, setTotalCount] = useState(data.totCnt);
-
-  const contentRef = useRef(data.content);
+  const [totalCount, setTotalCount] = useState();
 
   useEffect(() => {
-    if (schema.options?.checkbox) new Selector(gridRef.current.control);
-    if (schema.options?.isReadOnly) gridRef.current.control.isReadOnly = true;
-
+    // 1. initialize
+    if (schema.options.checkbox) new Selector(gridRef.current.control);
+    if (schema.options.isReadOnly) gridRef.current.control.isReadOnly = true;
     gridRef.current.control.selectionMode = "Row";
     gridRef.current.control.allowAddNew = true;
     gridRef.current.control.allowDelete = true;
-
     gridRef.current.control.headerLayoutDefinition = headerLayoutDefinition(schema.head);
     gridRef.current.control.layoutDefinition = layoutDefinition(schema.body);
-
     gridRef.current.control.rowAdded.addHandler(handleRowAdded);
     gridRef.current.control.deletedRow.addHandler(handleDeletedRow);
     gridRef.current.control.formatItem.addHandler(handleFormatItem);
     gridRef.current.control.itemsSourceChanged.addHandler(handleItemsSourceChanged);
     gridRef.current.control.selectionChanged.addHandler(handleSelectionChanged);
-
+    gridRef.current.control.sortedColumn.addHandler(handleSortedColumn);
+    gridRef.current.control.updatedView.addHandler(handleSortedColumn);
     setInitialize(true);
   }, []);
 
   useEffect(() => {
-    gridRef.current.control.itemsSource = _.cloneDeep(data.content);
-    // setGridSize(gridRef.current.control, size);
-    // setGridPage(gridRef.current.control, page);
+    // 2. itemsSource setting
+    const content = data.content.map((_, i) => ({ ..._, _grid_content_index: i }));
+    contentRef.current = _.cloneDeep(content);
+    gridRef.current.control.itemsSource = _.cloneDeep(content);
+    if (schema.options.pagination !== "inner") setTotalCount(data.totCnt);
   }, [data]);
 
   useEffect(() => {
@@ -54,6 +75,38 @@ export const Wijmo = (props = {}) => {
   useEffect(() => {
     setGridSize(gridRef.current.control, size);
   }, [size]);
+
+  const setGridPage = (grid, nextPage) => {
+    if (!grid.collectionView) return;
+    grid.collectionView.moveToPage(nextPage);
+  };
+
+  const setGridSize = (grid, nextSize) => {
+    if (!grid.collectionView) return;
+    grid.collectionView.pageSize = nextSize;
+  };
+
+  const handleChangePage = (nextPage) => {
+    setPage(nextPage);
+  };
+
+  const handleChangeSize = (nextSize) => {
+    setSize(nextSize);
+    setPage(0);
+  };
+
+  const handleSortedColumn = (e) => {
+    const _view = e.collectionView._view.map(({ _grid_content_index }) => _grid_content_index);
+    contentRef.current = _view.map((i) => contentRef.current.find((_) => _?._grid_content_index === i));
+    console.log(_view);
+  };
+
+  const handleItemsSourceChanged = (_) => {
+    if (!_.collectionView) return;
+    _.collectionView.collectionChanged.addHandler((__) => {
+      if (schema.options.pagination === "inner") setTotalCount(__.totalItemCount);
+    });
+  };
 
   const handleFormatItem = (s, e) => {
     if (e.panel !== s.cells) return;
@@ -73,35 +126,15 @@ export const Wijmo = (props = {}) => {
     onSelect(_.selectedItems);
   };
 
-  const handleItemsSourceChanged = (_) => {
-    _.collectionView.collectionChanged.addHandler((__) => {
-      setTotalCount(__.totalItemCount);
-    });
+  const handleRowAdded = (s, e) => {
+    const lastIndex = s.collectionView.sourceCollection.length - 1;
+    s.collectionView.sourceCollection[lastIndex] = { _grid_content_index: "_" + lastIndex };
   };
-
-  const handleRowAdded = (s, e) => {};
 
   const handleDeletedRow = (s, e) => {
     const pageIndex = s.collectionView.pageIndex;
     const rowIndex = e.row;
     contentRef.current = contentRef.current.filter((_, i) => i !== pageIndex * size + rowIndex);
-  };
-
-  const setGridSize = (grid, nextSize) => {
-    grid.collectionView.pageSize = nextSize;
-  };
-
-  const setGridPage = (grid, nextPage) => {
-    grid.collectionView.moveToPage(nextPage);
-  };
-
-  const handleChangePage = (nextPage) => {
-    setPage(nextPage);
-  };
-
-  const handleChangeSize = (nextSize) => {
-    setSize(nextSize);
-    handleChangePage(0);
   };
 
   const headerLayoutDefinition = (head) => {

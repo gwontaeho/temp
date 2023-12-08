@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useForm, useFetch, useWijmo, useModal, useCondition, usePopup } from "@/com/hooks";
-import { Page, Group, Layout, Wijmo, Button } from "@/com/components";
+import {
+  Page,
+  Group,
+  Layout,
+  //  Wijmo,
+  Button,
+} from "@/com/components";
+import { Wijmo } from "@/com/components/Wijmo.v2/Wijmo.v2";
 import { OPTIONS, SCHEMA_FORM, SCHEMA_GRID, APIS, SCHEMA_GRID_COMPONENTS } from "./SampleService";
 
 export const PopupSearch = () => {

@@ -33,7 +33,7 @@ export const useFetch = (props) => {
   const { api, key = [], enabled, onSuccess, onError, notifyStatus } = props;
 
   const isArray = Array.isArray(api);
-  const initialData = isArray ? Array(api.length).fill({}) : {};
+  const initialData = isArray ? Array(api.length).fill(undefined) : undefined;
 
   const keyRef = useRef({});
   const statusRef = useRef({ isLoading: false, isSuccess: false, isError: false });

@@ -18,7 +18,7 @@ export const APIS = {
 
 const schema = {
   __grid__: "grid",
-  options: { checkbox: true, pagination: true, add: true, remove: true },
+  options: { checkbox: true, pagination: "inner", add: true, remove: true },
   head: [
     { cells: [{ header: "a", binding: "id", colspan: 3 }, { header: "a" }, { header: "b" }, { header: "c" }] },
     { cells: [{ header: "d", binding: "a" }] },
@@ -78,7 +78,7 @@ export const ExWijmo = () => {
         <button onClick={() => console.log(getChecked())}>check 가져오기</button>
         <button onClick={() => console.log(getCheckedIndex())}>index 가져오기</button>
         <button onClick={() => addRow()}>add</button>
-        <button onClick={() => removeRow(1)}>remove at</button>
+        <button onClick={() => removeRow()}>remove at</button>
         <button onClick={() => removeChecked()}>checked 삭제</button>
         <button onClick={() => fetch()}>refetch</button>
       </div>
