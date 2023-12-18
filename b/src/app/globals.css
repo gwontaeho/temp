@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        @apply tracking-widest font-light;
+    }
+    html {
+        @apply text-sm md:text-base;
+    }
+    pre {
+        font-family: var(--font-pretendard);
+    }
+}
+
+@layer components {
+    .button {
+        @apply w-full text-sm border p-4 rounded hover:bg-gray-50 transition aria-selected:border-gray-900;
+    }
+    .input {
+        @apply w-full border outline-none p-4 rounded text-sm aria-[invalid=true]:border-red-500;
+    }
+    .textarea {
+        @apply w-full border outline-0 rounded p-4 resize-none text-sm aria-[invalid=true]:border-red-500 block;
+    }
+    .err {
+        @apply text-xs text-red-500;
+    }
+}
+
+body {
+    overflow-y: overlay;
+    scroll-behavior: smooth;
+}
