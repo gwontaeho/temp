@@ -11,10 +11,11 @@ import {
   FormControl,
   Input,
 } from 'native-base';
-import Geolocation from 'react-native-geolocation-service';
-
-import {useQuery, useMutation} from '@tanstack/react-query';
 import axios from 'axios';
+import Geolocation from 'react-native-geolocation-service';
+import {useQuery, useMutation} from '@tanstack/react-query';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import {createRequest, getAveragePrices} from '@apis';
 import {AuthContext} from '@contexts';
 import {ModalFormAddress} from '@components';
@@ -29,6 +30,7 @@ const initialState = {
   personnel: 1,
   address: '',
   address_detail: '',
+  address_short: '',
 };
 
 const reducer = (state, {type, payload}) => {
@@ -51,7 +53,7 @@ const reducer = (state, {type, payload}) => {
 };
 
 export const Before = ({refetch}) => {
-  const {auth} = useContext(AuthContext);
+  const {auth, permissions} = useContext(AuthContext);
 
   const numReg = /^[0-9]*$/;
   const personnels = [1, 2, 3, 4];
@@ -96,11 +98,21 @@ export const Before = ({refetch}) => {
             `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${key}`,
           );
 
-          const {formatted_address} = response.data.results[0];
+          const {formatted_address, address_components} =
+            response.data.results[0];
+
+          const dong = address_components.find(v =>
+            v.types.includes('sublocality_level_2'),
+          )?.long_name;
+          const ro = address_components.find(v =>
+            v.types.includes('sublocality_level_4'),
+          )?.long_name;
+
           dispatch({
             type: 'setAddress',
             payload: {
               address: formatted_address.replace('대한민국 ', ''),
+              address_short: dong || ro,
               longitude,
               latitude,
             },
@@ -120,7 +132,6 @@ export const Before = ({refetch}) => {
   );
 
   const handlePressSubmit = () => {
-    if (!numReg.test(price)) dispatch({type: 'setPrice', payload: ''});
     if (!address_detail || (!price && !average_price) || !numReg.test(price))
       return setIsErrored(true);
 
@@ -141,13 +152,41 @@ export const Before = ({refetch}) => {
           <Heading>요청하기</Heading>
           <ModalFormAddress
             label="위치 수동입력"
+            address={address}
             onComplete={v => dispatch(v)}
           />
         </HStack>
-        <Text color="gray.600" bold alignSelf="flex-end" px={5} pb={5}>
-          {address || '위치를 찾을 수 없습니다'}
-        </Text>
+
+        <HStack px={5} pb={5} alignItems="center" space={1}>
+          <Icon
+            name="location-outline"
+            size={16}
+            color={!permissions.location || !address ? '#e11d48' : '#000'}
+          />
+          <Input
+            flex={1}
+            isReadOnly
+            h={10}
+            color={!permissions.location || !address ? 'danger.600' : 'black'}
+            value={
+              permissions.location
+                ? address || '위치를 입력해 주세요'
+                : '위치 권한을 허용해주세요'
+            }
+            InputRightElement={
+              <Button
+                size="sm"
+                rounded="none"
+                h="full"
+                onPress={getCurrentPosition}>
+                <Icon name="refresh" size={16} color="#fff" />
+              </Button>
+            }
+          />
+        </HStack>
+
         <Divider />
+
         <ScrollView>
           <VStack flex={1} p={5} space={10}>
             <VStack space={3}>
@@ -231,6 +270,7 @@ export const Before = ({refetch}) => {
                     dispatch({type: 'setAddress_Detail', payload: v})
                   }
                   variant="underlined"
+                  placeholder="동, 호수등 상세주소를 적어주세요"
                 />
                 <FormControl.ErrorMessage>
                   상세 주소가 필요합니다
@@ -250,12 +290,13 @@ export const Before = ({refetch}) => {
             </VStack>
             <Button
               onPress={handlePressSubmit}
-              isDisabled={
-                (!price && !average_price) ||
-                !latitude ||
-                !longitude ||
-                !address_detail
-              }>
+              // isDisabled={
+              //   (!price && !average_price) ||
+              //   !latitude ||
+              //   !longitude ||
+              //   !address_detail
+              // }
+            >
               요청하기
             </Button>
           </VStack>

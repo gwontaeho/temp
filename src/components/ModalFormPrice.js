@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {SafeAreaView, Modal} from 'react-native';
-import {VStack, Button, Input, FormControl, Heading} from 'native-base';
+import {VStack, Button, Input, FormControl, Heading, Text} from 'native-base';
 
 export const ModalFormPrice = ({category, setCategory, onComplete}) => {
   const [price_60, setPrice_60] = useState('');
@@ -10,8 +10,19 @@ export const ModalFormPrice = ({category, setCategory, onComplete}) => {
 
   const handlePress = () => {
     const numReg = /^[0-9]*$/;
+    const prices = [price_60, price_90, price_120, price_150];
+    const filter = prices.filter(v => numReg.test(v) && !!v);
+    const every = filter.every(v => Number(v) >= 40000 && Number(v) <= 150000);
+    console.log(filter);
+    if (!every) return;
+    onComplete({
+      category,
+      price_60: price_60 || null,
+      price_90: price_90 || null,
+      price_120: price_120 || null,
+      price_150: price_150 || null,
+    });
 
-    onComplete({category, price_60, price_90, price_120, price_150});
     setCategory('');
     setPrice_60('');
     setPrice_90('');
@@ -73,6 +84,9 @@ export const ModalFormPrice = ({category, setCategory, onComplete}) => {
                   variant="underlined"
                 />
               </FormControl>
+              <Text color="info.600">
+                * 금액은 40,000 ~ 150,000 내에서 설정할 수 있습니다
+              </Text>
             </VStack>
 
             <Button w="full" onPress={handlePress}>

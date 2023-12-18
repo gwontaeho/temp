@@ -11,6 +11,7 @@ import {
 } from 'native-base';
 import {useHeaderHeight} from '@react-navigation/elements';
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {createRequest, getAveragePrices} from '@apis';
 import {AuthContext} from '@contexts';
 import {ModalFormAddress} from '@components';
@@ -24,6 +25,7 @@ const initialState = {
   description: '',
   personnel: 1,
   address: '',
+  address_short: '',
   phone: '',
   address_detail: '',
 };
@@ -64,14 +66,14 @@ export const CShareCreate = ({navigation}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     personnel,
-    category,
-    time,
-    address,
     price,
     latitude,
     longitude,
     description,
     address_detail,
+    category,
+    time,
+    address,
     phone,
   } = state;
 
@@ -120,17 +122,28 @@ export const CShareCreate = ({navigation}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView>
           <VStack flex={1} p={5} space={10}>
-            <VStack space={3} alignItems="flex-end">
-              <HStack>
-                <ModalFormAddress
-                  label="고객위치 입력"
-                  onComplete={v => dispatch(v)}
-                />
-              </HStack>
-              <Text color="gray.600" bold>
-                {address || '위치를 입력해주세요'}
-              </Text>
-            </VStack>
+            <HStack alignItems="center" space={1}>
+              <Icon
+                name="location-outline"
+                size={16}
+                color={!address ? '#e11d48' : '#000'}
+              />
+              <Input
+                h={10}
+                flex={1}
+                isReadOnly
+                color={address ? 'black' : 'danger.600'}
+                value={address || '위치를 입력해주세요'}
+                InputRightElement={
+                  <ModalFormAddress
+                    type="input"
+                    label="고객위치 입력"
+                    address={address}
+                    onComplete={v => dispatch(v)}
+                  />
+                }
+              />
+            </HStack>
 
             <VStack space={3}>
               <Button.Group isAttached w="full" size="sm">
@@ -208,6 +221,7 @@ export const CShareCreate = ({navigation}) => {
                   maxLength={11}
                   onChangeText={v => dispatch({type: 'setPhone', payload: v})}
                   variant="underlined"
+                  placeholder="고객 연락처는 수락하기 전까지 타업체에게 제공되지 않습니다"
                 />
                 <FormControl.ErrorMessage>
                   연락처가 필요합니다
@@ -221,6 +235,7 @@ export const CShareCreate = ({navigation}) => {
                     dispatch({type: 'setAddress_detail', payload: v})
                   }
                   variant="underlined"
+                  placeholder="상세주소는 수락 전까지 타업체에 제공되지 않습니다"
                 />
                 <FormControl.ErrorMessage>
                   상세 주소가 필요합니다

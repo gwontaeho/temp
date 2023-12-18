@@ -7,6 +7,15 @@ install! 'cocoapods', :deterministic_uuids => false
 target 'kys' do
   config = use_native_modules!
 
+    # firebase app
+    pod 'GoogleUtilities', :modular_headers => true
+    pod 'FirebaseCore', :modular_headers => true
+    pod 'FirebaseCoreInternal', :modular_headers => true
+    pod 'FirebaseMessaging', :modular_headers => true
+    # firebase app
+
+
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 

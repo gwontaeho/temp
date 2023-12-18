@@ -1,8 +1,9 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
+
 // op
-// axios.defaults.baseURL = 'https://homethai365.com/api';
-axios.defaults.baseURL = 'http://192.168.45.160:4000/api';
+axios.defaults.baseURL = 'https://homethai365.com/api';
+// axios.defaults.baseURL = 'http://192.168.35.246:3000/api';
 
 /******************************************************************************/
 
@@ -82,8 +83,14 @@ const getAveragePrices = async values => {
 };
 
 // 유저 : 약관 동의
-const updateUserTerms = async id => {
-  const {data} = await axios.put(`/users/${id}/terms`);
+const updateUserTerms = async ({id, marketing}) => {
+  const {data} = await axios.put(`/users/${id}/terms`, {marketing});
+  return data;
+};
+
+// 유저 : 약관 동의
+const updateUserMarketing = async ({id, marketing}) => {
+  const {data} = await axios.put(`/users/${id}/marketing`, {marketing});
   return data;
 };
 
@@ -142,10 +149,11 @@ const getNearbyRequests = async ({
   sort,
   filter,
   TargetId,
+  type,
 }) => {
   const {time} = filter;
   const {data} = await axios.get(
-    `/requests?TargetId=${TargetId}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&sort=${sort}&time=${time}`,
+    `/requests?TargetId=${TargetId}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&sort=${sort}&time=${time}&type=${type}`,
   );
   return data;
 };
@@ -153,6 +161,14 @@ const getNearbyRequests = async ({
 // 업체 : 매칭된 모든 요청 조회
 const getHistories = async TargetId => {
   const {data} = await axios.get(`/requests/targets/${TargetId}`);
+  return data;
+};
+
+// 업체 : 매칭된 모든 요청 조회
+const getDeleted = async ({TargetId, share}) => {
+  const {data} = await axios.get(
+    `/requests/targets/${TargetId}/deleted?share=${share}`,
+  );
   return data;
 };
 
@@ -190,6 +206,36 @@ const getPrices = async CompanyId => {
 // 업체 : 희망 단가 생성
 const upsertPrice = async values => {
   const {data} = await axios.post('/prices', values);
+  return data;
+};
+
+// 업체 : 매칭 리스트 삭제 (임시)
+const deleteHistories1 = async values => {
+  const {data} = await axios.put('/requests/delete1', values);
+  return data;
+};
+
+// 업체 : 매칭 리스트 삭제
+const deleteHistories2 = async values => {
+  const {data} = await axios.put('/requests/delete2', values);
+  return data;
+};
+
+// 업체 : 매칭 리스트 삭제 (임시)
+const deleteHistories3 = async values => {
+  const {data} = await axios.put('/requests/delete3', values);
+  return data;
+};
+
+// 업체 : 매칭 리스트 삭제
+const deleteHistories4 = async values => {
+  const {data} = await axios.put('/requests/delete4', values);
+  return data;
+};
+
+// 업체 : 리뷰 작성
+const createReview = async values => {
+  const {data} = await axios.post('/review/company', values);
   return data;
 };
 
@@ -265,6 +311,12 @@ export {
   completeRequestByCompany,
   getPrices,
   upsertPrice,
+  deleteHistories1,
+  getDeleted,
+  deleteHistories2,
+  deleteHistories3,
+  deleteHistories4,
+  createReview,
 };
 
 // 관리자
@@ -286,5 +338,6 @@ export {
   createRequest,
   getAveragePrices,
   updateUserTerms,
+  updateUserMarketing,
   getUser,
 };

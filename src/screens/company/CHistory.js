@@ -5,6 +5,7 @@ import {Button, Text, VStack, Badge, HStack, ScrollView} from 'native-base';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {completeRequestByCompany, cancelRequestByCompany} from '@apis';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {toDecimalString} from 'utils';
 
 export const CHistory = ({navigation, route}) => {
   const queryClient = useQueryClient();
@@ -24,16 +25,19 @@ export const CHistory = ({navigation, route}) => {
     share,
     User,
     updatedAt,
+    completedAt,
+    hasReview,
+    phone,
   } = params;
-  const {phone} = User;
 
   const today = dayjs();
+  const completed = dayjs(completedAt);
   const updated = dayjs(updatedAt);
   const diff = today.diff(updated, 'minute');
 
   const dateStr =
     status === 4 || status === 5
-      ? updated.format('YY. MM. DD')
+      ? completed.format('YY. MM. DD')
       : `${diff}분 전`;
 
   const shareStr = share ? '업체' : '사용자';
@@ -47,10 +51,9 @@ export const CHistory = ({navigation, route}) => {
 
   const {mutate: completeMutate} = useMutation({
     mutationFn: () => completeRequestByCompany(id),
-    onSuccess: async () => {
-      navigation.setParams({...params, status: 4});
+    onSettled: async () => {
       await queryClient.invalidateQueries({queryKey: ['CHistories']});
-      await queryClient.invalidateQueries({queryKey: ['CRequests']});
+      navigation.goBack();
     },
   });
 
@@ -68,8 +71,8 @@ export const CHistory = ({navigation, route}) => {
     Alert.alert('', '주소가 복사되었습니다', [{text: '확인'}]);
   };
 
-  const handlePressTel = () => {
-    Linking.openURL(`tel:${phone}`);
+  const handlePressTel = tel => {
+    Linking.openURL(`tel:${tel}`);
   };
 
   const handlePressCancel = () => {
@@ -110,24 +113,43 @@ export const CHistory = ({navigation, route}) => {
 
           <Text
             textAlign="center"
-            fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${price}원`}</Text>
+            fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${toDecimalString(
+            price,
+          )}원`}</Text>
 
           <VStack space={5} rounded="sm" borderColor="gray.300">
             {status !== 2 && (
               <HStack justifyContent="space-between" space={3}>
                 <VStack space={1}>
                   <Text color="gray.600">연락처</Text>
-                  <Text fontSize="md">{phone}</Text>
+                  <Text fontSize="md">{share ? phone : User.phone}</Text>
                 </VStack>
                 <Button
                   size="sm"
                   alignSelf="flex-end"
                   variant="outline"
-                  onPress={handlePressTel}>
+                  onPress={() => handlePressTel(share ? phone : User.phone)}>
                   전화하기
                 </Button>
               </HStack>
             )}
+
+            {status !== 2 && share && (
+              <HStack justifyContent="space-between" space={3}>
+                <VStack space={1}>
+                  <Text color="gray.600">업체 연락처</Text>
+                  <Text fontSize="md">{User.phone}</Text>
+                </VStack>
+                <Button
+                  size="sm"
+                  alignSelf="flex-end"
+                  variant="outline"
+                  onPress={() => handlePressTel(User.phone)}>
+                  전화하기
+                </Button>
+              </HStack>
+            )}
+
             {status !== 2 && (
               <HStack justifyContent="space-between" space={3}>
                 <VStack space={1} flex={1}>
@@ -159,21 +181,25 @@ export const CHistory = ({navigation, route}) => {
               <Text fontSize="md">{description_company || '-'}</Text>
             </VStack>
           </VStack>
-
-          {status === 3 && (
+          {(status === 2 || status === 3) && (
             <VStack space={3}>
               <Button onPress={handlePressCancel}>취소</Button>
-              <Button
-                onPress={completeMutate}
-                // isDisabled={time > diff}
-              >
-                {`완료 (${diff}분 진행중)`}
-              </Button>
+              {status === 3 && (
+                <Button onPress={completeMutate} isDisabled={time > diff}>
+                  {`완료 (${diff}분 진행중)`}
+                </Button>
+              )}
             </VStack>
           )}
-          {status === 2 && diff > 5 && (
-            <Button onPress={handlePressCancel}>취소</Button>
+          {(status === 4 || status === 5) && !hasReview && (
+            <Button onPress={() => navigation.navigate('CReview', params)}>
+              리뷰작성
+            </Button>
           )}
+          <Text color="info.600">
+            사용자, 업체 양측 수락 후에 사용자는 앱에서 임의로 취소할 수
+            없습니다
+          </Text>
         </VStack>
       </ScrollView>
     </SafeAreaView>

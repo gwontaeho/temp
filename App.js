@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Platform, PermissionsAndroid} from 'react-native';
+import {Platform, PermissionsAndroid, Linking, Alert} from 'react-native';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -8,6 +8,9 @@ import Geolocation from 'react-native-geolocation-service';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import messaging from '@react-native-firebase/messaging';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import PushNotification from 'react-native-push-notification';
 
 import {AuthContext} from '@contexts';
 import {Sign, Block, Inquiry, ErrorScreen, Terms} from '@screens/common';
@@ -29,6 +32,9 @@ import {
   CShareCreate,
   CShare,
   CPrices,
+  CDeleted,
+  CDeletedShare,
+  CReview,
 } from '@screens/company';
 import {URequest, USettings} from '@screens/user';
 import {getUser} from '@apis';
@@ -160,12 +166,44 @@ const CTabs = () => {
 
 const App = () => {
   const [auth, setAuth] = useState(null);
-  const [lp, setLp] = useState(0);
+  const [permissions, setPermissions] = useState({location: false});
 
   const isSigned = auth?.isSigned;
 
   useEffect(() => {
+    PushNotification.createChannel({channelId: 'pnc', channelName: 'pnc'});
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      try {
+        const title = remoteMessage.notification.title;
+        const message = remoteMessage.notification.body;
+        PushNotification.localNotification({
+          channelId: 'pnc',
+          title,
+          message,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    getInitialURL();
+  }, []);
+
+  const getInitialURL = async () => {
+    const url = await Linking.getInitialURL();
+  };
+
+  useEffect(() => {
     getData();
+  }, []);
+
+  useEffect(() => {
+    requestUserPermission();
   }, []);
 
   useEffect(() => {
@@ -178,13 +216,9 @@ const App = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        setLp(1);
-        console.log('granted');
-      } else {
-        setLp(0);
-        console.log('denied');
-      }
+      if (granted === PermissionsAndroid.RESULTS.GRANTED)
+        setPermissions(prev => ({...prev, location: true}));
+      else setPermissions(prev => ({...prev, location: false}));
     } catch (err) {
       console.warn(err);
     }
@@ -193,8 +227,20 @@ const App = () => {
   const requestAuthorization = async () => {
     try {
       const res = await Geolocation.requestAuthorization('always');
-      if (res === 'granted') return setLp(1);
-      else return setLp(0);
+      if (res === 'granted')
+        setPermissions(prev => ({...prev, location: true}));
+      else setPermissions(prev => ({...prev, location: false}));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const requestUserPermission = async () => {
+    try {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     } catch (error) {
       console.log(error);
     }
@@ -220,7 +266,7 @@ const App = () => {
 
   const signIn = async value => {
     try {
-      const auth = {...value, isSigned: true};
+      const auth = {...value, isSigned: true, initSign: true};
       const token = auth?.token;
       axios.defaults.headers.common['Authorization'] = token;
       const jsonValue = JSON.stringify(auth);
@@ -248,7 +294,8 @@ const App = () => {
   return (
     <NativeBaseProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <AuthContext.Provider value={{auth, signIn, signOut, lp, getData}}>
+        <AuthContext.Provider
+          value={{auth, signIn, signOut, permissions, getData, setAuth}}>
           <NavigationContainer theme={navTheme}>
             <Stack.Navigator screenOptions={{headerBackTitleVisible: false}}>
               {isTerms && (
@@ -318,7 +365,7 @@ const App = () => {
                   <Stack.Screen
                     name="CRequest"
                     component={CRequest}
-                    options={{title: ''}}
+                    options={{title: '인근 요청'}}
                   />
                   <Stack.Screen
                     name="CShareCreate"
@@ -333,12 +380,27 @@ const App = () => {
                   <Stack.Screen
                     name="CHistory"
                     component={CHistory}
-                    options={{headerTitle: ''}}
+                    options={{title: '매칭 리스트'}}
                   />
                   <Stack.Screen
                     name="CPrices"
                     component={CPrices}
                     options={{headerTitle: '단가 관리'}}
+                  />
+                  <Stack.Screen
+                    name="CDeleted"
+                    component={CDeleted}
+                    options={{headerTitle: '이용 내역'}}
+                  />
+                  <Stack.Screen
+                    name="CDeletedShare"
+                    component={CDeletedShare}
+                    options={{headerTitle: '공유 내역'}}
+                  />
+                  <Stack.Screen
+                    name="CReview"
+                    component={CReview}
+                    options={{headerTitle: '리뷰 작성'}}
                   />
                 </>
               )}

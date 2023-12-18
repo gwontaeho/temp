@@ -10,11 +10,13 @@ import {
   Input,
   Heading,
   View,
+  ScrollView,
 } from 'native-base';
 import {AuthContext} from '@contexts';
+import {ModalSettings} from '@components';
 
 export const USettings = () => {
-  const {auth, signOut} = useContext(AuthContext);
+  const {auth, signOut, getData} = useContext(AuthContext);
 
   return (
     <SafeAreaView flex={1}>
@@ -22,9 +24,14 @@ export const USettings = () => {
         <Heading>설정</Heading>
       </View>
       <Divider />
-      <VStack flex={1} p={5}>
-        <Button onPress={signOut}>로그아웃</Button>
-      </VStack>
+      <ScrollView>
+        <VStack flex={1} p={5} space={5}>
+          <ModalSettings />
+        </VStack>
+      </ScrollView>
+      <Button onPress={signOut} m={5}>
+        로그아웃
+      </Button>
     </SafeAreaView>
   );
 };

@@ -12,6 +12,7 @@ import {
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {acceptRequestByCompany} from '@apis';
 import {AuthContext} from '@contexts';
+import {toDecimalString} from 'utils';
 
 export const CRequest = ({navigation, route}) => {
   const queryClient = useQueryClient();
@@ -38,7 +39,8 @@ export const CRequest = ({navigation, route}) => {
         distance: d,
       }),
     onSuccess: ({code}) => {
-      if (code === 1) navigation.goBack();
+      console.log(code);
+      if (code === 1) navigation.navigate('CHistories');
       if (code === 0) {
         Alert.alert('', '이미 매칭된 요청입니다', [
           {text: '확인', onPress: navigation.goBack},
@@ -48,6 +50,9 @@ export const CRequest = ({navigation, route}) => {
     onSettled: async () => {
       await queryClient.invalidateQueries({queryKey: ['CHistories']});
       await queryClient.invalidateQueries({queryKey: ['CRequests']});
+    },
+    onError: error => {
+      console.log(error);
     },
   });
 
@@ -73,7 +78,9 @@ export const CRequest = ({navigation, route}) => {
 
             <Text
               textAlign="center"
-              fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${d}km \n ${price}원`}</Text>
+              fontSize="xl">{`${category} · ${time}분 · ${personnel}인 · ${d}km \n ${toDecimalString(
+              price,
+            )}원`}</Text>
 
             <VStack space={5}>
               <VStack space={1}>

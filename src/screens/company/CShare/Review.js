@@ -14,21 +14,25 @@ import {
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {completeRequestByUser} from '@apis';
 import {AuthContext} from '@contexts';
+import {toDecimalString} from 'utils';
 
 export const Review = ({data, refetch}) => {
   const queryClient = useQueryClient();
 
   const {auth} = useContext(AuthContext);
 
-  const {id, TargetId, category, time, personnel, price} = data;
+  const {id, TargetId, category, time, personnel, price, Target, isDeleted_3} =
+    data;
+  const {company_name} = Target;
 
   const [content, setContent] = useState('');
 
   const {mutate} = useMutation({
     mutationFn: variables => completeRequestByUser(variables),
     onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['CShares']});
-
+      if (isDeleted_3)
+        await queryClient.invalidateQueries({queryKey: ['CDeletedShare']});
+      else await queryClient.invalidateQueries({queryKey: ['CShares']});
       refetch();
     },
   });
@@ -47,7 +51,14 @@ export const Review = ({data, refetch}) => {
 
       <ScrollView>
         <VStack p={5} space={10}>
-          <Text fontSize="xl">{`${category} · ${time}분 · ${personnel}명 · ${price}원`}</Text>
+          <VStack alignItems="center">
+            <Text bold fontSize="lg">
+              {company_name}
+            </Text>
+            <Text fontSize="md">{`${category} · ${time}분 · ${personnel}명 · ${toDecimalString(
+              price,
+            )}원`}</Text>
+          </VStack>
 
           <FormControl>
             <FormControl.Label>후기를 작성해주세요</FormControl.Label>

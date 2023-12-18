@@ -27,7 +27,7 @@ export const CShare = ({route}) => {
         <After data={data} refetch={refetch} />
       )}
       {status === 4 && <Review data={data} refetch={refetch} />}
-      {status === 5 && <Complete data={data} />}
+      {(status === 5 || status === 0) && <Complete data={data} />}
     </>
   );
 };

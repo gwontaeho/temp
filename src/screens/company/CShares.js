@@ -1,27 +1,27 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {
   Button,
   Text,
-  VStack,
   Heading,
   HStack,
   FlatList,
   View,
   Divider,
-  Badge,
-  Center,
 } from 'native-base';
 import dayjs from 'dayjs';
-import {useQuery} from '@tanstack/react-query';
-import {getShares} from '@apis';
+import {useQuery, useMutation} from '@tanstack/react-query';
+import {getShares, deleteHistories3} from '@apis';
 import {AuthContext} from '@contexts';
+import {ShareCard} from '@components/company';
 
 export const CShares = ({navigation}) => {
   const {auth} = useContext(AuthContext);
 
+  const [selected, setSelected] = useState([]);
+
   const {Company} = auth;
-  const {expiration, distance, max_count} = Company || {};
+  const {expiration, max_count} = Company || {};
 
   const today = dayjs(auth.date).format('YYYYMMDD');
   const diff = expiration
@@ -40,63 +40,29 @@ export const CShares = ({navigation}) => {
     enabled: !expired,
   });
 
+  const {mutate} = useMutation({
+    mutationFn: () => deleteHistories3({ids: selected}),
+    onSettled: () => {
+      setSelected([]);
+      refetch();
+    },
+  });
+
   const requests = data?.requests || [];
   const count = data?.count || 0;
 
-  const renderItem = ({item}) => {
-    const {id, category, price, personnel, time, status} = item;
+  const handlePressSelectAll = () => {
+    if (selected.length > 0) setSelected([]);
+    else
+      setSelected(
+        requests
+          .filter(v => v.status === 4 || v.status === 5 || v.status === 0)
+          .map(v => v.id),
+      );
+  };
 
-    const statusStr =
-      status === 1
-        ? '인근 업체에 요청 중'
-        : status === 2
-        ? '수락 대기 중'
-        : status === 3
-        ? '업체 이동 중'
-        : '완료';
-
-    const borderColor =
-      status === 1
-        ? 'info.600'
-        : status === 2
-        ? 'warning.600'
-        : status === 3
-        ? 'success.600'
-        : 'gray.600';
-
-    const colorScheme =
-      status === 1
-        ? 'info'
-        : status === 2
-        ? 'warning'
-        : status === 3
-        ? 'success'
-        : 'gray';
-
-    return (
-      <VStack
-        p={3}
-        rounded="sm"
-        borderColor={borderColor}
-        borderWidth={1}
-        space={1}>
-        <HStack alignItems="center" justifyContent="space-between">
-          <Badge
-            alignSelf="flex-start"
-            variant="outline"
-            colorScheme={colorScheme}>
-            {statusStr}
-          </Badge>
-          {status === 4 && <Text fontSize="xs">* 후기를 작성해주세요</Text>}
-        </HStack>
-        <HStack alignItems="center" justifyContent="space-between">
-          <Text>{`${category} · ${time}분 · ${personnel}인`}</Text>
-          <Button size="sm" onPress={() => navigation.navigate('CShare', id)}>
-            자세히
-          </Button>
-        </HStack>
-      </VStack>
-    );
+  const handlePressDelete = () => {
+    mutate();
   };
 
   return (
@@ -119,16 +85,39 @@ export const CShares = ({navigation}) => {
           </Button>
         </Button.Group>
       </HStack>
-
-      <Text px={5} pb={5} alignSelf="flex-end" color="gray.600" underline>
+      <Text px={5} pb={5} alignSelf="flex-end" underline>
         {expirationStr}
       </Text>
+      <Divider />
+      <HStack mx={5} my={3} alignItems="center" justifyContent="flex-end">
+        <Button.Group size="sm">
+          <Button
+            onPress={handlePressSelectAll}
+            variant={selected.length > 0 ? 'outline' : 'solid'}
+            borderWidth={1}
+            borderColor="primary.600">
+            완료된 매칭 전체선택
+          </Button>
+          <Button
+            onPress={handlePressDelete}
+            borderWidth={1}
+            borderColor="primary.600">
+            선택된 항목 삭제
+          </Button>
+        </Button.Group>
+      </HStack>
 
       <Divider />
       {!expired && (
         <FlatList
           data={requests}
-          renderItem={renderItem}
+          renderItem={({item}) => (
+            <ShareCard
+              item={item}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          )}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={<View p={2.5} />}
           _contentContainerStyle={{p: 5}}

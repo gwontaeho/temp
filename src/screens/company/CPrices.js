@@ -14,6 +14,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import {AuthContext} from '@contexts';
 import {getAveragePrices, getPrices, upsertPrice} from '@apis';
 import {ModalFormPrice} from '@components';
+import {toDecimalString} from 'utils';
 
 export const CPrices = () => {
   const queryClient = useQueryClient();
@@ -79,21 +80,25 @@ export const CPrices = () => {
                     <HStack>
                       <VStack flex={1} alignItems="center">
                         <Text color="gray.600">60분</Text>
-                        <Text fontSize="md">{price_60}원</Text>
+                        <Text fontSize="md">{toDecimalString(price_60)}원</Text>
                       </VStack>
                       <VStack flex={1} alignItems="center">
                         <Text color="gray.600">90분</Text>
-                        <Text fontSize="md">{price_90}원</Text>
+                        <Text fontSize="md">{toDecimalString(price_90)}원</Text>
                       </VStack>
                     </HStack>
                     <HStack>
                       <VStack flex={1} alignItems="center">
                         <Text color="gray.600">120분</Text>
-                        <Text fontSize="md">{price_120}원</Text>
+                        <Text fontSize="md">
+                          {toDecimalString(price_120)}원
+                        </Text>
                       </VStack>
                       <VStack flex={1} alignItems="center">
                         <Text color="gray.600">150분</Text>
-                        <Text fontSize="md">{price_150}원</Text>
+                        <Text fontSize="md">
+                          {toDecimalString(price_150)}원
+                        </Text>
                       </VStack>
                     </HStack>
                   </VStack>

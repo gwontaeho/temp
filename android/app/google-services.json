@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "936559105430",
+    "project_id": "kys0000-373310",
+    "storage_bucket": "kys0000-373310.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936559105430:android:b2c4e4ad2daff3543db9b7",
+        "android_client_info": {
+          "package_name": "com.stewiewwww.homethai365"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936559105430-ta03gss1pld9a3qhfc5cnr17lbea2dh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5nOWpoV3Lcay4Ewh7y4B7sOAjtt2kiYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936559105430-ta03gss1pld9a3qhfc5cnr17lbea2dh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

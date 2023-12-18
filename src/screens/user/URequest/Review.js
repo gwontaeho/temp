@@ -14,12 +14,15 @@ import {
 import {useMutation} from '@tanstack/react-query';
 import {completeRequestByUser} from '@apis';
 import {AuthContext} from '@contexts';
+import {toDecimalString} from 'utils';
 
 export const Review = ({data, refetch}) => {
   const {auth} = useContext(AuthContext);
 
   const {id, TargetId, category, time, personnel, price, Target} = data;
   const {company_name} = Target;
+
+  console.log(company_name);
 
   const [content, setContent] = useState('');
 
@@ -42,7 +45,14 @@ export const Review = ({data, refetch}) => {
 
       <ScrollView>
         <VStack p={5} space={10}>
-          <Text fontSize="xl">{`${category} · ${time}분 · ${personnel}명 · ${price}원`}</Text>
+          <VStack alignItems="center">
+            <Text bold fontSize="lg">
+              {company_name}
+            </Text>
+            <Text fontSize="md">{`${category} · ${time}분 · ${personnel}명 · ${toDecimalString(
+              price,
+            )}원`}</Text>
+          </VStack>
 
           <FormControl>
             <FormControl.Label>후기를 작성해주세요</FormControl.Label>
@@ -56,10 +66,18 @@ export const Review = ({data, refetch}) => {
           </FormControl>
 
           <VStack space={3}>
-            <Button onPress={() => handlePressSubmit(false)}>
+            <Button
+              onPress={() => handlePressSubmit(false)}
+              borderWidth={1}
+              borderColor="primary.600">
               이 업체 또 만나기
             </Button>
-            <Button onPress={() => handlePressSubmit(true)}>만나지 않기</Button>
+            <Button
+              variant="outline"
+              borderColor="primary.600"
+              onPress={() => handlePressSubmit(true)}>
+              만나지 않기
+            </Button>
           </VStack>
         </VStack>
       </ScrollView>

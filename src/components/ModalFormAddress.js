@@ -3,13 +3,14 @@ import {SafeAreaView, Modal} from 'react-native';
 import {VStack, Button, Input, FormControl, Text} from 'native-base';
 import axios from 'axios';
 
-export const ModalFormAddress = ({label, onComplete}) => {
+export const ModalFormAddress = ({label, onComplete, address, type}) => {
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     setErrorMessage(false);
+    setText('');
   }, [visible]);
 
   const handlePress = async () => {
@@ -22,13 +23,23 @@ export const ModalFormAddress = ({label, onComplete}) => {
       if (status !== 'OK' || results.length === 0)
         return setErrorMessage('주소를 정확히 입력해주세요');
 
-      const {formatted_address, geometry} = results[0];
+      const {formatted_address, geometry, address_components} = results[0];
+
       if (!formatted_address.includes('대한민국')) return;
+
+      const dong = address_components.find(v =>
+        v.types.includes('sublocality_level_2'),
+      )?.long_name;
+      const ro = address_components.find(v =>
+        v.types.includes('sublocality_level_4'),
+      )?.long_name;
+
       const {lat: latitude, lng: longitude} = geometry.location;
       onComplete({
         type: 'setAddress',
         payload: {
           address: formatted_address.replace('대한민국 ', ''),
+          address_short: dong || ro,
           latitude,
           longitude,
         },
@@ -41,7 +52,11 @@ export const ModalFormAddress = ({label, onComplete}) => {
 
   return (
     <>
-      <Button size="sm" onPress={() => setVisible(true)}>
+      <Button
+        {...(type === 'input' && {h: 'full'})}
+        {...(type === 'input' && {rounded: 'none'})}
+        size="sm"
+        onPress={() => setVisible(true)}>
         {label}
       </Button>
       <Modal
@@ -61,6 +76,7 @@ export const ModalFormAddress = ({label, onComplete}) => {
               <FormControl>
                 <FormControl.Label>주소를 입력해주세요</FormControl.Label>
                 <Input
+                  placeholder={address}
                   value={text}
                   onChangeText={v => setText(v)}
                   variant="underlined"

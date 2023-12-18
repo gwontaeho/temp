@@ -7,3 +7,6 @@ export * from './CShares';
 export * from './CShareCreate';
 export * from './CShare';
 export * from './CPrices';
+export * from './CDeleted';
+export * from './CDeletedShare';
+export * from './CReview';

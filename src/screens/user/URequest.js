@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import {Alert} from 'react-native';
 import {useQuery} from '@tanstack/react-query';
 import {AuthContext} from '@contexts';
 import {getLastRequestOfUser} from '@apis';
@@ -16,6 +17,13 @@ export const URequest = () => {
     enabled: !!auth.id,
     refetchInterval: data =>
       (data?.status === 1 || data?.status === 2 || data?.status === 3) && 3000,
+    onSuccess: data => {
+      const code = data?.code;
+      if (code === 0)
+        Alert.alert('', '요청 후 30분이 지나 자동 취소되었습니다', [
+          {text: '네'},
+        ]);
+    },
   });
 
   const status = data?.status;

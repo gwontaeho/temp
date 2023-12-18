@@ -9,8 +9,10 @@ import {
   Divider,
   View,
   Heading,
+  ScrollView,
 } from 'native-base';
 import dayjs from 'dayjs';
+import {ModalSettings} from '@components';
 import {AuthContext} from 'contexts';
 
 export const CSettings = ({navigation}) => {
@@ -32,44 +34,58 @@ export const CSettings = ({navigation}) => {
         <Heading>설정</Heading>
       </View>
       <Divider />
-      <VStack flex={1} p={5} space={5}>
-        <VStack
-          py={3}
-          px={5}
-          space={3}
-          borderWidth={1}
-          rounded="sm"
-          borderColor="gray.300">
-          <HStack>
-            <VStack flex={1}>
-              <Text color="gray.600">업체명</Text>
-              <Text fontSize="md">{name}</Text>
-            </VStack>
-            <VStack flex={1}>
-              <Text color="gray.600">동시 요청 가능횟수</Text>
-              <Text fontSize="md">{max_count}</Text>
-            </VStack>
-          </HStack>
-          <HStack>
-            <VStack flex={1}>
-              <Text color="gray.600">요청 범위</Text>
-              <Text fontSize="md">{(distance / 1000).toFixed(1)}km</Text>
-            </VStack>
-            <VStack flex={1}>
-              <Text color="gray.600">만료일</Text>
-              <Text fontSize="md">{expireStr}</Text>
-            </VStack>
-          </HStack>
+      <ScrollView>
+        <VStack flex={1} p={5} space={5}>
+          <VStack
+            py={3}
+            px={5}
+            space={3}
+            borderWidth={1}
+            rounded="sm"
+            borderColor="gray.300">
+            <HStack>
+              <VStack flex={1}>
+                <Text color="gray.600">업체명</Text>
+                <Text fontSize="md">{name}</Text>
+              </VStack>
+              <VStack flex={1}>
+                <Text color="gray.600">동시 요청 가능횟수</Text>
+                <Text fontSize="md">{max_count}</Text>
+              </VStack>
+            </HStack>
+            <HStack>
+              <VStack flex={1}>
+                <Text color="gray.600">요청 범위</Text>
+                <Text fontSize="md">{(distance / 1000).toFixed(1)}km</Text>
+              </VStack>
+              <VStack flex={1}>
+                <Text color="gray.600">만료일</Text>
+                <Text fontSize="md">{expireStr}</Text>
+              </VStack>
+            </HStack>
+          </VStack>
+          <Divider />
+          <Button
+            variant="outline"
+            onPress={() => navigation.navigate('CDeleted')}>
+            이용내역
+          </Button>
+          <Button
+            variant="outline"
+            onPress={() => navigation.navigate('CDeletedShare')}>
+            공유내역
+          </Button>
+          <Button
+            variant="outline"
+            onPress={() => navigation.navigate('CPrices')}>
+            단가관리
+          </Button>
+          <ModalSettings />
         </VStack>
-
-        <Button
-          variant="outline"
-          onPress={() => navigation.navigate('CPrices')}>
-          단가 관리
-        </Button>
-        <Divider />
-        <Button onPress={signOut}>로그아웃</Button>
-      </VStack>
+      </ScrollView>
+      <Button onPress={signOut} m={5}>
+        로그아웃
+      </Button>
     </SafeAreaView>
   );
 };

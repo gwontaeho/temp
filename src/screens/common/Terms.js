@@ -730,7 +730,7 @@ export const Terms = () => {
   const [marketing, setMarketing] = useState(false);
 
   const {mutate} = useMutation({
-    mutationFn: () => updateUserTerms(auth.id),
+    mutationFn: () => updateUserTerms({id: auth.id, marketing}),
     onSuccess: () => signIn({...auth, terms: true}),
   });
 

@@ -8,9 +8,11 @@ export const ModalFormFilter = ({values, onComplete}) => {
 
   const [time, setTime] = useState(values.filter.time);
   const [sort, setSort] = useState(values.sort);
+  const [type, setType] = useState(values.type);
 
   const timeOptions = [0, 60, 90, 120, 150];
   const sortOptions = ['distance', 'price', 'createdAt'];
+  const typeOptions = ['all', 'user', 'share'];
 
   const timeText = v => {
     return v === 0 ? '전체' : `${v}분`;
@@ -27,23 +29,29 @@ export const ModalFormFilter = ({values, onComplete}) => {
     }
   };
 
+  const typeText = v => {
+    switch (v) {
+      case 'all':
+        return '전체';
+      case 'user':
+        return '사용자';
+      case 'share':
+        return '업체';
+    }
+  };
+
   const handlePressOk = () => {
-    onComplete({sort, filter: {time}});
+    onComplete({sort, filter: {time}, type});
     setVisible(false);
   };
 
   return (
     <>
       <Button onPress={() => setVisible(true)} size="sm">
-        {`${timeText(values.filter.time)} · ${sortText(values.sort)}`}
+        {`${timeText(values.filter.time)} · ${sortText(
+          values.sort,
+        )} · ${typeText(values.type)}`}
       </Button>
-      {/* <Pressable onPress={() => setVisible(true)}>
-        <HStack p={5} justifyContent="flex-end">
-          <Text>{`${timeText(values.filter.time)} · ${sortText(
-            values.sort,
-          )}`}</Text>
-        </HStack>
-      </Pressable> */}
       <Modal
         animationType="fade"
         visible={visible}
@@ -83,6 +91,20 @@ export const ModalFormFilter = ({values, onComplete}) => {
                         key={v}
                         variant={variant}>
                         {sortText(v)}
+                      </Button>
+                    );
+                  })}
+                </Button.Group>
+                <Button.Group isAttached>
+                  {typeOptions.map(v => {
+                    const variant = v === type ? 'solid' : 'outline';
+                    return (
+                      <Button
+                        flex={1}
+                        onPress={() => setType(v)}
+                        key={v}
+                        variant={variant}>
+                        {typeText(v)}
                       </Button>
                     );
                   })}

@@ -13,17 +13,18 @@ import {
 import dayjs from 'dayjs';
 import {useNavigation} from '@react-navigation/native';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {
   cancelRequestByUser,
   rejectRequestByUser,
   acceptRequestByUser,
 } from '@apis';
+import {toDecimalString} from 'utils';
 
 const ModalAccept = ({data, refetch}) => {
   const queryClient = useQueryClient();
 
-  const {id, status, Target, TargetId, description_company, count, distance} =
-    data;
+  const {id, status, description_company, count, distance} = data;
 
   const {mutate: rejectMutate} = useMutation({
     mutationFn: () => rejectRequestByUser(id),
@@ -60,7 +61,7 @@ const ModalAccept = ({data, refetch}) => {
                 color="gray.600">{`이 업체를 ${count}회 이용했습니다`}</Text>
               <Text
                 fontSize="md"
-                color="gray.600">{`업체와의 거리 ${distance}km`}</Text>
+                color="gray.600">{`업체와 고객과의 거리 ${distance}km`}</Text>
             </VStack>
           </VStack>
         </Modal.Body>
@@ -99,9 +100,9 @@ export const After = ({data, refetch}) => {
     count,
     updatedAt,
     distance,
+    phone,
   } = data;
 
-  const phone = Target?.phone;
   const statusStr = status === 3 ? '업체 이동 중' : '인근 업체 매칭 중';
 
   const {company_name} = {...Target};
@@ -135,6 +136,9 @@ export const After = ({data, refetch}) => {
     }
   }, [status, updatedAt]);
 
+  const handlePressTelCompany = () => {
+    Linking.openURL(`tel:${Target?.phone}`);
+  };
   const handlePressTel = () => {
     Linking.openURL(`tel:${phone}`);
   };
@@ -147,9 +151,12 @@ export const After = ({data, refetch}) => {
           <Spinner />
         </HStack>
         <VStack alignItems="flex-end" px={5} pb={5}>
-          <Text bold color="gray.600">
-            {address}
-          </Text>
+          <HStack alignItems="center" space={1}>
+            <Icon name="location-outline" size={16} color="#000" />
+            <Text bold color="gray.600">
+              {address}
+            </Text>
+          </HStack>
           {!!address_detail && (
             <Text bold color="gray.600">
               {address_detail}
@@ -160,14 +167,21 @@ export const After = ({data, refetch}) => {
         <VStack flex={1} alignItems="center" justifyContent="center" space={3}>
           <VStack alignItems="center">
             <Text fontSize="xl">{`${category} · ${time}분 · ${personnel}명`}</Text>
-            <Text fontSize="xl">{`${price}원`}</Text>
+            <Text fontSize="xl">{`${toDecimalString(price)}원`}</Text>
           </VStack>
-          {!!description && <Text>{description}</Text>}
-          {status === 1 && TargetId && (
-            <Text fontSize="md" bold alignSelf="center" color="info.600">
-              업체가 취소하여 인근업체를 재매칭합니다
-            </Text>
-          )}
+          {!!description && <Text textAlign="center">{description}</Text>}
+          <VStack>
+            {status === 1 && TargetId && (
+              <Text fontSize="md" bold alignSelf="center" color="info.600">
+                업체가 취소하여 인근업체를 재매칭합니다
+              </Text>
+            )}
+            {(status === 1 || status === 2) && (
+              <Text alignSelf="center" color="info.600">
+                30분간 업체수락이 없을 시 자동 취소됩니다
+              </Text>
+            )}
+          </VStack>
         </VStack>
 
         {status === 3 && (
@@ -195,7 +209,7 @@ export const After = ({data, refetch}) => {
                 <Text fontSize="md">{departure}분 전</Text>
               </VStack>
               <VStack flex={1}>
-                <Text color="gray.600">거리</Text>
+                <Text color="gray.600">고객과 상대 업체간 거리</Text>
                 <Text fontSize="md">{distance}km</Text>
               </VStack>
             </HStack>
@@ -205,21 +219,23 @@ export const After = ({data, refetch}) => {
             </VStack>
           </VStack>
         )}
-
-        {(status === 1 || status === 2) && (
-          <VStack m={5} space={3}>
-            <Button onPress={mutate}>취소하기</Button>
-            <Text alignSelf="center" color="warning.600">
-              고의적으로 취소 반복 시 이용이 정지 될 수 있습니다
-            </Text>
-          </VStack>
-        )}
         {status === 3 && (
-          <HStack m={5} space={3}>
+          <HStack mt={5} mx={5} space={3}>
             <Button flex={1} onPress={handlePressTel}>
+              고객에 전화하기
+            </Button>
+            <Button flex={1} onPress={handlePressTelCompany}>
               업체에 전화하기
             </Button>
           </HStack>
+        )}
+        {(status === 1 || status === 2 || status === 3) && (
+          <VStack m={5} space={3}>
+            <Button onPress={mutate}>취소하기</Button>
+            {/* <Text alignSelf="center" color="warning.600">
+              고의적으로 취소 반복 시 이용이 정지 될 수 있습니다
+            </Text> */}
+          </VStack>
         )}
       </SafeAreaView>
       <ModalAccept data={data} refetch={refetch} />
