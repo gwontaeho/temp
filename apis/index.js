@@ -4,8 +4,8 @@ import { getCookie } from "cookies-next";
 // import CryptoJS from "crypto-js";
 // 배포
 
-axios.defaults.baseURL = "https://homethai365.com/api";
-// axios.defaults.baseURL = "http://localhost:3000/api";
+// axios.defaults.baseURL = "https://homethai365.com/api";
+axios.defaults.baseURL = "http://localhost:3000/api";
 
 axios.interceptors.request.use((config) => {
     const token = getCookie("token");
