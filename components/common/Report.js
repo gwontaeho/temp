@@ -364,7 +364,9 @@ export const Report = ({ data, type }) => {
     const title = type === "FVC" ? "Forced Vital Capacity(FVC)" : "Slow Vital Capacity(SVC)";
 
     return (
-        <Stack width={0} height={0} overflow="hidden">
+        <Stack
+        //  width={0} height={0} overflow="hidden"
+        >
             <Stack id={`report-${type}`} width={1090} height={1682} minWidth={1090} minHeight={1682} bgcolor="#fff">
                 <Image priority src={logo2} alt="logo" width={170} height={170} />
                 <Stack px="82px">

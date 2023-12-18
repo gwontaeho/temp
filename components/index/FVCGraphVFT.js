@@ -28,6 +28,8 @@ export const FVCGraphVFT = ({ simple }) => {
         .filter((v) => v.graphType === "time-volume" && selectedIds.includes(v.measurementId))
         .map((v) => ({ id: v.measurementId, data: v.graph, i: simple.findIndex((vv) => vv.measurementId === v.measurementId) }));
 
+    console.log(vfs);
+
     const initMaxY = 1.4;
     const initMinY = -0.8;
     const initMaxX = 1.6;

@@ -54,6 +54,8 @@ export const SVC = () => {
         enabled: !!examineeId && !!date,
     });
 
+    console.log("svc", rData);
+
     const report = rData?.response || {};
     const reportCode = rData?.status;
     const reportTitle = `${examineeName}${dayjs().format("YYYYMMDD_HHmmss")}`;
