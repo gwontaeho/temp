@@ -1,0 +1,14 @@
+.App {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #64c864;
+}
+
+.App-container {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 200px);
+}

@@ -1,0 +1,82 @@
+.screen {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  max-height: 0;
+  background-color: black;
+  transition: 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.screen2 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  max-height: 0;
+  background-color: green;
+  transition: 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.screen3 {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #64c864;
+  transition: 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.Detail-header {
+  color: white;
+  font-size: 5rem;
+  padding: 50px;
+  height: 100px;
+  width: calc(100% - 100px);
+  display: flex;
+  align-items: center;
+}
+
+.Detail-container {
+  width: calc(100% - 200px);
+  height: calc(100% - 400px);
+  display: flex;
+  padding: 100px;
+}
+
+.Detail-container > div {
+  flex: 1;
+  margin: 0 1%;
+  transition: 0.5s;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.Detail-container div:hover {
+  flex: 1 1 50%;
+}
+
+.Detail-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.Detail-specifications {
+}
+
+.Detail-title {
+  font-size: 1.5rem;
+  padding: 10px;
+}
+
+.Detail-specification {
+  display: grid;
+  grid-template-columns: 200px 500px;
+  padding: 10px;
+  gap: 10px;
+}
