@@ -1,0 +1,26 @@
+{
+    "development": {
+        "username": "root",
+        "password": "dlwlsthf",
+        "database": "outsourcing_development",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "logging": false
+    },
+    "test": {
+        "username": "root",
+        "password": "dlwlsthf",
+        "database": "outsourcing_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "logging": false
+    },
+    "production": {
+        "username": "root",
+        "password": "dlwlsthf",
+        "database": "outsourcing_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "logging": false
+    }
+}
