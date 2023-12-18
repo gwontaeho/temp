@@ -1,0 +1,38 @@
+@use "styles/variable" as *;
+
+.editProfile {
+  display: flex;
+  flex-direction: column;
+
+  padding: 70px 0 0;
+
+  .categoryArea {
+    padding: 0 20px;
+
+    .categoryList {
+      display: flex;
+      height: 44px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      overflow: hidden;
+
+      li {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        font-size: 14px;
+        color: $Gray1;
+
+        &.on {
+          font-weight: 700;
+          color: $Blue3;
+          background: #fff;
+          border: 1px solid $Blue3;
+          border-radius: 6px;
+        }
+      }
+    }
+  }
+}

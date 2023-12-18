@@ -1,0 +1,300 @@
+@use "styles/variable" as *;
+
+.home {
+  padding: 0 0 120px;
+  background: $Bg1;
+
+  .indexSec {
+    padding: 70px 0 0;
+    position: relative;
+
+    .bgArea {
+      height: 220px;
+      top: 0;
+      right: 0;
+      left: 0;
+      position: absolute;
+      z-index: 0;
+      transition: all 0.4s;
+    }
+
+    .searchBar {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 16px;
+      margin: 0 20px;
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+      border-radius: 20px;
+      position: relative;
+
+      .placeholder {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 700;
+        color: $Placeholder1;
+      }
+    }
+
+    .slickArea {
+      margin: 20px 0 0;
+
+      .contBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 300px;
+        height: 120px;
+        margin: 0 auto;
+        border-radius: 10px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: inherit;
+        }
+      }
+    }
+  }
+
+  .listSec {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 16px;
+    margin: 40px 0 0;
+
+    .titleArea {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .secTitle {
+        font-weight: 700;
+      }
+
+      .pageBtn {
+        display: flex;
+        align-items: center;
+        height: 18px;
+        padding: 0 9px;
+        border-radius: 20px;
+
+        &:focus {
+          background: #ddd;
+        }
+
+        p {
+          font-size: 12px;
+          color: $Gray1;
+        }
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+    &.personSec {
+      .contArea {
+        padding: 0 16px;
+        background: #fff;
+        box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.06);
+        border-radius: 6px;
+
+        .personList {
+          li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 0 26px;
+
+            &:nth-child(n + 2) {
+              border-top: 1px solid $White2;
+            }
+
+            .profImg {
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+
+            .contCont {
+              flex: 1;
+              overflow: hidden;
+              color: $Black1;
+
+              .statusBar {
+                display: flex;
+                align-items: baseline;
+                gap: 8px;
+
+                .name {
+                  font-size: 14px;
+                  font-weight: 700;
+                }
+
+                .status {
+                  font-size: 10px;
+                  color: $Blue3;
+                }
+              }
+
+              .message {
+                margin: 8px 0 0;
+                font-size: 14px;
+                color: $Gray1;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              }
+
+              .scoreBar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 14px 0 0;
+
+                .scoreList {
+                  display: flex;
+                  gap: 4px;
+                }
+
+                .score {
+                  font-size: 12px;
+                  line-height: 18px;
+                  font-weight: 700;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.companySec {
+      .contArea {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        .companyList {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, 156px);
+          gap: 16px;
+          justify-content: space-between;
+
+          li {
+            font-size: 12px;
+            color: $Black1;
+
+            .companyImg {
+              width: 100%;
+              height: 110px;
+              object-fit: cover;
+              overflow: hidden;
+              border-radius: 6px;
+            }
+
+            .name {
+              margin-top: 12px;
+              font-size: 14px;
+            }
+
+            .location {
+              margin-top: 6px;
+            }
+
+            .tel {
+              margin-top: 10px;
+              color: $Gray1;
+            }
+          }
+        }
+
+        .moreBtn {
+          margin: 0 4px;
+          height: 40px;
+          font-size: 14px;
+          font-weight: 500;
+          background: #fff;
+          border: 1px solid $White4;
+          border-radius: 20px;
+        }
+      }
+    }
+
+    &.findSec {
+      .contArea {
+        display: flex;
+        gap: 12px;
+
+        button {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+          gap: 6px;
+          height: 110px;
+          padding: 10px 0 14px;
+          background: #fff;
+          border: 1px solid $White2;
+          border-radius: 6px;
+
+          img {
+            height: 55px;
+          }
+
+          p {
+            font-size: 16px;
+            font-weight: 500;
+            color: $Black1;
+          }
+        }
+      }
+    }
+  }
+
+  .bannerSec {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    padding: 0 16px;
+    margin: 30px 16px 0;
+    color: #fff;
+    background: #00b862;
+    border-radius: 6px;
+
+    .leftArea {
+      .title {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .pushBtn {
+        display: flex;
+        align-items: center;
+        margin: 8px 0 0;
+        font-size: 12px;
+        font-weight: 500;
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+    .banner{
+      width: 68px;
+    }
+  }
+}

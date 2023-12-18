@@ -1,0 +1,116 @@
+@use "styles/variable" as *;
+
+.qrPopup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  top: 50%;
+  left: 50%;
+  position: fixed;
+  z-index: 60;
+  transform: translate(-50%, -50%);
+
+  .headerBar {
+    width: 40px;
+    height: 4px;
+    background: #fff;
+    border-radius: 4px;
+  }
+
+  .contArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4), inset 0px 2px 1px #dddddd;
+    border-radius: 16px;
+
+    .logoBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 110px;
+      height: 30px;
+      background: linear-gradient(90deg, #505cec 20.71%, #5d4af0 90%);
+      border-radius: 30px;
+
+      svg {
+        height: 12px;
+      }
+    }
+
+    .qrBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 174px;
+      height: 174px;
+      margin: 16px 0 0;
+      position: relative;
+
+      &.off {
+        .reloadImg {
+          display: block;
+        }
+
+        .qrImg {
+          opacity: 0.1;
+        }
+      }
+
+      .reloadImg {
+        display: none;
+        width: 40px;
+        height: 40px;
+        background: #fff;
+        border: 1px solid $White1;
+        border-radius: 50%;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06);
+        position: absolute;
+      }
+
+      .qrImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .pointCont {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: 100%;
+      padding: 20px 20px 24px;
+      margin: 30px 0 0;
+      color: #fff;
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(100.08deg, #5e88f7 2.74%, #556af6 38.57%);
+      box-shadow: inset 0px -1px 2px 1px rgba(0, 0, 0, 0.14);
+      border-radius: 10px;
+
+      .contTitle {
+        font-size: 14px;
+      }
+
+      .pointList {
+        li {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+
+          .key {
+            font-size: 14px;
+          }
+
+          .value {
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+}

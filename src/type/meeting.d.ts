@@ -1,0 +1,3 @@
+interface Imeeting {
+  m: string;
+}

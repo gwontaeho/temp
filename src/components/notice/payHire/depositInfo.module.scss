@@ -1,0 +1,63 @@
+@use "styles/variable" as *;
+
+.depositInfo {
+  padding: 26px 16px;
+
+  .contArea {
+    padding: 20px 20px 22px;
+    color: $Black1;
+    background: #fff;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+
+    .areaTitle {
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .payList {
+      padding: 20px 20px 22px;
+      margin: 30px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: $Bg2;
+      border-radius: 8px;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 14px;
+
+        .key {
+          color: $Gray3;
+        }
+
+        .value {
+          font-weight: 700;
+        }
+      }
+    }
+
+    .explain {
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 18px;
+      text-align: center;
+      color: $Gray3;
+    }
+
+    .confirmBtn {
+      width: 100%;
+      height: 50px;
+      margin: 26px 0 0;
+      color: #fff;
+      background: $Blue3;
+      box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+      border-radius: 8px;
+    }
+  }
+}

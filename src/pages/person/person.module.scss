@@ -1,0 +1,157 @@
+@use "styles/variable" as *;
+
+.person {
+  padding: 90px 0 120px;
+  background: $White1;
+
+  .personSec {
+    padding: 10px 0 0;
+
+    .topBar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 30px;
+      padding: 0 16px;
+      font-size: 12px;
+      color: $Gray1;
+
+      .count {
+        .value {
+          color: #000;
+        }
+      }
+
+      .btnBox {
+        height: 100%;
+        position: relative;
+
+        .sortBtn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          height: 100%;
+        }
+      }
+    }
+
+    .contArea {
+      .personList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 16px;
+
+        & > li {
+          padding: 16px 16px 20px;
+          background: #fff;
+          box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.06);
+          border-radius: 6px;
+
+          .profBar {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 0 0 16px;
+
+            .profImg {
+              width: 60px;
+              height: 60px;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+
+            .infoBox {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+
+              .nameBar {
+                display: flex;
+                align-items: baseline;
+                gap: 8px;
+
+                .name {
+                  font-size: 20px;
+                  font-weight: 700;
+                  color: $Black1;
+                }
+
+                .selfFind {
+                  font-size: 12px;
+                  color: $Blue3;
+                }
+              }
+
+              .message {
+                font-size: 14px;
+                line-height: 16px;
+                color: $Gray1;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+              }
+            }
+          }
+
+          .scoreBar {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 16px 0;
+            border-top: 1px dashed $White2;
+
+            .scoreList {
+              display: flex;
+              gap: 6px;
+            }
+
+            .label {
+              font-size: 14px;
+              color: $Gray3;
+
+              .score {
+                font-weight: 700;
+                color: $Black1;
+              }
+            }
+          }
+
+          .categoryBar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 16px 0 0;
+            border-top: 1px dashed $White2;
+
+            .key {
+              font-size: 12px;
+              font-weight: 700;
+              color: $Black1;
+            }
+
+            .categoryList {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+
+              li {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 28px;
+                padding: 0 10px;
+                font-size: 14px;
+                color: $Gray1;
+                background: $Bg2;
+                border-radius: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

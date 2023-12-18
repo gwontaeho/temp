@@ -1,0 +1,53 @@
+@use "styles/variable" as *;
+
+.autoSavePopup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
+  padding: 26px 36px 30px;
+  background: #fff;
+  border-radius: 0px 0px 14px 14px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+
+  .textArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: $Black1;
+
+    .name {
+      font-size: 14px;
+    }
+
+    .explain {
+      font-weight: 700;
+    }
+  }
+
+  .btnBar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    button {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 44px;
+      border-radius: 6px;
+
+      &.freshBtn {
+        color: $Gray3;
+        border: 1px solid $White4;
+      }
+
+      &.continueBtn {
+        color: #fff;
+        background: $Blue3;
+      }
+    }
+  }
+}

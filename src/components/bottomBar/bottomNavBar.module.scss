@@ -1,0 +1,26 @@
+@use "styles/variable" as *;
+
+.bottomNavBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 18px;
+  background: $Bg1;
+  border-top: 1px solid $White4;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 30;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+}

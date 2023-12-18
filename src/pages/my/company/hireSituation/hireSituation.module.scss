@@ -1,0 +1,105 @@
+@use "styles/variable" as *;
+
+.hireSituation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 70px 16px;
+  background: $Bg1;
+
+  .count {
+    font-size: 12px;
+    color: $Gray1;
+
+    strong {
+      font-weight: 700;
+      color: $Black1;
+    }
+  }
+
+  .historyList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    & > li {
+      background: #fff;
+      box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+      border-radius: 8px;
+
+      .contArea {
+        font-size: 12px;
+        padding: 20px 20px 26px;
+
+        .red {
+          color: $Red1;
+        }
+
+        .blue {
+          color: $Blue3;
+        }
+
+        .topBar {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .title {
+          margin: 20px 0 0;
+          font-size: 16px;
+          font-weight: 700;
+        }
+
+        .infoList {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin: 14px 0 0;
+
+          li {
+            display: flex;
+            gap: 8px;
+
+            .key {
+              width: 46px;
+              color: $Gray3;
+            }
+
+            hr {
+              width: 1px;
+              height: 14px;
+              background: $White4;
+              border: none;
+            }
+
+            .value {
+              color: $Gray1;
+            }
+          }
+        }
+      }
+
+      .btnBar {
+        display: flex;
+        height: 50px;
+        border-top: 1px solid $White2;
+
+        button {
+          flex: 1;
+          height: 100%;
+          font-size: 14px;
+          color: $Gray3;
+
+          &:nth-of-type(n + 2) {
+            border-left: 1px solid $White2;
+          }
+
+          &.blue {
+            color: $Blue3;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+}

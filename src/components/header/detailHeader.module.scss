@@ -1,0 +1,39 @@
+@use "styles/variable" as *;
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 14px;
+  background: #fff;
+  top: 0;
+  right: 0;
+  left: 0;
+  position: fixed;
+  z-index: 30;
+
+  &.bottomBorder{
+    border-bottom: 1px solid $White2;
+  }
+
+  .leftArea {
+    width: 44px;
+
+    .backBtn {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .pageTitle {
+    padding: 1px 0 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: $Black1;
+  }
+
+  .rightArea {
+    width: 44px;
+  }
+}

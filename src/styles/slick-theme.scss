@@ -1,0 +1,15 @@
+@import "./colors.scss";
+
+.homeSlick {
+  .slick-list {
+    .slick-track {
+      .slick-slide {
+        padding: 0 10px;
+
+        &.slick-active {
+          padding: 0;
+        }
+      }
+    }
+  }
+}

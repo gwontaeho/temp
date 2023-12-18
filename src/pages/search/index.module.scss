@@ -1,0 +1,125 @@
+@use "styles/variable" as *;
+
+.search {
+  .searchHeader {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 14px;
+    border-bottom: 1px solid $White2;
+
+    .backBtn {
+      display: flex;
+      align-items: center;
+    }
+
+    input {
+      flex: 1;
+      height: 100%;
+      padding: 0 14px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .delBtn {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .searchSec {
+    padding: 16px 10px;
+
+    .recommendedArea {
+      .recommendedList {
+        li {
+          display: flex;
+          align-items: center;
+          height: 34px;
+
+          p {
+            font-size: 12px;
+            color: $Gray1;
+
+            &.name {
+              font-size: 16px;
+              font-weight: 500;
+              color: #000;
+            }
+
+            mark {
+              color: $Blue3;
+              background: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .searchNullSec {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 16px;
+
+    .searchArea {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .areaTitle {
+        font-size: 14px;
+        font-weight: 500;
+        color: $Gray1;
+      }
+
+      &.popularArea {
+        .popularList {
+          display: flex;
+          gap: 6px;
+          overflow-x: scroll;
+          margin: 0 -16px;
+          padding: 0 16px;
+
+          li {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            padding: 0 13px;
+            border: 1px solid $White4;
+            border-radius: 20px;
+
+            p {
+              font-size: 14px;
+              font-weight: 500;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+
+      &.recentArea {
+        .recentList {
+          li {
+            display: flex;
+            align-items: center;
+            height: 38px;
+
+            p {
+              flex: 1;
+              font-size: 16px;
+              color: $Black1;
+            }
+
+            svg {
+              width: 24px;
+              height: 24px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

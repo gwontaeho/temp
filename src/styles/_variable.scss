@@ -1,0 +1,151 @@
+@import "./colors.scss";
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../assets/fonts/NanumSquareNeoOTF-bRg.otf") format("opentye");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../assets/fonts/NanumSquareNeoOTF-cBd.otf") format("opentye");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../assets/fonts/NanumSquareNeoOTF-dEb.otf") format("opentye");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../assets/fonts/NanumSquareNeoOTF-eHv.otf") format("opentye");
+  font-weight: 700;
+}
+
+@mixin errorMsg {
+  font-size: 12px;
+  color: $Red1;
+}
+
+@mixin formExplain {
+  font-size: 12px;
+  color: $Gray1;
+}
+
+@mixin formKeyBox {
+  &:focus-within {
+    .keyBox {
+      .required {
+        display: block;
+      }
+    }
+  }
+
+  .keyBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+
+    .key {
+      .red {
+        color: $Red1;
+      }
+    }
+
+    .required {
+      display: none;
+      color: $Blue3;
+    }
+  }
+}
+
+@mixin formValueBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .inputBar {
+    display: flex;
+    gap: 10px;
+    height: 44px;
+    position: relative;
+
+    &:focus-within {
+      .inputBox {
+        border: 2px solid rgba(105, 119, 249, 0.5);
+      }
+    }
+
+    .inputBox {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 100%;
+      border: 1px solid $White4;
+      border-radius: 6px;
+
+      &.err {
+        border-color: $Red1;
+      }
+
+      &.focusOn {
+        border: 2px solid rgba(105, 119, 249, 0.5);
+      }
+
+      input {
+        flex: 1;
+        height: 100%;
+        padding: 0 16px;
+
+        &::placeholder {
+          color: $Gray1;
+        }
+      }
+
+      .chevronDown {
+        margin: 0 16px 0 0;
+      }
+    }
+  }
+
+  .errorMsg {
+    @include errorMsg;
+  }
+
+  .explain {
+    @include formExplain;
+  }
+}
+
+@mixin toggleBtn {
+  width: 44px;
+  height: 26px;
+  padding: 1px;
+  background: $Toggle1;
+  border-radius: 20px;
+  transition: all 0.3s;
+
+  &.on {
+    background: $Blue3;
+
+    .thumb {
+      margin: 0 0 0 18px;
+    }
+  }
+
+  .thumb {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border: 1px solid $White2;
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+}

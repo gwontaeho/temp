@@ -1,0 +1,52 @@
+@use "styles/variable" as *;
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 0 0;
+
+  .commentSec {
+    flex: 1;
+    padding: 20px;
+  }
+
+  .submitSec {
+    padding: 0 0 30px;
+
+    .inputBar {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+
+      &:focus-within {
+        .sendBtn {
+          width: 40px;
+        }
+      }
+
+      .inputBox {
+        flex: 1;
+        display: flex;
+        height: 40px;
+        background: #fff;
+        border: 1px solid $White3;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+        border-radius: 20px;
+
+        input {
+          flex: 1;
+          height: 100%;
+          padding: 0 16px;
+          font-size: 14px;
+        }
+      }
+
+      .sendBtn {
+        display: flex;
+        align-items: center;
+        width: 0;
+        transition: all 0.3s;
+      }
+    }
+  }
+}

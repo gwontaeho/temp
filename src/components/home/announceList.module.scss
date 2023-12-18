@@ -1,0 +1,55 @@
+@use "styles/variable" as *;
+
+.announceSec {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 16px;
+
+  .titleArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .secTitle {
+      font-weight: 700;
+    }
+
+    .pageBtn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 20px;
+
+      &:focus {
+        background: #ddd;
+      }
+
+      p {
+        font-size: 12px;
+        color: $Gray1;
+      }
+    }
+  }
+
+  .pageList {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    gap: 10px;
+
+    .page {
+      min-width: 100%;
+      scroll-snap-align: center;
+
+      .announceList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: 290px;
+      }
+    }
+  }
+}

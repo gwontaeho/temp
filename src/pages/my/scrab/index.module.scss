@@ -1,0 +1,70 @@
+@use "styles/variable" as *;
+
+.scrab {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 70px 20px 20px;
+  background: $Bg1;
+
+  .count {
+    font-size: 12px;
+    color: $Gray1;
+
+    strong {
+      font-weight: 700;
+      color: $Black1;
+    }
+  }
+
+  .scrabList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    li {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px 16px 24px;
+      font-size: 12px;
+      background: #fff;
+      box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.06);
+      border-radius: 6px;
+      position: relative;
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .scrabBtn {
+        display: flex;
+        align-items: center;
+        top: 12px;
+        right: 12px;
+        position: absolute;
+      }
+
+      .companyName {
+        font-size: 14px;
+        color: $Blue1;
+      }
+
+      .hireTitle {
+        font-weight: 700;
+        color: $Black1;
+      }
+
+      .info {
+        color: $Gray1;
+
+        .red {
+          color: $Red1;
+        }
+      }
+    }
+  }
+}

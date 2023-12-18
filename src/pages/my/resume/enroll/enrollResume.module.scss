@@ -1,0 +1,62 @@
+@use "styles/variable" as *;
+
+.enrollResume {
+  background: $Bg1;
+  padding: 70px 16px 200px;
+
+  .innerSec {
+    background: #fff;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+
+    .progressBar {
+      display: flex;
+      align-items: center;
+      height: 60px;
+      padding: 0 20px;
+      border-bottom: 1px solid $White1;
+
+      .progressList {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .current {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 0 8px 0 0;
+
+          .index {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            background: $Process1;
+            border-radius: 50%;
+          }
+
+          p {
+            font-size: 14px;
+            color: $Process1;
+          }
+        }
+
+        .dot {
+          width: 8px;
+          height: 8px;
+          background: $White2;
+          border-radius: 50%;
+
+          &.on {
+            background: $Process1;
+          }
+        }
+      }
+    }
+  }
+}

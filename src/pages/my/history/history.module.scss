@@ -1,0 +1,31 @@
+@use "styles/variable" as *;
+
+.history {
+  padding: 70px 20px 0;
+
+  .categoryBar {
+    .categoryList {
+      display: flex;
+      background: #f5f5f5;
+      border-radius: 6px;
+      overflow: hidden;
+
+      li {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 44px;
+        font-size: 14px;
+        color: $Gray1;
+        border-radius: inherit;
+
+        &.on {
+          font-weight: 700;
+          color: #fff;
+          background: $Blue3;
+        }
+      }
+    }
+  }
+}

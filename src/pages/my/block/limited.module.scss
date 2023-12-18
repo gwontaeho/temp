@@ -1,0 +1,120 @@
+@use "styles/variable" as *;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 46px 32px 70px;
+  color: #fff;
+  background: $Bg3;
+
+  .key {
+    margin: 16px 0 0;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .value {
+    margin: 20px 0 0;
+    line-height: 22px;
+    text-align: center;
+  }
+}
+
+.limited {
+  padding: 20px 0 90px;
+  background: $Bg1;
+
+  .contSec {
+    padding: 26px 20px;
+    margin: 0 16px;
+    font-size: 14px;
+    color: $Gray3;
+    background: #fff;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+
+    .contTitle {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      color: $Black1;
+    }
+
+    &.infoSec {
+      .contArea {
+        margin: 20px 0 0;
+
+        .cont {
+          line-height: 18px;
+          color: $Gray1;
+        }
+
+        .infoList {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin: 20px 0 0;
+
+          li {
+            .red {
+              color: $Red1;
+            }
+          }
+        }
+
+        .lastLogin {
+          display: flex;
+          align-items: center;
+          height: 30px;
+          padding: 0 14px;
+          margin: 30px 0 0;
+          background: $Bg2;
+          border-radius: 6px;
+
+          .key {
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    &.actionSec {
+      padding-bottom: 30px;
+      margin-top: 20px;
+
+      .contArea {
+        margin: 20px 0 0;
+
+        .cont {
+          line-height: 18px;
+          color: $Gray1;
+        }
+
+        .actionCont {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 14px;
+          margin: 20px 0 0;
+
+          .primaryBtn {
+            width: 100%;
+            height: 50px;
+            font-size: 16px;
+            color: #fff;
+            background: $Blue3;
+            box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+            border-radius: 8px;
+          }
+
+          .laterBtn {
+            color: $Gray1;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

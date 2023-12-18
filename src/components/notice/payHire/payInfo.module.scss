@@ -1,0 +1,258 @@
+@use "styles/variable" as *;
+
+.payInfo {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 16px;
+
+    .errorMsg {
+      @include errorMsg;
+    }
+
+    .contArea {
+      padding: 20px 20px 24px;
+      color: $Black1;
+      background: #fff;
+      box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+      border-radius: 8px;
+
+      .red {
+        color: $Red1;
+      }
+
+      .areaTitle {
+        font-weight: 700;
+      }
+
+      .valueBox {
+        margin: 20px 0 0;
+        font-size: 14px;
+      }
+
+      .chkBtn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &.on {
+          .chkBox {
+            background: $Blue3;
+            border-color: $Blue3;
+          }
+        }
+
+        .chkBox {
+          width: 18px;
+          height: 18px;
+          padding: 3.5px;
+          border: 1.5px solid $White4;
+          border-radius: 50%;
+
+          span {
+            // display: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: inherit;
+          }
+        }
+      }
+
+      &.jobOpeningArea {
+        .valueBox {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin: 10px 0 0;
+
+          .info {
+            color: $Gray1;
+          }
+        }
+      }
+
+      &.personArea {
+        .valueBox {
+          .infoList {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            li {
+              display: flex;
+              gap: 10px;
+              font-size: 14px;
+
+              .key {
+                width: 56px;
+                font-weight: 700;
+                color: $Gray3;
+              }
+
+              hr {
+                width: 1px;
+                height: 14px;
+                background: $White4;
+                border: none;
+              }
+
+              .value {
+                color: $Gray1;
+              }
+            }
+          }
+        }
+      }
+
+      &.paymentArea {
+        .valueBox {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          .payList {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            li {
+              display: flex;
+              gap: 10px;
+
+              .key {
+                flex: 1;
+              }
+            }
+          }
+
+          hr {
+            width: 100%;
+            height: 1px;
+            background: $White2;
+            border: none;
+          }
+
+          .totalPay {
+            display: flex;
+            gap: 10px;
+
+            .key {
+              flex: 1;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
+      &.receiptArea {
+        .valueBox {
+          .receiptList {
+            display: flex;
+            gap: 30px;
+          }
+
+          .inputCont {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 30px 0 0;
+
+            .key {
+              font-size: 12px;
+            }
+
+            .inputBox {
+              display: flex;
+              align-items: center;
+              height: 44px;
+              border: 1px solid $White4;
+              border-radius: 6px;
+
+              &.err {
+                border-color: $Red1;
+              }
+
+              &:focus-within {
+                border-color: $Blue3;
+              }
+
+              input {
+                flex: 1;
+                height: 100%;
+                padding: 0 16px;
+              }
+            }
+          }
+
+          .termCont {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 40px 0 0;
+
+            .key {
+              font-size: 12px;
+            }
+
+            .agreeBtn {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+
+              &.on {
+                .chk {
+                  path {
+                    stroke: $Blue3;
+                  }
+                }
+              }
+
+              p {
+                font-size: 12px;
+                color: $Gray3;
+
+                strong {
+                  text-decoration: underline;
+                  color: $Process1;
+                }
+              }
+            }
+
+            .explainBox {
+              padding: 14px 16px 16px;
+              margin: 10px 0 0;
+              background: $Bg1;
+              border-radius: 6px;
+
+              p {
+                font-size: 12px;
+                line-height: 18px;
+                color: $Gray1;
+
+                strong {
+                  font-weight: 700;
+                  color: $Black1;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .btnArea {
+      .confirmBtn {
+        width: 100%;
+        height: 50px;
+        margin: 16px 0 0;
+        color: #fff;
+        background: linear-gradient(90.38deg, #616ae3 0.12%, #5a96de 88.5%);
+        box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+        border-radius: 8px;
+      }
+    }
+  }
+}

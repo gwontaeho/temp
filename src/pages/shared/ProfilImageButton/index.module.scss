@@ -1,0 +1,25 @@
+@use "styles/variable" as *;
+
+.utilBtn {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  &.noticeBtn {
+    .new {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #fff;
+      top: 0px;
+      right: 0px;
+      position: absolute;
+    }
+  }
+
+  img {
+    width: 25px;
+    height: 25px;
+    border-radius: 60px;
+  }
+}

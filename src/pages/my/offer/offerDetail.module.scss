@@ -1,0 +1,76 @@
+@use "styles/variable" as *;
+
+.offerDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 70px 20px 20px;
+  background: $White1;
+
+  section {
+    height: 546px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 23px;
+      margin-bottom: 28px;
+      span {
+        color: #6977f9;
+      }
+    }
+
+    article {
+      h3 {
+        font-size: 14px;
+        line-height: 16.1px;
+        font-weight: 600;
+        border-bottom: 1px solid #e2e2e2;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+      }
+
+      ul {
+        li {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 25px;
+          font-weight: 400;
+          .title {
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+          i {
+            font-size: 12px;
+            color: #6a6a6a;
+          }
+        }
+      }
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
+
+    button {
+      font-size: 16px;
+      font-weight: 400;
+      height: 50px;
+      flex: 1;
+      border-radius: 6px;
+    }
+    .reject {
+      border: 1px solid #dddddd;
+      color: #6a6a6a;
+      background-color: #fff;
+    }
+    .accept {
+      background-color: #6977f9;
+      color: #fff;
+    }
+  }
+}

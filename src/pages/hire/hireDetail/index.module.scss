@@ -1,0 +1,99 @@
+@use "styles/variable" as *;
+
+.hireDetail {
+  padding: 50px 0 140px;
+
+  .initSec {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px 20px 30px;
+
+    .titleArea {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .hireTitle {
+        font-size: 20px;
+        font-weight: 700;
+      }
+    }
+
+    .initArea {
+      .initList {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+
+        li {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          height: 60px;
+          padding: 0 14px;
+          border: 1px solid $White2;
+          border-radius: 6px;
+
+          .iconBox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 34px;
+            height: 34px;
+            background: $White1;
+            border-radius: 50%;
+          }
+
+          .infoBox {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            p {
+              font-size: 12px;
+
+              &.value {
+                font-weight: 700;
+              }
+
+              &.blue {
+                color: $Blue3;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .contSec {
+    .tabBar {
+      .categoryList {
+        display: flex;
+
+        li {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 48px;
+          border-bottom: 4px solid #fff;
+
+          &.on {
+            border-color: $Blue3;
+
+            p {
+              color: $Black1;
+            }
+          }
+
+          p {
+            font-size: 14px;
+            color: $Gray1;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,199 @@
+@use "styles/variable" as *;
+
+.categoryPopup {
+  display: flex;
+  flex-direction: column;
+  max-height: 76vh;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 14px 14px 0px 0px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 60;
+
+  .topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    min-height: 50px;
+    padding: 0 20px;
+    border-bottom: 1px solid $White3;
+
+    .popupTitle {
+      font-size: 16px;
+      font-weight: 700;
+      color: $Black1;
+    }
+
+    .closeBtn {
+      display: flex;
+      align-items: center;
+
+      svg {
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+
+  .contArea {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+
+    .largeCategoryList {
+      width: 150px;
+      overflow-y: scroll;
+
+      li {
+        display: flex;
+        align-items: center;
+        height: 44px;
+        padding: 0 20px;
+        background: $Blue4;
+
+        &.on {
+          background: #fff;
+
+          p {
+            color: $Blue3;
+          }
+        }
+
+        p {
+          flex: 1;
+          font-size: 14px;
+          color: $Black1;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .smallCategoryList {
+      flex: 1;
+      border-left: 1px solid $White3;
+      overflow-y: scroll;
+
+      li {
+        display: flex;
+        align-items: center;
+        height: 44px;
+        padding: 0 20px;
+
+        &.on {
+          p {
+            color: $Blue3;
+          }
+
+          .chkBlue {
+            display: block;
+          }
+        }
+
+        p {
+          flex: 1;
+          font-size: 14px;
+          color: $Black1;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .chkBlue {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .bottomBar {
+    padding: 14px 20px 30px;
+    border-top: 1px solid $White2;
+
+    &.some {
+      padding: 22px 20px 30px;
+      border-top: none;
+      box-shadow: 4px 0px 14px rgba(0, 0, 0, 0.2);
+
+      .resultCont {
+        display: flex;
+      }
+    }
+
+    .resultCont {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+
+      .countBox {
+        font-size: 10px;
+        color: $Gray1;
+
+        .count {
+          font-weight: 500;
+          color: $Blue3;
+        }
+      }
+
+      .resultList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        li {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 6px;
+          height: 34px;
+          padding: 0 10px;
+          background: $White1;
+          border: 1px solid $White2;
+          border-radius: 4px;
+
+          p {
+            font-size: 14px;
+            color: $Gray1;
+          }
+
+          svg {
+            path {
+              stroke: $Gray1;
+            }
+          }
+        }
+      }
+    }
+
+    .btnBox {
+      display: flex;
+      gap: 10px;
+      padding: 14px 0 0;
+
+      button {
+        height: 44px;
+
+        &.resetBtn {
+          width: 100px;
+          color: $Gray1;
+          border: 1px solid $White4;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06);
+          border-radius: 6px;
+        }
+
+        &.confirmBtn {
+          flex: 1;
+          color: #fff;
+          background: linear-gradient(90.38deg, #616ae3 0.12%, #5a96de 88.5%);
+          box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+}

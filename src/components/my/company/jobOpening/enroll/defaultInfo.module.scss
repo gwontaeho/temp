@@ -1,0 +1,113 @@
+@use "styles/variable" as *;
+
+.defaultInfo {
+  padding: 50px 16px 170px;
+  background: $Bg1;
+
+  .titleSec {
+    padding: 34px 0 26px;
+
+    .processTitle {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      color: $Black1;
+    }
+  }
+
+  .contSec {
+    background: #fff;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+
+    form {
+      padding: 26px 20px 40px;
+
+      .formList {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+
+        & > li {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          @include formKeyBox;
+
+          .valueBox {
+            @include formValueBox;
+
+            .inputBar {
+              .inputBox {
+                .unit {
+                  margin: 0 16px 0 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.contArea {
+  display: flex;
+  flex-direction: column;
+
+  .result {
+    font-size: 14px;
+    line-height: 15px;
+
+    color: #333333;
+    padding: 5px 0 10px 0;
+  }
+
+  .rangeCont {
+    padding: 0 14px;
+
+    .rangeTrack {
+      display: flex;
+      align-items: center;
+      height: 28px;
+
+      .track {
+        width: 100%;
+        height: 8px;
+        border-radius: 10px;
+
+        .renderThumbBox {
+          padding: 1px;
+          background: $Blue3;
+          border-radius: 50%;
+
+          &.dragged {
+            padding: 4px;
+            background: linear-gradient(
+              140.19deg,
+              #4065f6 5.03%,
+              #ffffff 104.06%
+            );
+          }
+
+          .renderThumb {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border-radius: inherit;
+
+            p {
+              font-size: 14px;
+              font-weight: 700;
+              color: $Blue3;
+            }
+          }
+        }
+      }
+    }
+  }
+}

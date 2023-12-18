@@ -1,0 +1,75 @@
+@use "styles/variable" as *;
+
+.authorityPopup {
+  padding: 26px 20px 40px;
+  background: #fff;
+  border-radius: 14px 14px 0px 0px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 60;
+
+  .titleArea {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+
+    .explain {
+      font-size: 12px;
+      line-height: 16px;
+      color: $Gray1;
+    }
+  }
+
+  .authorArea {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0 0;
+
+    .areaTitle {
+      font-size: 12px;
+      color: $Sky1;
+    }
+
+    .authorList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px 20px 18px 36px;
+      border-radius: 8px;
+      background: #fafafa;
+
+      li {
+        list-style: disc;
+
+        .innerBox {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          font-size: 12px;
+          color: $Black2;
+
+          .value {
+            color: $Gray1;
+          }
+        }
+      }
+    }
+  }
+
+  .btnArea {
+    margin: 18px 0 0;
+
+    .confirmBtn {
+      width: 100%;
+      height: 50px;
+      color: #fff;
+      background: linear-gradient(90.38deg, #616ae3 0.12%, #5a96de 88.5%);
+      box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+      border-radius: 8px;
+    }
+  }
+}

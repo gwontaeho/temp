@@ -1,0 +1,102 @@
+@use "styles/variable" as *;
+
+.hire {
+  padding: 100px 0 60px;
+  background: #e6e6e6;
+
+  .hireSec {
+    background: #fff;
+    border-top: 1px solid $White4;
+
+    .topBar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 30px;
+      padding: 0 16px;
+      font-size: 12px;
+      color: $Gray1;
+      border-bottom: 1px solid $White2;
+
+      .count {
+        .value {
+          color: #000;
+        }
+      }
+
+      .btnBox {
+        height: 100%;
+        position: relative;
+
+        .sortBtn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          height: 100%;
+        }
+      }
+    }
+
+    .contArea {
+      padding: 0 0 62px;
+
+      .hireList {
+        padding: 0 16px;
+
+        li {
+          padding: 16px 0;
+          font-size: 12px;
+          border-bottom: 1px solid $White4;
+          position: relative;
+
+          .favBtn {
+            position: absolute;
+            top: 14px;
+            right: 0;
+
+            .flag {
+              path {
+                stroke: $White4;
+              }
+            }
+          }
+
+          .company {
+            font-weight: 500;
+            color: $Blue3;
+          }
+
+          .announceTitle {
+            font-weight: 700;
+            font-size: 14px;
+            margin: 10px 0 0;
+          }
+
+          .bottomBar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 4px 0 0;
+
+            .info {
+              color: $Gray1;
+
+              .red {
+                color: $Red1;
+              }
+            }
+
+            .supportBtn {
+              height: 18px;
+              padding: 0 12px;
+              font-size: 10px;
+              color: $Blue3;
+              border: 1px solid $Blue3;
+              border-radius: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

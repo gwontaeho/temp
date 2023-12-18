@@ -1,0 +1,46 @@
+@use "styles/variable" as *;
+
+.settingScreen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: $Bg1;
+  padding: 70px 20px;
+
+  .menuList {
+    padding: 10px 0;
+    background: #fff;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 44px;
+      padding: 0 20px;
+
+      p {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      svg {
+        path {
+          stroke: $Gray3;
+        }
+      }
+    }
+  }
+
+  .logoutBtn {
+    height: 44px;
+    font-size: 14px;
+    font-weight: 700;
+    color: $Gray1;
+    background: #fff;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+  }
+}

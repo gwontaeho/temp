@@ -1,0 +1,31 @@
+@use "styles/variable" as *;
+
+.join {
+  .formSec {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    min-height: 100vh;
+    padding: 90px 20px 40px;
+
+    .topBar {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+
+      .title {
+        color: $Black1;
+      }
+
+      .countBox {
+        font-size: 12px;
+        color: $Gray1;
+
+        .count {
+          font-weight: 700;
+          color: $Black1;
+        }
+      }
+    }
+  }
+}
