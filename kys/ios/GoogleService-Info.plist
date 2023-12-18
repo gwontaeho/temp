@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>936559105430-b4ck2c2ggbdahaerogq8c05rpisdn22l.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.936559105430-b4ck2c2ggbdahaerogq8c05rpisdn22l</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAKumymNM1NP0_AfcKM7WiX3uTWdxdlQno</string>
+	<key>GCM_SENDER_ID</key>
+	<string>936559105430</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.stewiewwww.homethai365</string>
+	<key>PROJECT_ID</key>
+	<string>kys0000-373310</string>
+	<key>STORAGE_BUCKET</key>
+	<string>kys0000-373310.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:936559105430:ios:0075293529482ec03db9b7</string>
+</dict>
+</plist>
