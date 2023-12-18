@@ -1,0 +1,28 @@
+{
+  "name": "pj_1108_back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "2.1062.0",
+    "cors": "2.8.5",
+    "dotenv": "10.0.0",
+    "express": "4.17.1",
+    "jsonwebtoken": "8.5.1",
+    "morgan": "1.10.0",
+    "multer": "1.4.3",
+    "multer-s3": "2.10.0",
+    "mysql2": "2.3.3-rc.0",
+    "sequelize": "6.9.0",
+    "sequelize-cli": "6.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.14"
+  }
+}
