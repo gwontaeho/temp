@@ -1,0 +1,8 @@
+.App {
+  width: 100vw;
+  display: flex;
+}
+
+.route {
+  width: calc(100% - 300px);
+}
