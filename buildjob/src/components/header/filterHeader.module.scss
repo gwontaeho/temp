@@ -1,0 +1,134 @@
+@use "styles/variable" as *;
+
+.filterHeader {
+  background: #fff;
+  top: 0;
+  right: 0;
+  left: 0;
+  position: fixed;
+  z-index: 30;
+  border-bottom: 1px solid $White2;
+
+  .topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    padding: 0 14px 0 16px;
+
+    .leftArea {
+      .logoBtn {
+        display: flex;
+        align-items: center;
+
+        .logo {
+          height: 16px;
+        }
+      }
+    }
+
+    .rightArea {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .inputBox {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 36px;
+        padding: 0 16px;
+        background: $White1;
+        border: 1px solid $White4;
+        border-radius: 20px;
+
+        input {
+          flex: 1;
+          height: 100%;
+        }
+
+        .clearBtn {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .utilBtn {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        &.noticeBtn {
+          .new {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: $Blue3;
+            top: 0px;
+            right: 0px;
+            position: absolute;
+          }
+        }
+
+        &.profBtn {
+          svg {
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+
+  .filterBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    overflow-x: scroll;
+    padding: 0 16px;
+
+    .btnBox {
+      position: relative;
+
+      & > button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 24px;
+        border: 1px solid $White4;
+
+        &.clearBtn {
+          width: 24px;
+          border-radius: 50%;
+
+          &:focus {
+            background: $White2;
+          }
+        }
+
+        &.filterBtn {
+          gap: 4px;
+          padding: 0 10px;
+          font-size: 14px;
+          color: $Gray1;
+          border-radius: 20px;
+
+          &.on {
+            color: #fff;
+            background: $Blue3;
+          }
+
+          p {
+            white-space: nowrap;
+          }
+
+          svg {
+            path {
+              stroke: $White4;
+            }
+          }
+        }
+      }
+    }
+  }
+}

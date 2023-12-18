@@ -1,0 +1,40 @@
+@use "styles/variable" as *;
+
+.letsEnrollPopup {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  overflow: hidden;
+  padding: 30px 20px;
+  background: #fff;
+  border-radius: 0px 0px 14px 14px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+
+  .contArea {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+
+    .popupTitle {
+      font-size: 18px;
+      font-weight: 700;
+      color: $Black1;
+    }
+
+    .subTitle {
+      font-size: 14px;
+      color: $Gray3;
+    }
+  }
+
+  .confirmBtn {
+    width: 100%;
+    height: 50px;
+    font-weight: 700;
+    color: #fff;
+    background: $Blue3;
+    box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+    border-radius: 8px;
+  }
+}

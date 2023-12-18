@@ -1,0 +1,73 @@
+@use "styles/variable" as *;
+
+.selLocationPopup {
+  display: flex;
+  height: 214px;
+  font-size: 14px;
+  color: $Gray3;
+  background: #fff;
+  border: 1px solid $White2;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  top: 50px;
+  right: 0;
+  left: 0;
+  position: absolute;
+  z-index: 60;
+
+  .bigLocation {
+    width: 120px;
+    overflow-y: scroll;
+    padding: 6px 0;
+    border-right: 1px solid $White2;
+
+    li {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 16px;
+
+      &.on {
+        background: $White1;
+
+        p {
+          color: $Blue3;
+        }
+      }
+
+      p {
+        flex: 1;
+      }
+    }
+  }
+
+  .smallLocation {
+    flex: 1;
+    overflow-y: scroll;
+    padding: 6px 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      height: 38px;
+      padding: 0 16px;
+
+      &.on {
+        color: $Blue3;
+        background: $White1;
+
+        svg {
+          display: block;
+        }
+      }
+
+      p {
+        flex: 1;
+      }
+
+      svg {
+        display: none;
+      }
+    }
+  }
+}

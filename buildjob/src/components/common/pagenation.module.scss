@@ -1,0 +1,45 @@
+@use "styles/variable" as *;
+
+.pagenation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+
+  .chevronBtn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid $White4;
+    border-radius: 4px;
+
+    &.preBtn {
+      transform: scaleX(-1);
+    }
+  }
+
+  .pageList {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    li {
+      .pageBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        color: $Gray1;
+        border: 1px solid $White2;
+        border-radius: 4px;
+
+        &.on {
+          color: #fff;
+          background: $Blue3;
+          border: none;
+        }
+      }
+    }
+  }
+}

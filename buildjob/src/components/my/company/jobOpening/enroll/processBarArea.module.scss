@@ -1,0 +1,28 @@
+@use "styles/variable" as *;
+
+.processArea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+  padding: 0 20px;
+
+  .processBar {
+    flex: 1;
+    height: 8px;
+    background: $White1;
+    border-radius: 8px;
+
+    .processThumb {
+      height: 100%;
+      background: $Process1;
+      border-radius: inherit;
+    }
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $Process1;
+  }
+}

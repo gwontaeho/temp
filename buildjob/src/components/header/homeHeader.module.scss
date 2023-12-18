@@ -1,0 +1,50 @@
+@use "styles/variable" as *;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 16px;
+  border-bottom: 1px solid #eeeeee24;
+  top: 0;
+  right: 0;
+  left: 0;
+  position: absolute;
+  z-index: 30;
+
+  .leftArea {
+    .logoBtn {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        height: 16px;
+      }
+    }
+  }
+
+  .rightArea {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .utilBtn {
+      display: flex;
+      align-items: center;
+      position: relative;
+
+      &.noticeBtn {
+        .new {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: #fff;
+          top: 0px;
+          right: 0px;
+          position: absolute;
+        }
+      }
+    }
+  }
+}

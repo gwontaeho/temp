@@ -1,0 +1,47 @@
+@use "styles/variable" as *;
+
+.details {
+  padding: 30px 20px;
+  border-top: 1px solid $White2;
+
+  .keyBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .contKey {
+      font-weight: 700;
+    }
+
+    .moreBtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      background: $White1;
+      border-radius: 50%;
+    }
+  }
+
+  .contValue {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 30px 0 0;
+
+    .placeholder {
+      font-size: 12px;
+      text-align: center;
+      color: $Gray3;
+
+      .blue {
+        color: $Blue3;
+      }
+    }
+
+    .contPlace {
+      width: 100%;
+    }
+  }
+}

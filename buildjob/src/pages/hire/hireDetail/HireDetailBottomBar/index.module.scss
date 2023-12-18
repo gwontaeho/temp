@@ -1,0 +1,46 @@
+@use "styles/variable" as *;
+
+.hireDetailBottomBar {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px 30px;
+  background: #fff;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 30;
+
+  &.scroll {
+    .resetBtn {
+      p {
+        display: none;
+      }
+    }
+  }
+
+  button {
+    height: 50px;
+
+    &.resetBtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      min-width: 80px;
+      padding: 0 20px;
+      color: $Black1;
+      border: 1px solid $White4;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06);
+      border-radius: 6px;
+    }
+
+    &.confirmBtn {
+      flex: 1;
+      color: #fff;
+      background: linear-gradient(90.38deg, #616ae3 0.12%, #5a96de 88.5%);
+      box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+      border-radius: 8px;
+    }
+  }
+}

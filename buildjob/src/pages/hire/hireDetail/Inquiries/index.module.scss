@@ -1,0 +1,87 @@
+@use "styles/variable" as *;
+
+.inquiries {
+  padding: 30px 20px;
+  border-top: 1px solid $White2;
+
+  .keyBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .contKey {
+      font-weight: 700;
+    }
+
+    .moreBtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      background: $White1;
+      border-radius: 50%;
+    }
+  }
+
+  .contValue {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 30px 0 0;
+
+    .ruleList {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 0 0 0 14px;
+
+      li {
+        list-style: disc;
+        font-size: 12px;
+        color: $Gray1;
+      }
+    }
+
+    .inputBar {
+      display: flex;
+      align-items: center;
+
+      &:focus-within {
+        .sendBtn {
+          width: 40px;
+        }
+      }
+
+      .inputBox {
+        flex: 1;
+        display: flex;
+        height: 40px;
+        background: #fff;
+        border: 1px solid $White3;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+        border-radius: 20px;
+
+        input {
+          flex: 1;
+          height: 100%;
+          padding: 0 16px;
+          font-size: 14px;
+        }
+      }
+
+      .sendBtn {
+        display: flex;
+        align-items: center;
+        width: 0;
+        transition: all 0.3s;
+      }
+    }
+
+    .inquryList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}

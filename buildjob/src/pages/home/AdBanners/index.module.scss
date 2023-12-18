@@ -1,0 +1,23 @@
+@use "styles/variable" as *;
+
+.slickArea {
+  margin: 20px 0 0;
+
+  .contBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0 6px;
+
+    img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+  }
+}

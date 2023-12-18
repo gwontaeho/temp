@@ -1,0 +1,119 @@
+@use "styles/variable" as *;
+
+.applyResume {
+  padding: 70px 16px 60px;
+  color: $Black1;
+  background: $Bg1;
+
+  .innerSec {
+    padding: 26px 16px 16px;
+    background: #fff;
+    border-radius: 8px;
+
+    .profArea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+
+      .profImg {
+        width: 78px;
+        height: 78px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .profName {
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+
+    .infoArea {
+      margin: 46px 0 0;
+
+      .infoList {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+
+        & > li {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          font-size: 14px;
+
+          .infoTitle {
+            font-weight: 700;
+          }
+
+          .contCont {
+            padding: 20px;
+            background: $Bg2;
+            border-radius: 6px;
+          }
+
+          &.workConditionCont {
+            .contCont {
+              .conditionList {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                li {
+                  display: flex;
+                  gap: 20px;
+
+                  .key {
+                    width: 54px;
+                    color: $Gray1;
+                  }
+
+                  .value {
+                    flex: 1;
+                    color: $Black1;
+                  }
+                }
+              }
+            }
+          }
+
+          &.careerCont {
+            .contCont {
+              .careerList {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                font-size: 14px;
+
+                li {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  color: $Gray1;
+
+                  .companyName {
+                    font-weight: 700;
+                    color: $Black1;
+                  }
+
+                  .term {
+                    font-size: 12px;
+                  }
+                }
+              }
+            }
+          }
+
+          &.introduceCont {
+            .contCont {
+              .introduce {
+                white-space: pre-wrap;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

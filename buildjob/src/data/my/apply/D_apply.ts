@@ -1,0 +1,65 @@
+export const D_applyList: IapplySimple[] = [
+  {
+    date: "23.04.22",
+    form: "온라인지원",
+    seen: false,
+    companyName: "(주)위베네베네",
+    hireTitle: "베네베네 직영점 [신세계 강남점] 정규직 모집 ",
+    location: "서울 전체",
+    payForm: "월",
+    pay: "300만원",
+  },
+  {
+    date: "23.04.22",
+    form: "온라인지원",
+    seen: true,
+    companyName: "(주)위베네베네",
+    hireTitle: "베네베네 직영점 [신세계 강남점] 정규직 모집 ",
+    location: "서울 전체",
+    payForm: "월",
+    pay: "300만원",
+  },
+  {
+    date: "23.04.22",
+    form: "전화지원",
+    companyName: "(주)위베네베네",
+    hireTitle: "베네베네 직영점 [신세계 강남점] 정규직 모집 ",
+    location: "서울 전체",
+    payForm: "월",
+    pay: "300만원",
+  },
+];
+
+export const D_applyResumeList: IapplyResumeSimple[] = [
+  {
+    date: "23.04.22",
+    form: "온라인지원",
+    status: "미열람",
+    name: "김둘리",
+    workForm: "정규직",
+    career: "10년 2개월",
+  },
+  {
+    date: "23.04.22",
+    form: "전화지원",
+    name: "김둘리",
+    workForm: "정규직",
+    career: "10년 2개월",
+  },
+  {
+    date: "23.04.22",
+    form: "온라인지원",
+    status: "채용 제안중",
+    name: "김둘리",
+    workForm: "정규직",
+    career: "10년 2개월",
+  },
+  {
+    date: "23.04.22",
+    form: "온라인지원",
+    status: "제안거절",
+    name: "김둘리",
+    workForm: "정규직",
+    career: "10년 2개월",
+  },
+];

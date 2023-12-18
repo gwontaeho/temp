@@ -1,0 +1,60 @@
+@use "styles/variable" as *;
+
+.payHire {
+  padding: 50px 0 40px;
+  background: $Bg1;
+
+  .processArea {
+    padding: 8px 0 0;
+
+    .processList {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      height: 76px;
+
+      svg {
+        path {
+          stroke: $White4;
+        }
+      }
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        &.on {
+          .index {
+            background: $Process1;
+          }
+
+          .label {
+            color: $Process1;
+          }
+        }
+
+        .index {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 24px;
+          height: 24px;
+          font-size: 12px;
+          font-weight: 700;
+          color: #fff;
+          background: $White4;
+          border-radius: 50%;
+        }
+
+        .label {
+          font-size: 14px;
+          color: $White4;
+        }
+      }
+    }
+  }
+
+ 
+}

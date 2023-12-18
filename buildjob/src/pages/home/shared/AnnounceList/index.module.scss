@@ -1,0 +1,74 @@
+@use "styles/variable" as *;
+
+.announceSec {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  .titleArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+
+    .secTitle {
+      font-weight: 700;
+    }
+
+    .pageBtn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 20px;
+
+      &:focus {
+        background: #ddd;
+      }
+
+      p {
+        font-size: 12px;
+        color: $Gray1;
+      }
+    }
+  }
+
+  .slickArea {
+    .contBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      overflow: hidden;
+      padding: 0 16px;
+
+      .announceList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  }
+
+  .pageList {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    gap: 10px;
+
+    .page {
+      min-width: 100%;
+      scroll-snap-align: center;
+
+      .announceList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        // height: 290px;
+      }
+    }
+  }
+}

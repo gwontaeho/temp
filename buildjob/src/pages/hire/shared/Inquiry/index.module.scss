@@ -1,0 +1,73 @@
+@use "styles/variable" as *;
+
+.inqury {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+
+  .profImg {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .inquryBox {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 12px;
+    color: $Gray1;
+
+    .contBar {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      color: $Black1;
+
+      .nickname {
+        width: 32px;
+        font-weight: 700;
+        line-height: 16px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .content {
+        flex: 1;
+        font-size: 14px;
+        line-height: 16px;
+      }
+    }
+
+    .utilBar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .replyBar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      hr {
+        width: 32px;
+        height: 1px;
+        background: $Gray1;
+        border: none;
+      }
+    }
+
+    .replyList {
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin: 6px 0 0;
+      }
+    }
+  }
+}

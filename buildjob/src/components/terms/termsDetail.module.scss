@@ -1,0 +1,49 @@
+@use "styles/variable" as *;
+
+.termsDetail {
+  padding: 30px 14px;
+
+  .box {
+    margin-bottom: 16px;
+
+    .title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 16px;
+    }
+
+    .content {
+      font-size: 12px;
+      font-weight: 400;
+      color: $Gray2;
+      line-height: 16px;
+    }
+  }
+}
+
+.bottom {
+  height: 22px;
+  background-color: $White2;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .copyright {
+    display: flex;
+    
+    .strong {
+      color: $Gray1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    .text {
+      color: $Gray1;
+      font-size: 12px;
+      font-weight: 400;
+      margin-left: 2px;
+    }
+  }
+}

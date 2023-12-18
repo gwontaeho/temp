@@ -1,0 +1,107 @@
+@use "styles/variable" as *;
+
+.referral {
+  padding: 110px 0 60px;
+  color: #fff;
+  background: $Orange1;
+
+  .titleArea {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+
+    .pageTitle {
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .explain {
+      font-size: 14px;
+      line-height: 18px;
+      color: $White2;
+    }
+  }
+
+  .inputArea {
+    display: flex;
+    gap: 10px;
+    height: 44px;
+    padding: 0 20px;
+    margin: 94px 0 0;
+
+    input {
+      flex: 1;
+      height: 100%;
+      padding: 0 16px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid $White4;
+      border-radius: 6px;
+    }
+
+    .disabledSubmitBtn {
+      width: 100px;
+      height: 100%;
+      background: $Gray1;
+      border-radius: 6px;
+      opacity: .8;
+    }
+
+    .submitBtn {
+      width: 100px;
+      height: 100%;
+      background: #000;
+      border-radius: 6px;
+    }
+  }
+
+  .copyArea {
+    margin: 174px 0 0;
+    padding: 0 30px;
+
+    fieldset {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 24px 36px;
+      border: 1px solid #fff;
+
+      legend {
+        padding: 0 6px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      button {
+        height: 50px;
+        color: $Orange1;
+        background: #fff;
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+      }
+    }
+  }
+}
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px 20px;
+  color: $Gray1;
+  background: $Black1;
+
+  .noticeKey {
+    font-size: 14px;
+  }
+
+  .noticeList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    li {
+      font-size: 12px;
+      line-height: 16px;
+    }
+  }
+}

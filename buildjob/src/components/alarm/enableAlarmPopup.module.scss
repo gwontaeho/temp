@@ -1,0 +1,38 @@
+@use "styles/variable" as *;
+
+.enableAlarmPopup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 20px 30px;
+  margin: 0 0 20px;
+  background: #fff;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0px 0px 14px 14px;
+
+  .textArea {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+
+    .popupTitle {
+      font-size: 14px;
+      color: $Gray3;
+    }
+
+    .explain {
+      font-size: 12px;
+      color: $Gray1;
+    }
+  }
+
+  .settingBtn {
+    height: 50px;
+    font-weight: 700;
+    color: #fff;
+    background: $Blue3;
+    box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+    border-radius: 8px;
+  }
+}

@@ -1,0 +1,60 @@
+@use "styles/variable" as *;
+
+.floatingMorePopup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  right: 20px;
+  bottom: 128px;
+  position: fixed;
+  z-index: 60;
+
+  button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+
+    &.closeBtn {
+      .iconBox {
+        background: $Blue3;
+
+        svg {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
+
+    p {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .iconBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border-radius: 50%;
+    }
+
+    // &.moreBtn {
+    //   background: $Blue3;
+
+    //   svg {
+    //     path {
+    //       stroke: #fff;
+    //     }
+    //   }
+    // }
+
+    // &.upBtn {
+    //   background: rgba(255, 255, 255, 0.2);
+    //   border: 1px solid $White4;
+    //   backdrop-filter: blur(5px);
+    // }
+  }
+}

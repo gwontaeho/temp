@@ -1,0 +1,45 @@
+@use "styles/variable" as *;
+
+.hireDetailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 14px;
+  background: #fff;
+  border-bottom: 1px solid $White2;
+  top: 0;
+  right: 0;
+  left: 0;
+  position: fixed;
+  z-index: 30;
+
+  .leftArea {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .backBtn {
+      display: flex;
+      align-items: center;
+    }
+
+    .pageTitle {
+      padding: 1px 0 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: $Black1;
+    }
+  }
+
+  .rightArea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .utilBtn {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

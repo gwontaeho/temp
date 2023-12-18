@@ -1,0 +1,19 @@
+.Toastify__toast-container {
+  .customContainer {
+    display: flex;
+    align-items: center;
+    min-height: 44px !important;
+    height: 44px !important;
+    padding: 0 16px !important;
+    background: rgba(0,0,0,0.7) !important;
+    border-radius: 6px !important;
+
+    .customBody {
+      margin: 0 !important;
+    }
+
+    .Toastify__close-button {
+      align-self: unset;
+    }
+  }
+}

@@ -1,0 +1,177 @@
+@use "styles/variable" as *;
+
+.careerPopup {
+  padding: 0 0 40px;
+  background: #fff;
+  border-radius: 14px 14px 0px 0px;
+  top: 26px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 60;
+
+  .titleBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    padding: 0 16px;
+    border-bottom: 1px solid $White4;
+
+    .popupTitle {
+      color: $Black1;
+    }
+
+    .blank {
+      width: 26px;
+    }
+
+    .closeBtn {
+      svg {
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+
+  .contArea {
+    height: 100%;
+    padding: 20px 20px 40px;
+    overflow-y: scroll;
+
+    .areaTitle {
+      font-size: 12px;
+      text-align: center;
+      color: $Gray1;
+    }
+
+    form {
+      margin: 30px 0 0;
+
+      .formList {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+
+        & > li {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          @include formKeyBox;
+
+          .valueBox {
+            @include formValueBox;
+
+            &.termValueBox {
+              &:focus-within {
+                .inputBox {
+                  border: 1px solid $White4;
+                }
+              }
+
+              .inputBar {
+                align-items: center;
+
+                .inputBox {
+                  &:focus-within {
+                    border: 2px solid rgba(105, 119, 249, 0.5);
+                  }
+
+                  flex: 1;
+                  overflow: hidden;
+
+                  .customDatePicker {
+                    display: flex;
+                    width: 100%;
+                    font-size: 14px;
+
+                    .iconCalender {
+                      position: absolute;
+                      right: 16px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .workNowBtn {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              &.on {
+                svg {
+                  path {
+                    stroke: $Blue3;
+                  }
+                }
+              }
+
+              p {
+                font-size: 12px;
+                color: $Gray3;
+              }
+            }
+          }
+
+          &.textAreaCont {
+            .valueBox {
+              .inputBar {
+                height: 100px;
+
+                .inputBox {
+                  overflow: hidden;
+                  border: 1px solid $White4;
+                  border-radius: 6px;
+                  &.err {
+                    border-color: $Red1;
+                  }
+
+                  &:focus-within {
+                    border: 2px solid rgba(105, 119, 249, 0.5);
+                  }
+
+                  textarea {
+                    width: 100%;
+                    height: 100%;
+                    padding: 14px 16px;
+                    font-size: 14px;
+                    border: none;
+                    outline: none;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .btnCont {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      margin: 20px 0 0;
+
+      .enrollBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        height: 44px;
+        color: $Blue3;
+        border: 1px dashed $Blue3;
+        border-radius: 6px;
+      }
+
+      .saveBtn {
+        height: 50px;
+        color: #fff;
+        background: linear-gradient(90.38deg, #616ae3 0.12%, #5a96de 88.5%);
+        border-radius: 8px;
+        box-shadow: 0px 3px 4px rgba(134, 109, 248, 0.3);
+      }
+    }
+  }
+}

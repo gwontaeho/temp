@@ -1,0 +1,17 @@
+@use "styles/variable" as *;
+
+.intro {
+  padding: 46% 0 0;
+  background: linear-gradient(180deg, #6050f2 0%, #3e55b0 100%);
+
+  .contSec {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    .bgImg {
+      height: 96px;
+    }
+  }
+}

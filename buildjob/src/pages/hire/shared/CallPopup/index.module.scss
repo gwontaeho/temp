@@ -1,0 +1,29 @@
+@use "styles/variable" as *;
+
+.callPopup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  right: 10px;
+  bottom: 30px;
+  left: 10px;
+  z-index: 60;
+  position: fixed;
+
+  .actionBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    padding: 0 46px;
+    color: $Blue1;
+    background: #fff;
+    border-radius: 8px;
+    position: relative;
+
+    svg {
+      left: 20px;
+      position: absolute;
+    }
+  }
+}

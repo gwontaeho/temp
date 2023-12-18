@@ -1,0 +1,59 @@
+@use "styles/variable" as *;
+
+.bottomSheetPopup {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 60px 16px 30px;
+  border-radius: 14px 14px 0px 0px;
+  background: #fff;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 60;
+
+  .closeBtn {
+    top: 14px;
+    right: 14px;
+    position: absolute;
+  }
+
+  .contArea {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+
+    .cont {
+      font-weight: 700;
+      color: $Black1;
+    }
+
+    .subText {
+      font-size: 14px;
+      color: $Gray3;
+    }
+  }
+
+  .btnArea {
+    display: flex;
+    gap: 12px;
+
+    button {
+      flex: 1;
+      height: 50px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+
+      &.cancelBtn {
+        border: 1px solid $White4;
+      }
+
+      &.confirmBtn {
+        color: #fff;
+        background: linear-gradient(90.38deg, #616ae3 0.12%, #5a96de 88.5%);
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+@use "styles/variable" as *;
+
+.apply {
+  padding: 50px 16px 110px;
+  background: $Bg1;
+
+  .countBar {
+    margin: 20px 0 0;
+
+    .count {
+      font-size: 12px;
+      color: $Gray1;
+
+      strong {
+        font-weight: 700;
+        color: $Black1;
+      }
+    }
+  }
+
+  .listArea {
+    margin: 10px 0 0;
+
+    .applyList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      li {
+        background: #fff;
+        box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+        border-radius: 8px;
+
+        .infoCont {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 20px 20px 26px;
+          font-size: 14px;
+          color: $Black1;
+
+          .red {
+            color: $Red1;
+          }
+
+          .blue {
+            color: $Blue3;
+          }
+
+          .statusBar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+
+            .timeFormBox {
+              color: $Gray3;
+            }
+          }
+
+          .companyName {
+            font-weight: 700;
+          }
+
+          .locationPay {
+            color: $Gray1;
+          }
+        }
+
+        .actionBar {
+          display: flex;
+          height: 50px;
+          border-top: 1px solid $White2;
+
+          hr {
+            width: 1px;
+            height: 100%;
+            background: $White2;
+            border: none;
+          }
+
+          button {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 100%;
+
+            p {
+              font-size: 14px;
+              color: $Gray3;
+            }
+          }
+        }
+      }
+    }
+  }
+}
